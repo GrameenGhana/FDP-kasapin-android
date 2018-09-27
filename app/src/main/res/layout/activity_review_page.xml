@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/ll1"
+        android:layout_above="@+id/bottom_buttons"
+
+        >
+
+
+        <RelativeLayout
+            android:id="@+id/currencyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+
+            >
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/plotName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plot 1 Year 1"
+                android:textStyle="bold"
+                android:padding="@dimen/spacing_normal"
+                android:textColor="@color/text_black_87" />
+
+            <LinearLayout
+                android:id="@+id/nameLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/spacing_normal"
+                android:paddingRight="@dimen/spacing_normal"
+                android:layout_toRightOf="@id/plotName"
+                android:layout_centerVertical="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/spacing_normal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/farmer_name"
+                        android:layout_marginRight="@dimen/spacing_half"
+                        android:textColor="@color/text_black_87" />
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aang Junior"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_black_87" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/farmer_code"
+                        android:layout_marginRight="@dimen/spacing_half"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="23445"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_alignParentRight="true"
+                android:id="@+id/title_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:padding="@dimen/spacing_normal"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="?attr/colorAccent"
+                android:background="?attr/selectableItemBackground"
+
+                />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll5"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal|vertical"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal">
+
+
+            <de.codecrafters.tableview.TableView xmlns:table="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/general_ao_tableView"
+                android:orientation="horizontal"
+                android:scrollbarAlwaysDrawHorizontalTrack="true"
+                android:layout_width="300dp"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_height="wrap_content"
+                table:tableView_headerElevation="2"
+                table:tableView_columnCount="2"
+                android:background="@drawable/table_header_background_accent"
+                android:dividerHeight="0.5dip"
+                android:textColor="?attr/colorAccent"
+
+                />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/spacing_normal">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true" />
+
+
+                <TextView
+                    android:id="@+id/noData"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Data!"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom_buttons"
+        android:paddingLeft="@dimen/spacing_normal"
+        android:paddingRight="@dimen/spacing_normal"
+        android:paddingBottom="@dimen/spacing_half"
+
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_marginRight="@dimen/spacing_half"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/farmer_hire_labour_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hire_labour"
+                    android:layout_weight="2"
+                    android:layout_marginRight="@dimen/spacing_half"
+
+                    />
+
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/farmer_hire_labour_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/spacing_half"
+
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="@dimen/spacing_half">
+
+                <TextView
+                    android:id="@+id/labour_type_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hire_labour_type"
+                    android:layout_weight="1"
+                    android:layout_marginRight="@dimen/spacing_half" />
+
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/labour_type_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/spacing_half" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:clipToPadding="false"
+            android:clipChildren="false">
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:theme="@style/PrimaryButtonGrey"
+                android:text="@string/back"
+                android:padding="@dimen/spacing_normal" />
+
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/sync"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="Sync"
+                android:padding="@dimen/spacing_normal"
+                android:layout_marginLeft="@dimen/spacing_normal" />
+
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:padding="@dimen/spacing_normal"
+                android:layout_marginLeft="@dimen/spacing_normal"
+
+                />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                  android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/content"
+        android:orientation="vertical"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="2dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+
+            <include layout="@layout/toolbar"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                     android:paddingLeft="@dimen/spacing_normal"
+                    android:paddingRight="@dimen/spacing_normal"
+                    android:paddingTop="@dimen/spacing_normal"
+                    android:paddingBottom="@dimen/spacing_half"
+                    android:orientation="horizontal"
+                     >
+
+                        <TextView
+                            android:id="@+id/plotName"
+                             android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Plot Name"
+                            android:textSize="@dimen/text_size_medium"
+                            android:textColor="@android:color/primary_text_light"
+                            android:textStyle="bold"
+
+
+                            />
+
+
+                    <TextView
+                        android:id="@+id/landSize"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="1.5 Ha"
+                        android:textSize="@dimen/text_size_normal"
+
+
+                        />
+
+
+
+
+
+
+
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/spacing_normal"
+                    android:paddingRight="@dimen/spacing_normal"
+                    android:paddingTop="@dimen/spacing_half"
+                    android:paddingBottom="@dimen/spacing_half"                     >
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/estimated_production_size"
+                        android:layout_marginRight="@dimen/spacing_quarter"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="@dimen/text_size_normal"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/estimatedProductionSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10000kg"
+                        android:textSize="@dimen/text_size_normal"
+                        />
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/spacing_normal"
+                    android:paddingRight="@dimen/spacing_normal"
+                    android:paddingTop="@dimen/spacing_half"
+                    android:layout_marginBottom="@dimen/spacing_normal"
+                    android:gravity="center_vertical"
+                    >
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recommended_intervention"
+                        android:layout_marginRight="@dimen/spacing_quarter"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="@dimen/text_size_normal"
+
+                        />
+
+
+                    <ProgressBar
+                        android:id="@+id/recommendationProgress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        android:layout_marginLeft="@dimen/spacing_half"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:visibility="gone"
+                         />
+
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="horizontal"
+                        >
+
+
+                        <TextView
+                            android:id="@+id/recommended_intervention"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:textSize="@dimen/text_size_normal"
+                            android:textColor="?attr/colorAccent"
+                            />
+
+
+
+
+                    </HorizontalScrollView>
+
+
+
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                        android:id="@+id/ll3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         android:gravity="center_vertical"
+                         android:orientation="horizontal"
+                        android:paddingLeft="@dimen/spacing_half"
+                    android:visibility="gone"
+                        android:paddingRight="@dimen/spacing_half"
+                        android:layout_marginBottom="@dimen/spacing_normal"
+                        >
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="@dimen/spacing_half"
+                        >
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Soil pH: "
+                            android:textColor="@android:color/primary_text_light"
+                            android:textSize="@dimen/text_size_normal"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/ph"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4"
+                            android:textStyle="bold"
+                            android:textColor="@color/cpb_red"
+                            android:textSize="@dimen/text_size_normal"
+                            />
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="@dimen/spacing_half"
+                        >
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lime needed: "
+                            android:textColor="@android:color/primary_text_light"
+                            android:textSize="@dimen/text_size_normal"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/lime_needed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="@dimen/text_size_normal"
+                            />
+
+
+
+                    </LinearLayout>
+
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:id="@+id/ll4"
+                        android:layout_toRightOf="@+id/ll3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_widthPercent="80%"
+                        android:orientation="vertical"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/spacing_normal"
+
+                        >
+
+
+
+
+
+                    </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_below="@id/content"
+        android:layout_above="@+id/conditionsLayout"
+        android:layout_marginTop="@dimen/spacing_half"
+         >
+
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical"
+
+            >
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
+                <LinearLayout
+                    android:id="@+id/aosLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_normal"
+                    android:background="@drawable/border_background_white"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/aosLayout"
+                    android:padding="@dimen/spacing_normal"
+                    >
+
+
+                <include layout="@layout/monitoring_form_section"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+
+
+
+
+        </ScrollView>
+    </LinearLayout>
+
+
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_half"
+        android:layout_marginBottom="@dimen/spacing_half"
+        android:layout_above="@+id/bottom_buttons"
+        android:id="@+id/conditionsLayout"
+        android:visibility="gone"
+
+        >
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        >
+
+
+
+        <TextView
+             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adoption Observations Results"
+            android:padding="@dimen/spacing_normal"
+            android:textAllCaps="true"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_size_tiny"
+            android:textStyle="bold"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_half"
+            >
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Good: "
+                android:textColor="@color/green_indicator"
+                android:textStyle="bold"
+
+
+                />
+
+            <TextView
+                android:id="@+id/good"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="wrap_content"
+                android:text="Genetics of plant Material, GAP's ESM"
+                 android:textColor="@android:color/primary_text_light"
+                />
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            >
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Bad: "
+                android:textColor="@color/cpb_red"
+                android:textStyle="bold"
+
+
+                />
+
+            <TextView
+                android:id="@+id/bad"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="wrap_content"
+                android:text="Farm Condition"
+                 android:textColor="@android:color/primary_text_light"
+                />
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom_buttons"
+        android:padding="@dimen/spacing_normal"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        >
+
+
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:theme="@style/PrimaryButtonGrey"
+            android:text="@string/back"
+            android:padding="@dimen/spacing_normal"
+            />
+
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:padding="@dimen/spacing_normal"
+            android:layout_marginLeft="@dimen/spacing_normal"
+
+            />
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

@@ -1,0 +1,374 @@
+<resources>
+    <string name="app_name">FDP</string>
+    <string name="farm_development_plan">Farm Development Plan</string>
+    <string name="navigation_drawer_open">Buka navigasi</string>
+    <string name="navigation_drawer_close">Tutup navigasi</string>
+    <string name="action_settings">Pengaturan</string>
+    <string name="email">E-mail</string>
+    <string name="password">Kata sandi</string>
+    <string name="start_by_swiping_left">Mulai dengan menggesek ke kiri.</string>
+    <string name="loading">Pemuatan&#8230;</string>
+    <string name="full_name_error">Harap masukkan nama lengkap</string>
+    <string name="account_type">org.grameen.fdp.login</string>
+    <string name="app_package">org.grameen.fdp</string>
+    <string name="welcome">Selamat datang %s</string>
+    <string name="logout_button">Keluar</string>
+    <string name="fetch_contacts_button">Ambil Kontak</string>
+    <string name="fetch_accounts_button">Ambil Akun</string>
+    <string name="clear_button">Bersih</string>
+    <string name="edit_farmer_details">Edit Detail Petani</string>
+    <string name="add_farmer_details">Tambahkan Detail Petani</string>
+    <string name="save_data">Simpan data</string>
+    <string name="save_data_explanation">Apakah Anda ingin menyimpan data Anda saat ini sebelum keluar?</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="ok">Baik</string>
+    <string name="retry">Mencoba kembali</string>
+    <string name="new_farmer_added">Petani Baru ditambahkan!</string>
+    <string name="new_farmer_not_added">Tidak dapat menambahkan info petani. Silakan coba lagi.</string>
+    <string name="farmer_updated">Data petani berhasil diperbarui!</string>
+    <string name="could_not_save">Tidak bisa menyelamatkan petani</string>
+    <string name="try_again_suffix">. Silakan coba lagi</string>
+    <string name="permission_required">Diperlukan izin</string>
+    <string name="camera_permission_rationale">Harap berikan izin kamera untuk dapat mengambil gambar</string>
+    <string name="enter_valid_plot_name">Harap masukkan nama plot yang valid</string>
+    <string name="edit_plot">Edit detail plot</string>
+    <string name="add_new_plot">Tambahkan plot baru</string>
+    <string name="provide_plot_name">Harap berikan nama alurnya</string>
+    <string name="new_plot_added">Plot baru ditambahkan</string>
+    <string name="data_saved">Data disimpan</string>
+    <string name="data_not_saved">Tidak dapat menyimpan data!</string>
+
+    <string name="could_not_add_plot">Tidak dapat menambahkan info plot. Silakan coba lagi</string>
+    <string name="new_data_updated">Data baru diperbarui</string>
+    <string name="add_plot_monitoring">Tambahkan pemindaian plot baru</string>
+    <string name="edit_plot_monitoring">Edit pemindaian plot</string>
+    <string name="error_total_plot_estimated_production">Total Petak diperkirakan produksi lebih dari total produksi pertanian!</string>
+    <string name="error_invalid_units">Unit tidak valid disediakan untuk ukuran produksi petak!</string>
+    <string name="error_missing_estimated_production">Produksi Total Produksi Pertanian atau Plot tidak disediakan!</string>
+    <string name="year">Tahun</string>
+    <string name="jan">Jan</string>
+    <string name="feb">Februari</string>
+    <string name="mar">Mar</string>
+    <string name="apr">April</string>
+    <string name="may">Mei</string>
+    <string name="jun">Juni</string>
+    <string name="jul">Juli</string>
+    <string name="aug">Agustus</string>
+    <string name="sep">September</string>
+    <string name="oct">Oktober</string>
+    <string name="nov">November</string>
+    <string name="dec">Desember</string>
+    <string name="activities">Kegiatan</string>
+    <string name="supplies">Biaya Perlengkapan</string>
+    <string name="labour">Biaya Tenaga Kerja</string>
+    <string name="family_members">Anggota keluarga</string>
+    <string name="farmer_details">Detail Petani</string>
+    <string name="error_getting_farmer_info">Terjadi kesalahan saat mencoba mengambil info petani</string>
+    <string name="fill_data">Masukkan data</string>
+    <string name="enter_data_rationale">Harap masukkan jumlah anggota keluarga dalam formulir Profil Petani untuk </string>
+    <string name="before_proceed_suffux"> sebelum melanjutkan.</string>
+    <string name="no_access_to_pl">Tidak ada akses ke P &amp; L</string>
+    <string name="and"> dan </string>
+    <string name="enter_all_ao_data">Masukkan semua nilai Pengamatan Adopsi dan Info Plot untuk </string>
+    <string name="missing_data">Data tidak ada</string>
+    <string name="no_plots">Tidak Ada Plot yang Ditambahkan!</string>
+    <string name="add_plot_to_access_pl">Silakan tambahkan plot untuk mengakses P &amp; L.</string>
+    <string name="farm_result">Hasil Peternakan</string>
+    <string name="incomplete_ao_monitoring">Monitoring AO yang tidak lengkap</string>
+    <string name="different_no_monitoring">Beragam pemantauan untuk plot</string>
+    <string name="ensure_farm_acre_equal">Pastikan total luas lahan pertanian sama dengan total areal semua plot!</string>
+    <string name="fill_in_plot_size_values">Harap isi nilai untuk ukuran lahan dan semua ukuran petak!</string>
+    <string name="monitoring_for_year">Pemantauan untuk Tahun</string>
+    <string name="for_"> untuk </string>
+    <string name="incorrect_no_plots_suffix">petak tidak sama. \\ nSilahkan pastikan semua plot memiliki jumlah pemantauan yang sama!</string>
+    <string name="farmer">Petani </string>
+    <string name="no_monitoring_added"> tidak ada pemantauan yang ditambahkan untuk Tahun </string>
+    <string name="please_add_monitoring_suffix">! \\ nSilakan tambahkan setidaknya 1 pemantauan untuk setiap plot sebelum melanjutkan.</string>
+    <string name="no_plots_added_suffix">tidak ada plot yang ditambahkan! Harap tambahkan setidaknya 1 petak sebelum melanjutkan</string>
+    <string name="incomplete_monitoring_prefix">Beberapa plot memiliki hasil Pemantauan AO yang tidak lengkap untuk Tahun</string>
+    <string name="incomplete_monitoring_suffix">. Harap pastikan semua pemindaian plot selesai untuk tahun yang ditentukan</string>
+    <string name="back">Kembali</string>
+    <string name="provide_all_permissions">Berikan Izin</string>
+    <string name="provide_all_permissions_rationale">Semua izin diperlukan agar FDP berfungsi dengan benar</string>
+    <string name="quit">Berhenti</string>
+    <string name="select_country_region">Silakan Pilih Negara / Daerah</string>
+    <string name="hey_there">Hi, di sana!</string>
+    <string name="sync">Sinkronisasi</string>
+    <string name="sync_anyway">Sinkronkan saja</string>
+    <string name="first_sign_in_rationale">Sepertinya ini adalah proses masuk pertama Anda. \"Karena Anda memiliki koneksi internet, sebaiknya Anda menyinkronkan data dari server.</string>
+    <string name="incomplete_ao_rational">Harap lengkapi Pengamatan Adopsi Diagnostik untuk Plot </string>
+
+    <string name="plot_info">Info Plot</string>
+
+    <string name="getting_data">Mendapatkan data</string>
+    <string name="sending_data">Mengunggah rekaman</string>
+
+
+    <string name="please_wait">Silakan tunggu beberapa saat…</string>
+    <string name="network_error">Tidak ada internet!</string>
+    <string name="network_error_rational">Anda tidak memiliki akses internet! Harap sambungkan ke jaringan dan coba lagi.</string>
+
+    <string name="connection_error">Sebuah kesalahan telah terjadi. Silakan coba lagi :(</string>
+    <string name="update_questions_data">Memperbarui data pertanyaan</string>
+    <string name="could_not_connect">Tidak dapat tersambung</string>
+    <string name="could_not_connect_rationale">Mungkin ada masalah dengan koneksi Anda. Silakan periksa dan coba lagi.!</string>
+    <string name="all_resources_downloaded">Semua sumber daya berhasil diunduh!</string>
+    <string name="all_data_downloaded">Semua data berhasil diunduh!</string>
+
+    <string name="download_all_farmer_data">Apakah Anda ingin mengunduh data petani?</string>
+    <string name="download_farmer_data">Unduh data petani</string>
+
+
+    <string name="download_complete">Pengunduhan data selesai</string>
+    <string name="getting_skip_logic">Mendapatkan data Skip Logic</string>
+    <string name="getting_recommendations">Mendapatkan data Rekomendasi</string>
+    <string name="getting_more">Mendapatkan lebih banyak data</string>
+    <string name="getting_even_more">Mendapatkan lebih banyak data</string>
+    <string name="getting_final_data">Dapatkan bit terakhir dari data lain</string>
+    <string name="getting_logic">Memperoleh data Logika</string>
+    <string name="getting_cc">Menyinkronkan semua data perhitungan yang rumit</string>
+    <string name="getting_c">Menyinkronkan semua data Perhitungan</string>
+
+
+    <string-array name="months">
+        <item name="1">Januari</item>
+        <item name="2">Februari</item>
+        <item name="3">Maret</item>
+
+        <item name="4">April</item>
+        <item name="5">Mungkin</item>
+        <item name="6">Juni</item>
+
+        <item name="7">Juli</item>
+        <item name="8">Agustus</item>
+        <item name="9">September</item>
+
+        <item name="10">Oktober</item>
+        <item name="11">November</item>
+        <item name="12">Desember</item>
+
+    </string-array>
+
+
+    <string-array name="educationLevel">
+        <item name="1">Utama</item>
+        <item name="2">Secondary</item>
+        <item name="3">Tersier</item>
+
+    </string-array>
+
+
+    <string-array name="gender">
+        <item name="1">Pria</item>
+        <item name="2">Wanita</item>
+        <item name="3">Lain</item>
+    </string-array>
+
+
+    <string-array name="answer">
+        <item name="1">Yes</item>
+        <item name="2">No</item>
+    </string-array>
+
+
+    <string name="phone_hint">Nomor Telepon</string>
+    <string name="submit">Kirim Perjanjian</string>
+    <string name="invalid_phone_number">Silahkan masukkan nomor telepon yang benar.</string>
+    <string name="valid_phone_number">Nomor telepon yang valid!</string>
+
+    <!--    Permissions    -->
+    <string name="permission_rationale_location">Akses ke layanan lokasi diperlukan untuk menunjukkan fitur \'lokasi saya\', yang menunjukkan lokasi Anda saat ini di peta.</string>
+    <string name="location_permission_denied">Sampel ini memerlukan izin lokasi untuk mengaktifkan lapisan \'lokasi saya\'. Harap coba lagi dan berikan akses untuk menggunakan lokasi. \ NJika izin telah ditolak secara permanen, itu dapat diaktifkan dari Pengaturan Sistem&gt; Aplikasi&gt; \'Demo Google Maps API\'.</string>
+    <string name="permission_required_toast">Izin lokasi diperlukan untuk demo ini.</string>
+
+
+    <string name="title_activity_maps">Peta</string>
+    <string name="sign_in_with_email">Masuk dengan Email</string>
+    <string name="sign_up_with_email">Mendaftar dengan Email</string>
+    <string name="sign_in_with_account">Masuk dengan Akun</string>
+    <string name="google_sign_in">Google Masuk</string>
+    <string name="sign_in">Masuk</string>
+    <string name="sign_up">Daftar</string>
+    <string name="name">Nama</string>
+    <string name="phone">Nomor Telepon</string>
+    <string name="dob">Pilih Tanggal Lahir</string>
+    <string name="select_picture">Pilih gambar profil</string>
+    <string name="next">NEXT</string>
+    <string name="games">Arcade</string>
+    <string name="settings">Settings</string>
+    <string name="login">Masuk</string>
+    <string name="home">Rumah</string>
+    <string name="dont_have_account_text">Tidak punya akun?</string>
+    <string name="have_account_text">Memili akun?</string>
+    <string name="log_in_facebook">Masuk dengan Facebook</string>
+    <string name="sign_up_with_google">Mendaftar dengan Google</string>
+    <string name="open">Buka</string>
+    <string name="close">Tutup</string>
+    <string name="title">Tutup</string>
+    <string name="generic_error">Tidak dapat menyimpan data!</string>
+    <string name="pandl">Tinjau halaman dan P &amp; L</string>
+
+
+    //Ignore
+    <string-array name="years">
+        <item name="1">2017</item>
+        <item name="2">2018</item>
+        <item name="3">2019</item>
+
+        <item name="4">2020</item>
+        <item name="5">2021</item>
+        <item name="6">2022</item>
+
+        <item name="7">2023</item>
+        <item name="8">2024</item>
+        <item name="9">2025</item>
+
+        <item name="10">2026</item>
+        <item name="11">2027</item>
+        <item name="12">2028</item>
+
+        <item name="13">2029</item>
+        <item name="14">2030</item>
+        <item name="15">2031</item>
+    </string-array>
+
+
+    <string name="year_1">Tahun 1</string>
+    <string name="year_2">Tahun 2</string>
+    <string name="year_3">Tahun 3</string>
+
+    <string name="year_4">Tahun 4</string>
+    <string name="year_5">Tahun 5</string>
+    <string name="year_6">Tahun 6</string>
+
+    <string name="year_7">Tahun 7</string>
+
+
+    <string-array name="seven_years">
+        <item name="1"> </item>
+        <item name="2">Tahun 0</item>
+
+        <item name="3">Tahun 1</item>
+        <item name="4">Tahun 2</item>
+        <item name="5">Tahun 3</item>
+        <item name="6">Tahun 4</item>
+        <item name="7">Tahun 5</item>
+        <item name="8">Tahun 6</item>
+        <item name="9">Tahun 7</item>
+    </string-array>
+
+
+    <string name="all_data_synced">Semua data berhasil disinkronkan!</string>
+    <string name="sync_complete">Sinkronisasi Selesai</string>
+    <string name="sync_in_complete">Sinkronisasi Tidak Lengkap</string>
+    <string name="no_farmers">Tidak ada data petani baru untuk disinkronkan</string>
+    <string name="no_new_data">Tidak ada data baru</string>
+    <string name="no_old_data">Tidak ada data untuk diunduh</string>
+    <string name="no_data">Tidak ada data</string>
+    <string name="calc_area">klik untuk menghitung area plot</string>
+    <string name="title_area_calc">Perhitungan Area GPS</string>
+    <string name="no_points">Belum ada Poin yang ditambahkan</string>
+    <string name="add_3_more_points">Untuk menghitung luas, tambahkan 3 poin atau lebih.</string>
+    <string name="delete">Menghapus foto</string>
+    <string name="delete_photo_rationale">Anda yakin ingin menghapus foto?</string>
+    <string name="click_photo_to_delete">Anda dapat mengklik pada foto untuk menghapus menghapus</string>
+    <string name="no_image_taken">Tidak ada foto yang dipilih.</string>
+    <string name="something_went_wrong">Ada yang salah </string>
+    <string name="image_options">Silakan pilih satu opsi</string>
+    <string name="view">Lihat</string>
+    <string name="save">Simpan</string>
+    <string name="save_and_continue">Simpan dan Lanjutkan</string>
+    <string name="cancel">Batal</string>
+    <string name="take_picture">Mengambil gambar</string>
+    <string name="hello">- Halo! Selamat datang!</string>
+    <string name="change_to">Mengubah</string>
+    <string name="status_submitted">Perjanjian Disampaikan!</string>
+    <string name="status_incomplete">Anda masih bisa melakukan pengeditan</string>
+    <string name="caution">Perhatian!</string>
+    <string name="read_only_rational">Setelah dikirimkan dan disinkronkan, Anda tidak dapat melakukan modifikasi lagi.\nLanjutkan?</string>
+    <string name="agreement_submitted_and_data_synced">Perjanjian dikirimkan dan data berhasil disinkronkan!</string>
+
+    <string name="plot_aos">Pengamatan Adopsi Plot </string>
+    <string name="plot_ao">Pengamatan Adopsi Petak </string>
+    <string name="add_plot">Tambahkan plot baru</string>
+
+    <string name="farm_assessment">Penilaian Peternakan</string>
+    <string name="last_visit">Kunjungan terakhir: </string>
+    <string name="last_sync">Sinkronisasi Terakhir </string>
+
+    <string name="sync_farmer">Sinkronkan Petani</string>
+
+    <string name="no_plots_added">Tidak ada plot yang ditambahkan.</string>
+    <string name="no_plots_added_rationale">Klik tombol di bawah ini untuk menambahkan plot baru.</string>
+
+    <string name="est_production_size">Perkiraan Ukuran Produksi</string>
+    <string name="plot_name">Nama Bidang</string>
+    <string name="soil_ph">Soil ph</string>
+
+    <string name="farmer_name">Nama Petani:</string>
+    <string name="farmer_code">Kode Petani:</string>
+    <string name="hire_labour">Apakah petani mempekerjakan tenaga kerja?</string>
+    <string name="hire_labour_type">Tipe tenaga kerja</string>
+    <string name="monitoring_ao">Memantau Pengamatan Adopsi</string>
+    <string name="ao">AO</string>
+    <string name="farmer_competence">Kompetensi Petani</string>
+    <string name="reason_for_failure">Alasan Kegagalan</string>
+
+    <string name="log_out">Keluar</string>
+
+    <string name="info_plot_monitoring">Info Plot Monitoring</string>
+    <string name="add_new_monitoring">Tambahkan pemantauan baru</string>
+
+    <string name="edit">Edit</string>
+    <string name="diagnostic">Diagnostik</string>
+    <string name="plot_assessment">Penilaian Plot</string>
+    <string name="date">Tanggal</string>
+
+    <string name="data_already_synced">data telah disinkronkan!</string>
+    <string name="apostrophe_s">% s </string>
+    <string name="currency">Mata uang</string>
+    <string name="fdp_status">Status FDP</string>
+
+    <string name="no_internet_connection_available">Tidak ada koneksi internet.</string>
+    <string name="you_can_still_make_edits">Anda masih dapat melakukan pengeditan </string>
+    <string name="data_before_sync">data sebelum menyinkronkan.</string>
+    <string name="fdp_status_incomplete">Status FDP tidak lengkap</string>
+    <string name="fill_out_fdp_status">Silakan isi Formulir Status FDP untuk </string>
+    <string name="go_to_fdp_status_form">Pergi ke formulir status FDP</string>
+    <string name="no_more_mods">Anda tidak dapat melakukan modifikasi lagi </string>
+    <string name="data">Data</string>
+    <string name="populating_data">Mengisi Data</string>
+    <string name="total_maintenance_cost">Total Biaya Pemeliharaan</string>
+    <string name="total_labour_days">Total Hari Kerja</string>
+    <string name="total_labour_cost">Total Biaya Tenaga Kerja</string>
+    <string name="planned_investment">Investasi yang direncanakan</string>
+    <string name="updating_table_data">Memperbarui data tabel!</string>
+
+
+    <string name="recommended_intervention">Intervensi yang Disarankan:</string>
+    <string name="fill_out_ao_data">Harap isi semua data Pengamatan Adopsi!</string>
+    <string name="add_farmer">Tambahkan petani</string>
+
+    <string name="add_farmer_rational">Tambahkan data petani baru dengan mengklik tombol hijau di bawah ini</string>
+
+
+    <string name="monitoring">Pemantauan</string>
+
+    <string name="fdp">Rencana Pengembangan Pertanian</string>
+    <string name="download_resources">Unduh Sumber Daya</string>
+    <string name="upload_farmer_data">Unggah data petani</string>
+    <string name="share">Bagikan</string>
+    <string name="toggle_translation">Alihkan terjemahan</string>
+    <string name="estimated_production_size">Perkiraan ukuran produksi:</string>
+    <string name="lime_needed">Kapur dibutuhkan:</string>
+    <string name="log_out_rational">THis will delete all data and sign you out. Proceed?</string>
+    <string name="no_farmer_data_rational">You have no farmer data!</string>
+    <string name="delete_farmer">Delete farmer?</string>
+    <string name="delete_farmer_rational">Do you want to delete data for</string>
+    <string name="farmer_data_deleted_message">data deleted!</string>
+    <string name="validation_error_title">Invalid Input</string>
+    <string name="required_field_error_msg">%s is a required field</string>
+    <string name="take_image">Take a photo</string>
+
+</resources>

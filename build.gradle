@@ -1,0 +1,81 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.4'
+
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+
+ext {
+    // Sdk and tools
+    // Support library and architecture components support minSdk 14 and above.
+    minSdkVersion = 21
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.0-rc02'
+
+    mapsVersion = '10.2.0'
+
+
+    // App dependencies
+    supportLibraryVersion = '28.0.0-rc02'
+    guavaVersion = '18.0'
+    roomVersion = "1.1.1"
+
+    junitVersion = '4.12'
+    runnerVersion = '1.0.2'
+    espressoVersion = '3.0.2'
+    roomVersion = "1.1.1"
+    gsonVersion = "2.8.5"
+    playServicesVersion = "15.0.0"
+    firebaseVersion = "15.0.0"
+    volleyVersion = "1.1.1"
+
+    rhinoVersion = "1.0"
+
+    calligraphyVersion = '2.2.0'
+    glideVersion = '3.7.0'
+
+    rx2FastAndroidNetworking = '1.0.1'
+
+    dagger2Version = '2.11'
+    rxjava2Version = '2.0.6'
+    rxandroidVersion = '2.0.1'
+    butterKnifeVersion = '8.6.0'
+    greenDaoVersion = '3.2.0'
+    placeholderviewVersion = '0.6.1'
+    debugDBVersion = '1.0.3'
+    timberVersion = '4.7.1'
+    materialSearchViewVersion = '1.0'
+
+    smartTabVersion = '1.6.1@aar'
+
+    //Test dependencies
+     mockitoVersion = '2.7.1'
+
+
+
+}

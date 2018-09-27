@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#1976D2</color>
+-->
+
+    <color name="colorPrimary">#1b8f63</color>
+    <color name="colorPrimaryDark">#1b7653</color>
+
+    <!--<color name="colorPrimary">#0eb065</color>
+     <color name="colorPrimaryDark">#0b9957</color>
+     -->
+
+    <color name="colorAccent">#4CAF50</color>
+
+
+    <color name="colorPrimaryMonitoring">#73a93f</color>
+    <color name="colorPrimaryDarkMonitoring">#69a134</color>
+    <color name="colorAccentMonitoring">#8bc34a</color>
+
+    <color name="colorAccent50Alpha">#8f4caf50</color>
+
+
+    <color name="background_1">#0b68c4</color>
+    <color name="background_2">#247ad1</color>
+    <color name="background_3">#5C6BC0</color>
+
+
+    //Light Colors
+
+    <color name="fabStatePressed">#732031</color>
+    <color name="textColorPrimaryLight">#000</color>
+    <color name="textColorSecondaryLight">#363636</color>
+    <color name="textColorTertiaryLight">#787878</color>
+    <color name="fab_label_background_color_light">#d1d1d1</color>
+
+
+    //Inverted colors
+    <!--<color name="colorPrimaryInverted">#24272b</color>
+    <color name="colorPrimaryDarkInverted">#24272b</color>-->
+    <color name="colorPrimaryInverted">@color/background_1</color>
+    <color name="colorPrimaryDarkInverted">@color/background_1</color>
+    <color name="textColorPrimaryLightInverted">#fff</color>
+    <color name="textColorSecondaryLightInverted">#bebebe</color>
+    <color name="textColorTertiaryLightInverted">#808080</color>
+    <color name="fab_label_background_color_dark">#4e4e4e</color>
+
+
+    //Others
+
+    <color name="grey">#d9d9d9</color>
+    <color name="divider_2">#afafaf</color>
+    <color name="translucent">#cc000000</color>
+    <color name="steel">#778da9</color>
+    <color name="composite">#13917a</color>
+    <color name="cpb_red">#ea2f35</color>
+    <color name="editText_base_color">#707070</color>
+    <color name="editText_primaryColor">#27b780</color>
+    <color name="editText_error_color">#cf4149</color>
+    <color name="text_color_grey">#555b55</color>
+    <color name="gradient_color_2">#A43141</color>
+    <color name="gradient_color_1">#73314A</color>
+    <color name="gradient_color_3">#94314A</color>
+    <color name="bottom_sheet_light">#ebeef0</color>
+    <color name="bottom_sheet_dark">#2e2e2e</color>
+
+    <color name="fail">#e65252</color>
+    <color name="pass">#52e668</color>
+    <color name="non_critical_fail">#fcdc7e</color>
+
+
+    <color name="colorAccentLighter">@color/background_1</color>
+    <color name="colorAccentDark">#060606</color>
+    <color name="statusComplete">@color/colorAccentLighter</color>
+    <color name="statusNormal">@color/divider</color>
+    <color name="statusPending">@color/fab_color</color>
+    <color name="statusCaution">#ea3838</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_50">#c8ffffff</color>
+    <color name="tab_text_selected">@color/colorAccent</color>
+    <color name="fab_pressed">#00E676</color>
+    <color name="fab_color">@color/colorAccent</color>
+    <color name="fab_mini_buttons">#898989</color>
+    <color name="tab_text">#c2ededed</color>
+    <color name="text_color">#ffffff</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="login_tab_text">#ff313131</color>
+    <color name="login_screen_statusbar_color">@color/colorPrimaryDark</color>
+    <color name="edittext_error_color">#cf4149</color>
+    <color name="yellow_bar_disabled">#9f9f9f</color>
+    <color name="material_icon_colors">#9E9E9E</color>
+    <color name="divider">#dad9d9d9</color>
+    <color name="background_card">#fff</color>
+    <color name="background_snackbar">#323232</color>
+    <color name="text_black_87">#d0000000</color>
+    <color name="black">#000000</color>
+
+    <color name="text_white_87">#deFFFFFF</color>
+    <color name="text_white_75">#87ececec</color>
+    <color name="drawable_grey">#555b55</color>
+    <color name="black_50">#555b55</color>
+
+    <color name="viewBg">#f1f5f8</color>
+    <color name="customButtonNormal">#00ececec</color>
+    <color name="customButtonPressed">#5acacaca</color>
+    <color name="customButtonFocused">#3ea1a1a1</color>
+    <color name="actionbar_opacity">#00000000</color>
+    <color name="color_slide_intro">#fdfdfd</color>
+    <color name="color_dark_slide_intro">#ebeef0</color>
+
+    <color name="background">#fafafa</color>
+
+
+    <color name="green_indicator">#9bc53d</color>
+    <color name="orange_indicator">#f4a261</color>
+
+    <color name="red_indicator">@color/cpb_red</color>
+
+
+    <array name="recommendations_colors">
+        <item name="1" type="color">@color/colorAccent</item>
+        <item name="2" type="color">#9288c9</item>
+        <item name="3" type="color">#d76b7b</item>
+        <item name="4" type="color">#3b9aee</item>
+        <item name="5" type="color">#9bc53d</item>
+        <item name="6" type="color">#f4a261</item>
+        <item name="7" type="color">#1ed2bb</item>
+        <item name="8" type="color">#778da9</item>
+        <item name="10" type="color">#9f9fed</item>
+        <item name="13" type="color">#98ecb2</item>
+        <item name="14" type="color">#ef8362</item>
+        <item name="15" type="color">#b97c9c</item>
+        <item name="16" type="color">#ef686d</item>
+        <item name="17" type="color">#5ec9dc</item>
+        <item name="18" type="color">#3eae99</item>
+        <item name="19" type="color">#d29547</item>
+        <item name="20" type="color">#404040</item>
+        <item name="21" type="color">#8263cc</item>
+
+    </array>
+
+
+    <color name="bg_line">#E7E7E7</color>
+    <color name="bg_color">#FF99DCD7</color>
+
+    <color name="cell_background_color">#ffffff</color>
+    <color name="cell_text_color">#1f1f1f</color>
+    <color name="header_line_color">@color/colorAccent</color>
+
+
+    <!-- Material Design TableView Colors -->
+    <color name="md_cell_text_color">#1f1f1f</color>
+    <color name="md_column_header_text_color">#696969</color>
+    <color name="md_highlight_row_background_color">#EEEEEE</color>
+    <color name="md_selected_background_color">#F5F5F5</color>
+    <color name="md_cell_line_color">#dbdbdb</color>
+
+    <!-- Overriding the default values of the tableView -->
+    <!-- <color name="cell_line_color">#dbdbdb</color> -->
+    <!-- <color name="table_view_selected_background_color">@color/md_selected_background_color</color> -->
+    <color name="default_background_color">@color/cell_background_color</color>
+
+    <color name="black_overlay">#66000000</color>
+
+
+</resources>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/colorPrimary"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_background_white"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_margin="@dimen/spacing_normal"
+            android:onClick="showSearchDialog"
+
+            >
+
+            <ImageView
+                android:id="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_half"
+                android:src="@drawable/ic_menu_black_24dp"
+                android:tint="@color/black_50"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="toggleDrawer"
+                />
+
+
+            <TextView
+                android:layout_toRightOf="@+id/menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/app_name"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:textStyle="bold"
+                />
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_half"
+                android:src="@drawable/ic_search_white_24dp"
+                android:layout_alignParentRight="true"
+                android:tint="@color/black_50"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="showSearchDialog"
+
+                />
+
+        </RelativeLayout>
+
+
+
+
+
+
+    <com.ogaclejapan.smarttablayout.SmartTabLayout
+        android:id="@+id/viewpagertab"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:stl_indicatorAlwaysInCenter="true"
+        app:stl_indicatorInterpolation="smart"
+        app:stl_indicatorThickness="30dp"
+        app:stl_indicatorGravity="center"
+        app:stl_indicatorColor="#61000000"
+        app:stl_indicatorWidth="auto"
+        app:stl_indicatorCornerRadius="20dp"
+        app:stl_dividerColor="#6AFFFFFF"
+        app:stl_underlineThickness="0dp"
+        app:stl_dividerThickness="0dp"
+        app:stl_defaultTabBackground="?attr/selectableItemBackground"
+        app:stl_defaultTabTextAllCaps="true"
+        app:stl_defaultTabTextColor="@color/white"
+        app:stl_defaultTabTextSize="@dimen/text_size_normal"
+        app:stl_defaultTabTextHorizontalPadding="16dp"
+        app:stl_defaultTabTextMinWidth="0dp"
+        app:stl_distributeEvenly="false"
+        app:stl_clickable="true"
+        app:stl_drawDecorationAfterTab="false"
+        />
+
+
+
+
+</LinearLayout>
+
+
+
+
+
+
+

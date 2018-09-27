@@ -1,0 +1,388 @@
+<resources>
+    <string name="app_name">FDP</string>
+    <string name="farm_development_plan">Farm Development Plan</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="start_by_swiping_left">Start by swiping left.</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="full_name_error">Please enter full name</string>
+    <string name="account_type">org.grameen.fdp.login</string>
+    <string name="app_package">org.grameen.fdp</string>
+    <string name="welcome">Welcome %s</string>
+    <string name="logout_button">Logout</string>
+    <string name="fetch_contacts_button">Fetch Contacts</string>
+    <string name="fetch_accounts_button">Fetch Accounts</string>
+    <string name="clear_button">Clear</string>
+    <string name="edit_farmer_details">Edit Farmer Details</string>
+    <string name="add_farmer_details">Add Farmer Details</string>
+    <string name="save_data">Save data</string>
+    <string name="save_data_explanation">Do you want to save your current data before exit?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="retry">Retry</string>
+    <string name="new_farmer_added">New Farmer added!</string>
+    <string name="new_farmer_not_added">Could not add farmer info. Please try again.</string>
+    <string name="farmer_updated">Farmer data updated successfully!</string>
+    <string name="could_not_save">Could not save farmer</string>
+    <string name="try_again_suffix">. Please try again</string>
+    <string name="permission_required">Permission required</string>
+    <string name="camera_permission_rationale">Please provide camera permission to be able to take pictures</string>
+    <string name="enter_valid_plot_name">Please enter a valid plot name</string>
+    <string name="edit_plot">Edit plot details</string>
+    <string name="add_new_plot">Add a new plot</string>
+    <string name="provide_plot_name">Please provide the plot name</string>
+    <string name="new_plot_added">New plot added</string>
+    <string name="data_saved">Data saved</string>
+    <string name="data_not_saved">Could not save data!</string>
+    <string name="generic_error">Could not save data!</string>
+
+
+    <string name="could_not_add_plot">Could not add plot info. Please try again</string>
+    <string name="new_data_updated">New data updated</string>
+    <string name="add_plot_monitoring">Add new plot monitoring</string>
+    <string name="edit_plot_monitoring">Edit plot monitoring</string>
+    <string name="error_total_plot_estimated_production">Total Plots estimated production is more than total farm production!</string>
+    <string name="error_invalid_units">Invalid units provided for plot production sizes!</string>
+    <string name="error_missing_estimated_production">Total Farm Production or Plot production was not provided!</string>
+    <string name="year">Year</string>
+    <string name="jan">Jan</string>
+    <string name="feb">Feb</string>
+    <string name="mar">Mar</string>
+    <string name="apr">Apr</string>
+    <string name="may">May</string>
+    <string name="jun">Jun</string>
+    <string name="jul">Jul</string>
+    <string name="aug">Aug</string>
+    <string name="sep">Sep</string>
+    <string name="oct">Oct</string>
+    <string name="nov">Nov</string>
+    <string name="dec">Dec</string>
+    <string name="activities">Activities</string>
+    <string name="supplies">Supplies Cost</string>
+    <string name="labour">Labour Cost</string>
+    <string name="family_members">Family Members</string>
+    <string name="farmer_details">Farmer Details</string>
+    <string name="error_getting_farmer_info">There was an error attempting to retrieve farmer info</string>
+    <string name="fill_data">Enter data</string>
+    <string name="enter_data_rationale">"Please enter number of family members in Farmer Profile form for "</string>
+    <string name="before_proceed_suffux"> before proceeding.</string>
+    <string name="no_access_to_pl">No access to P &amp; L</string>
+    <string name="and"> and </string>
+    <string name="enter_all_ao_data">Please enter all Adoption Observation and Plot Info values for </string>
+    <string name="missing_data">Missing data</string>
+    <string name="no_plots">No Plots Added!</string>
+    <string name="add_plot_to_access_pl">Please add a plot to access P &amp; L.</string>
+    <string name="farm_result">Farm Result</string>
+    <string name="incomplete_ao_monitoring">Incomplete AO monitoring</string>
+    <string name="different_no_monitoring">Different number of monitoring for plots</string>
+    <string name="ensure_farm_acre_equal">Please ensure that total farm acreage is equal to total acreage of all plots!</string>
+    <string name="fill_in_plot_size_values">Please fill in values for farm size and all plot sizes!</string>
+    <string name="monitoring_for_year">Monitoring for Year</string>
+    <string name="for_"> for </string>
+    <string name="incorrect_no_plots_suffix">\'s plots are not equal.\\nPlease make sure all plots have the same number of monitoring!</string>
+    <string name="farmer">Farmer </string>
+    <string name="no_monitoring_added"> has no monitoring added for Year </string>
+    <string name="please_add_monitoring_suffix">!\\nPlease add at least 1 monitoring for each plot before proceeding.</string>
+    <string name="no_plots_added_suffix">has no plots added! Please add at least 1 plot before proceeding</string>
+    <string name="incomplete_monitoring_prefix">Some plots have incomplete AO Monitoring results for Year</string>
+    <string name="incomplete_monitoring_suffix">.
+        Please make sure all plot monitoring are complete for the specified year</string>
+    <string name="back">Back</string>
+    <string name="provide_all_permissions">Provide Permissions</string>
+    <string name="provide_all_permissions_rationale">All permissions are needed for FDP to work properly</string>
+    <string name="quit">Quit</string>
+    <string name="select_country_region">Please Select a Country/Region</string>
+    <string name="hey_there">Hi there!</string>
+    <string name="sync">Sync</string>
+    <string name="sync_anyway">Sync anyway</string>
+    <string name="first_sign_in_rationale">Looks like this is your first sign in.
+        "Since you have internet connection it's recommended you sync data from the server.</string>
+    <string name="incomplete_ao_rational">Please complete Diagnostic Adoption Observation for Plot </string>
+
+    <string name="plot_info">Plot Info</string>
+
+    <string name="getting_data">Getting data</string>
+    <string name="sending_data">Uploading records</string>
+    <string name="please_wait">Please wait a moment…</string>
+    <string name="network_error">No internet!</string>
+    <string name="network_error_rational">You have no internet access! Please connect to a network and try again.</string>
+
+    <string name="connection_error">"An error has occurred. Please try again :("</string>
+    <string name="update_questions_data">Updating questions data</string>
+    <string name="could_not_connect">Could not connect</string>
+    <string name="could_not_connect_rationale">There might be a problem with your connection. Please check and try again.!</string>
+    <string name="all_resources_downloaded">All resources downloaded successfully!</string>
+    <string name="all_data_downloaded">All data downloaded successfully!</string>
+
+    <string name="download_all_farmer_data">Do you want to download farmer data?</string>
+    <string name="download_farmer_data">Download farmer data</string>
+
+
+    <string name="download_complete">Data download Complete</string>
+    <string name="getting_skip_logic">Obtaining Skip Logic data</string>
+    <string name="getting_recommendations">Obtaining Recommendations data</string>
+    <string name="getting_more">Getting more data</string>
+    <string name="getting_even_more">Getting even more data</string>
+    <string name="getting_final_data">Getting the last bit of other data</string>
+    <string name="getting_logic">Obtaining Logic data</string>
+    <string name="getting_cc">Syncing all Complex calculations data</string>
+    <string name="getting_c">Syncing all Calculations data</string>
+
+
+    <string-array name="months">
+        <item name="1">January</item>
+        <item name="2">February</item>
+        <item name="3">March</item>
+
+        <item name="4">April</item>
+        <item name="5">May</item>
+        <item name="6">June</item>
+
+        <item name="7">July</item>
+        <item name="8">August</item>
+        <item name="9">September</item>
+
+        <item name="10">October</item>
+        <item name="11">November</item>
+        <item name="12">December</item>
+
+    </string-array>
+
+
+    <string-array name="educationLevel">
+        <item name="1">Primary</item>
+        <item name="2">Secondary</item>
+        <item name="3">Tertiary</item>
+
+    </string-array>
+
+
+    <string-array name="gender">
+        <item name="1">Male</item>
+        <item name="2">Female</item>
+        <item name="3">Other</item>
+    </string-array>
+
+
+    <string-array name="answer">
+        <item name="1">Yes</item>
+        <item name="2">No</item>
+    </string-array>
+
+
+    <string name="phone_hint">Phone Number</string>
+    <string name="submit">Submit Agreement</string>
+    <string name="invalid_phone_number">Please enter a valid phone number</string>
+    <string name="valid_phone_number">Valid phone numbers!</string>
+
+    <!--    Permissions    -->
+    <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
+    <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
+    <string name="permission_required_toast">Location permission is required for this demo.</string>
+
+
+    <string name="title_activity_maps">Map</string>
+    <string name="sign_in_with_email">Sign In with Email</string>
+    <string name="sign_up_with_email">Sign Up with Email</string>
+    <string name="sign_in_with_account">Sign In with an Account</string>
+    <string name="google_sign_in">Google Sign in</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone number</string>
+    <string name="dob">Select Date of Birth</string>
+    <string name="select_picture">Select a profile picture</string>
+    <string name="next">Next</string>
+    <string name="games">Arcade</string>
+    <string name="settings">Settings</string>
+    <string name="login">Log In</string>
+    <string name="home">Home</string>
+    <string name="dont_have_account_text">Don\'t have an account?</string>
+    <string name="have_account_text">Have an account?</string>
+    <string name="log_in_facebook">Log in with facebook</string>
+    <string name="sign_up_with_google">Sign up with google</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="title">Close</string>
+    <string name="ipsum" translatable="false">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+    <string name="pandl">Review Page and P &amp; L</string>
+
+
+    //Ignore
+    <string-array name="years">
+        <item name="1">2017</item>
+        <item name="2">2018</item>
+        <item name="3">2019</item>
+
+        <item name="4">2020</item>
+        <item name="5">2021</item>
+        <item name="6">2022</item>
+
+        <item name="7">2023</item>
+        <item name="8">2024</item>
+        <item name="9">2025</item>
+
+        <item name="10">2026</item>
+        <item name="11">2027</item>
+        <item name="12">2028</item>
+
+        <item name="13">2029</item>
+        <item name="14">2030</item>
+        <item name="15">2031</item>
+    </string-array>
+
+
+    <string-array name="seven_years">
+        <item name="1"> </item>
+        <item name="2">Year 0</item>
+        <item name="3">Year 1</item>
+        <item name="4">Year 2</item>
+
+        <item name="5">Year 3</item>
+        <item name="6">Year 4</item>
+        <item name="7">Year 5</item>
+
+        <item name="8">Year 6</item>
+        <item name="9">Year 7</item>
+    </string-array>
+
+
+    <string name="year_1">Year 1</string>
+    <string name="year_2">Year 2</string>
+    <string name="year_3">Year 3</string>
+
+    <string name="year_4">Year 4</string>
+    <string name="year_5">Year 5</string>
+    <string name="year_6">Year 6</string>
+
+    <string name="year_7">Year 7</string>
+
+
+    <string name="all_data_synced">All data synced successfully!</string>
+    <string name="sync_complete">Sync Complete</string>
+    <string name="sync_in_complete">Sync Incomplete</string>
+    <string name="no_farmers">No new farmer data to sync</string>
+    <string name="no_new_data">No new data</string>
+    <string name="no_old_data">No data to download</string>
+    <string name="no_data">No data</string>
+    <string name="calc_area">click to calculate plot area</string>
+    <string name="title_area_calc">GPS Area Calculation</string>
+    <string name="no_points">No Points added yet</string>
+    <string name="add_3_more_points">To calculate area, please add 3 or more points.</string>
+    <string name="delete">Delete photo</string>
+    <string name="delete_photo_rationale">Are you sure you want to delete photo?</string>
+    <string name="click_photo_to_delete">You can click on photo to remove/delete</string>
+    <string name="no_image_taken">No photo was selected.</string>
+    <string name="something_went_wrong">Something went wrong :( </string>
+    <string name="image_options">Please select an option</string>
+    <string name="view">View</string>
+    <string name="save">Save</string>
+    <string name="save_and_continue">Save and continue</string>
+    <string name="cancel">Cancel</string>
+    <string name="take_picture">Take picture</string>
+    <string name="hello">Hello, Welcome!</string>
+    <string name="change_to">Change to</string>
+    <string name="status_submitted">Agreement Submitted!</string>
+    <string name="status_incomplete">You can still make edits</string>
+    <string name="caution">Caution!</string>
+    <string name="read_only_rational">Once submitted and synced, you cannot make any more modifications.\n\nProceed?</string>
+    <string name="agreement_submitted_and_data_synced">Agreement submitted and data synced successfully!</string>
+
+    <string name="plot_aos">"Plot Adoption Observations "</string>
+    <string name="plot_ao">"Plot Adoption Observation "</string>
+    <string name="add_plot">Add a new plot</string>
+
+    <string name="farm_assessment">Farm Assessment</string>
+    <string name="last_visit">Last visit: </string>
+    <string name="last_sync">Last sync: </string>
+
+    <string name="sync_farmer">Sync Farmer</string>
+
+    <string name="no_plots_added">No plots added.</string>
+    <string name="no_plots_added_rationale">Click the button below to add a new plot.</string>
+
+    <string name="est_production_size">Estimated Production Size</string>
+    <string name="plot_name">Plot Name</string>
+    <string name="soil_ph">Soil ph</string>
+
+    <string name="farmer_name">Farmer Name:</string>
+    <string name="farmer_code">Farmer Code:</string>
+    <string name="hire_labour">Did the farmer hire labour?</string>
+    <string name="hire_labour_type">Labour type</string>
+    <string name="monitoring_ao">Monitoring Adoption Observations</string>
+    <string name="ao">AO</string>
+    <string name="farmer_competence">Farmer Competence</string>
+    <string name="reason_for_failure">Reason for Failure</string>
+
+    <string name="log_out">Log Out?</string>
+
+    <string name="info_plot_monitoring">Info Plot Monitoring</string>
+    <string name="add_new_monitoring">"Add new monitoring</string>
+
+    <string name="edit">Edit</string>
+    <string name="plot_assessment">"Plot Assessment</string>
+    <string name="date">Date</string>
+
+    <string name="data_already_synced">data has already been synced!</string>
+    <string name="apostrophe_s">\'s </string>
+    <string name="currency">Currency:</string>
+    <string name="fdp_status">FDP status</string>
+    <string name="no_internet_connection_available">No internet connection available.</string>
+
+    <string name="you_can_still_make_edits">You can still make edits to </string>
+    <string name="data_before_sync">data before syncing.</string>
+    <string name="fdp_status_incomplete">FDP Status incomplete</string>
+    <string name="fill_out_fdp_status">"Please fill out FDP status Form for "</string>
+    <string name="go_to_fdp_status_form">Go to FDP status form</string>
+    <string name="no_more_mods">You cannot make any more modifications to </string>
+    <string name="data">data.</string>
+
+    <string name="populating_data">Populating Data</string>
+    <string name="total_maintenance_cost">Total Maintenance Cost</string>
+    <string name="total_labour_days">Total Labour Days</string>
+    <string name="total_labour_cost">Total Labour Cost</string>
+    <string name="planned_investment">Planned Investments</string>
+    <string name="updating_table_data">Updating table data!</string>
+
+    <string name="recommended_intervention">Recommended Intervention:</string>
+
+    <string name="fill_out_ao_data">Please fill out all Adoption Observations data!</string>
+    <string name="add_farmer">Add farmer</string>
+    <string name="add_farmer_rational">Add new farmer data by clicking on the green button below</string>
+
+
+    <string name="monitoring">Monitoring</string>
+    <string name="diagnostic">Diagnostics</string>
+
+    <string name="fdp">Farm Development Plan</string>
+    <string name="download_resources">Download Resources</string>
+    <string name="upload_farmer_data">Upload farmer data</string>
+    <string name="share">Share</string>
+    <string name="toggle_translation">Toggle Translation</string>
+    <string name="estimated_production_size">Estimated production size:</string>
+    <string name="lime_needed">Lime needed:</string>
+    <string name="search_title">Search</string>
+    <string name="action_sign_in_short">Enter email</string>
+
+    <string name="error_invalid_password">Please enter a valid password</string>
+    <string name="error_field_required">Thuis field is required</string>
+    <string name="error_invalid_email">Please enter a valid email</string>
+    <string name="permission_rationale">This permission is required by the app to work properly.</string>
+    <string name="some_error">an_error_occured</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="log_out_rational">THis will delete all data and sign you out. Proceed?</string>
+    <string name="no_farmer_data_rational">You have no farmer data!</string>
+    <string name="delete_farmer">Delete farmer?</string>
+    <string name="delete_farmer_rational">Do you want to delete data for</string>
+    <string name="farmer_data_deleted_message">data deleted!</string>
+    <string name="validation_error_title">Invalid Input</string>
+    <string name="required_field_error_msg">%s is a required field</string>
+    <string name="take_image">Take a photo</string>
+</resources>

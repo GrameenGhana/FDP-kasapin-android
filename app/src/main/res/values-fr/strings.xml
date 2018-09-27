@@ -1,0 +1,376 @@
+<resources>
+    <string name="app_name">FDP</string>
+    <string name="farm_development_plan">Farm Development Plan</string>
+    <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
+    <string name="navigation_drawer_close">Fermez le tiroir de navigation</string>
+    <string name="action_settings">Options</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de Passe</string>
+    <string name="start_by_swiping_left">Commencez par balayer à gauche.</string>
+    <string name="loading">Chargement en cours&#8230;</string>
+    <string name="full_name_error">S\'il vous plaît entrer Nom complet</string>
+    <string name="account_type">org.grameen.fdp.login</string>
+    <string name="app_package">org.grameen.fdp</string>
+    <string name="welcome">Bienvenue %s</string>
+    <string name="logout_button">Déconnecter</string>
+    <string name="fetch_contacts_button">Récupérer des contacts</string>
+    <string name="fetch_accounts_button">Récupérer des comptes</string>
+    <string name="clear_button">Vider</string>
+    <string name="edit_farmer_details">Modifier les détails de l\'agriculteur</string>
+    <string name="add_farmer_details">Ajouter les détails de l\'agriculteur</string>
+    <string name="save_data">Enregistrer les données?</string>
+    <string name="save_data_explanation">Voulez-vous enregistrer vos données actuelles avant de quitter?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="ok">OK</string>
+    <string name="retry">Réessayez</string>
+    <string name="new_farmer_added">Nouveau fermier ajouté!</string>
+    <string name="new_farmer_not_added">Impossible d\'ajouter des informations sur l\'agriculteur. Veuillez réessayer.</string>
+    <string name="farmer_updated">Les données des agriculteurs ont été mises à jour avec succès!</string>
+    <string name="could_not_save">Impossible de sauver l\'agriculteur</string>
+    <string name="try_again_suffix">SVP, veuillez réessayer de nouveau.</string>
+    <string name="permission_required">Permission requise</string>
+    <string name="camera_permission_rationale">S\'il vous plaît fournir la permission de la caméra pour être en mesure de prendre des photos</string>
+    <string name="enter_valid_plot_name">Veuillez entrer un nom de tracé valide</string>
+    <string name="edit_plot">Modifier les détails du tracé</string>
+    <string name="add_new_plot">Ajouter un nouveau terrain</string>
+    <string name="provide_plot_name">S\'il vous plaît fournir le nom de l\'intrigue</string>
+    <string name="new_plot_added">Nouvelle intrigue ajoutée</string>
+    <string name="data_saved">Données enregistrées</string>
+    <string name="data_not_saved">Impossible de sauvegarder les données!</string>
+
+    <string name="could_not_add_plot">Impossible d\'ajouter des informations sur l\'intrigue. Veuillez réessayer</string>
+    <string name="new_data_updated">Nouvelles données mises à jour</string>
+    <string name="add_plot_monitoring">Ajouter une nouvelle surveillance de parcelle</string>
+    <string name="edit_plot_monitoring">Modifier la surveillance de tracé</string>
+    <string name="error_total_plot_estimated_production">Les parcelles totales estiment que la production est supérieure à la production agricole totale!</string>
+    <string name="error_invalid_units">Unités non valides fournies pour les tailles de production de parcelles!</string>
+    <string name="error_missing_estimated_production">La production agricole totale ou la production de parcelles n\'ont pas été fournies!</string>
+    <string name="year">An</string>
+    <string name="jan">Jan</string>
+    <string name="feb">Février</string>
+    <string name="mar">Mars</string>
+    <string name="apr">Avril</string>
+    <string name="may">Mai</string>
+    <string name="jun">Juin</string>
+    <string name="jul">Juillet</string>
+    <string name="aug">Août</string>
+    <string name="sep">Septembre</string>
+    <string name="oct">Octobre</string>
+    <string name="nov">Novembre</string>
+    <string name="dec">Déc</string>
+    <string name="activities">Activités</string>
+    <string name="supplies">Coût des fournitures</string>
+    <string name="labour">Coût de la main d\'oeuvre</string>
+    <string name="family_members">Membres de la famille</string>
+    <string name="farmer_details">Détails de l\'agriculteur</string>
+    <string name="error_getting_farmer_info">Une erreur s\'est produite lors de la tentative de récupération des informations sur le fermier</string>
+    <string name="fill_data">Entrer des données</string>
+    <string name="enter_data_rationale">Veuillez entrer le nombre de membres de la famille dans le formulaire Profil de l\'agriculteur pour </string>
+    <string name="before_proceed_suffux"> avant de procéder.</string>
+    <string name="no_access_to_pl">Pas d\'accès à P &amp; L</string>
+    <string name="and"> et </string>
+    <string name="enter_all_ao_data">Veuillez entrer toutes les valeurs d\'observation d\'adoption et les informations de tracé pour </string>
+    <string name="missing_data">Données manquantes</string>
+    <string name="no_plots">Aucune parcelle ajoutée!</string>
+    <string name="add_plot_to_access_pl">S\'il vous plaît ajouter une parcelle pour accéder à P &amp; L.</string>
+    <string name="farm_result">Résultat de la ferme</string>
+    <string name="incomplete_ao_monitoring">Surveillance AO incomplète</string>
+    <string name="different_no_monitoring">Différent nombre de surveillance pour les parcelles</string>
+    <string name="ensure_farm_acre_equal">Veuillez vous assurer que la superficie agricole totale est égale à la superficie totale de toutes les parcelles!</string>
+    <string name="fill_in_plot_size_values">S\'il vous plaît remplir les valeurs pour la taille de la ferme et toutes les tailles de parcelles!</string>
+    <string name="monitoring_for_year">Surveillance pour l\'année</string>
+    <string name="for_"> pour </string>
+    <string name="incorrect_no_plots_suffix">Les parcelles ne sont pas égales. \\ nVeuillez vous assurer que toutes les parcelles ont le même nombre de surveillance!</string>
+    <string name="farmer">AGRICULTEUR </string>
+    <string name="no_monitoring_added"> n\'a pas de surveillance ajoutée pour l\'année </string>
+    <string name="please_add_monitoring_suffix">! \\ nVeuillez ajouter au moins 1 surveillance pour chaque parcelle avant de continuer.</string>
+    <string name="no_plots_added_suffix">n\'a pas de parcelles ajoutées! S\'il vous plaît ajouter au moins 1 parcelle avant de procéder</string>
+    <string name="incomplete_monitoring_prefix">Certaines parcelles ont des résultats de surveillance AO incomplets pour l\'année</string>
+    <string name="incomplete_monitoring_suffix">. Veuillez vous assurer que toutes les surveillances de parcelles sont complètes pour l\'année spécifiée</string>
+    <string name="back">Retour</string>
+    <string name="provide_all_permissions">Fournir des autorisations</string>
+    <string name="provide_all_permissions_rationale">Toutes les autorisations sont nécessaires pour que FDP fonctionne correctement</string>
+    <string name="quit">Quite</string>
+    <string name="select_country_region">Veuillez sélectionner un pays / une région</string>
+    <string name="hey_there">Bonjour!</string>
+    <string name="sync">Sync</string>
+    <string name="sync_anyway">Synchroniser quand même</string>
+    <string name="first_sign_in_rationale">On dirait que c\'est votre première connexion. \"Comme vous avez une connexion Internet, il est recommandé de synchroniser les données du serveur.</string>
+    <string name="incomplete_ao_rational">S\'il vous plaît compléter l\'observation d\'adoption diagnostique pour le complot </string>
+
+    <string name="plot_info">Informations sur le terrain</string>
+
+    <string name="getting_data">Obtenir des données</string>
+    <string name="sending_data">Télécharger des enregistrements</string>
+
+
+    <string name="please_wait">S\'il vous plait patienter quelques instants.</string>
+    <string name="network_error">Pas d\'Internet</string>
+    <string name="network_error_rational">Vous n\'avez pas d\'accès internet! Veuillez vous connecter à un réseau et réessayer.</string>
+
+    <string name="connection_error">Une erreur est survenue. Veuillez réessayer :(</string>
+    <string name="update_questions_data">Mise à jour des données de questions</string>
+    <string name="could_not_connect">N\'a pas pu se connecter</string>
+    <string name="could_not_connect_rationale">Il pourrait y avoir un problème avec votre connexion. S\'il vous plaît, vérifiez et essayez à nouveau.!</string>
+    <string name="all_resources_downloaded">Toutes les ressources téléchargées avec succès!</string>
+    <string name="all_data_downloaded">Toutes les données téléchargées avec succès!</string>
+
+    <string name="download_all_farmer_data">Voulez-vous télécharger les données de l\'agriculteur?</string>
+    <string name="download_farmer_data">Télécharger les données de l\'agriculteur</string>
+
+
+    <string name="download_complete">Téléchargement des données terminé</string>
+    <string name="getting_skip_logic">Obtention des données Skip Logic</string>
+    <string name="getting_recommendations">Obtention de données de recommandations</string>
+    <string name="getting_more">Obtenir plus de données</string>
+    <string name="getting_even_more">Obtenir encore plus de données</string>
+    <string name="getting_final_data">Obtenir le dernier bit d\'autres données</string>
+    <string name="getting_logic">Obtention de données de logique</string>
+    <string name="getting_cc">Synchroniser toutes les données de calculs complexes</string>
+    <string name="getting_c">Synchroniser toutes les données de calculs</string>
+
+
+    <string-array name="months">
+        <item name="1">Janvier</item>
+        <item name="2">Février</item>
+        <item name="3">Mars</item>
+
+        <item name="4">Avril</item>
+        <item name="5">Mai</item>
+        <item name="6">Juin</item>
+
+        <item name="7">Juillet</item>
+        <item name="8">Août</item>
+        <item name="9">Septembre</item>
+
+        <item name="10">Octobre</item>
+        <item name="11">Novembre</item>
+        <item name="12">Décembre</item>
+
+    </string-array>
+
+
+    <string-array name="educationLevel">
+        <item name="1">Primaire</item>
+        <item name="2">Secondaire</item>
+        <item name="3">Tertiaire</item>
+
+    </string-array>
+
+
+    <string-array name="gender">
+        <item name="1">Mâle</item>
+        <item name="2">Femme</item>
+        <item name="3">Autre</item>
+    </string-array>
+
+
+    <string-array name="answer">
+        <item name="1">Yes</item>
+        <item name="2">No</item>
+    </string-array>
+
+
+    <string name="phone_hint">Téléphone</string>
+    <string name="submit">Envoyer un accord</string>
+    <string name="invalid_phone_number">Veuillez saisir un numéro de téléphone valide.</string>
+    <string name="valid_phone_number">Numéros de téléphone valides!</string>
+
+    <!--    Permissions    -->
+    <string name="permission_rationale_location">L\'accès au service de localisation est requis pour démontrer la fonction «ma position», qui indique votre position actuelle sur la carte.</string>
+    <string name="location_permission_denied">Cet exemple nécessite une autorisation de localisation pour activer la couche \"Ma position\". Veuillez réessayer et autoriser l\'accès à l\'emplacement. \ NSi l\'autorisation a été définitivement refusée, elle peut être activée à partir de Paramètres système&gt; Applications&gt; \"Démos de l\'API Google Maps\".</string>
+    <string name="permission_required_toast">La permission de localisation est requise pour cette démo.</string>
+
+
+    <string name="title_activity_maps">Carte</string>
+    <string name="sign_in_with_email">Se connecter avec Email</string>
+    <string name="sign_up_with_email">S\'enregistrer avec l\'adresse e-mail</string>
+    <string name="sign_in_with_account">Se connecter avec un compte</string>
+    <string name="google_sign_in">Connexion à Google</string>
+    <string name="sign_in">Se connecter</string>
+    <string name="sign_up">S\'inscrire</string>
+    <string name="name">Nom</string>
+    <string name="phone">Téléphone</string>
+    <string name="dob">Sélectionnez la date de naissance</string>
+    <string name="select_picture">Sélectionnez une photo de profil</string>
+    <string name="next">Next</string>
+    <string name="games">Arcade</string>
+    <string name="settings">Options</string>
+    <string name="login">Connecter</string>
+    <string name="home">Départ</string>
+    <string name="dont_have_account_text">Vous n\'avez pas de compte?</string>
+    <string name="have_account_text">Avoir un compte?</string>
+    <string name="log_in_facebook">Se connecter avec Facebook</string>
+    <string name="sign_up_with_google">S\'inscrire avec Google</string>
+    <string name="open">Ouvrir</string>
+    <string name="close">Fermer</string>
+    <string name="title">Fermer</string>
+    <string name="pandl">Page de revue et P &amp; L </string>
+    <string name="generic_error">Impossible de sauvegarder les données!</string>
+
+
+    //Ignore
+    <string-array name="years">
+        <item name="1">2017</item>
+        <item name="2">2018</item>
+        <item name="3">2019</item>
+
+        <item name="4">2020</item>
+        <item name="5">2021</item>
+        <item name="6">2022</item>
+
+        <item name="7">2023</item>
+        <item name="8">2024</item>
+        <item name="9">2025</item>
+
+        <item name="10">2026</item>
+        <item name="11">2027</item>
+        <item name="12">2028</item>
+
+        <item name="13">2029</item>
+        <item name="14">2030</item>
+        <item name="15">2031</item>
+    </string-array>
+
+
+    <string name="year_1">Année 1</string>
+    <string name="year_2">Année 2</string>
+    <string name="year_3">Année 3</string>
+
+    <string name="year_4">Année 4</string>
+    <string name="year_5">Année 5</string>
+    <string name="year_6">Année 6</string>
+
+    <string name="year_7">Année 7</string>
+
+
+    <string-array name="seven_years">
+        <item name="1"> </item>
+        <item name="2">Année 0</item>
+
+        <item name="3">Année 1</item>
+        <item name="4">Année 2</item>
+
+        <item name="5">Année 3</item>
+        <item name="6">Année 4</item>
+        <item name="7">Année 5</item>
+
+        <item name="8">Année 6</item>
+        <item name="9">Année 7</item>
+    </string-array>
+
+
+    <string name="all_data_synced">Toutes les données synchronisées avec succès!</string>
+    <string name="sync_complete">Synchronisation terminée</string>
+    <string name="sync_in_complete">Synchronisation incomplète</string>
+    <string name="no_farmers">Aucune nouvelle donnée de l\'agriculteur à synchroniser</string>
+    <string name="no_new_data">Aucune nouvelle donnée</string>
+    <string name="no_old_data">Aucune donnée à télécharger</string>
+    <string name="no_data">Pas de données</string>
+    <string name="calc_area">cliquez pour calculer la zone de tracé</string>
+    <string name="title_area_calc">Calcul de la surface GPS</string>
+    <string name="no_points">Aucun point ajouté pour le moment</string>
+    <string name="add_3_more_points">Pour calculer la superficie, veuillez ajouter 3 points ou plus.</string>
+    <string name="delete">Supprimer la photo</string>
+    <string name="delete_photo_rationale">Êtes-vous sûr de vouloir supprimer la photo?</string>
+    <string name="click_photo_to_delete">Vous pouvez cliquer sur la photo pour supprimer / supprimer</string>
+    <string name="no_image_taken">Aucune photo n\'a été sélectionnée.</string>
+    <string name="something_went_wrong">Quelque chose a mal fonctionné. </string>
+    <string name="image_options">* Merci de sélectionner une option</string>
+    <string name="view">Vue</string>
+    <string name="save">Sauvegarder</string>
+    <string name="save_and_continue">Sauvegarder et continuer</string>
+    <string name="cancel">Annuler</string>
+    <string name="take_picture">Prendre une photo</string>
+    <string name="hello">Bonjour bienvenue!</string>
+    <string name="change_to">Changer pour</string>
+    <string name="status_submitted">Accord soumis!</string>
+    <string name="status_incomplete">Vous pouvez toujours faire des modifications</string>
+    <string name="caution">Avertissement!</string>
+    <string name="read_only_rational">Une fois soumis et synchronisé, vous ne pouvez plus apporter de modifications. \ N \ nRéaliser?</string>
+    <string name="agreement_submitted_and_data_synced">Accord soumis et données synchronisées avec succès!</string>
+
+    <string name="plot_aos">Observations d\'adoption de placette </string>
+    <string name="plot_ao">Observation de l\'adoption du tracé </string>
+    <string name="add_plot">Ajouter un nouveau terrain</string>
+
+    <string name="farm_assessment">Évaluation de ferme</string>
+    <string name="last_visit">Dernière visite </string>
+    <string name="last_sync">Derniere synchronisation: </string>
+
+    <string name="sync_farmer">Synchroniser le fermier</string>
+
+    <string name="no_plots_added">Aucune parcelle ajoutée.</string>
+    <string name="no_plots_added_rationale">Cliquez sur le bouton ci-dessous pour ajouter un nouveau tracé.</string>
+
+    <string name="est_production_size">Estimation de la taille de production</string>
+    <string name="plot_name">Nom du tracé</string>
+    <string name="soil_ph">Sol ph</string>
+
+    <string name="farmer_name">Nom de l\'agriculteur: </string>
+    <string name="farmer_code">Code de l\'agriculteur: </string>
+    <string name="hire_labour">L\'agriculteur a-t-il embauché du travail?</string>
+    <string name="hire_labour_type">Type de travail</string>
+    <string name="monitoring_ao">Suivi des observations d\'adoption</string>
+    <string name="ao">AO</string>
+    <string name="farmer_competence">Compétence des agriculteurs</string>
+    <string name="reason_for_failure">Raison de l\'échec</string>
+
+    <string name="log_out">Se déconnecter</string>
+
+    <string name="info_plot_monitoring">Surveillance de parcelles d\'information</string>
+    <string name="add_new_monitoring">Ajouter un nouveau suivi</string>
+
+    <string name="edit">Modifier</string>
+    <string name="diagnostic">Diagnostique</string>
+    <string name="plot_assessment">Évaluation de parcelle</string>
+    <string name="date">Rendez-vous amoureux</string>
+
+    <string name="data_already_synced">les données ont déjà été synchronisées!</string>
+    <string name="apostrophe_s">\'s </string>
+    <string name="currency">Monnaie:</string>
+    <string name="fdp_status">Statut FDP</string>
+
+
+    <string name="no_internet_connection_available">Pas de connexion Internet disponible.</string>
+    <string name="you_can_still_make_edits">Vous pouvez toujours apporter des modifications à </string>
+    <string name="data_before_sync">données avant la synchronisation.</string>
+    <string name="fdp_status_incomplete">Statut FDP incomplet</string>
+    <string name="fill_out_fdp_status">S\'il vous plaît remplir le formulaire de statut FDP pour </string>
+    <string name="go_to_fdp_status_form">Aller au formulaire de statut FDP</string>
+    <string name="no_more_mods">Vous ne pouvez plus apporter de modifications à </string>
+    <string name="data">données</string>
+
+    <string name="populating_data">Remplissage de données</string>
+
+
+    <string name="total_maintenance_cost">Coût total de maintenance</string>
+    <string name="total_labour_days">Total des journées de travail</string>
+    <string name="total_labour_cost">Coût total du travail</string>
+    <string name="planned_investment">Investissements planifiés</string>
+    <string name="updating_table_data">Mise à jour des données de table!</string>
+
+
+    <string name="recommended_intervention">Intervention recommandée:</string>
+    <string name="fill_out_ao_data">S\'il vous plaît remplir toutes les données d\'observations d\'adoption!</string>
+    <string name="add_farmer">Ajouter un agriculteur</string>
+    <string name="add_farmer_rational">Ajouter de nouvelles données sur l\'agriculteur en cliquant sur le bouton vert ci-dessous</string>
+
+    <string name="monitoring">Surveillance</string>
+
+    <string name="fdp">Plan de développement agricole</string>
+    <string name="download_resources">Télécharger les ressources</string>
+    <string name="upload_farmer_data">télécharger des données sur les agriculteurs</string>
+    <string name="share">Partager</string>
+    <string name="toggle_translation">Toggle Traduction</string>
+    <string name="estimated_production_size">Taille de production estimée:</string>
+    <string name="lime_needed">Citron vert nécessaire:</string>
+    <string name="log_out_rational">THis will delete all data and sign you out. Proceed?</string>
+    <string name="no_farmer_data_rational">You have no farmer data!</string>
+    <string name="delete_farmer">Delete farmer?</string>
+    <string name="delete_farmer_rational">Do you want to delete data for</string>
+    <string name="validation_error_title">Invalid Input</string>
+    <string name="required_field_error_msg">%s is a required field</string>
+    <string name="take_image">Take a photo</string>
+</resources>
