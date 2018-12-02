@@ -51,8 +51,8 @@ public class ButtonController extends MyLabeledFieldController {
      * @param validators    contains the validations to process on the field
      * @param displayFormat the format of the date to show in the text box when a date is set
      */
-    public ButtonController(Context ctx, String name, String labelText, Set<InputValidator> validators, LocationListener displayFormat) {
-        super(ctx, name, labelText, validators);
+    public ButtonController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, LocationListener displayFormat) {
+        super(ctx, name, content_desc, labelText, validators);
         this.locationListener = displayFormat;
         this.context = ctx;
     }
@@ -66,8 +66,8 @@ public class ButtonController extends MyLabeledFieldController {
      * @param isRequired    indicates if the field is required or not
      * @param displayFormat the format of the date to show in the text box when a date is set
      */
-    public ButtonController(Context ctx, String name, String labelText, boolean isRequired, LocationListener displayFormat, boolean enabled) {
-        super(ctx, name, labelText, isRequired);
+    public ButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, LocationListener displayFormat, boolean enabled) {
+        super(ctx, name, content_desc, labelText, isRequired);
         this.locationListener = displayFormat;
         this.context = ctx;
         this.isEnabled = enabled;
@@ -80,8 +80,8 @@ public class ButtonController extends MyLabeledFieldController {
      * @param name      the name of the field
      * @param labelText the label to display beside the field
      */
-    public ButtonController(Context context, String name, String labelText, LocationListener locationListener, boolean enabled) {
-        this(context, name, labelText, false, locationListener, enabled);
+    public ButtonController(Context context, String name, String content_desc, String labelText, LocationListener locationListener, boolean enabled) {
+        this(context, name, content_desc, labelText, false, locationListener, enabled);
         this.context = context;
 
     }
@@ -91,7 +91,8 @@ public class ButtonController extends MyLabeledFieldController {
         final EditText editText = new EditText(getContext());
 
         editText.setId(editTextId);
-        editText.setContentDescription(getName());
+
+        editText.setContentDescription(getContentDesc());
         editText.setSingleLine(true);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         editText.setKeyListener(null);

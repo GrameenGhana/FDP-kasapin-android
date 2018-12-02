@@ -34,6 +34,8 @@ import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.io.File;
 
+import timber.log.Timber;
+
 import static android.app.Activity.RESULT_OK;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
@@ -147,14 +149,14 @@ public abstract class FormFragment extends BaseFragment {
 
 
             } catch (Exception e) {
-                Log.v(TAG, "Can't create file to take picture!");
+                Timber.tag(TAG).v("Can't create file to take picture!");
                 //Toast.makeText(activity, "Please check SD card! Image shot is impossible!", 10000);
             }
 
 
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
 
-                Log.d(TAG, "Starting camera intent");
+                Timber.d("Starting camera intent");
 
                 startActivityForResult(takePictureIntent, CAMERA_INTENT);
 
@@ -168,8 +170,8 @@ public abstract class FormFragment extends BaseFragment {
     private File createTemporaryFile(String part, String ext) throws Exception {
 
         File dir = new File(ROOT_DIR + File.separator + ".temp/");
-        if (!dir.exists()) Log.i(TAG, "Is DIR created?  " + dir.mkdirs());
-        Log.i(TAG, "Destination path is " + dir);
+        if (!dir.exists()) Timber.i("Is DIR created?  %s", dir.mkdirs());
+        Timber.i("Destination path is %s", dir);
 
 
         return File.createTempFile(part, ext, dir);

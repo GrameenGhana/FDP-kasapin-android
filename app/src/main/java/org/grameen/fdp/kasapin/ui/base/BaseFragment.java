@@ -160,6 +160,7 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
         CommonUtils.showAlertDialog(mActivity.mAlertDialogBuilder, cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener,
                 negativeText, icon_drawable);
 
+
     }
 
 

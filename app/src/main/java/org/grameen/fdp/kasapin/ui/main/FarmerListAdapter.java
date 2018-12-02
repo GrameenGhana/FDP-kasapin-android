@@ -46,7 +46,7 @@ public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.Vi
      * @param farmers
      **/
 
-    public FarmerListAdapter(Context context, List<RealFarmer> farmers) {
+    FarmerListAdapter(Context context, List<RealFarmer> farmers) {
         this.farmers = farmers;
         this.context = context;
 
@@ -78,7 +78,7 @@ public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.Vi
 
 
         if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")){
-            viewHolder.photo.setImageBitmap(ImageUtil.base64ToBitmap(farmer.getImageUrl()));
+            viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));
             //Picasso.with(context).load(farmer.getImageUrl()).resize(200, 200).into(viewHolder.photo);
         viewHolder.setIsRecyclable(false);
         }

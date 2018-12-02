@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.interceptors.HttpLoggingInterceptor;
+import com.balsikandar.crashreporter.CrashReporter;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.di.component.ApplicationComponent;
@@ -19,6 +20,8 @@ import java.io.FileOutputStream;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 public class FDPKasapin extends Application {
 
 
@@ -26,45 +29,6 @@ public class FDPKasapin extends Application {
     AppDataManager mAppDataManager;
 
     private ApplicationComponent mApplicationComponent;
-
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-
-        mApplicationComponent = DaggerApplicationComponent
-                .builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
-        mApplicationComponent.inject(this);
-
-
-
-
-        //Initialize application logging mechanism
-        AppLogger.init();
-
-       /* AndroidNetworking.initialize(getApplicationContext());
-        if (BuildConfig.DEBUG) {
-            AndroidNetworking.enableLogging(HttpLoggingInterceptor.Level.BODY);
-        }*/
-
-
-       createNoMediaFile();
-
-    }
-
-
-
-    public static FDPKasapin getAppContext(Context context) {
-        return (FDPKasapin) context.getApplicationContext();
-    }
-
-
-    public ApplicationComponent getComponent(){
-        return mApplicationComponent;
-    }
 
 
     public static void createNoMediaFile() {
@@ -79,19 +43,61 @@ public class FDPKasapin extends Application {
             File thumbnailsDir = new File(ROOT + File.separator + ".thumbnails");
             if (!thumbnailsDir.exists())
                 if (thumbnailsDir.mkdirs())
-                    Log.i("Application", "Thumbnails dir file created!  " + thumbnailsDir);
+                    Timber.i("Thumbnails dir file created!  %s", thumbnailsDir);
 
+
+            File crashReporterDir = new File(AppConstants.CRASH_REPORTS_DIR);
+            if (!crashReporterDir.exists()) crashReporterDir.mkdirs();
+            Timber.i("Crash Reporter dirs created! %s", crashReporterDir);
+
+
+            File databaseBackupDir = new File(AppConstants.DATABASE_BACKUP_DIR);
+            if (!databaseBackupDir.exists()) databaseBackupDir.mkdirs();
+            Timber.i("DatabaseBackup dirs created! %s", databaseBackupDir);
 
 
             File file = new File(ROOT + File.separator, ".nomedia");
             if (!file.exists()) {
                 out = new FileOutputStream(file);
                 out.write(0);
-                out.close();}
+                out.close();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static FDPKasapin getAppContext(Context context) {
+        return (FDPKasapin) context.getApplicationContext();
+    }
+
+
+    public ApplicationComponent getComponent() {
+        return mApplicationComponent;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+
+        mApplicationComponent = DaggerApplicationComponent
+                .builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+        mApplicationComponent.inject(this);
+
+
+        //Initialize application logging mechanism
+        AppLogger.init(this);
+
+       /* AndroidNetworking.initialize(getApplicationContext());
+        if (BuildConfig.DEBUG) {
+            AndroidNetworking.enableLogging(HttpLoggingInterceptor.Level.BODY);
+        }*/
+
     }
 
 }

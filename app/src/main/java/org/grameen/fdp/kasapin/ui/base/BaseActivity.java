@@ -115,6 +115,14 @@ public abstract class BaseActivity extends AppCompatActivity
         mProgressDialog = CommonUtils.showLoadingDialog(mProgressDialog);
     }
 
+
+    @Override
+    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
+        hideLoading();
+        mProgressDialog = CommonUtils.showLoadingDialog(mProgressDialog, title, message, indeterminate, 0, cancelableOnTouchOutside);
+
+    }
+
     @Override
     public void hideLoading() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {

@@ -71,7 +71,6 @@ public class ViewModule {
 
 
     @Provides
-    @Singleton
     ScriptEngine providesScriptEngine(){
         return new ScriptEngineManager().getEngineByName("rhino");
     }

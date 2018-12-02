@@ -17,10 +17,18 @@ package org.grameen.fdp.kasapin.data;
 
 
 import android.content.Context;
+import android.os.Environment;
 
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
 import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -184,5 +192,52 @@ public class AppDataManager implements DataManager {
 
     public AppDatabase getDatabaseManager() {
         return mAppDatabase;
+    }
+
+
+    @Override
+    public int backupRestoreDatabase(boolean shouldbackup) {
+
+        String oldPath;
+        String newPath;
+
+        if (shouldbackup) {
+            oldPath = Environment.getDataDirectory().getPath() + "/data/" + mContext.getPackageName() + "/databases/" + AppConstants.DATABASE_NAME;
+            newPath = AppConstants.DATABASE_BACKUP_DIR + "/" + AppConstants.DATABASE_NAME;
+
+        } else {
+
+            oldPath = AppConstants.DATABASE_BACKUP_DIR + "/" + AppConstants.DATABASE_NAME;
+            newPath = Environment.getDataDirectory().getPath() + "/data/" + mContext.getPackageName() + "/databases/" + AppConstants.DATABASE_NAME;
+        }
+
+
+        int value;
+
+        File currentDB = new File(oldPath);
+
+        File backupDB = new File(newPath);
+
+        if (!shouldbackup && !currentDB.exists())
+            return 0;
+
+        FileChannel source;
+        FileChannel destination;
+
+        try {
+            source = new FileInputStream(currentDB).getChannel();
+            destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+
+            value = 1;
+        } catch (IOException e) {
+            e.printStackTrace();
+            value = -1;
+        }
+
+        return value;
+
     }
 }

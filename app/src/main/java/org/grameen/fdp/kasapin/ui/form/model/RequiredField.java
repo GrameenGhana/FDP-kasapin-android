@@ -1,6 +1,7 @@
 package org.grameen.fdp.kasapin.ui.form.model;
 
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 
 import org.grameen.fdp.kasapin.R;
@@ -25,6 +26,7 @@ public class RequiredField extends ValidationError {
         super(fieldName, fieldLabel);
     }
 
+    @SuppressLint("StringFormatInvalid")
     @Override
     public String getMessage(Resources resources) {
         return String.format(resources.getString(R.string.required_field_error_msg), getFieldLabel());

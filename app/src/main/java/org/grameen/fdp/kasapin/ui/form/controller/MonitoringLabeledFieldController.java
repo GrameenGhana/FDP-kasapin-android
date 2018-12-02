@@ -38,8 +38,8 @@ public abstract class MonitoringLabeledFieldController extends MyFormElementCont
      * @param isRequired indicates whether this field is required. If true, this field checks for a non-empty or
      *                   non-null value upon validation. Otherwise, this field can be empty.
      */
-    public MonitoringLabeledFieldController(Context ctx, String name, String labelText, boolean isRequired, boolean isEnabled) {
-        this(ctx, name, labelText, new HashSet<InputValidator>(), isEnabled);
+    public MonitoringLabeledFieldController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, boolean isEnabled) {
+        this(ctx, name, content_desc, labelText, new HashSet<InputValidator>(), isEnabled);
         setIsRequired(isRequired);
     }
 
@@ -52,30 +52,16 @@ public abstract class MonitoringLabeledFieldController extends MyFormElementCont
      *                   occupy the entire length of the row.
      * @param validators The list of input validations to add to the field.
      */
-    public MonitoringLabeledFieldController(Context ctx, String name, String labelText, Set<InputValidator> validators, boolean isEnabled) {
-        super(ctx, name);
+    public MonitoringLabeledFieldController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, boolean isEnabled) {
+        super(ctx, name, content_desc);
         this.labelText = labelText;
         this.validators = validators;
 
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public MonitoringLabeledFieldController(Context ctx, String name, String labelText, boolean isRequired) {
-        this(ctx, name, labelText, new HashSet<InputValidator>());
+    public MonitoringLabeledFieldController(Context ctx, String name, String content_desc, String labelText, boolean isRequired) {
+        this(ctx, name, content_desc, labelText, new HashSet<InputValidator>());
         setIsRequired(isRequired);
     }
 
@@ -88,8 +74,8 @@ public abstract class MonitoringLabeledFieldController extends MyFormElementCont
      *                   occupy the entire length of the row.
      * @param validators The list of input validations to add to the field.
      */
-    public MonitoringLabeledFieldController(Context ctx, String name, String labelText, Set<InputValidator> validators) {
-        super(ctx, name);
+    public MonitoringLabeledFieldController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators) {
+        super(ctx, name, content_desc);
 
         this.labelText = labelText;
         this.validators = validators;

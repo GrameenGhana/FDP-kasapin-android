@@ -1,6 +1,8 @@
 package org.grameen.fdp.kasapin.ui.landing;
 
 
+import android.support.annotation.Nullable;
+
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 /**
@@ -16,12 +18,18 @@ public class LandingContract {
     public interface View extends  BaseContract.View {
 
 
+        void showPopUp(@Nullable android.view.View v);
+
+
+
     }
 
      public interface Presenter {
 
+         void showPopupDialog();
 
 
+         void uploadLogsToServer();
 
     }
 

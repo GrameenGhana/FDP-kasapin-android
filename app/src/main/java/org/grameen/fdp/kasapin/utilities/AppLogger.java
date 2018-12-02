@@ -1,15 +1,38 @@
 package org.grameen.fdp.kasapin.utilities;
 
 
+import android.app.Application;
+import android.os.Environment;
+import android.util.Log;
+
+import com.balsikandar.crashreporter.CrashReporter;
+import com.crashlytics.android.Crashlytics;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import org.grameen.fdp.kasapin.BuildConfig;
 
+import java.io.File;
+
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
+
+import static android.util.Log.INFO;
 
 public class AppLogger {
 
-    public static void init() {
-        if (BuildConfig.DEBUG) {
+    public static void init(Application applicationContext) {
+        if (!BuildConfig.ENABLE_CRASHLYTICS) {
             Timber.plant(new Timber.DebugTree());
+        } else {
+
+            String crashReporterPath = AppConstants.ROOT_DIR + File.separator + "crashReports";
+            CrashReporter.initialize(applicationContext, crashReporterPath);
+
+            //Todo Initialize Crashytics here
+            Fabric.with(applicationContext, new Crashlytics());
+
         }
     }
 
@@ -49,5 +72,37 @@ public class AppLogger {
         Timber.d(s);
     }
 
+    public static void i(String s) {
+        Timber.i(s);
+    }
+
+
+    private static final class CrashReportingTree extends Timber.Tree {
+
+
+        @Override
+        protected boolean isLoggable(@Nullable String tag, int priority) {
+            return priority >= INFO;
+        }
+
+
+        @Override
+        protected void log(int priority, @Nullable String tag, @NotNull String message, @Nullable Throwable t) {
+
+            if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+                return;
+            }
+
+            MyCrashReporter.log(priority, tag, message);
+
+            if (t != null) {
+                if (priority == Log.ERROR) {
+                    MyCrashReporter.logError(t);
+                } else if (priority == Log.WARN) {
+                    MyCrashReporter.logWarning(t);
+                }
+            }
+        }
+    }
 
 }

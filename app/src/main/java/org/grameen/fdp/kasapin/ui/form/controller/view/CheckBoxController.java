@@ -51,8 +51,8 @@ public class CheckBoxController extends MyLabeledFieldController {
      *                         {@code CheckBoxController} expects the form model to use index (as an Integer) to
      *                         represent the selected item
      */
-    public CheckBoxController(Context ctx, String name, String labelText, Set<InputValidator> validators, List<String> items, boolean useItemsAsValues, boolean isEnabled) {
-        this(ctx, name, labelText, validators, items, useItemsAsValues ? items : null, isEnabled);
+    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, List<String> items, boolean useItemsAsValues, boolean isEnabled) {
+        this(ctx, name, content_desc, labelText, validators, items, useItemsAsValues ? items : null, isEnabled);
     }
 
     /**
@@ -66,8 +66,8 @@ public class CheckBoxController extends MyLabeledFieldController {
      * @param values     a list of Objects representing the values to set the form model on a selection (in
      *                   the same order as the {@code items}.
      */
-    public CheckBoxController(Context ctx, String name, String labelText, Set<InputValidator> validators, List<String> items, List<?> values, boolean isEnabled) {
-        super(ctx, name, labelText, validators, isEnabled);
+    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, List<String> items, List<?> values, boolean isEnabled) {
+        super(ctx, name, content_desc, labelText, validators, isEnabled);
         this.items = items;
         this.values = values;
         this.IS_ENABLED = isEnabled;
@@ -100,9 +100,8 @@ public class CheckBoxController extends MyLabeledFieldController {
         Log.i("CHECK BOX CONTROLLER", oldValues);
 
     }*/
-
-    public CheckBoxController(Context ctx, String name, String labelText, boolean isRequired, List<String> items, boolean useItemsAsValues, boolean isEnabled) {
-        this(ctx, name, labelText, isRequired, items, useItemsAsValues ? items : null, isEnabled);
+    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, List<String> items, boolean useItemsAsValues, boolean isEnabled) {
+        this(ctx, name, content_desc, labelText, isRequired, items, useItemsAsValues ? items : null, isEnabled);
 
 
        // Log.i("CHECK BOX CONTROLLER", oldValues);
@@ -120,8 +119,8 @@ public class CheckBoxController extends MyLabeledFieldController {
      * @param values     a list of Objects representing the values to set the form model on a selection (in
      *                   the same order as the {@code items}.
      */
-    public CheckBoxController(Context ctx, String name, String labelText, boolean isRequired, List<String> items, List<?> values, boolean isEnabled) {
-        super(ctx, name, labelText, isRequired, isEnabled);
+    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, List<String> items, List<?> values, boolean isEnabled) {
+        super(ctx, name, content_desc, labelText, isRequired, isEnabled);
         this.items = items;
         this.values = values;
         this.IS_ENABLED = isEnabled;
@@ -141,18 +140,21 @@ public class CheckBoxController extends MyLabeledFieldController {
         for (int index = 0; index < nbItem; index++) {
             checkBox = new CheckBox(getContext());
             checkBox.setText(items.get(index));
-            checkBox.setContentDescription(getName());
+            checkBox.setContentDescription(getContentDesc());
             checkBox.setId(CHECKBOX_ID + index);
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                int position = buttonView.getId() - CHECKBOX_ID;
-                Object value = areValuesDefined() ? values.get(position) : position;
-                Set<Object> modelValues = new HashSet<>(retrieveModelValues());
-                if (isChecked) {
-                    modelValues.add(value);
-                } else {
-                    modelValues.remove(value);
+            checkBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int position = buttonView.getId() - CHECKBOX_ID;
+                    Object value = areValuesDefined() ? values.get(position) : position;
+                    Set<Object> modelValues = new HashSet<>(retrieveModelValues());
+                    if (isChecked) {
+                        modelValues.add(value);
+                    } else {
+                        modelValues.remove(value);
+                    }
+                    getModel().setValue(getName(), modelValues);
                 }
-                getModel().setValue(getName(), modelValues);
             });
 
 

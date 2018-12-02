@@ -100,8 +100,17 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         getAppDataManager().getDatabaseManager().villageAndFarmersDao().getVillagesAndFarmers()
                 .observe(getContext(), villagesAndFarmers -> {
 
-                    if(villagesAndFarmers != null && villagesAndFarmers.size() > 0)
+                    if (villagesAndFarmers != null && villagesAndFarmers.size() > 0) {
                         getView().setFragmentAdapter(villagesAndFarmers);
+
+                        List<RealFarmer> farmers = new ArrayList<>();
+
+                        for (VillageAndFarmers villageAndFarmers : villagesAndFarmers)
+                            farmers.addAll(villageAndFarmers.getFarmerList());
+
+                        getView().instantiateSearchDialog(farmers);
+
+                    }
                     else
                         getView().togglePlaceHolder(true);
                 });

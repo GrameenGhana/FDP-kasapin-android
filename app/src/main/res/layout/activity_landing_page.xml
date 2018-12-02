@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.landing.LandingActivity">
+
+
+    <LinearLayout
+        android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
     android:background="@color/white"
     >
 
 
-
-
     <LinearLayout
+        android:id="@+id/ll1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
@@ -46,6 +52,7 @@
 
 
     <LinearLayout
+        android:id="@+id/ll2"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:layout_width="match_parent"
@@ -132,3 +139,14 @@
 
 
 </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:onClick="showPopUp"
+        android:padding="@dimen/spacing_normal"
+        android:src="@drawable/ic_info_outline_black_24dp"
+        android:tint="@android:color/tertiary_text_light" />
+</RelativeLayout>

@@ -3,7 +3,6 @@ package org.grameen.fdp.kasapin.ui.form.controller.view;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
@@ -60,8 +60,8 @@ public class SelectionController extends MyLabeledFieldController {
      *                         {@code SelectionController} expects the form model to use index (as an Integer) to
      *                         represent the selected item
      */
-    public SelectionController(Context ctx, String name, String labelText, Set<InputValidator> validators, String prompt, List<String> items, boolean useItemsAsValues, boolean isEnabled) {
-        this(ctx, name, labelText, validators, prompt, items, useItemsAsValues ? items : null, isEnabled);
+    public SelectionController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, String prompt, List<String> items, boolean useItemsAsValues, boolean isEnabled) {
+        this(ctx, name, content_desc, labelText, validators, prompt, items, useItemsAsValues ? items : null, isEnabled);
     }
 
     /**
@@ -76,8 +76,8 @@ public class SelectionController extends MyLabeledFieldController {
      * @param values     a list of Objects representing the values to set the form model on a selection (in
      *                   the same order as the {@code items}.
      */
-    public SelectionController(Context ctx, String name, String labelText, Set<InputValidator> validators, String prompt, List<String> items, List<?> values, boolean isEnabled) {
-        super(ctx, name, labelText, validators, isEnabled);
+    public SelectionController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, String prompt, List<String> items, List<?> values, boolean isEnabled) {
+        super(ctx, name, content_desc, labelText, validators, isEnabled);
         this.prompt = prompt;
         this.items = new ArrayList<>(items);
         this.items.add(prompt);     // last item is used for the 'prompt' by the SpinnerView
@@ -100,8 +100,8 @@ public class SelectionController extends MyLabeledFieldController {
      *                         {@code SelectionController} expects the form model to use index (as an Integer) to
      *                         represent the selected item
      */
-    public SelectionController(Context ctx, String name, String labelText, boolean isRequired, String prompt, List<String> items, boolean useItemsAsValues, boolean isEnabled, String helperText) {
-        this(ctx, name, labelText, isRequired, prompt, items, useItemsAsValues ? items : null, isEnabled, helperText);
+    public SelectionController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String prompt, List<String> items, boolean useItemsAsValues, boolean isEnabled, String helperText) {
+        this(ctx, name, content_desc, labelText, isRequired, prompt, items, useItemsAsValues ? items : null, isEnabled, helperText);
     }
 
     /**
@@ -116,8 +116,8 @@ public class SelectionController extends MyLabeledFieldController {
      * @param values     a list of Objects representing the values to set the form model on a selection (in
      *                   the same order as the {@code items}.
      */
-    public SelectionController(Context ctx, String name, String labelText, boolean isRequired, String prompt, List<String> items, List<?> values, boolean isEnabled, String helperText) {
-        super(ctx, name, labelText, isRequired, isEnabled);
+    public SelectionController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String prompt, List<String> items, List<?> values, boolean isEnabled, String helperText) {
+        super(ctx, name, content_desc, labelText, isRequired, isEnabled);
         this.prompt = prompt;
         this.items = new ArrayList<>(items);
         this.items.add(prompt);     // last item is used for the 'prompt' by the SpinnerView
@@ -148,9 +148,8 @@ public class SelectionController extends MyLabeledFieldController {
 
 
         Spinner spinnerView = new Spinner(getContext());
-
+        spinnerView.setContentDescription(getContentDesc());
         spinnerView.setId(spinnerId);
-        spinnerView.setContentDescription(getName());
         spinnerView.setPrompt(prompt);
          ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, items) {
             @NonNull
@@ -231,7 +230,6 @@ public class SelectionController extends MyLabeledFieldController {
 
         if(helperText != null && !helperText.equalsIgnoreCase("null") && !helperText.equalsIgnoreCase("")) {
 
-            Log.i("SELECTABLE", "HAS HELPER TEXT !!!!!!!!!!!!!!!!!!" );
             final ImageView imageView = new ImageView(getContext());
             imageView.setImageResource(R.drawable.ic_info_grey_400_18dp);
             imageView.setPadding(4, 4, 4, 4);

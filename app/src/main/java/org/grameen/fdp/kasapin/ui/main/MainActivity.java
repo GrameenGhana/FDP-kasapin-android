@@ -138,6 +138,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                 fragmentPagerItems.add(FragmentPagerItem.of(villageAndFarmers.getName(), FarmerListFragment.class, new Bundler()
                         .putString("farmers", new Gson().toJson(villageAndFarmers.getFarmerList())).get()));
+
+
             }
 
 
@@ -151,7 +153,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
         }
 
-        mPresenter.getFarmersData();
+
+        //mPresenter.getFarmersData();
     }
 
 
@@ -317,7 +320,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public void showNoFarmersMessage() {
 
-        showDialog(true, getString(R.string.no_data), getString(R.string.no_farmer_data_rational),
+        showDialog(true, getString(R.string.no_data), getString(R.string.no_farmers),
                 (dialogInterface, i) -> dialogInterface.dismiss(),
                 getString(R.string.ok),
                 null,

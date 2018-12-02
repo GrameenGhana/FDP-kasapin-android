@@ -245,48 +245,48 @@ public class MyFormFragment extends FormFragment {
             switch (q.getType().toLowerCase()) {
 
                 case AppConstants.TYPE_TEXT:
-                    formSectionController.addElement(new EditTextController(context, q.getId(),  (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_CLASS_TEXT, !isEnabled, q.getHelpText()));
+                    formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_CLASS_TEXT, !isEnabled, q.getHelpText()));
                     break;
                 case AppConstants.TYPE_NUMBER:
-                    formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_CLASS_NUMBER, !isEnabled, q.getHelpText()));
+                    formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_CLASS_NUMBER, !isEnabled, q.getHelpText()));
 
                     break;
 
                 case AppConstants.TYPE_NUMBER_DECIMAL:
-                    formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_NUMBER_FLAG_DECIMAL, !isEnabled, q.getHelpText()));
+                    formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_NUMBER_FLAG_DECIMAL, !isEnabled, q.getHelpText()));
 
                     break;
 
                 case AppConstants.TYPE_SELECTABLE:
-                    formSectionController.addElement(new SelectionController(context, q.getId(), (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption(), true,  q.getDefaultValue()  , q.formatQuestionOptions(), true, !isEnabled, q.getHelpText()));
+                    formSectionController.addElement(new SelectionController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), true, q.getDefaultValue(), q.formatQuestionOptions(), true, !isEnabled, q.getHelpText()));
 
                     break;
                 case AppConstants.TYPE_MULTI_SELECTABLE:
-                    formSectionController.addElement(new CheckBoxController(context, q.getId(), (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption(), true, q.formatQuestionOptions(), true, !isEnabled));
+                    formSectionController.addElement(new CheckBoxController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), true, q.formatQuestionOptions(), true, !isEnabled));
 
                     break;
 
                 case AppConstants.TYPE_TIMEPICKER:
-                    formSectionController.addElement(new TimePickerController(context, q.getId(), (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption()));
+                    formSectionController.addElement(new TimePickerController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption()));
 
                     break;
                 case AppConstants.TYPE_DATEPICKER:
-                    formSectionController.addElement(new DatePickerController(context, q.getId(), (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption()));
+                    formSectionController.addElement(new DatePickerController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption()));
                     break;
 
                 case AppConstants.TYPE_MATH_FORMULA:
-                    formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_CLASS_TEXT, false, q.getHelpText()));
+                    formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_CLASS_TEXT, false, q.getHelpText()));
                     applyCalculation(appDataManager.getDatabaseManager().calculationsDao().getCalculationById(q.getId()));
 
                     break;
 
                 case AppConstants.TYPE_LOGIC_FORMULA:
-                    formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_CLASS_TEXT, false, q.getHelpText()));
+                    formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), q.getDefaultValue(), true, InputType.TYPE_CLASS_TEXT, false, q.getHelpText()));
                     break;
 
 
                 case AppConstants.TYPE_LOCATION:
-                    formSectionController.addElement(new ButtonController(context, q.getId(), (IS_TRANSLATION) ?  q.getTranslation() : q.getCaption(), new LocationListener() {
+                    formSectionController.addElement(new ButtonController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), new LocationListener() {
                         @Override
                         public void onLocationChanged(Location location) {
 
@@ -321,7 +321,7 @@ public class MyFormFragment extends FormFragment {
 
 
                 case AppConstants.TYPE_PHOTO:
-                    formSectionController.addElement(new PhotoButtonController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), (View.OnClickListener) v -> {
+                    formSectionController.addElement(new PhotoButtonController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), (View.OnClickListener) v -> {
                         try{
 
                             startCameraIntent(q.getId());
@@ -363,69 +363,64 @@ public class MyFormFragment extends FormFragment {
                 switch (q.getType().toLowerCase()) {
 
                     case AppConstants.TYPE_TEXT:
-                        formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_CLASS_TEXT, !isEnabled, q.getHelpText()));
+                        formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_CLASS_TEXT, !isEnabled, q.getHelpText()));
                         //getValue(q);
 
                         break;
                     case AppConstants.TYPE_NUMBER:
-                        formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_CLASS_NUMBER, !isEnabled, q.getHelpText()));
+                        formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_CLASS_NUMBER, !isEnabled, q.getHelpText()));
                         //getValue(q);
 
                         break;
 
                     case AppConstants.TYPE_NUMBER_DECIMAL:
-                        formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_NUMBER_FLAG_DECIMAL, !isEnabled, q.getHelpText()));
+                        formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_NUMBER_FLAG_DECIMAL, !isEnabled, q.getHelpText()));
                         //getValue(q);
 
                         break;
 
                     case AppConstants.TYPE_SELECTABLE:
-                        formSectionController.addElement(new SelectionController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), true, storedValue, q.formatQuestionOptions(), true, !isEnabled, q.getHelpText()));
+                        formSectionController.addElement(new SelectionController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), true, storedValue, q.formatQuestionOptions(), true, !isEnabled, q.getHelpText()));
                         //getValue(q);
 
                         break;
 
                     case AppConstants.TYPE_MULTI_SELECTABLE:
-                        formSectionController.addElement(new CheckBoxController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), true, q.formatQuestionOptions(), true, !isEnabled));
+                        formSectionController.addElement(new CheckBoxController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), true, q.formatQuestionOptions(), true, !isEnabled));
                         //getValue(q, jsonObject);
 
                         break;
 
                     case AppConstants.TYPE_TIMEPICKER:
-                        formSectionController.addElement(new TimePickerController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption()));
+                        formSectionController.addElement(new TimePickerController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption()));
                         //getValue(q);
 
                         break;
                     case AppConstants.TYPE_DATEPICKER:
-                        formSectionController.addElement(new DatePickerController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption()));
+                        formSectionController.addElement(new DatePickerController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption()));
                         //getValue(q);
 
                         break;
 
                     case AppConstants.TYPE_MATH_FORMULA:
-                        formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_CLASS_TEXT, false));
+                        formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_CLASS_TEXT, false));
                         //getValue(q);
                         applyCalculation(appDataManager.getDatabaseManager().calculationsDao().getCalculationById(q.getId()));
 
                         break;
 
                     case AppConstants.TYPE_LOGIC_FORMULA:
-                        formSectionController.addElement(new EditTextController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_CLASS_TEXT, false));
+                        formSectionController.addElement(new EditTextController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), storedValue, true, InputType.TYPE_CLASS_TEXT, false));
                         //getValue(q);
                         break;
 
 
                     case AppConstants.TYPE_LOCATION:
-                        formSectionController.addElement(new ButtonController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), new LocationListener() {
+                        formSectionController.addElement(new ButtonController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), new LocationListener() {
                             @Override
                             public void onLocationChanged(Location location) {
 
-                                Log.i(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
-
-                                Log.i(TAG, "lat:" + location.getLatitude() + " lon:" + location.getLongitude());
-
                                 getModel().setValue(q.getId(), location.getLatitude() + ", " + location.getLongitude());
-
 
                             }
 
@@ -436,14 +431,11 @@ public class MyFormFragment extends FormFragment {
 
                             @Override
                             public void onProviderEnabled(String s) {
-                                Log.i(TAG, "^^^^^^^^^^ PROVIDER ENABLED ^^^^^^^^^^^^");
 
                             }
 
                             @Override
                             public void onProviderDisabled(String s) {
-                                Log.i(TAG, "^^^^^^^^^^ PROVIDER DISABLED ^^^^^^^^^^^^");
-
 
                             }
                         }, !isEnabled));
@@ -452,7 +444,7 @@ public class MyFormFragment extends FormFragment {
 
 
                     case AppConstants.TYPE_PHOTO:
-                        formSectionController.addElement(new PhotoButtonController(context, q.getId(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), (View.OnClickListener) v -> {
+                        formSectionController.addElement(new PhotoButtonController(context, q.getId(), q.getName(), (IS_TRANSLATION) ? q.getTranslation() : q.getCaption(), (View.OnClickListener) v -> {
 
                             try {
 
@@ -776,6 +768,11 @@ public class MyFormFragment extends FormFragment {
 
     @Override
     public void openNextActivity() {
+
+    }
+
+    @Override
+    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
 
     }
 

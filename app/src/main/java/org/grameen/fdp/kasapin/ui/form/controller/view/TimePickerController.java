@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
@@ -41,8 +40,8 @@ public class TimePickerController extends MyLabeledFieldController {
      * @param displayFormat the format of the time to show in the text box when a time is set
      * @param is24HourView  the format of time picker dialog should be 24 hour format or not
      */
-    public TimePickerController(Context ctx, String name, String labelText, Set<InputValidator> validators, SimpleDateFormat displayFormat, boolean is24HourView) {
-        super(ctx, name, labelText, validators);
+    public TimePickerController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, SimpleDateFormat displayFormat, boolean is24HourView) {
+        super(ctx, name, content_desc, labelText, validators);
         this.displayFormat = displayFormat;
         this.timeZone = displayFormat.getTimeZone();
         this.is24HourView = is24HourView;
@@ -59,8 +58,8 @@ public class TimePickerController extends MyLabeledFieldController {
      * @param displayFormat the format of the time to show in the text box when a time is set
      * @param is24HourView  the format of time picker dialog should be 24 hour format or not
      */
-    public TimePickerController(Context ctx, String name, String labelText, boolean isRequired, SimpleDateFormat displayFormat, boolean is24HourView) {
-        super(ctx, name, labelText, isRequired);
+    public TimePickerController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, SimpleDateFormat displayFormat, boolean is24HourView) {
+        super(ctx, name, content_desc, labelText, isRequired);
         this.displayFormat = displayFormat;
         this.timeZone = displayFormat.getTimeZone();
         this.is24HourView = is24HourView;
@@ -72,15 +71,15 @@ public class TimePickerController extends MyLabeledFieldController {
      * @param name      the name of the field
      * @param labelText the label to display beside the field
      */
-    public TimePickerController(Context context, String name, String labelText) {
-        this(context, name, labelText, false, new SimpleDateFormat("hh:mm a", Locale.getDefault()), false);
+    public TimePickerController(Context context, String name, String content_desc, String labelText) {
+        this(context, name, content_desc, labelText, false, new SimpleDateFormat("hh:mm a", Locale.getDefault()), false);
     }
 
     @Override
     protected View createFieldView() {
         final EditText editText = new EditText(getContext());
         editText.setId(editTextId);
-        editText.setContentDescription(getName());
+        editText.setContentDescription(getContentDesc());
         editText.setSingleLine(true);
         editText.setInputType(InputType.TYPE_CLASS_DATETIME);
         editText.setKeyListener(null);

@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.base;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -61,6 +62,11 @@ public class BaseContract {
         void showLoading();
 
         void hideLoading();
+
+
+        void showLoading(String title, String message, boolean indeterminate, @DrawableRes int icon, boolean cancelableOnTouchOutside);
+
+
 
         void openLoginActivityOnTokenExpire();
 

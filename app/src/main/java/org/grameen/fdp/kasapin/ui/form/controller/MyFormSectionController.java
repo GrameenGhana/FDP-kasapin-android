@@ -33,8 +33,8 @@ public class MyFormSectionController extends MyFormElementController {
      * @param name  the name of the section
      * @param title the title of the section to display
      */
-    public MyFormSectionController(Context ctx, String name, String title) {
-        super(ctx, name);
+    public MyFormSectionController(Context ctx, String name, String title, String content_desc) {
+        super(ctx, name, content_desc);
         this.title = title;
     }
 
@@ -44,15 +44,20 @@ public class MyFormSectionController extends MyFormElementController {
      *
      * @param title
      */
+    public MyFormSectionController(Context context, String title, String content_desc) {
+        this(context, UUID.randomUUID().toString(), title, content_desc);
+    }
+
+
     public MyFormSectionController(Context context, String title) {
-        this(context, UUID.randomUUID().toString(), title);
+        this(context, UUID.randomUUID().toString(), title, null);
     }
 
     /**
      * Creates a new instance of a form section with no title or name.
      */
     public MyFormSectionController(Context context) {
-        this(context, null);
+        this(context, null, null);
     }
 
     /**

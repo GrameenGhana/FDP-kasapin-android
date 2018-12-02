@@ -362,13 +362,25 @@
     <string name="toggle_translation">Alihkan terjemahan</string>
     <string name="estimated_production_size">Perkiraan ukuran produksi:</string>
     <string name="lime_needed">Kapur dibutuhkan:</string>
-    <string name="log_out_rational">THis will delete all data and sign you out. Proceed?</string>
-    <string name="no_farmer_data_rational">You have no farmer data!</string>
-    <string name="delete_farmer">Delete farmer?</string>
-    <string name="delete_farmer_rational">Do you want to delete data for</string>
-    <string name="farmer_data_deleted_message">data deleted!</string>
-    <string name="validation_error_title">Invalid Input</string>
-    <string name="required_field_error_msg">%s is a required field</string>
-    <string name="take_image">Take a photo</string>
+
+    <string name="crash_reporter">Buka CrashReporter</string>
+    <string name="send_logs_to_server">Kirim log ke server</string>
+    <string name="export_database">Mengekspor basis data</string>
+    <string name="import_database">Impor basis data lokal</string>
+    <string name="database_exported">Database telah diekspor!</string>
+    <string name="could_not_export_database">Tidak dapat mengekspor basis data!</string>
+    <string name="import_data_question">Impor data?</string>
+    <string name="import_data_rationale">Ini akan menggantikan data saat ini dengan yang tersimpan di perangkat.</string>
+    <string name="database_imported">Basis data telah diimpor!</string>
+    <string name="database_import_error">Tidak dapat mengimpor basis data!</string>
+    <string name="no_database_data_found">Tidak ada data database yang ditemukan!</string>
+    <string name="logs_sent">Logs have been sent!</string>
+    <string name="permissions_needed">Permission needed</string>
+    <string name="permissions_needed_rationale">This permission is needed. Please provide permission</string>
+    <string name="grant_permissions">Grant</string>
+    <string name="permissions_not_provided">Permissions were not provided. Please provide all permissions.</string>
+    <string name="permissions_not_provided_rationale">Permission were not provided. Please provide all permissions</string>
+    <string name="required_field_error_msg">This field is required</string>
+
 
 </resources>

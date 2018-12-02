@@ -41,7 +41,9 @@ public class MainContract {
 
         void startDelay(long delayTime);
         void openSearchDialog();
-        void toggleDrawer();
+
+
+         void toggleDrawer();
 
         void getFarmersData();
 

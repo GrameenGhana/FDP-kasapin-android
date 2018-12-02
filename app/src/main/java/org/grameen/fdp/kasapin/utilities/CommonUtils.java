@@ -10,6 +10,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -52,13 +53,27 @@ public final class CommonUtils {
 
 
     public static ProgressDialog showLoadingDialog(ProgressDialog progressDialog) {
-        progressDialog.show();
+
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
         return progressDialog;
     }
 
+
+    public static ProgressDialog showLoadingDialog(ProgressDialog progressDialog, String title, String message, boolean indeterminate, @DrawableRes int icon, boolean cancelableOnTouchOutside) {
+
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(message);
+        if (icon != 0)
+            progressDialog.setIcon(icon);
+        progressDialog.setIndeterminate(indeterminate);
+        progressDialog.setCancelable(cancelableOnTouchOutside);
+        progressDialog.setCanceledOnTouchOutside(cancelableOnTouchOutside);
+        progressDialog.show();
+        return progressDialog;
+    }
 
 
     public static ProgressDialog showDownloadProgressgDialog(ProgressDialog progressDialog) {

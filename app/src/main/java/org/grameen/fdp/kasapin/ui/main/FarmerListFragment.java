@@ -191,6 +191,11 @@ public class FarmerListFragment extends BaseFragment {
     }
 
     @Override
+    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
+
+    }
+
+    @Override
     public void openLoginActivityOnTokenExpire() {
 
     }

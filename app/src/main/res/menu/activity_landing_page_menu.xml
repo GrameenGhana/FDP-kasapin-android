@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/upload_logs"
+        android:icon="@android:drawable/ic_menu_upload"
+        android:title="@string/send_logs_to_server" />
+
+
+    <item
+        android:id="@+id/crash_reports"
+        android:icon="@drawable/ic_error_outline_black_24dp"
+        android:title="@string/crash_reporter" />
+
+
+    <item
+        android:id="@+id/export_database"
+        android:icon="@drawable/ic_backup_black_24dp"
+        android:title="@string/export_database" />
+
+
+    <item
+        android:id="@+id/import_database"
+        android:icon="@drawable/ic_restore_black_24dp"
+        android:title="@string/import_database" />
+
+
+</menu>

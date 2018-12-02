@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.ext.targetSdkVersion
 
     defaultConfig {
         applicationId "org.grameen.fdp.kasapin"
@@ -14,14 +15,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-
-
+        buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
     }
 
 
     signingConfigs {
-
-
         release {
             storeFile file("fdp-kasapin.jks")
             storePassword "sirrius"
@@ -34,6 +32,7 @@ android {
     buildTypes {
 
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -48,8 +47,10 @@ android {
             debuggable true
             useProguard false
             //buildConfigField("String", "API_KEY", "testkey")
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
 
         }
+    }
 
 /*        productFlavors {
             internal {
@@ -97,13 +98,18 @@ android {
 
 
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
 
+    }
 
 
 
 
         dependencies {
             implementation fileTree(dir: 'libs', include: ['*.jar'])
+            implementation "com.android.support:support-v4:$rootProject.ext.supportLibraryVersion"
             implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
             implementation "com.android.support:design:$rootProject.ext.supportLibraryVersion"
             implementation "com.android.support:cardview-v7:$rootProject.ext.supportLibraryVersion"
@@ -113,6 +119,13 @@ android {
             implementation "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
             implementation "com.android.support:percent:$rootProject.ext.supportLibraryVersion"
             implementation "com.google.android.gms:play-services-maps:$rootProject.ext.mapsVersion"
+
+
+
+            //firebase
+            implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
+            implementation "com.crashlytics.sdk.android:crashlytics:$rootProject.ext.crashyticsVersion"
+
 
             // room database
             //implementation "com.google.guava:guava:$rootProject.ext.guavaVersion"
@@ -130,9 +143,6 @@ android {
             implementation "com.ogaclejapan.smarttablayout:library:$rootProject.ext.smartTabVersion"
             implementation "com.ogaclejapan.smarttablayout:utils-v4:$rootProject.ext.smartTabVersion"
 
-
-
-
             // debug database
             debugImplementation "com.amitshekhar.android:debug-db:$rootProject.ext.debugDBVersion"
 
@@ -149,7 +159,7 @@ android {
             annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterKnifeVersion"
 
             //Material Search View
-            implementation "com.github.mirrajabi:search-dialog:$rootProject.ext.materialSearchViewVersion"
+            implementation "com.github.mirrajabi:search-dialog:$rootProject.ext.materialSearchDialogVersion"
 
             //Custom Material views
             implementation 'com.rengwuxian.materialedittext:library:2.1.4'
@@ -161,21 +171,19 @@ android {
             //Pretty time
             implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
 
-
             //Table views
             implementation 'com.evrencoskun.library:tableview:0.8.6'
             implementation 'de.codecrafters.tableview:tableview:2.8.0'
 
-
             //Rhino
             implementation "io.apisense:rhino-android:$rootProject.ext.rhinoVersion"
-
 
             //Spotlight for app intro
             implementation 'com.github.wooplr:Spotlight:1.2.3'
 
             // logger
             implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
+            implementation "com.balsikandar.android:crashreporter:$rootProject.ext.crashReporterVersion"
 
             // dependencies for local unit tests
             testImplementation "junit:junit:$rootProject.ext.junitVersion"
@@ -187,6 +195,11 @@ android {
             androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
             androidTestImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
             androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
+
+            //Permissions
+            implementation "com.github.karanchuri:PermissionManager:$rootProject.ext.permissionManager"
+
+
 
 
         }
@@ -203,13 +216,16 @@ android {
         }
 
 
+
+
+
+
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
+
+
+apply plugin: 'com.google.gms.google-services'
+
 
 dependencies {
-    implementation 'com.android.support:support-v4:28.+'
+    implementation 'com.android.support:exifinterface:28.0.0'
 }

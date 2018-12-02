@@ -32,6 +32,7 @@ public interface DataManager extends PreferencesHelper {
 
     void clearAllTablesFromDb();
 
+    int backupRestoreDatabase(boolean shouldBackup);
 
     void updateUserInfo(
             String accessToken,

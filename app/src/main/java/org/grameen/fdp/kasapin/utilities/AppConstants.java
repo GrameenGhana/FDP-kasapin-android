@@ -30,6 +30,10 @@ public class AppConstants {
             .getExternalStorageDirectory() + File.separator + ".FDP";
 
 
+    public static String CRASH_REPORTS_DIR = AppConstants.ROOT_DIR + File.separator + "crashReports";
+    public static String DATABASE_BACKUP_DIR = AppConstants.ROOT_DIR + File.separator + "databaseBackups";
+
+
     public static final String TYPE_TEXT = "text";
     public static final String TYPE_NUMBER = "number";
     public static final String TYPE_NUMBER_DECIMAL = "decimal";
@@ -123,6 +127,27 @@ public class AppConstants {
     public static int SYNC_NOT_OK = 0;
 
     public static final String NO_MONITORING_PLACE_HOLDER = "N/A - Please complete monitoring A0";
+    //Token Constants
+    public static int TOKEN_IF = 1;
+    public static int TOKEN_VARIABLE = 2;
+    public static int TOKEN_EQUAL_TO = 3;
+    public static int TOKEN_BRAKET_CLOSED = 4;
+    public static int TOKEN_BRACKET_OPEN = 5;
+    public static int TOKEN_PLUS_MINUS = 6;
+    public static int TOKEN_INT = 7;
+    public static int TOKEN_MUL_DIV = 8;
+    public static int TOKEN_EXP = 9;
+    public static int TOKEN_MULTIPLIER = 10;
+    public static int TOKEN_CHAR = 11;
+    String complexCalculation = "IF(farm_weight_units_ghana == Kg,cocoa_production_ly_ghana,cocoa_production_ly_ghana*62.5)";
+
+
+
+
+
+
+
+
 
 
     private AppConstants(){}
