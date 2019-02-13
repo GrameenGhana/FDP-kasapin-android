@@ -327,7 +327,7 @@
                 android:layout_height="wrap_content"
                  android:orientation="vertical"
                 android:padding="@dimen/spacing_normal"
-                android:animateLayoutChanges="true"
+                android:animateLayoutChanges="truem"
                 android:background="@drawable/border_background_white"
                 />
 
