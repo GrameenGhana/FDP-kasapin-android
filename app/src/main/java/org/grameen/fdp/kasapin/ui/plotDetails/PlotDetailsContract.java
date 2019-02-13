@@ -1,9 +1,10 @@
-package org.grameen.fdp.kasapin.ui.setup;
+package org.grameen.fdp.kasapin.ui.plotDetails;
 
 
-import org.grameen.fdp.kasapin.di.Scope.PerActivity;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
-import org.grameen.fdp.kasapin.ui.base.BasePresenter;
+
+import java.util.List;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:09 PM
@@ -11,23 +12,19 @@ import org.grameen.fdp.kasapin.ui.base.BasePresenter;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class LoginContract {
+public class PlotDetailsContract {
 
 
 
     public interface View extends  BaseContract.View {
 
-        void onLoginSuccessful();
+        void showForm(List<FormAndQuestions> formAndQuestionsList);
+
 
     }
 
      public interface Presenter {
-
-        void makeLoginApiCall(String email, String password);
-
-
-
-
+         void getPlotQuestions();
     }
 
 

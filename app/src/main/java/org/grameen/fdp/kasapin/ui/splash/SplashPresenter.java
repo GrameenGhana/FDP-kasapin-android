@@ -1,14 +1,9 @@
 package org.grameen.fdp.kasapin.ui.splash;
 
 
-import android.animation.Animator;
-import android.content.Intent;
-import android.view.Window;
-
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.DataManager;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.ui.setup.LoginActivity;
 
 import javax.inject.Inject;
 
@@ -40,19 +35,14 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
     @Override
     public void openNextActivity() {
 
-        if(mAppDataManager.getCurrentUserLoggedInMode() == DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType())
+        if(mAppDataManager.getUserLoggedInMode() == DataManager.LoggedInMode.LOGGED_OUT.getType())
             getView().openLoginActivity();
         else
             getView().openNextActivity();
 
-
     }
 
-    @Override
-    public void toggleFullScreen(Boolean hideNavBar) {
-        getView().onToggleFullScreenClicked(hideNavBar);
 
-    }
 
     @Override
     public void startDelay() {

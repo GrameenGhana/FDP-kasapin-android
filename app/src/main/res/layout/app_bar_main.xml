@@ -99,6 +99,7 @@
                 android:theme="@style/PrimaryButtonGrey"
                 android:text="@string/back"
                 android:padding="@dimen/spacing_normal"
+                android:onClick="setBackListener"
                 android:layout_marginRight="@dimen/spacing_normal"
 
                 />

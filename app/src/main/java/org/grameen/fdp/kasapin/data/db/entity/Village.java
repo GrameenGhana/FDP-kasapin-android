@@ -16,15 +16,17 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "villages", indices = @Index(value = "countryId"), foreignKeys = @ForeignKey(entity = Country.class, parentColumns = "id", childColumns = "countryId", onDelete = CASCADE))
 public class Village {
+
     @PrimaryKey
     @NonNull
-    String id;
+    int id;
 
     @SerializedName("LastModifiedDate")
     String lastModifiedDate;
 
+     @NonNull
     String name;
-    String countryId;
+    int countryId;
 
     @SerializedName("district__c")
     String district;
@@ -34,11 +36,12 @@ public class Village {
     }
 
 
-    public void setCountryId(String countryId) {
-        this.countryId = countryId;
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
-    public String getCountryId() {
+
+    public int getCountryId() {
         return countryId;
     }
 
@@ -58,12 +61,13 @@ public class Village {
         this.name = name;
     }
 
-    public String getId() {
-        return id;
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @NonNull
+    public int getId() {
+        return id;
     }
 
     public String getDistrict() {

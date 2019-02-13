@@ -19,7 +19,7 @@ public class VillageAndFarmers {
     public String name;
 
 
-    @Relation(parentColumn = "id", entityColumn = "villageId", entity = RealFarmer.class)
+    @Relation(parentColumn = "name", entityColumn = "villageName", entity = RealFarmer.class)
     public List<RealFarmer> farmerList;
 
 

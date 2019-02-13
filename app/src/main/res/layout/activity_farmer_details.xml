@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -16,7 +15,7 @@
 
 
 
-    <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar"/>
     </LinearLayout>
 
 
@@ -64,7 +63,7 @@
                         style="@style/TextAppearance.AppCompat.Display2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                         android:textAllCaps="true"
+                        android:textAllCaps="true"
                         android:fontFamily="sans-serif-light"
                         android:layout_centerInParent="true"
                         android:textColor="@color/white"
@@ -110,6 +109,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="#TYHS3"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:textAllCaps="true"
                     android:layout_marginBottom="@dimen/spacing_half"
 
@@ -156,6 +157,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Jan 12, 2017"
+                        android:maxLength="16"
                         android:layout_marginLeft="@dimen/spacing_quarter"
                         android:layout_marginBottom="@dimen/spacing_half"
 
@@ -186,6 +188,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/spacing_quarter"
+                        android:maxLength="16"
                         android:text="Jan 12, 2017"
 
                         />
@@ -232,7 +235,7 @@
                 android:layout_below="@id/ll1"
                 android:padding="@dimen/spacing_normal"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                 />
+                />
 
         </RelativeLayout>
 
@@ -265,66 +268,66 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_half"
                 android:layout_marginBottom="@dimen/spacing_half"
-
+                android:animateLayoutChanges="true"
                 >
 
 
-               <HorizontalScrollView
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   >
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
 
 
-                   <LinearLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:orientation="horizontal"
-                       android:id="@+id/dynamicButtons"
-                       android:padding="@dimen/spacing_normal"
-                       >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/dynamicButtons"
+                        android:padding="@dimen/spacing_normal"
+                        >
 
-                       <Button
-                           android:visibility="gone"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="Profile"
-                           android:theme="@style/PrimaryButtonAccent"
-                           />
-
-
-                       <Button
-                           android:visibility="gone"
-
-                           android:id="@+id/socioeconomic"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="Socio-Economic"
-                           android:theme="@style/PrimaryButtonAccent"
-                           />
+                        <Button
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Profile"
+                            android:theme="@style/PrimaryButtonAccent"
+                            />
 
 
-                       <Button
-                           android:visibility="gone"
+                        <Button
+                            android:visibility="gone"
 
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="Farming eco"
-                           android:theme="@style/PrimaryButtonAccent"
-                           />
+                            android:id="@+id/socioeconomic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Socio-Economic"
+                            android:theme="@style/PrimaryButtonAccent"
+                            />
 
 
-                       <Button
-                           android:visibility="gone"
+                        <Button
+                            android:visibility="gone"
 
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="Productive"
-                           android:theme="@style/PrimaryButtonAccent"
-                           />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Farming eco"
+                            android:theme="@style/PrimaryButtonAccent"
+                            />
 
-                   </LinearLayout>
 
-               </HorizontalScrollView>
+                        <Button
+                            android:visibility="gone"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Productive"
+                            android:theme="@style/PrimaryButtonAccent"
+                            />
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
 
 
 
@@ -385,20 +388,20 @@
                             android:padding="@dimen/spacing_normal"
                             android:gravity="center"
                             >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/no_plots_added"
-                            android:textColor="@android:color/primary_text_light"
-                            android:layout_marginBottom="@dimen/spacing_half"
-                             />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/no_plots_added"
+                                android:textColor="@android:color/primary_text_light"
+                                android:layout_marginBottom="@dimen/spacing_half"
+                                />
 
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/no_plots_added_rationale"
-                             />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/no_plots_added_rationale"
+                                />
 
                         </LinearLayout>
 
@@ -409,7 +412,7 @@
                             android:layout_marginBottom="@dimen/spacing_half"
                             android:clipToPadding="false"
                             android:clipChildren="false"
-
+                            android:animateLayoutChanges="true"
                             >
 
                             <android.support.v7.widget.RecyclerView
@@ -438,7 +441,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/plotsRl"
                         style="@style/TextAppearance.AppCompat.Button"
-                         android:background="?attr/selectableItemBackground"
+                        android:background="?attr/selectableItemBackground"
                         />
 
 
@@ -462,33 +465,28 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="@dimen/spacing_normal"
-
                     >
 
-
-
-
-                        <TextView
-                            android:id="@+id/text1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/pandl"
-                            android:textAllCaps="true"
-                            android:layout_marginBottom="@dimen/spacing_normal"
-                            android:textColor="?attr/colorAccent"
-                            android:textSize="@dimen/text_size_tiny"
-                            android:textStyle="bold"
-
-                            />
+                    <TextView
+                        android:id="@+id/text1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pandl"
+                        android:textAllCaps="true"
+                        android:layout_marginBottom="@dimen/spacing_normal"
+                        android:textColor="?attr/colorAccent"
+                        android:textSize="@dimen/text_size_tiny"
+                        android:textStyle="bold"
+                        />
 
 
                     <ImageView
                         android:id="@+id/review_page"
+                        android:src="@drawable/review"
                         android:layout_below="@id/text1"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/review"
                         android:clickable="true"
                         android:focusable="true" />
 
@@ -502,12 +500,23 @@
                         android:layout_marginLeft="@dimen/spacing_2"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/bars_chart"
-                          android:clickable="true"
+                        android:clickable="true"
                         android:focusable="true"
                         />
 
 
-
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/historical_view"
+                        android:src="@drawable/combo_chart"
+                        android:layout_below="@id/text1"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_toRightOf="@id/pandl"
+                        android:layout_marginLeft="@dimen/spacing_2"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true" />
 
                 </RelativeLayout>
 
@@ -520,7 +529,7 @@
                 android:id="@+id/farm_assessment_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                 android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_marginBottom="@dimen/spacing_normal"
                 >
 
                 <RelativeLayout
@@ -597,13 +606,14 @@
             android:layout_height="wrap_content"
             android:theme="@style/PrimaryButtonGrey"
             android:text="@string/back"
+            android:onClick="setBackListener"
             android:padding="@dimen/spacing_normal"
             />
 
 
         <Button
             android:id="@+id/sync_farmer"
-             android:layout_width="0dp"
+            android:layout_width="0dp"
             android:layout_weight="3"
             android:layout_height="wrap_content"
             android:text="@string/sync_farmer"

@@ -1,26 +1,23 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
- import android.os.Bundle;
- import android.support.annotation.NonNull;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -34,13 +31,12 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.db.entity.Form;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.Village;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
-import org.grameen.fdp.kasapin.utilities.CommonUtils;
+import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 
@@ -53,7 +49,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
-import ir.mirrajabi.searchdialog.core.BaseSearchDialogCompat;
 import ir.mirrajabi.searchdialog.core.SearchResultListener;
 
 
@@ -67,9 +62,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
     @BindView(R.id.menu)
     View navDrawerMenu;
-
-    @BindView(R.id.place_holder)
-    View placeHolderView;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -94,14 +86,14 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @BindView(R.id.translation_switch)
     Switch toggleTranslation;
 
-    List<Village> villages;
+    @BindView(R.id.custom_toolbar_layout)
+    LinearLayout toolBarLayout;
+
+    String SELECTED_VILLAGE = "";
     SimpleSearchDialogCompat searchDialogCompat;
     private FragmentPagerItemAdapter viewPagerAdapter;
 
 
-    public static Intent getStartIntent(Context context) {
-        return new Intent(context, MainActivity.class);
-     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,13 +106,88 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         mPresenter.takeView(this);
 
 
+
+
+        if(FORM_AND_QUESTIONS == null)
+        mPresenter.getFormsAndQuestionsData();
+
+
         navigationView.setNavigationItemSelectedListener(this);
         toggleTranslation.setChecked(mPresenter.getAppDataManager().isTranslation());
 
-        if(mPresenter.getAppDataManager().isMonitoring())
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close) {
+
+            @Override
+            public void onDrawerSlide(View drawer, float slideOffset) {
+
+                findViewById(R.id.main_content).setX(drawer.getWidth() * slideOffset);
+
+            }
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+                syncState();
+
+
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+                syncState();
+
+            }
+        };
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+        if(mPresenter.getAppDataManager().isMonitoring()) {
             addFarmerButton.setVisibility(View.GONE);
 
+            toolBarLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.gradient_background_monitoring));
+        }
+
         mPresenter.getVillagesData();
+
+
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        View headerLayout = navigationView.getHeaderView(0);
+
+
+        try {
+            TextView nameTV = headerLayout.findViewById(R.id.name_textView);
+            TextView emailTV = headerLayout.findViewById(R.id.email_textView);
+            TextView versionNumberTV = navigationView.findViewById(R.id.version_number);
+
+
+
+            nameTV.setText(getAppDataManager().getUserFullName());
+            emailTV.setText(getAppDataManager().getUserEmail());
+
+
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionNumberTV.setText(pInfo.versionName);
+
+        } catch (PackageManager.NameNotFoundException ignore) {
+            AppLogger.e("TAG", ignore);
+        }
+
+
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+
+
+
+
+
+
+
 
 
     }
@@ -130,69 +197,110 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public void setFragmentAdapter(List<VillageAndFarmers> villageAndFarmersList) {
 
+
+
         FragmentPagerItems fragmentPagerItems = new FragmentPagerItems(this);
 
        for(VillageAndFarmers villageAndFarmers : villageAndFarmersList){
 
-            if(villageAndFarmers.getFarmerList() != null && villageAndFarmers.getFarmerList().size() > 0){
+           AppLogger.i(TAG, "VILLAGE NAME IS " + villageAndFarmers.name + " AND FARMERS SIZE IS " + villageAndFarmers.getFarmerList().size() );
+
+           if(villageAndFarmers.getFarmerList() != null && villageAndFarmers.getFarmerList().size() > 0){
+
+
 
                 fragmentPagerItems.add(FragmentPagerItem.of(villageAndFarmers.getName(), FarmerListFragment.class, new Bundler()
-                        .putString("farmers", new Gson().toJson(villageAndFarmers.getFarmerList())).get()));
+                        .putString("villageName", SELECTED_VILLAGE)
+                        .putString("farmers", getGson().toJson(villageAndFarmers.getFarmerList())).get()));
 
 
+        new Handler().postDelayed(() -> {
+        viewPagerAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(), fragmentPagerItems);
+        viewPager.setAdapter(viewPagerAdapter);
+        smartTabLayout.setViewPager(viewPager);
+        }, 500);
+
+
+
+           viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+               @Override
+               public void onPageScrolled(int i, float v, int i1) {
+
+               }
+
+               @Override
+               public void onPageSelected(int i) {
+
+                   SELECTED_VILLAGE  = fragmentPagerItems.get(i).getTitle().toString();
+
+                   CURRENT_PAGE = i;
+
+               }
+
+               @Override
+               public void onPageScrollStateChanged(int i) {
+
+               }
+           });
+
+           SELECTED_VILLAGE  = fragmentPagerItems.get(0).getTitle().toString();
             }
+       }
 
 
-           viewPagerAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(), fragmentPagerItems);
 
-           viewPager.setAdapter(viewPagerAdapter);
+       if(fragmentPagerItems.size() > 0)
+           hideNoDataView();
 
-           smartTabLayout.setViewPager(viewPager);
-
-           togglePlaceHolder(viewPagerAdapter.getCount() == 0);
-
-        }
-
-
-        //mPresenter.getFarmersData();
-    }
+ }
 
 
     @OnClick(R.id.add_farmer)
      void addFarmerActivity() {
-
         //Todo get forms, check size of forms, move to next activity
-//        mPresenter.getAppDataManager().getDatabaseManager().formsDao().getAllForms().size()
 
-
+        //mPresenter.getFarmerProfileFormAndQuestions();
+        openAddNewFarmerActivity(null);
 
 
 
 
     }
 
+
     @Override
-    public void togglePlaceHolder(boolean value) {
-        placeHolderView.setVisibility(value ? View.VISIBLE : View.GONE);
+    public void cacheFormsAndQuestionsData(List<FormAndQuestions> formAndQuestions) {
+        AppLogger.i(TAG, "FORMS SIZE IS " + formAndQuestions.size());
+
+        FORM_AND_QUESTIONS = formAndQuestions;
+        CURRENT_FORM = 0;
+
+    }
+
+
+    @Override
+    public void openAddNewFarmerActivity(@Nullable FormAndQuestions formAndQuestion) {
+
+        new Handler().post(() -> {
+
+            Intent intent = new Intent(MainActivity.this, AddEditFarmerActivity.class);
+            //intent.putExtra("formAndQuestions", getGson().toJson(formAndQuestion));
+            startActivity(intent);
+        });
+
+
     }
 
     @Override
-    public void instantiateSearchDialog(List<RealFarmer> farmers) {
+    public void instantiateSearchDialog(ArrayList<MySearchItem> items) {
 
-
-        ArrayList<MySearchItem> items = new ArrayList<>();
-        items.add(new MySearchItem("001", "First item"));
-        items.add(new MySearchItem("002","Second item"));
-        items.add(new MySearchItem("003", "Third item"));
-        items.add(new MySearchItem("004", "The ultimate item"));
-        items.add(new MySearchItem("005", "Last item"));
-
+        AppLogger.i(TAG, "SEARCH DIALOG ITEMS = " + items.size());
 
 
         searchDialogCompat = new SimpleSearchDialogCompat(MainActivity.this, "Search Farmer",
                 "Who are you looking for?", null, items,
                 (SearchResultListener<MySearchItem>) (dialog, item, position) -> {
-                    Toast.makeText(MainActivity.this, item.getTitle(),
+                    Toast.makeText(this, item.getTitle(),
                             Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 });
@@ -223,18 +331,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public void openNextActivity() {
 
-
-    }
-
-    @Override
-    public void openLoginActivityOnTokenExpire() {
-
-    }
-
-
-
-    @Override
-    public void onToggleFullScreenClicked(Boolean hideNavBar) {
 
     }
 
@@ -275,13 +371,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                         if (NetworkUtils.isNetworkConnected(MainActivity.this)) {
 
                             //Todo Sync data down
-
-
+                            new Handler().postDelayed(() -> mPresenter.syncData(true), 500);
 
                         }
 
                         else
-                            CustomToast.makeToast(MainActivity.this, getStringResources(R.string.no_internet_connection_available), Toast.LENGTH_LONG).show();
+                            showMessage(R.string.no_internet_connection_available);
 
 
 
@@ -320,7 +415,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public void showNoFarmersMessage() {
 
-        showDialog(true, getString(R.string.no_data), getString(R.string.no_farmers),
+        showDialog(true, getString(R.string.no_data), getString(R.string.no_new_data),
                 (dialogInterface, i) -> dialogInterface.dismiss(),
                 getString(R.string.ok),
                 null,

@@ -18,7 +18,8 @@ package org.grameen.fdp.kasapin.data;
 
 
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
- import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
+import org.grameen.fdp.kasapin.data.db.model.User;
+import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 
 import io.reactivex.Observable;
 
@@ -36,16 +37,24 @@ public interface DataManager extends PreferencesHelper {
 
     void updateUserInfo(
             String accessToken,
-            Long userId,
-            LoggedInMode loggedInMode,
-            String userName,
+            int userId,
+            String uuid,
+            String firstName,
+            String lastName,
             String email,
-            String profilePicPath);
+            Boolean active,
+            String confirmationCode,
+            Boolean confirmed,
+            String image);
+
+
+    void updateUserInfo(User user);
 
       enum LoggedInMode {
 
-        LOGGED_IN_MODE_LOGGED_OUT(0),
-        LOGGED_IN_MODE_SERVER(3);
+          LOGGED_OUT(0),
+          LOGGED_IN(1),
+          SERVER(3);
 
         private final int mType;
 
@@ -57,13 +66,5 @@ public interface DataManager extends PreferencesHelper {
             return mType;
         }
     }
-
-
-
-
-
-
-
-
 
 }

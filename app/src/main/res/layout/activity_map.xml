@@ -9,9 +9,7 @@
     <include layout="@layout/toolbar"/>
 
 
-    <io.codetail.widget.RevealFrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
 
 
     <RelativeLayout
@@ -120,8 +118,6 @@
 
 
     </RelativeLayout>
-
-    </io.codetail.widget.RevealFrameLayout>
 
 
 </LinearLayout>

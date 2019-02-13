@@ -22,7 +22,10 @@ import android.content.SharedPreferences;
 import org.grameen.fdp.kasapin.data.DataManager;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
 import org.grameen.fdp.kasapin.di.Scope.PreferenceInfo;
+import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.CommonUtils;
+import org.grameen.fdp.kasapin.utilities.SecurePreferences;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,85 +38,146 @@ import javax.inject.Singleton;
 public class AppPreferencesHelper implements PreferencesHelper {
 
     private static final String PREF_KEY_USER_LOGGED_IN_MODE = "PREF_KEY_USER_LOGGED_IN_MODE";
-    private static final String PREF_KEY_CURRENT_USER_ID = "PREF_KEY_CURRENT_USER_ID";
-    private static final String PREF_KEY_CURRENT_USER_NAME = "PREF_KEY_CURRENT_USER_NAME";
-    private static final String PREF_KEY_CURRENT_USER_EMAIL = "PREF_KEY_CURRENT_USER_EMAIL";
-    private static final String PREF_KEY_CURRENT_USER_PROFILE_PIC_URL = "PREF_KEY_CURRENT_USER_PROFILE_PIC_URL";
+    private static final String PREF_KEY_USER_ID = "PREF_KEY_USER_ID";
+    private static final String PREF_KEY_USER_UUID = "PREF_KEY_USER_UUID";
+    private static final String PREF_KEY_USER_FNAME = "PREF_KEY_USER_FNAME";
+    private static final String PREF_KEY_USER_LNAME = "PREF_KEY_USER_LNAME";
+    private static final String PREF_KEY_USER_EMAIL = "PREF_KEY_USER_EMAIL";
+    private static final String PREF_KEY_USER_ACTIVE = "PREF_KEY_USER_ACTIVE";
+    private static final String PREF_KEY_USER_CONFIRMATION_CODE = "PREF_KEY_USER_CONFIRMATION_CODE";
+    private static final String PREF_KEY_USER_CONFIRMED = "PREF_KEY_USER_CONFIRMED";
+    private static final String PREF_KEY_USER_PROFILE_PIC_URL = "PREF_KEY_USER_PROFILE_PIC_URL";
     private static final String PREF_KEY_IS_TRANSLATION = "IS_TRANSLATION_TOGGLED";
-
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
-
     public static final String PREF_KEY_IS_MONITORING_MODE = "PREF_KEY_MONITORING_MODE";
 
 
     private final SharedPreferences mPrefs;
 
+    private SecurePreferences securedPreferences;
+
     @Inject
     public AppPreferencesHelper(SharedPreferences preferences) {
         mPrefs = preferences;
+        securedPreferences = new SecurePreferences(mPrefs, BaseActivity.DEVICE_ID, false);
     }
 
     @Override
-    public Long getCurrentUserId() {
-        long userId = mPrefs.getLong(PREF_KEY_CURRENT_USER_ID, AppConstants.NULL_INDEX);
-        return userId == AppConstants.NULL_INDEX ? null : userId;
+    public int getUserId() {
+        return mPrefs.getInt(PREF_KEY_USER_ID, AppConstants.NULL_INDEX);
     }
 
     @Override
-    public void setCurrentUserId(Long userId) {
-        long id = userId == null ? AppConstants.NULL_INDEX : userId;
-        mPrefs.edit().putLong(PREF_KEY_CURRENT_USER_ID, id).apply();
+    public void setUserId(int userId) {
+        mPrefs.edit().putLong(PREF_KEY_USER_ID, userId).apply();
     }
 
     @Override
-    public String getCurrentUserName() {
-        return mPrefs.getString(PREF_KEY_CURRENT_USER_NAME, null);
+    public String getUserFirstName() {
+        return mPrefs.getString(PREF_KEY_USER_FNAME, null);
     }
 
     @Override
-    public void setCurrentUserName(String userName) {
-        mPrefs.edit().putString(PREF_KEY_CURRENT_USER_NAME, userName).apply();
+    public void setUserFirstName(String firstName) {
+        mPrefs.edit().putString(PREF_KEY_USER_FNAME, firstName).apply();
+
     }
 
     @Override
-    public String getCurrentUserEmail() {
-        return mPrefs.getString(PREF_KEY_CURRENT_USER_EMAIL, null);
+    public String getUserLastName() {
+        return mPrefs.getString(PREF_KEY_USER_LNAME, null);
     }
 
     @Override
-    public void setCurrentUserEmail(String email) {
-        mPrefs.edit().putString(PREF_KEY_CURRENT_USER_EMAIL, email).apply();
+    public void setUserLastName(String lastName) {
+        mPrefs.edit().putString(PREF_KEY_USER_LNAME, lastName).apply();
+    }
+
+
+    @Override
+    public String getUserEmail() {
+        return securedPreferences.getString(PREF_KEY_USER_EMAIL);
     }
 
     @Override
-    public String getCurrentUserProfilePicUrl() {
-        return mPrefs.getString(PREF_KEY_CURRENT_USER_PROFILE_PIC_URL, null);
+    public void setUserEmail(String email) {
+        securedPreferences.put(PREF_KEY_USER_EMAIL, email);
     }
 
     @Override
-    public void setCurrentUserProfilePicUrl(String profilePicUrl) {
-        mPrefs.edit().putString(PREF_KEY_CURRENT_USER_PROFILE_PIC_URL, profilePicUrl).apply();
+    public String getUserUuid() {
+        return securedPreferences.getString(PREF_KEY_USER_UUID);
     }
 
     @Override
-    public int getCurrentUserLoggedInMode() {
+    public void setUserUuid(String uuid) {
+        securedPreferences.put(PREF_KEY_USER_UUID, uuid);
+
+    }
+
+    @Override
+    public Boolean getUserIsActive() {
+        return mPrefs.getBoolean(PREF_KEY_USER_ACTIVE, false);
+    }
+
+    @Override
+    public void setUserIsActive(boolean isActive) {
+        mPrefs.edit().putBoolean(PREF_KEY_USER_ACTIVE, isActive).apply();
+
+    }
+
+    @Override
+    public String getUserProfilePicUrl() {
+        return mPrefs.getString(PREF_KEY_USER_PROFILE_PIC_URL, null);
+    }
+
+    @Override
+    public void setUserProfilePicUrl(String profilePicUrl) {
+        mPrefs.edit().putString(PREF_KEY_USER_PROFILE_PIC_URL, profilePicUrl).apply();
+    }
+
+    @Override
+    public String getUserConfirmationCode() {
+        return mPrefs.getString(PREF_KEY_USER_CONFIRMATION_CODE, null);
+    }
+
+    @Override
+    public void setUserConfirmationCode(String code) {
+
+        mPrefs.edit().putString(PREF_KEY_USER_CONFIRMATION_CODE, code).apply();
+
+    }
+
+    @Override
+    public Boolean getUserIsConfirmed() {
+        return mPrefs.getBoolean(PREF_KEY_USER_CONFIRMED, false);
+    }
+
+    @Override
+    public void setUserIsConfirmed(boolean isConfirmed) {
+        mPrefs.edit().putBoolean(PREF_KEY_USER_CONFIRMED, isConfirmed).apply();
+
+    }
+
+    @Override
+    public int getUserLoggedInMode() {
         return mPrefs.getInt(PREF_KEY_USER_LOGGED_IN_MODE,
-                DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT.getType());
+                DataManager.LoggedInMode.LOGGED_OUT.getType());
     }
 
     @Override
-    public void setCurrentUserLoggedInMode(DataManager.LoggedInMode mode) {
+    public void setUserLoggedInMode(DataManager.LoggedInMode mode) {
         mPrefs.edit().putInt(PREF_KEY_USER_LOGGED_IN_MODE, mode.getType()).apply();
     }
 
     @Override
     public String getAccessToken() {
-        return mPrefs.getString(PREF_KEY_ACCESS_TOKEN, null);
+        return securedPreferences.getString(PREF_KEY_ACCESS_TOKEN);
     }
 
     @Override
     public void setAccessToken(String accessToken) {
-        mPrefs.edit().putString(PREF_KEY_ACCESS_TOKEN, accessToken).apply();
+        securedPreferences.put(PREF_KEY_ACCESS_TOKEN, accessToken);
     }
 
     @Override
@@ -136,6 +200,11 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public boolean isTranslation() {
         return mPrefs.getBoolean(PREF_KEY_IS_TRANSLATION, false);
+    }
+
+    @Override
+    public void clearSecurePreferences() {
+        securedPreferences.clear();
     }
 
     @Override

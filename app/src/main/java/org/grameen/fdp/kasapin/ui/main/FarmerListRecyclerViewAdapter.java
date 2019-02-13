@@ -6,7 +6,6 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +31,7 @@ import java.util.Random;
  */
 
 
-public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.ViewHolder> {
+public class FarmerListRecyclerViewAdapter extends RecyclerView.Adapter<FarmerListRecyclerViewAdapter.ViewHolder> {
 
     OnItemClickListener mItemClickListener;
     OnLongClickListener longClickListener;
@@ -46,7 +45,7 @@ public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.Vi
      * @param farmers
      **/
 
-    FarmerListAdapter(Context context, List<RealFarmer> farmers) {
+    FarmerListRecyclerViewAdapter(Context context, List<RealFarmer> farmers) {
         this.farmers = farmers;
         this.context = context;
 
@@ -65,10 +64,10 @@ public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.Vi
     }
 
     @Override
-    public FarmerListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public FarmerListRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.farmer_item_view, viewGroup, false);
 
-        return new FarmerListAdapter.ViewHolder(v);
+        return new FarmerListRecyclerViewAdapter.ViewHolder(v);
     }
 
 
@@ -116,7 +115,7 @@ public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.Vi
         viewHolder.code.setText(farmer.getCode());
 
 
-        if(farmer.getSyncStatus() != null){
+
             if(farmer.getSyncStatus() == 1) {
                 viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_black_18dp);
                 viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
@@ -124,10 +123,6 @@ public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.Vi
                 viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_problem_black_18dp);
                 viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.cpb_red));
             }
-        } else {
-            viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_problem_black_18dp);
-            viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.cpb_red));
-        }
 
 
         if (farmer.getHasSubmitted() != null) {
@@ -148,11 +143,11 @@ public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.Vi
         return position;
     }
 
-    public void setOnItemClickListener(final FarmerListAdapter.OnItemClickListener mItemClickListener) {
+    public void setOnItemClickListener(final FarmerListRecyclerViewAdapter.OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
 
-    public void OnLongClickListener(final FarmerListAdapter.OnLongClickListener mLongClickListener) {
+    public void OnLongClickListener(final FarmerListRecyclerViewAdapter.OnLongClickListener mLongClickListener) {
         this.longClickListener = mLongClickListener;
     }
 
@@ -200,13 +195,11 @@ public class FarmerListAdapter extends RecyclerView.Adapter<FarmerListAdapter.Vi
             fdpStatus = itemView.findViewById(R.id.fdp_status);
 
 
-
             mainLayout.setOnClickListener(v -> {
                 if (mItemClickListener != null) {
                     mItemClickListener.onItemClick(itemView, getAdapterPosition());
                 }
             });
-
 
                 mainLayout.setOnLongClickListener(view -> {
                     longClickListener.onLongClick(view, getAdapterPosition());

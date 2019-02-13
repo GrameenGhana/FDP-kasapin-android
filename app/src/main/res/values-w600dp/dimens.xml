@@ -35,6 +35,8 @@
     <dimen name="sections_image_size">70dp</dimen>
     <dimen name="sub_sections_image_size">40dp</dimen>
     <dimen name="topics_image_size">20dp</dimen>
+    <dimen name="alert_def_padding">18dp</dimen>
+
 
 
     <dimen name="text_size_title">24sp</dimen>
@@ -45,7 +47,6 @@
     <dimen name="visa_margin">70dp</dimen>
 
 
-    <dimen name="alert_def_padding">18dp</dimen>
     <dimen name="player_controls">60dp</dimen>
 
     <dimen name="listview_icon_size">70dp</dimen>

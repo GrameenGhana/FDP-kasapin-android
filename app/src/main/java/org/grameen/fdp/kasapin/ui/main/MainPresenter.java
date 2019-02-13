@@ -1,23 +1,33 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import com.google.gson.Gson;
 
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.DataManager;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
+import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
+import org.grameen.fdp.kasapin.utilities.DownloadResources;
+import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:06 PM
@@ -25,9 +35,11 @@ import javax.inject.Inject;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class MainPresenter extends BasePresenter<MainContract.View> implements MainContract.Presenter{
+public class MainPresenter extends BasePresenter<MainContract.View> implements MainContract.Presenter,
+        FdpCallbacks.OnDownloadResourcesListener{
 
     AppDataManager mAppDataManager;
+    public List<RealFarmer> FARMERS = new ArrayList<>();
 
 
 
@@ -40,28 +52,91 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     }
 
 
-
-
     @Override
-    public void openNextActivity() {
+    public void getFarmerProfileFormAndQuestions() {
 
+        runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByName(AppConstants.FARMER_PROFILE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(formAndQuestion -> getView().openAddNewFarmerActivity(formAndQuestion), throwable -> {
+                    getView().showMessage(R.string.error_has_occurred);
+                    throwable.printStackTrace();
+                }));
     }
 
-   /* @Override
-    public void showDialog(Boolean cancelable, @Nullable String title, @Nullable String message,
-                           @Nullable DialogInterface.OnClickListener onPositiveButtonClickListener,
-                           @NonNull String positiveText,
-                           @Nullable DialogInterface.OnClickListener onNegativeButtonClickListener,
-                           @NonNull String negativeText, @Nullable int icon_drawable) {
+    @Override
+    public void getFormsAndQuestionsData() {
 
-        getView().showDialog(cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener,
-                negativeText, icon_drawable);
-
-
-
+        runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByType(AppConstants.DIAGNOSTIC, AppConstants.DISPLAY_TYPE_FORM)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(formAndQuestions -> getView().cacheFormsAndQuestionsData(formAndQuestions), throwable -> {
+                    getView().showMessage(R.string.error_has_occurred);
+                    throwable.printStackTrace();
+                }));
 
 
-    }*/
+      /*  runSingleCall(getAppDataManager().getDatabaseManager().formsDao().getAllForms()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(forms -> Observable.fromIterable(forms)
+                        .filter(form -> form.getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC) && form.getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
+                        .map(form -> {
+                            if(form.getFormNameC().equalsIgnoreCase(AppConstants.FARMER_PROFILE)){
+                                runSingleCall(getAppDataManager().getDatabaseManager().questionDao()
+                                        .getQuestionsByForm(form.getId())
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(questions -> {
+
+                                            form.setQuestionList(questions);
+                                            AppLogger.i(TAG, "QUESTIONS FOR FORM Farmer Profile FOUND with size " + form.getQuestionList().size() );
+                                            AppLogger.i(TAG, "DATA " + new Gson().toJson(form.getQuestionList()) );
+
+
+                                        }));
+                                return form;
+                            }else
+                                return form;
+                        })
+                        .toList()
+                    ).subscribe(newForms -> getView().openFarmerDetailsActivity(newForms), throwable -> {
+                        getView().showMessage(R.string.error_has_occurred);
+                        throwable.printStackTrace();
+                }));
+*/
+/*
+        runSingleCall(getAppDataManager().getDatabaseManager().formsDao().getAllForms()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(forms -> Observable.fromIterable(forms)
+                        .filter(form -> form.getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC) && form.getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
+                        .doOnNext(form -> {
+
+                            if(form.getFormNameC().equalsIgnoreCase(AppConstants.FARMER_PROFILE)) {
+                                runSingleCall(getAppDataManager().getDatabaseManager().questionDao()
+                                        .getQuestionsByForm(form.getId())
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(questions -> {
+
+                                            form.setQuestionList(questions);
+
+                                            AppLogger.i(TAG, "QUESTIONS FOR FORM Farmer Profile FOUND with size " + questions.size() );
+                                            AppLogger.i(TAG, "DATA " + new Gson().toJson(questions) );
+
+
+                                        }));
+                            }
+                        })
+                        .toList()
+                ).subscribe(newForms -> getView().openFarmerDetailsActivity(newForms), throwable -> {
+                    getView().showMessage(R.string.error_has_occurred);
+                    AppLogger.e(TAG, throwable);
+                }));*/
+
+
+    }
 
     @Override
     public void startDelay(long delayTime) {
@@ -81,40 +156,101 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         getView().toggleDrawer();
     }
 
-    @Override
-    public void getFarmersData() {
-
-        getAppDataManager().getDatabaseManager().realFarmersDao().getAll()
-                .observe(getContext(),
-                        farmers -> {
-                if(farmers != null && farmers.size() > 0)
-                    getView().instantiateSearchDialog(farmers);
-
-    });
-        }
-
 
     @Override
     public void getVillagesData() {
 
-        getAppDataManager().getDatabaseManager().villageAndFarmersDao().getVillagesAndFarmers()
-                .observe(getContext(), villagesAndFarmers -> {
 
-                    if (villagesAndFarmers != null && villagesAndFarmers.size() > 0) {
-                        getView().setFragmentAdapter(villagesAndFarmers);
+       ArrayList<MySearchItem> farmerNames = new ArrayList<>();
 
-                        List<RealFarmer> farmers = new ArrayList<>();
+        runSingleCall(getAppDataManager().getDatabaseManager().villageAndFarmersDao().getVillagesAndFarmers()
+                .filter(villageAndFarmers -> villageAndFarmers != null && villageAndFarmers.size() > 0)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(villageAndFarmers -> {
 
-                        for (VillageAndFarmers villageAndFarmers : villagesAndFarmers)
-                            farmers.addAll(villageAndFarmers.getFarmerList());
+                     if(villageAndFarmers.size() > 0) {
+                         AppLogger.i(TAG, "VILLAGES & FARMERS SIZE IS " + villageAndFarmers.size());
 
-                        getView().instantiateSearchDialog(farmers);
 
-                    }
-                    else
-                        getView().togglePlaceHolder(true);
-                });
+                         getView().setFragmentAdapter(villageAndFarmers);
+
+
+                         runSingleCall(Observable.fromIterable(villageAndFarmers)
+                                 .subscribeOn(Schedulers.io())
+                                 .observeOn(AndroidSchedulers.mainThread())
+                                 .map(villageAndFarmers1 -> {
+
+                                     if(villageAndFarmers1.getFarmerList().size() > 0)
+                                         Observable.fromIterable(villageAndFarmers1.getFarmerList())
+                                                 .map(farmer -> new MySearchItem(farmer.getCode(), farmer.getFarmerName()))
+                                                 .toList()
+                                         .subscribe(new SingleObserver<List<MySearchItem>>() {
+                                             @Override
+                                             public void onSubscribe(Disposable d) {
+
+                                                 if(d.isDisposed())
+                                                 getAppDataManager().getCompositeDisposable().add(d);
+
+                                             }
+
+                                             @Override
+                                             public void onSuccess(List<MySearchItem> mySearchItems) {
+                                                 farmerNames.addAll(mySearchItems);
+                                             }
+
+                                             @Override
+                                             public void onError(Throwable e) {
+
+                                             }
+                                         });
+                                     return farmerNames;
+                                 }).subscribe(items -> getView().instantiateSearchDialog(farmerNames)));
+
+                     }else{
+
+                         AppLogger.i(TAG, "VILLAGES & FARMERS SIZE IS EMPTY " + villageAndFarmers.size());
+
+                     }}));
+
+    }
+
+
+    @Override
+    public void syncData(boolean showProgress) {
+
+        if(showProgress)
+            getView().showLoading("Syncing data","Please wait...", true, 0,false);
+
+        DownloadResources.newInstance(getView(), mAppDataManager, this, showProgress).getData();
+
+    }
+
+
+    @Override
+    public void onSuccess() {
+        AppLogger.i(TAG, "**** ON SUCCESS");
+        getView().hideLoading();
+        getView().showMessage("Data download complete!");
+
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+        AppLogger.i(TAG, "**** ON ERROR");
+
+        getView().hideLoading();
+        getView().showMessage(throwable.getMessage());
+
+        throwable.printStackTrace();
+
+        if(throwable.getMessage().contains("401")) {
+            getView().openLoginActivityOnTokenExpire();
+        }
 
 
     }
-}
+
+
+
+ }

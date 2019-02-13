@@ -5,11 +5,14 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
 
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 
 import java.util.List;
+
+import io.reactivex.Single;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 12:37 PM
@@ -18,15 +21,10 @@ import java.util.List;
  */
 
 @Dao
-public interface QuestionDao {
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Question> objects);
-
+public interface QuestionDao extends BaseDao<Question>{
 
     @Query("SELECT * FROM questions")
-    List<Question> getAllQuestions();
+    Single <List<Question> >getAllQuestions();
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -34,10 +32,10 @@ public interface QuestionDao {
 
 
     @Query("SELECT * FROM questions WHERE id = :id")
-    Question getQuestionById(String id);
+    Question getQuestionById(int id);
 
-    @Query("SELECT * FROM questions WHERE formId = :formId")
-    List<Question> getQuestionsByform(String formId);
+    @Query("SELECT * FROM questions WHERE formTranslationId = :formTranslationId")
+    Single<List<Question>> getQuestionsByForm(int formTranslationId);
 
 
     @Update
@@ -50,7 +48,7 @@ public interface QuestionDao {
 
 
     @Query("DELETE FROM questions WHERE id = :id")
-    int deleteQuestionById(String id);
+    int deleteQuestionById(int id);
 
 
 }

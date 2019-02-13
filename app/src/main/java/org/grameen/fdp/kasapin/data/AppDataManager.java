@@ -20,6 +20,8 @@ import android.content.Context;
 import android.os.Environment;
 
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
+import org.grameen.fdp.kasapin.data.db.model.User;
+import org.grameen.fdp.kasapin.data.network.FdpApiService;
 import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -33,6 +35,7 @@ import java.nio.channels.FileChannel;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.disposables.CompositeDisposable;
 
 
 @Singleton
@@ -44,13 +47,19 @@ public class AppDataManager implements DataManager {
     private final AppDatabase mAppDatabase;
     private final PreferencesHelper mPreferencesHelper;
 
+
+    @Inject
+    CompositeDisposable compositeDisposable;
+
+    @Inject
+    FdpApiService fdpApiService;
+
+
     @Inject
     public AppDataManager(@ApplicationContext Context context, AppDatabase appDatabase, PreferencesHelper preferencesHelper) {
         mContext = context;
         mAppDatabase = appDatabase;
         mPreferencesHelper = preferencesHelper;
-
-
      }
 
 
@@ -63,6 +72,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setAccessToken(String accessToken) {
+        mPreferencesHelper.setAccessToken(accessToken);
 
     }
 
@@ -94,74 +104,153 @@ public class AppDataManager implements DataManager {
 
 
     @Override
-    public int getCurrentUserLoggedInMode() {
-        return mPreferencesHelper.getCurrentUserLoggedInMode();
+    public int getUserLoggedInMode() {
+        return mPreferencesHelper.getUserLoggedInMode();
     }
 
     @Override
-    public void setCurrentUserLoggedInMode(LoggedInMode mode) {
-        mPreferencesHelper.setCurrentUserLoggedInMode(mode);
+    public void setUserLoggedInMode(LoggedInMode mode) {
+        mPreferencesHelper.setUserLoggedInMode(mode);
     }
 
     @Override
-    public Long getCurrentUserId() {
-        return mPreferencesHelper.getCurrentUserId();
+    public int getUserId() {
+        return mPreferencesHelper.getUserId();
     }
 
     @Override
-    public void setCurrentUserId(Long userId) {
-        mPreferencesHelper.setCurrentUserId(userId);
+    public void setUserId(int userId) {
+        mPreferencesHelper.setUserId(userId);
     }
 
     @Override
-    public String getCurrentUserName() {
-        return mPreferencesHelper.getCurrentUserName();
+    public String getUserFirstName() {
+        return mPreferencesHelper.getUserFirstName();
     }
 
     @Override
-    public void setCurrentUserName(String userName) {
-        mPreferencesHelper.setCurrentUserName(userName);
+    public void setUserFirstName(String firstName) {
+        mPreferencesHelper.setUserFirstName(firstName);
     }
 
     @Override
-    public String getCurrentUserEmail() {
-        return mPreferencesHelper.getCurrentUserEmail();
+    public String getUserLastName() {
+        return mPreferencesHelper.getUserLastName();
     }
 
     @Override
-    public void setCurrentUserEmail(String email) {
-        mPreferencesHelper.setCurrentUserEmail(email);
-    }
-
-    @Override
-    public String getCurrentUserProfilePicUrl() {
-        return mPreferencesHelper.getCurrentUserProfilePicUrl();
-    }
-
-    @Override
-    public void setCurrentUserProfilePicUrl(String profilePicUrl) {
-        mPreferencesHelper.setCurrentUserProfilePicUrl(profilePicUrl);
+    public void setUserLastName(String lastName) {
+        mPreferencesHelper.setUserLastName(lastName);
     }
 
 
+    @Override
+    public String getUserEmail() {
+        return mPreferencesHelper.getUserEmail();
+    }
 
     @Override
-    public void updateUserInfo(
-            String accessToken,
-            Long userId,
-            LoggedInMode loggedInMode,
-            String userName,
-            String email,
-            String profilePicPath) {
+    public void setUserEmail(String email) {
+        mPreferencesHelper.setUserEmail(email);
+    }
 
-        setAccessToken(accessToken);
-        setCurrentUserId(userId);
-        setCurrentUserLoggedInMode(loggedInMode);
-        setCurrentUserName(userName);
-        setCurrentUserEmail(email);
-        setCurrentUserProfilePicUrl(profilePicPath);
+    @Override
+    public String getUserUuid() {
+        return (mPreferencesHelper.getUserUuid() != null) ? mPreferencesHelper.getUserUuid(): getUserEmail();
+    }
 
-        updateApiHeader(userId, accessToken);
+    @Override
+    public void setUserUuid(String uuid) {
+        mPreferencesHelper.setUserUuid(uuid);
+    }
+
+    @Override
+    public Boolean getUserIsActive() {
+        return mPreferencesHelper.getUserIsActive();
+    }
+
+    @Override
+    public void setUserIsActive(boolean isActive) {
+        mPreferencesHelper.setUserIsActive(isActive);
+    }
+
+    @Override
+    public String getUserProfilePicUrl() {
+        return mPreferencesHelper.getUserProfilePicUrl();
+    }
+
+    @Override
+    public void setUserProfilePicUrl(String profilePicUrl) {
+        mPreferencesHelper.setUserProfilePicUrl(profilePicUrl);
+    }
+
+
+    public String getUserFullName(){
+        return getUserFirstName() + " " + getUserLastName();
+    }
+
+    @Override
+    public String getUserConfirmationCode() {
+        return mPreferencesHelper.getUserConfirmationCode();
+    }
+
+    @Override
+    public void setUserConfirmationCode(String code) {
+        mPreferencesHelper.setUserConfirmationCode(code);
+    }
+
+    @Override
+    public Boolean getUserIsConfirmed() {
+        return mPreferencesHelper.getUserIsConfirmed();
+    }
+
+    @Override
+    public void setUserIsConfirmed(boolean isActive) {
+        mPreferencesHelper.setUserIsConfirmed(isActive);
+    }
+
+
+    @Override
+    public void clearSecurePreferences() {
+        mPreferencesHelper.clearSecurePreferences();
+    }
+
+    @Override
+    public void updateUserInfo(String accessToken,
+                               int userId,
+                               String uuid,
+                               String firstName,
+                               String lastName,
+                               String email,
+                               Boolean active,
+                               String confirmationCode,
+                               Boolean confirmed,
+                               String image) {
+
+        mPreferencesHelper.setAccessToken(accessToken);
+        mPreferencesHelper.setUserId(userId);
+        mPreferencesHelper.setUserUuid(uuid);
+        mPreferencesHelper.setUserFirstName(firstName);
+        mPreferencesHelper.setUserLastName(lastName);
+        mPreferencesHelper.setUserEmail(email);
+        mPreferencesHelper.setUserIsActive(active);
+        mPreferencesHelper.setUserConfirmationCode(confirmationCode);
+        mPreferencesHelper.setUserIsConfirmed(confirmed);
+        mPreferencesHelper.setUserProfilePicUrl(image);
+
+    }
+
+    @Override
+    public void updateUserInfo(User user) {
+        mPreferencesHelper.setUserId(user.getId());
+        mPreferencesHelper.setUserUuid(user.getUuid());
+        mPreferencesHelper.setUserFirstName(user.getFirstName());
+        mPreferencesHelper.setUserLastName(user.getLastName());
+        mPreferencesHelper.setUserEmail(user.getEmail());
+        mPreferencesHelper.setUserIsActive(user.isActive());
+        mPreferencesHelper.setUserConfirmationCode(user.getConfirmationCode());
+        mPreferencesHelper.setUserIsConfirmed(user.isConfirmed());
+        mPreferencesHelper.setUserProfilePicUrl(user.getAvatarLocation());
     }
 
     @Override
@@ -171,16 +260,19 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setUserAsLoggedOut() {
-        updateUserInfo(
-                null,
-                null,
-                DataManager.LoggedInMode.LOGGED_IN_MODE_LOGGED_OUT,
-                null,
-                null,
-                null);
+
+       updateUserInfo(new User(-1,
+               "",
+               "",
+               "",
+               "",
+               "",
+               false,
+               "",
+               false));
 
         clearPreferences();
-
+        clearSecurePreferences();
         clearAllTablesFromDb();
     }
 
@@ -239,5 +331,14 @@ public class AppDataManager implements DataManager {
 
         return value;
 
+    }
+
+
+    public CompositeDisposable getCompositeDisposable() {
+        return compositeDisposable;
+    }
+
+    public FdpApiService getFdpApiService() {
+        return fdpApiService;
     }
 }

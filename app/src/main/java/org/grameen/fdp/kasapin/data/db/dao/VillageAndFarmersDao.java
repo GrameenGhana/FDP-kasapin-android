@@ -11,6 +11,10 @@ import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+
 /**
  * Created by AangJnr on 20, September, 2018 @ 5:57 PM
  * Work Mail cibrahim@grameenfoundation.org
@@ -22,6 +26,6 @@ public interface VillageAndFarmersDao {
 
     @Transaction
     @Query("SELECT id, name FROM villages")
-    public LiveData<List<VillageAndFarmers>> getVillagesAndFarmers();
+    Flowable<List<VillageAndFarmers>> getVillagesAndFarmers();
 
 }

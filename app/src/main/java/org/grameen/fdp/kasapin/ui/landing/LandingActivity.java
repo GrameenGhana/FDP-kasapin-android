@@ -71,13 +71,17 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             int flags = getWindow().getDecorView().getSystemUiVisibility();
             flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             getWindow().getDecorView().setSystemUiVisibility(flags);
             getWindow().setStatusBarColor(Color.WHITE);
-        }
+        }*/
+
+
+        toggleFullScreen(false, getWindow());
+
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_landing_page);
 
@@ -105,6 +109,11 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
 
 
+
+
+        org.grameen.fdp.kasapin.utilities.FileUtils.createNoMediaFile();
+
+
      }
 
 
@@ -118,7 +127,7 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
 
     @Override
-    public void openNextActivity() {
+    public void openMainActivity() {
 
         startActivity(new Intent(this, MainActivity.class));
 
@@ -132,20 +141,13 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
 
 
-    @Override
-    public void onToggleFullScreenClicked(Boolean hideNavBar) {
-
-    }
-
-
     public void showPopUp(@Nullable final View v) {
 
         PopupMenu menu = new PopupMenu(this, v);
         menu.getMenuInflater().inflate(R.menu.activity_landing_page_menu, menu.getMenu());
 
         if (BuildConfig.DEBUG) {
-            menu.getMenu().findItem(1).setVisible(false);
-            menu.getMenu().findItem(2).setVisible(false);
+            menu.getMenu().findItem(R.id.crash_reports).setVisible(true);
         }
 
         menu.setOnMenuItemClickListener(item -> {

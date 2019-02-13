@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.fragment.FormModelFragment;
 import org.grameen.fdp.kasapin.ui.form.model.MapFormModel;
 
@@ -47,6 +48,18 @@ public class ActivityUtils {
 
          fragmentManager.beginTransaction()
                 .add(frameId, fragment, fragment.getClass().getSimpleName())
+                .commit();
+    }
+
+
+    public static void loadDynamicView(@NonNull FragmentManager fragmentManager,  @NonNull Fragment fragment, String formName) {
+        //Todo add parameter to load data from the database, if is in editing mode else display default forms with their resp values
+        checkNotNull(fragmentManager);
+        checkNotNull(fragment);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.dynamicLayout, fragment, formName)
+                .addToBackStack(null)
                 .commit();
     }
 

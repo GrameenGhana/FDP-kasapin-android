@@ -20,6 +20,8 @@ public class LandingContract {
 
         void showPopUp(@Nullable android.view.View v);
 
+        void openMainActivity();
+
 
 
     }
@@ -28,8 +30,10 @@ public class LandingContract {
 
          void showPopupDialog();
 
-
          void uploadLogsToServer();
+
+
+
 
     }
 

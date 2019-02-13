@@ -24,26 +24,48 @@ import org.grameen.fdp.kasapin.data.DataManager;
 
 public interface PreferencesHelper {
 
-    int getCurrentUserLoggedInMode();
+    int getUserLoggedInMode();
 
-    void setCurrentUserLoggedInMode(DataManager.LoggedInMode mode);
+    void setUserLoggedInMode(DataManager.LoggedInMode mode);
 
-    Long getCurrentUserId();
+    int getUserId();
 
-    void setCurrentUserId(Long userId);
+    void setUserId(int userId);
 
-    String getCurrentUserName();
+    String getUserFirstName();
 
-    void setCurrentUserName(String userName);
+    void setUserFirstName(String firstName);
 
-    String getCurrentUserEmail();
+    String getUserLastName();
 
-    void setCurrentUserEmail(String email);
+    void setUserLastName(String lastName);
 
-    String getCurrentUserProfilePicUrl();
+    String getUserEmail();
+
+    void setUserEmail(String email);
+
+    String getUserUuid();
+
+    void setUserUuid(String uuid);
 
 
-    void setCurrentUserProfilePicUrl(String profilePicUrl);
+    Boolean getUserIsActive();
+
+    void setUserIsActive(boolean isActive);
+
+
+    String getUserProfilePicUrl();
+
+    void setUserProfilePicUrl(String profilePicUrl);
+
+    String getUserConfirmationCode();
+
+    void setUserConfirmationCode(String code);
+
+    Boolean getUserIsConfirmed();
+
+    void setUserIsConfirmed(boolean isActive);
+
 
     String getAccessToken();
 
@@ -61,6 +83,9 @@ public interface PreferencesHelper {
     void setIsTranslationToggled(boolean isTranslationToggled);
 
     boolean isTranslation();
+
+
+    void clearSecurePreferences();
 
  
 

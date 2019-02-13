@@ -11,11 +11,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.di.Scope.ActivityContext;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.ui.landing.LandingPresenter;
-import org.grameen.fdp.kasapin.ui.setup.LoginContract;
-import org.grameen.fdp.kasapin.ui.setup.LoginPresenter;
 
-import javax.inject.Singleton;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 

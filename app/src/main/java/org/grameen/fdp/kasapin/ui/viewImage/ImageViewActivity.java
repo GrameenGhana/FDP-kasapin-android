@@ -147,8 +147,9 @@ public class ImageViewActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onToggleFullScreenClicked(Boolean hideNavBar) {
 
+    @Override
+    public void toggleFullScreen(Boolean hideNavBar, Window window) {
+        super.toggleFullScreen(hideNavBar, window);
     }
 }

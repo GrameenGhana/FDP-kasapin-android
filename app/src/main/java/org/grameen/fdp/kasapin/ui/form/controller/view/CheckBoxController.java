@@ -216,12 +216,12 @@ public class CheckBoxController extends MyLabeledFieldController {
             value = "";
         }
 
-        JSONArray jsonArray = new JSONArray();
+      /*  JSONArray jsonArray = new JSONArray();
         try {
             jsonArray = new JSONArray(value);
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
 
         /*Set<Object> modelValues = new HashSet<Object>(Arrays.asList(jsonArray));
         if (modelValues == null) {

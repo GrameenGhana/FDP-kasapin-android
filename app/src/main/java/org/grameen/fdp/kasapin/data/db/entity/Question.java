@@ -6,13 +6,17 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.squareup.moshi.Json;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -21,201 +25,326 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
  * Created by aangjnr on 29/11/2017.
  */
 
-@Entity(tableName = "questions", indices = {@Index(value = "formId")}, foreignKeys = {@ForeignKey(entity = Form.class, parentColumns = "id", childColumns = "formId", onDelete = CASCADE)})
+@Entity(tableName = "questions", indices = {@Index(value = "formTranslationId"),
+        @Index(value = "id", unique = true)}, foreignKeys = {@ForeignKey(entity = FormTranslation.class, parentColumns = "id", childColumns = "formTranslationId", onDelete = CASCADE)})
 public class Question {
 
-    @PrimaryKey
+
+    @PrimaryKey(autoGenerate = true)
     @NonNull
-    @SerializedName("Id")
-    String id;
-
-    @SerializedName("LastModifiedDate")
-    String lastModifiedDate;
+    int base_id;
 
 
-    @SerializedName("Name")
-    String name;
-
-    @SerializedName("Caption_c")
-    String caption;
-
-    @SerializedName("Default_value_c")
-    String defaultValue;
-
-    @SerializedName("Display_Order_c")
-    Double displayOrder = 1.00;
-
-    @SerializedName("Error_text_c")
-    String errorText;
-
-    @SerializedName("Help_Text_c")
-    String helpText;
-
-    @SerializedName("Hide_c")
-    Boolean shouldHide;
-
-    @SerializedName("Max_value_c")
-    String maxValue;
-
-    @SerializedName("Min_value_c")
-    String minValue;
-
-    @SerializedName("Options_c")
-    String options;
-
-    @SerializedName("Type__c")
-    String type;
-
-    @SerializedName("Related_questions_c")
-    String relatedQuestions;
-
-    @SerializedName("Form__r")
-    String formId;
-
-
-    @SerializedName("Translation_c")
-    String translation;
-
-
-    @Ignore
-    Form form;
-
-    public Question() {
-    }
+        @SerializedName("id")
+        @Expose
+        private int id;
+        @SerializedName("form_translation_id")
+        @Expose
+        private int formTranslationId;
+        @SerializedName("created_at")
+        @Expose
+        private String createTime;
+        @SerializedName("updated_at")
+        @Expose
+        private String updateTime;
+        @SerializedName("caption_c")
+        @Expose
+        private String captionC;
+        @SerializedName("type_c")
+        @Expose
+        private String typeC;
+        @SerializedName("required_c")
+        @Expose
+        private int requiredC;
+        @SerializedName("formula_c")
+        @Expose
+        private String formulaC;
+        @SerializedName("label_c")
+        @Expose
+        private String labelC;
+        @SerializedName("default_value_c")
+        @Expose
+        private String defaultValueC;
+        @SerializedName("display_order_c")
+        @Expose
+        private int displayOrderC;
+        @SerializedName("help_text_c")
+        @Expose
+        private String helpTextC;
+        @SerializedName("hide_c")
+        @Expose
+        private int hideC;
+        @SerializedName("options_c")
+        @Expose
+        private String optionsC;
+        @SerializedName("can_edit")
+        @Expose
+        private int canEdit;
 
 
-    public Form getForm() {
-        return form;
-    }
+        @Ignore
+        List<SkipLogic> skipLogics;
 
-    public void setId(@NonNull String id) {
-        this.id = id;
-    }
+        /**
+         * No args constructor for use in serialization
+         *
+         */
+        public Question() {
+        }
 
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
+        /**
+         *
+         * @param defaultValueC
+         * @param id
+         * @param captionC
+         * @param createTime
+         * @param helpTextC
+         * @param hideC
+         * @param labelC
+         * @param formTranslationId
+         * @param updateTime
+         * @param formulaC
+         * @param displayOrderC
+         * @param requiredC
+         * @param canEdit
+         * @param optionsC
+         * @param typeC
+         */
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
+        @Ignore
+        public Question(int id, int formTranslationId, String createTime, String updateTime, String captionC, String typeC, int requiredC, String formulaC, String labelC, String defaultValueC, int displayOrderC, String helpTextC, int hideC, String optionsC, int canEdit) {
+            super();
+            this.id = id;
+            this.formTranslationId = formTranslationId;
+            this.createTime = createTime;
+            this.updateTime = updateTime;
+            this.captionC = captionC;
+            this.typeC = typeC;
+            this.requiredC = requiredC;
+            this.formulaC = formulaC;
+            this.labelC = labelC;
+            this.defaultValueC = defaultValueC;
+            this.displayOrderC = displayOrderC;
+            this.helpTextC = helpTextC;
+            this.hideC = hideC;
+            this.optionsC = optionsC;
+            this.canEdit = canEdit;
+        }
 
-    public void setDisplayOrder(Double displayOrder) {
-        this.displayOrder = displayOrder;
-    }
 
-    public void setErrorText(String errorText) {
-        this.errorText = errorText;
-    }
-
-    public void setHelpText(String helpText) {
-        this.helpText = helpText;
-    }
-
-
-    public void setFormId(String formId) {
-        this.formId = formId;
-    }
-
-    public void setShouldHide(Boolean shouldHide) {
-        this.shouldHide = shouldHide;
-    }
-
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public void setMaxValue(String maxValue) {
-        this.maxValue = maxValue;
-    }
-
-    public void setMinValue(String minValue) {
-        this.minValue = minValue;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setOptions(String options) {
-        this.options = options;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setRelatedQuestions(String relatedQuestions) {
-        this.relatedQuestions = relatedQuestions;
-    }
-
-    public void setTranslation(String translation) {
-        this.translation = translation;
-    }
-
-    public String getErrorText() {
-        return errorText;
+    public void setBase_id(@NonNull int base_id) {
+        this.base_id = base_id;
     }
 
     @NonNull
-    public String getId() {
-        return id;
+    public int getBase_id() {
+        return base_id;
     }
 
-    public Boolean getShouldHide() {
-        return shouldHide;
+    public int getId() {
+            return id;
+        }
+
+
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public Question withId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public int getFormTranslationId() {
+            return formTranslationId;
+        }
+
+        public void setFormTranslationId(int formTranslationId) {
+            this.formTranslationId = formTranslationId;
+        }
+
+        public Question withFormTranslationId(int formTranslationId) {
+            this.formTranslationId = formTranslationId;
+            return this;
+        }
+
+        public String getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
+        }
+
+        public Question withCreateTime(String createTime) {
+            this.createTime = createTime;
+            return this;
+        }
+
+        public String getUpdateTime() {
+            return updateTime;
+        }
+
+        public void setUpdateTime(String updateTime) {
+            this.updateTime = updateTime;
+        }
+
+        public Question withUpdateTime(String updateTime) {
+            this.updateTime = updateTime;
+            return this;
+        }
+
+        public String getCaptionC() {
+            return captionC;
+        }
+
+        public void setCaptionC(String captionC) {
+            this.captionC = captionC;
+        }
+
+        public Question withCaptionC(String captionC) {
+            this.captionC = captionC;
+            return this;
+        }
+
+        public String getTypeC() {
+            return typeC;
+        }
+
+        public void setTypeC(String typeC) {
+            this.typeC = typeC;
+        }
+
+        public Question withTypeC(String typeC) {
+            this.typeC = typeC;
+            return this;
+        }
+
+        public int getRequiredC() {
+            return requiredC;
+        }
+
+        public void setRequiredC(int requiredC) {
+            this.requiredC = requiredC;
+        }
+
+        public Question withRequiredC(int requiredC) {
+            this.requiredC = requiredC;
+            return this;
+        }
+
+        public String getFormulaC() {
+            return formulaC;
+        }
+
+        public void setFormulaC(String formulaC) {
+            this.formulaC = formulaC;
+        }
+
+        public Question withFormulaC(String formulaC) {
+            this.formulaC = formulaC;
+            return this;
+        }
+
+        public String getLabelC() {
+            return labelC;
+        }
+
+        public void setLabelC(String labelC) {
+            this.labelC = labelC;
+        }
+
+        public Question withLabelC(String labelC) {
+            this.labelC = labelC;
+            return this;
+        }
+
+        public String getDefaultValueC() {
+            return (defaultValueC != null) ? defaultValueC : "";
+        }
+
+        public void setDefaultValueC(String defaultValueC) {
+            this.defaultValueC = defaultValueC;
+        }
+
+        public Question withDefaultValueC(String defaultValueC) {
+            this.defaultValueC = defaultValueC;
+            return this;
+        }
+
+        public int getDisplayOrderC() {
+            return displayOrderC;
+        }
+
+        public void setDisplayOrderC(int displayOrderC) {
+            this.displayOrderC = displayOrderC;
+        }
+
+        public Question withDisplayOrderC(int displayOrderC) {
+            this.displayOrderC = displayOrderC;
+            return this;
+        }
+
+        public String getHelpTextC() {
+            return helpTextC;
+        }
+
+        public void setHelpTextC(String helpTextC) {
+            this.helpTextC = helpTextC;
+        }
+
+        public Question withHelpTextC(String helpTextC) {
+            this.helpTextC = helpTextC;
+            return this;
+        }
+
+        public int getHideC() {
+            return hideC;
+        }
+
+        public void setHideC(int hideC) {
+            this.hideC = hideC;
+        }
+
+        public Question withHideC(int hideC) {
+            this.hideC = hideC;
+            return this;
+        }
+
+        public String getOptionsC() {
+            return optionsC;
+        }
+
+        public void setOptionsC(String optionsC) {
+            this.optionsC = optionsC;
+        }
+
+        public Question withOptionsC(String optionsC) {
+            this.optionsC = optionsC;
+            return this;
+        }
+
+        public int getCanEdit() {
+            return canEdit;
+        }
+
+        public void setCanEdit(int canEdit) {
+            this.canEdit = canEdit;
+        }
+
+        public Question withCanEdit(int canEdit) {
+            this.canEdit = canEdit;
+            return this;
+        }
+
+    public boolean shouldHide(){
+        return getHideC() == 1;
     }
 
-    public Double getDisplayOrder() {
-        return displayOrder;
-    }
 
-    public String getCaption() {
-        return caption;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public String getFormId() {
-        return formId;
-    }
-
-    public String getHelpText() {
-        return helpText;
-    }
-
-    public String getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public String getMaxValue() {
-        return maxValue;
-    }
-
-    public String getMinValue() {
-        return minValue;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getOptions() {
-        return options;
-    }
-
-    public String getRelatedQuestions() {
-        return relatedQuestions;
-    }
-
-    public String getTranslation() {
-        return translation;
-    }
-
-    public String getType() {
-        return type;
+    public boolean caEdit(){
+            return canEdit == 1;
     }
 
 
@@ -224,19 +353,28 @@ public class Question {
     public List<String> formatQuestionOptions() {
 
         String s = "";
-        s = getOptions();
-        Log.i("QUESTION MODEL", "OPTIONS = " + s);
+        s = getOptionsC();
+        Timber.i("OPTIONS = %s", s);
 
         if (!s.equalsIgnoreCase("null"))
             try {
                 return Arrays.asList(s.trim().split(","));
             } catch (Exception e) {
                 e.printStackTrace();
-                return Arrays.asList(s);
+                return Collections.singletonList(s);
             }
 
         else return new ArrayList<>();
 
+
     }
 
+
+    public void setSkipLogics(List<SkipLogic> skipLogics) {
+        this.skipLogics = skipLogics;
+    }
+
+    public List<SkipLogic> getSkipLogics() {
+        return skipLogics;
+    }
 }

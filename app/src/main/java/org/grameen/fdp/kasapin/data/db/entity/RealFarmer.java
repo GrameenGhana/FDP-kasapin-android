@@ -1,64 +1,81 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by aangjnr on 13/12/2017.
  */
 
-@Entity(tableName = "farmers" )
+@Entity(tableName = "farmers", indices = {@Index(value = "id", unique = true), @Index(value = "code", unique = true)})
 public class RealFarmer{
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
-    String id;
+    int id;
 
-    @SerializedName("LastModifiedDate")
-    String lastModifiedDate;
     String farmerName;
     String code;
-    String villageId;
+    int villageId;
     String gender;
     String birthYear = "1970";
     String educationLevel;
     String imageUrl;
-    String firstVisitDate;
-    String lastVisitDate;
+    Date firstVisitDate;
+    Date lastVisitDate;
+    @SerializedName("LastModifiedDate")
+    Date lastModifiedDate;
+
     String landArea;
-    String answersJson;
-    Integer syncStatus;
-    String hasSubmitted;
+
+    int syncStatus = 0;
+    String hasSubmitted = "NO";
+
+    String villageName;
 
     public RealFarmer(){}
 
-    public void setFirstVisitDate(String firstVisitDate) {
+
+    public void setFirstVisitDate(Date firstVisitDate) {
         this.firstVisitDate = firstVisitDate;
     }
 
-    public String getFirstVisitDate() {
-        return firstVisitDate;
-    }
 
-    public void setLastModifiedDate(String lastModifiedDate) {
+    public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public String getLastModifiedDate() {
+    public void setLastVisitDate(Date lastVisitDate) {
+        this.lastVisitDate = lastVisitDate;
+    }
+
+    public Date getFirstVisitDate() {
+        return firstVisitDate;
+    }
+
+    public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setAnswersJson(String answersJson) {
-        this.answersJson = answersJson;
+    public Date getLastVisitDate() {
+        return lastVisitDate;
     }
 
-    public String getAnswersJson() {
-        return answersJson;
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public String getLandArea() {
@@ -70,22 +87,6 @@ public class RealFarmer{
         this.landArea = landArea;
     }
 
-    public String getLastVisitDate() {
-        return lastVisitDate;
-    }
-
-    public void setLastVisitDate(String lastVisitDate) {
-        this.lastVisitDate = lastVisitDate;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public String getEducationLevel() {
         return educationLevel;
     }
@@ -94,7 +95,7 @@ public class RealFarmer{
         this.educationLevel = education;
     }
 
-    public Integer getSyncStatus() {
+    public int getSyncStatus() {
         return syncStatus;
     }
 
@@ -111,12 +112,13 @@ public class RealFarmer{
     }
 
 
-    public String getId() {
-        return id;
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @NonNull
+    public int getId() {
+        return id;
     }
 
     public String getBirthYear() {
@@ -154,15 +156,24 @@ public class RealFarmer{
     }
 
 
-
-
-    public String getVillageId() {
+    public int getVillageId() {
         return villageId;
     }
 
-    public void setVillageId(String village) {
-        this.villageId = village;
+    public void setVillageId(int villageId) {
+        this.villageId = villageId;
+    }
+
+    public void setVillageName(String villageName) {
+        this.villageName = villageName;
+    }
+
+    public String getVillageName() {
+        return villageName;
     }
 
 
- }
+    public boolean hasAgreed(){
+        return hasSubmitted.equalsIgnoreCase("YES");
+    }
+}

@@ -267,23 +267,22 @@ public class EditTextController extends MyLabeledFieldController {
         });
 
 
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
 
-                    double doubleValue = 0;
-                    if (editText.getText() != null) {
+                double doubleValue = 0;
+                if (editText.getText() != null) {
 
-                        editText.setText(getModel().getValue(getName()).toString());
-                        /*try {
-                            doubleValue = Double.parseDouble(editText.getText().toString().replace(".", ""));
-                            editText.setText(new DecimalFormat("#,###,###.##").format(doubleValue));
 
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                        }*/
-                    }
+                    if(getModel().getValue(getName()) != null)
+                    editText.setText(getModel().getValue(getName()).toString());
+                    /*try {
+                        doubleValue = Double.parseDouble(editText.getText().toString().replace(".", ""));
+                        editText.setText(new DecimalFormat("#,###,###.##").format(doubleValue));
+
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }*/
                 }
             }
         });
@@ -296,23 +295,20 @@ public class EditTextController extends MyLabeledFieldController {
     }
 
     private void refresh(EditText editText) {
-        Object value = getModel().getValue(getName());
 
+        if(editText != null) {
+            Object value = getModel().getValue(getName());
 
+            String valueStr = value != null ? value.toString() : placeholder;
 
-        String valueStr = value != null ? value.toString() : placeholder;
-
-        if (!valueStr.equals(editText.getText().toString())) {
-
-
-            try {
-                editText.setHint(valueStr);
-            } catch (Exception ignored) {
+            if (editText.getText() != null)
+            if (!valueStr.equals(editText.getText().toString())) {
+                try {
+                    editText.setHint(valueStr);
+                } catch (Exception ignored) {
+                }
             }
-
         }
-
-
     }
 
     @Override

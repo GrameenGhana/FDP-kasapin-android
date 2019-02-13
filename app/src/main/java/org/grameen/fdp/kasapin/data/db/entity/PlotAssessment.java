@@ -20,7 +20,7 @@ public class PlotAssessment {
     @NonNull
     String id;
     String plotName;
-    String plotId;
+    int plotId;
     String results;
     Integer color;
 
@@ -31,15 +31,13 @@ public class PlotAssessment {
     public PlotAssessment(String name, String result){this.plotName = name; this.results = result;}
 
 
-    public void setPlotId(String plotId) {
+    public void setPlotId(int plotId) {
         this.plotId = plotId;
     }
 
-
-    public String getPlotId() {
+    public int getPlotId() {
         return plotId;
     }
-
 
     public void setPlotName(String plotName) {
         this.plotName = plotName;

@@ -4,7 +4,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.Date;
+import java.sql.Date;
+
 
 /**
  * Created by aangjnr on 24/03/2018.

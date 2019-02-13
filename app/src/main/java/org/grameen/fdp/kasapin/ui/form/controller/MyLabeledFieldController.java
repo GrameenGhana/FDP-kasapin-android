@@ -1,6 +1,11 @@
 package org.grameen.fdp.kasapin.ui.form.controller;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -197,5 +202,24 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
             errorView.setText(message);
             errorView.setVisibility(View.VISIBLE);
         }
+    }
+
+
+
+
+    public boolean hasPermissions(Context context, String permission) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
+
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
+
+
+                }
+                return false;
+            }
+
+        }
+        return true;
     }
 }

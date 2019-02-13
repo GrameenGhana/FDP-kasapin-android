@@ -10,7 +10,6 @@
         <attr name="indicatorColor" format="color" />
     </declare-styleable>
 
-
     <attr name="colorPrimary" format="color" />
     <attr name="colorAccent" format="color" />
 

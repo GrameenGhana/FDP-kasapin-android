@@ -30,6 +30,7 @@ import butterknife.Unbinder;
 
 public abstract class BaseFragment extends Fragment implements BaseContract.View {
 
+    public String TAG;
     private BaseActivity mActivity;
     private Unbinder mUnBinder;
 
@@ -40,6 +41,8 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
 
+        TAG = getClass().getSimpleName();
+
 
     }
 
@@ -47,6 +50,7 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUp(view);
+
     }
 
     @Override
@@ -164,6 +168,12 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
     }
 
 
+    @Override
+    public void setLoadingMessage(String message) {
+        if(mActivity.mProgressDialog != null && mActivity.mProgressDialog.isShowing())
+            mActivity.mProgressDialog.setMessage(message);
+    }
 
 
+    public  abstract void openNextActivity();
 }

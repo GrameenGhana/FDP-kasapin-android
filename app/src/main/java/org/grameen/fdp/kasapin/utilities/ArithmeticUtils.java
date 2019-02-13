@@ -69,13 +69,12 @@ public class ArithmeticUtils {
 
 
     public static Boolean compareBooleanValues(@NonNull ScriptEngine engine, SkipLogic sl, String newValue) {
-
-
-        String equation = sl.getAnswerValue() + sl.getLogicalOperator() + String.valueOf(newValue);
-
-        Log.i("BASE ACTIVITY", "Equation is " + equation);
-
         boolean value = false;
+
+
+    /*
+        String equation = sl.getAnswerValue() + sl.getLogicalOperator() + String.valueOf(newValue);
+        Log.i("BASE ACTIVITY", "Equation is " + equation);
 
         try {
             value = (Boolean) engine.eval(equation);
@@ -90,6 +89,9 @@ public class ArithmeticUtils {
         } finally {
             System.out.println(equation + " = " + value);
         }
+
+     */
+
         return value;
     }
 

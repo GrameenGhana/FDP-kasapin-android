@@ -9,6 +9,7 @@
 
     <item
         android:id="@+id/crash_reports"
+        android:visible="false"
         android:icon="@drawable/ic_error_outline_black_24dp"
         android:title="@string/crash_reporter" />
 

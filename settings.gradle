@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':commons-lang-2.4'

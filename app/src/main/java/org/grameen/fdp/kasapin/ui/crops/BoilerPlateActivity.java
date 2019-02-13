@@ -64,10 +64,6 @@ public class BoilerPlateActivity extends BaseActivity implements BoilerPlateCont
     }
 
 
-    @Override
-    public void onToggleFullScreenClicked(Boolean hideNavBar) {
-
-    }
 
 
 }

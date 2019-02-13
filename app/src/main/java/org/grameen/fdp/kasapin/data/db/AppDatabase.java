@@ -10,6 +10,9 @@ import org.grameen.fdp.kasapin.data.db.dao.CalculationsDao;
 import org.grameen.fdp.kasapin.data.db.dao.ComplexCalculationDao;
 import org.grameen.fdp.kasapin.data.db.dao.CountryDao;
 import org.grameen.fdp.kasapin.data.db.dao.FarmResultsDao;
+import org.grameen.fdp.kasapin.data.db.dao.FormAndQuestionsDao;
+import org.grameen.fdp.kasapin.data.db.dao.FormAnswersDao;
+import org.grameen.fdp.kasapin.data.db.dao.FormTranslationDao;
 import org.grameen.fdp.kasapin.data.db.dao.FormsDao;
 import org.grameen.fdp.kasapin.data.db.dao.InputsDao;
 import org.grameen.fdp.kasapin.data.db.dao.LogicsDao;
@@ -33,6 +36,9 @@ import org.grameen.fdp.kasapin.data.db.entity.ComplexCalculation;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.FarmResult;
 import org.grameen.fdp.kasapin.data.db.entity.Form;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
+import org.grameen.fdp.kasapin.data.db.entity.FormTranslation;
 import org.grameen.fdp.kasapin.data.db.entity.Input;
 import org.grameen.fdp.kasapin.data.db.entity.Logic;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
@@ -56,10 +62,10 @@ import javax.inject.Singleton;
  * Personal mail aang.jnr@gmail.com
  */
 @Singleton
-@Database(entities = {Country.class, Village.class, Form.class, Question.class, SkipLogic.class, Logic.class, Recommendation.class,
+@Database(entities = {Country.class, Village.class, Form.class, FormTranslation.class, Question.class, SkipLogic.class, Logic.class, Recommendation.class,
         RecommendationsPlusActivity.class, ActivitiesPlusInput.class, Activity.class, Input.class, Calculation.class, ComplexCalculation.class,
-        RealFarmer.class, Plot.class, Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class
-}, version = 1, exportSchema = false)
+        RealFarmer.class, FormAnswerData.class, Plot.class, Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class
+}, version = 2, exportSchema = false)
 
 @TypeConverters({DateTypeConverter.class, ListTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -67,6 +73,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CountryDao countryDao();
     public abstract VillagesDao villagesDao();
     public abstract FormsDao formsDao();
+    public abstract FormTranslationDao formTranslationDao();
     public abstract QuestionDao questionDao();
     public abstract SkipLogicsDao skipLogicsDao();
     public abstract LogicsDao logicsDao();
@@ -78,6 +85,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CalculationsDao calculationsDao();
     public abstract ComplexCalculationDao complexCalculationDao();
     public abstract RealFarmersDao realFarmersDao();
+    public abstract FormAnswersDao formAnswerDao();
     public abstract PlotsDao plotsDao();
     public abstract MonitoringsDao monitoringsDao();
     public abstract PlotAssessmentDao plotAssessmentDao();
@@ -86,6 +94,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract SuppliesCostsDao suppliesCostsDao();
     public abstract PlotAndAssessmentsDao plotAndAssessmentsDao();
     public abstract VillageAndFarmersDao villageAndFarmersDao();
+    public abstract FormAndQuestionsDao formAndQuestionsDao();
 
 
 }

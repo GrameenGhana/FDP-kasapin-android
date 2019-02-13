@@ -115,6 +115,12 @@ public final class CommonUtils {
                                        @Nullable DialogInterface.OnClickListener onNegativeButtonClickListener,
                                        @NonNull String negativeText, @Nullable int icon_drawable) {
 
+
+        builder.setPositiveButton("", null);
+        builder.setNegativeButton("", null);
+        builder.setIcon(0);
+
+
         builder.setTitle(title);
         builder.setCancelable(cancelable);
 

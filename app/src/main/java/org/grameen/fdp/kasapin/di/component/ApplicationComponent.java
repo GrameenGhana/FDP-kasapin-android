@@ -9,6 +9,7 @@ import org.grameen.fdp.kasapin.FDPKasapin;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.DataManager;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
+import org.grameen.fdp.kasapin.data.network.RetrofitInterceptor;
 import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
 import org.grameen.fdp.kasapin.di.module.ApplicationModule;
@@ -30,6 +31,8 @@ public interface ApplicationComponent {
 
     void inject(FDPKasapin app);
     void inject(SyncService service);
+    //void inject(RetrofitInterceptor interceptor);
+
 
     @ApplicationContext
     Context getContext();

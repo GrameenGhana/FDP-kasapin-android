@@ -3,11 +3,15 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.support.annotation.Nullable;
 
+import org.grameen.fdp.kasapin.data.db.entity.Form;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
+import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,13 +30,15 @@ public class MainContract {
         void showSearchDialog(@Nullable android.view.View view);
         void toggleDrawer();
 
-        void instantiateSearchDialog(List<RealFarmer> farmers);
+        void instantiateSearchDialog(ArrayList<MySearchItem> myItems);
 
         void showNoFarmersMessage();
 
         void setFragmentAdapter(List<VillageAndFarmers> villageAndFarmersList);
 
-        void togglePlaceHolder(boolean value);
+        void cacheFormsAndQuestionsData(List<FormAndQuestions> formAndQuestions);
+
+        void openAddNewFarmerActivity(FormAndQuestions formAndQuestions);
 
 
     }
@@ -41,18 +47,44 @@ public class MainContract {
 
         void startDelay(long delayTime);
         void openSearchDialog();
-
-
-         void toggleDrawer();
-
-        void getFarmersData();
-
+        void toggleDrawer();
         void getVillagesData();
+        void getFormsAndQuestionsData();
+
+        void getFarmerProfileFormAndQuestions();
+
+         void syncData(boolean showProgress);
+
+
+     }
+
+
+    public interface FragmentView extends BaseContract.View {
+        void setRecyclerAdapter();
+        void setListAdapter(List<RealFarmer> farmerList);
+
+        void showDeleteFarmerDialog(RealFarmer farmer, int position);
+
+        void showFarmerDeletedMessage(String farmerName, int position);
 
 
 
     }
 
 
+
+    public interface FragmentPresenter {
+
+
+        void getFarmerData();
+
+        void showDeleteFarmerDialog(RealFarmer farmer, int position);
+
+        void deleteFarmer(RealFarmer farmer, int position);
+
+
+
+
+    }
 
 }

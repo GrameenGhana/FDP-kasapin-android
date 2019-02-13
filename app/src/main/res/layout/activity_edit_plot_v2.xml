@@ -322,11 +322,12 @@
 
 
             <LinearLayout
-                android:id="@+id/aosLayout"
+                android:id="@+id/dynamicLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                  android:orientation="vertical"
                 android:padding="@dimen/spacing_normal"
+                android:animateLayoutChanges="true"
                 android:background="@drawable/border_background_white"
                 />
 
@@ -477,6 +478,7 @@
             android:layout_height="wrap_content"
             android:theme="@style/PrimaryButtonGrey"
             android:text="@string/back"
+            android:onClick="onBackClicked"
             android:padding="@dimen/spacing_normal"
             />
 

@@ -10,10 +10,24 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
+import com.google.gson.Gson;
+
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.DataManager;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.network.model.BaseModel;
+import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
+
+import java.util.List;
 
 import javax.inject.Inject;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 8:02 PM
@@ -25,6 +39,9 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     private V mView;
     AppDataManager mAppDataManager;
+    protected String TAG = "";
+
+
 
 
     @Inject
@@ -34,7 +51,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     @Override
     public void takeView(V view) {
-
+        TAG = view.getClass().getSimpleName() + "\t";
         mView = view;
 
     }
@@ -66,10 +83,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     }
 
-    @Override
-    public void toggleFullScreen(Boolean hideNavBar) {
-
-    }
 
     @Override
     public void onTokenExpire() {
@@ -88,10 +101,22 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         return mAppDataManager;
     }
 
- /*   public abstract void showDialog(Boolean cancelable, @Nullable String title, @Nullable String message,
-                                    @Nullable DialogInterface.OnClickListener onPositiveButtonClickListener,
-                                    @NonNull String positiveText,
-                                    @Nullable DialogInterface.OnClickListener onNegativeButtonClickListener,
-                                    @NonNull String negativeText, @Nullable int icon_drawable);
-*/
+
+
+    protected void runSingleCall(Single<BaseModel> call, DisposableSingleObserver<BaseModel> disposableSingleObserver){
+
+        getAppDataManager().getCompositeDisposable().add(call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(disposableSingleObserver));
+
+
+    }
+
+    protected void runSingleCall(Disposable disposableSingleObserver){
+        getAppDataManager().getCompositeDisposable().add(disposableSingleObserver);
+
+    }
+
+
+
  }

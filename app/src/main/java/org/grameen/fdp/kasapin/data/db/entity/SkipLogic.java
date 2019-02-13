@@ -2,6 +2,7 @@ package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
@@ -19,95 +20,116 @@ public class SkipLogic {
 
     @PrimaryKey
     @NonNull
-    @SerializedName("Id")
-    String id;
+    @SerializedName("id")
+    int id;
 
-    @SerializedName("LastModifiedDate")
-    String lastModifiedDate;
+    @SerializedName("question_id")
+    int questionId;
 
-    @SerializedName("Name")
-    String name;
+    @SerializedName("updated_at")
+    String dateUpdated;
 
-    @SerializedName("Question__c")
-    String questionId;
+    @SerializedName("created_at")
+    String dateCreated;
 
-    @SerializedName("Question_value__c")
-    String answerValue;
+    @SerializedName("formula_c")
+    String formula;
 
-    @SerializedName("Question_1__c")
-    String questionShowHide;
+    @SerializedName("hide_c")
+    int shouldHide;
 
-    @SerializedName("Logical_Operator__c")
+
+    @Ignore
+    String comparingQuestion;
+    @Ignore
     String logicalOperator;
-
-    @SerializedName("Hide__c")
-    String actionToBeTaken;
+    @Ignore
+    String answerValue;
 
 
     public SkipLogic() {
     }
 
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
 
-    public String getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
+    public void setId(@NonNull int id) {
         this.id = id;
     }
 
-    public String getActionToBeTaken() {
-        return actionToBeTaken;
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
-    public void setActionToBeTaken(String actionToBeTaken) {
-        this.actionToBeTaken = actionToBeTaken;
+    public void setDateUpdated(String dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
-    public String getQuestionId() {
-        return questionId;
+    public void setFormula(String formula) {
+        this.formula = formula;
     }
 
-    public void setQuestionId(String questionId) {
+    public void setQuestionId(int questionId) {
         this.questionId = questionId;
     }
 
-    public String getAnswerValue() {
-        return answerValue;
+    public void setShouldHide(int shouldHide) {
+        this.shouldHide = shouldHide;
     }
+
+    @NonNull
+    public int getId() {
+        return id;
+    }
+
+    public int getQuestionId() {
+        return questionId;
+    }
+
+    public int getShouldHide() {
+        return shouldHide;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public String getDateUpdated() {
+        return dateUpdated;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+
+    public boolean shouldHide(){
+        return shouldHide == 1;
+    }
+
 
     public void setAnswerValue(String answerValue) {
         this.answerValue = answerValue;
-    }
-
-    public String getLogicalOperator() {
-        return logicalOperator;
     }
 
     public void setLogicalOperator(String logicalOperator) {
         this.logicalOperator = logicalOperator;
     }
 
-    public String getQuestionShowHide() {
-        return questionShowHide;
+
+
+    public String getAnswerValue() {
+        return answerValue;
     }
 
-    public void setQuestionShowHide(String questionShowHide) {
-        this.questionShowHide = questionShowHide;
+    public String getLogicalOperator() {
+        return logicalOperator;
+    }
+
+
+    public void setComparingQuestion(String comparingQuestion) {
+        this.comparingQuestion = comparingQuestion;
+    }
+
+    public String getComparingQuestion() {
+        return comparingQuestion;
     }
 }

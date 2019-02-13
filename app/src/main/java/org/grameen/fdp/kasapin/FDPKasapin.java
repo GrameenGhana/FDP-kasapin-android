@@ -2,11 +2,11 @@ package org.grameen.fdp.kasapin;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
+import android.security.NetworkSecurityPolicy;
 import android.util.Log;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.interceptors.HttpLoggingInterceptor;
-import com.balsikandar.crashreporter.CrashReporter;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.di.component.ApplicationComponent;
@@ -25,8 +25,6 @@ import timber.log.Timber;
 public class FDPKasapin extends Application {
 
 
-    @Inject
-    AppDataManager mAppDataManager;
 
     private ApplicationComponent mApplicationComponent;
 
@@ -93,10 +91,11 @@ public class FDPKasapin extends Application {
         //Initialize application logging mechanism
         AppLogger.init(this);
 
-       /* AndroidNetworking.initialize(getApplicationContext());
-        if (BuildConfig.DEBUG) {
-            AndroidNetworking.enableLogging(HttpLoggingInterceptor.Level.BODY);
-        }*/
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+
+
 
     }
 

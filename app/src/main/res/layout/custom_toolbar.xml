@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/custom_toolbar_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/colorPrimary"
+    android:background="@drawable/gradient_background"
     android:orientation="vertical"
+    android:paddingTop="@dimen/spacing_normal"
     android:layout_height="wrap_content">
 
-
-
-        <RelativeLayout
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_background_white"
             android:clickable="true"
             android:focusable="true"
+            android:paddingTop="@dimen/spacing_normal"
             android:layout_margin="@dimen/spacing_normal"
             android:onClick="showSearchDialog"
 
@@ -24,6 +26,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/spacing_half"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/spacing_half"
+                android:layout_marginRight="@dimen/spacing_half"
                 android:src="@drawable/ic_menu_black_24dp"
                 android:tint="@color/black_50"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -48,27 +53,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/spacing_half"
+                android:layout_centerVertical="true"
                 android:src="@drawable/ic_search_white_24dp"
                 android:layout_alignParentRight="true"
                 android:tint="@color/black_50"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
+                android:layout_marginRight="@dimen/spacing_half"
                 android:onClick="showSearchDialog"
 
                 />
 
         </RelativeLayout>
 
-
-
-
-
-
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/viewpagertab"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:paddingLeft="@dimen/spacing_normal"
+        android:paddingRight="@dimen/spacing_normal"
         app:stl_indicatorAlwaysInCenter="true"
         app:stl_indicatorInterpolation="smart"
         app:stl_indicatorThickness="30dp"
@@ -89,9 +93,6 @@
         app:stl_clickable="true"
         app:stl_drawDecorationAfterTab="false"
         />
-
-
-
 
 </LinearLayout>
 

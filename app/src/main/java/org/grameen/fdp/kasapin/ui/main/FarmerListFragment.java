@@ -1,37 +1,33 @@
 package org.grameen.fdp.kasapin.ui.main;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.GridView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
- import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
+import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseFragment;
+import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
+import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,89 +39,75 @@ import butterknife.ButterKnife;
  * Created by aangjnr on 11/12/2017.
  */
 
-public class FarmerListFragment extends BaseFragment {
+public class FarmerListFragment extends BaseFragment implements MainContract.FragmentView{
+
+
+    @Inject
+    FarmerListFragmentPresenter mPresenter;
 
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+
+    @BindView(R.id.grid_view)
+    GridView listView;
+
     View rootView;
-
-
-    FarmerListAdapter mAdapter;
+    FarmerListRecyclerViewAdapter mAdapter;
     List<RealFarmer> mFarmers;
+    FarmerListViewAdapter farmerListViewAdapter;
 
 
-    AppDataManager appDataManager;
+
+    String SELECTED_VILLAGE;
+
 
 
     public FarmerListFragment() {
-
         super();
     }
 
-
-    public static FarmerListFragment newInstance(String filter, List<RealFarmer> farmers) {
-
-        FarmerListFragment farmerListFragment = new FarmerListFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("filterTag", filter);
-        bundle.putString("farmerList",  new Gson().toJson(farmers));
-        farmerListFragment.setArguments(bundle);
-        return farmerListFragment;
-
-
-    }
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
+        getBaseActivity().getActivityComponent().inject(this);
+        mPresenter.takeView(this);
 
-        return inflater.inflate(R.layout.fragment_farmer_list, container, false);
-
+        rootView = inflater.inflate(R.layout.fragment_farmer_list, container, false);
+        setUnBinder(ButterKnife.bind(this, rootView));
+        return rootView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setUp(view);
+
     }
 
 
 
     @Override
     protected void setUp(View view) {
-        setUnBinder(ButterKnife.bind(view));
-        setUpAdapter();
+        if (getArguments() != null) {
+            mFarmers = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<RealFarmer>>() {}.getType());
+            SELECTED_VILLAGE = getArguments().getString("village");
+        }
+
+        //mPresenter.getFarmerData();
+
+        setListAdapter(mFarmers);
 
     }
+
 
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void setRecyclerAdapter() {
 
-
-
-    }
-
-
-    void setUpAdapter() {
-
-        appDataManager = getAppDataManager();
-        mFarmers = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<RealFarmer>>() {}.getType());
-
-        if(mFarmers != null && mFarmers.size() > 0) {
+       /* if(mFarmers != null && mFarmers.size() > 0) {
 
 
             GridLayoutManager productsGridLayoutManager;
@@ -142,7 +124,7 @@ public class FarmerListFragment extends BaseFragment {
             //  mRecycler.addItemDecoration(decoration);
 
 
-            mAdapter = new FarmerListAdapter(getActivity(), mFarmers);
+            mAdapter = new FarmerListRecyclerViewAdapter(getActivity(), mFarmers);
             mAdapter.setHasStableIds(true);
             recyclerView.setAdapter(mAdapter);
 
@@ -151,16 +133,18 @@ public class FarmerListFragment extends BaseFragment {
 
                 RealFarmer farmer = mFarmers.get(position);
 
-        /*    Intent intent = new Intent(getActivity(), FarmerDetailsActivity.class);
-            intent.putExtra("farmer", new Gson().toJson(farmer));
-            startActivity(intent);*/
+                //Todo uncomment this
+
+            Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
+            intent.putExtra("farmer", BaseActivity.getGson().toJson(farmer));
+            startActivity(intent);
 
             });
 
 
             mAdapter.OnLongClickListener((view, position) -> {
 
-                if (appDataManager.isMonitoring())
+                if (getAppDataManager().isMonitoring())
                     return;
 
                 final RealFarmer farmer = mFarmers.get(position);
@@ -169,7 +153,7 @@ public class FarmerListFragment extends BaseFragment {
 
                             dialogInterface.dismiss();
 
-                            appDataManager.getDatabaseManager().realFarmersDao().deleteFarmerById(farmer.getId());
+                            getAppDataManager().getDatabaseManager().realFarmersDao().deleteFarmerById(farmer.getId());
                             showMessage(farmer.getFarmerName() + getString(R.string.farmer_data_deleted_message));
                             mFarmers.remove(position);
                             mAdapter.notifyItemRemoved(position);
@@ -179,16 +163,95 @@ public class FarmerListFragment extends BaseFragment {
 
 
         }
+
+*/
+
+
     }
 
 
+    @Override
+    public void setListAdapter(List<RealFarmer> mFarmers) {
 
 
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+
+
+
+        AppLogger.i(TAG, "Farmers Array Size is " + mFarmers.size());
+
+        if(mFarmers.size() > 0) {
+
+            if (ScreenUtils.isTablet((AppCompatActivity) getActivity()))
+                listView.setNumColumns(AppConstants.TABLET_COLUMN_COUNT);
+            else
+                listView.setNumColumns(AppConstants.PHONE_COLUMN_COUNT);
+
+
+            farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
+            listView.setAdapter(farmerListViewAdapter);
+
+
+            listView.setOnItemClickListener((adapterView, view, i, l) -> {
+
+                AppLogger.i(TAG, "ON CLICK ");
+
+                RealFarmer farmer = mFarmers.get(i);
+                //Todo uncomment this
+
+                Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
+                intent.putExtra("farmer", BaseActivity.getGson().toJson(farmer));
+                startActivity(intent);
+
+            });
+
+
+            listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+
+                if (getAppDataManager().isMonitoring())
+                    return false;
+
+                final RealFarmer farmer = mFarmers.get(i);
+                mPresenter.showDeleteFarmerDialog(farmer, i);
+            return false;
+
+
+            });
+        }
+
+
+            }
+        });
+
+    }
+
+
+    @Override
+    public void showFarmerDeletedMessage(String farmerName, int position) {
+        showMessage(R.string.farmer_data_deleted_message);
+        mFarmers.remove(position);
+        mAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void showDeleteFarmerDialog(RealFarmer farmer, int position) {
+        showDialog(true, getString(R.string.delete_farmer), getString(R.string.delete_farmer_rational) + farmer.getFarmerName() + "?",
+                (dialogInterface, j) -> {
+
+                    dialogInterface.dismiss();
+                    mPresenter.deleteFarmer(farmer, position);
+                }, getString(R.string.yes), (dialogInterface, j) -> dialogInterface.dismiss(), getString(R.string.no), 0);
+
+
+    }
 
     @Override
     public void openNextActivity() {
 
     }
+
 
     @Override
     public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
@@ -200,16 +263,12 @@ public class FarmerListFragment extends BaseFragment {
 
     }
 
+
     @Override
-    public void onToggleFullScreenClicked(Boolean hideNavBar) {
+    public void toggleFullScreen(Boolean hideNavBar, Window W) {
 
     }
 
-    @Override
-    public void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable) {
-        super.showDialog(cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener, negativeText, icon_drawable);
-
-    }
 
 
     public static class SpacesGridItemDecoration extends RecyclerView.ItemDecoration {
@@ -248,4 +307,12 @@ public class FarmerListFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void onDestroy() {
+        if(mPresenter != null)
+        mPresenter.dropView();
+
+        super.onDestroy();
+
+    }
 }

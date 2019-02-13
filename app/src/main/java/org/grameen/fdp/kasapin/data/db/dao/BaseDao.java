@@ -19,19 +19,20 @@ import java.util.List;
 
  public interface BaseDao<T> {
 
+     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<T> objects);
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOne(T object);
+    long insertOne(T object);
 
 
     @Update
     int updateOne(T object);
 
-   @Delete
-   int deleteOne(T object);
+    @Delete
+    int deleteOne(T object);
 
 
 

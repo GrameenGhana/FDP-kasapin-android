@@ -21,6 +21,8 @@ public class SplashContract {
 
         void openLoginActivity();
 
+        void openNextActivity();
+
 
     }
 

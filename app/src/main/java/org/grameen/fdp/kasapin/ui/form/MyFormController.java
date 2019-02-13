@@ -33,12 +33,7 @@ public class MyFormController {
     private final List<MyFormSectionController> sectionControllers = new ArrayList<MyFormSectionController>();
     private FormModel model;
     private ValidationErrorDisplay validationErrorDisplay;
-    private PropertyChangeListener modelListener = new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent event) {
-            getElement(event.getPropertyName()).refresh();
-        }
-    };
+    private PropertyChangeListener modelListener = event -> getElement(event.getPropertyName()).refresh();
 
     /**
      * Constructs a new FormController.

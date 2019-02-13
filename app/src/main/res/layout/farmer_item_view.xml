@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:text="Farmer Name"
             android:textSize="@dimen/text_size_normal"
-            android:maxLines="2"
+            android:maxLines="1"
             android:ellipsize="end"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/spacing_half"

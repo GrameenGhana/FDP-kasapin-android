@@ -6,12 +6,29 @@ import java.io.File;
 
 public class AppConstants {
 
-    public static final int PERMISSION_FINE_LOCATION = 1001;
 
+    public static int TABLET_COLUMN_COUNT = 6;
+    public static int PHONE_COLUMN_COUNT = 4;
+
+
+    public static final String SERVER_URL = "http://104.236.220.235/";
+    public static final String API_VERSION = "fdp/api/v1/";
+
+
+    public static final int PERMISSION_FINE_LOCATION = 1001;
     public static final int PLACE_PICKER_REQUEST = 1002;
     public static final int PERMISSION_CALL = 1003;
+    public static int CAMERA_INTENT = 1004;
+    public static int PERMISSION_CAMERA = 1005;
 
     public static final String DATABASE_NAME = "fdp_database";
+
+
+
+    public static final String DISPLAY_TYPE_FORM = "form";
+
+
+
 
 
     public static final String STATUS_CODE_SUCCESS = "success";
@@ -23,11 +40,13 @@ public class AppConstants {
     public static final String FARMER_SUBMITTED_YES = "YES";
 
 
-    public static final long NULL_INDEX = -1L;
+    public static final long NULL_INDEXL = -1L;
+    public static final int NULL_INDEX = -1;
+
     public static final int API_STATUS_CODE_LOCAL_ERROR = 0;
 
     public static String ROOT_DIR = Environment
-            .getExternalStorageDirectory() + File.separator + ".FDP";
+            .getExternalStorageDirectory() + File.separator + ".fdpkasapin";
 
 
     public static String CRASH_REPORTS_DIR = AppConstants.ROOT_DIR + File.separator + "crashReports";
@@ -68,6 +87,8 @@ public class AppConstants {
     public static final String TYPE_TIMEPICKER = "timePicker";
     public static final String TYPE_DATEPICKER = "date";
 
+    public static final String TYPE_FORMULA = "formula";
+
     public static final String TYPE_MATH_FORMULA = "math formula";
     public static final String TYPE_LOGIC_FORMULA = "logic formula";
 
@@ -102,8 +123,11 @@ public class AppConstants {
 
 
 
-    public static final String DIAGNOSTIC = " register";
+    public static final String DIAGNOSTIC = "diagnostic";
     public static final String MONITORING = "monitoring";
+
+
+
     public static final String TAG_TITLE_TEXT_VIEW = "titleTag";
     public static final String BUTTON_VIEW = "buttonTag";
     public static final String TAG_OTHER_TEXT_VIEW = "textTag";

@@ -34,22 +34,13 @@ public class BaseContract {
          */
         void dropView();
 
+        void setUserAsLoggedOut();
 
-         void setUserAsLoggedOut();
+        boolean isViewAttached();
 
+        void openNextActivity();
 
-         boolean isViewAttached();
-
-
-         void openNextActivity();
-
-
-         void toggleFullScreen(Boolean hideNavBar);
-
-
-         void onTokenExpire();
-
-
+        void onTokenExpire();
 
      }
 
@@ -57,16 +48,13 @@ public class BaseContract {
 
     public interface View<T> {
 
-        void openNextActivity();
-
         void showLoading();
+
+        void setLoadingMessage(String message);
 
         void hideLoading();
 
-
         void showLoading(String title, String message, boolean indeterminate, @DrawableRes int icon, boolean cancelableOnTouchOutside);
-
-
 
         void openLoginActivityOnTokenExpire();
 
@@ -82,7 +70,7 @@ public class BaseContract {
 
         void hideKeyboard();
 
-        void onToggleFullScreenClicked(Boolean hideNavBar);
+        void toggleFullScreen(Boolean hideNavBar, Window W);
 
         void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable);
     }

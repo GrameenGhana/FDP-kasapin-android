@@ -5,18 +5,16 @@ buildscript {
     repositories {
         google()
         jcenter()
-
         maven {
             url 'https://maven.fabric.io/public'
         }
     }
 
 
-
     dependencies {
+
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.google.gms:google-services:4.1.0'
-
         classpath 'io.fabric.tools:gradle:1.26.1'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -29,7 +27,6 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-
     }
 }
 
@@ -52,7 +49,6 @@ ext {
     // App dependencies
     supportLibraryVersion = '28.0.0'
     guavaVersion = '18.0'
-    roomVersion = "1.1.1"
 
     junitVersion = '4.12'
     runnerVersion = '1.0.2'
@@ -72,7 +68,8 @@ ext {
     rx2FastAndroidNetworking = '1.0.1'
 
     dagger2Version = '2.11'
-    rxjava2Version = '2.0.6'
+
+    rxjava2Version = '2.1.10'
     rxandroidVersion = '2.0.1'
     butterKnifeVersion = '8.6.0'
     greenDaoVersion = '3.2.0'
@@ -90,6 +87,12 @@ ext {
     permissionManager = '0.1.0'
 
     materialSearchDialogVersion = '1.2.3'
+    moshiVersion = "1.8.0"
+    retrofitVersion = "2.5.0"
+    apacheCommonsVersion = "3.6"
+
+    loggingInterceptorVersion = '3.9.1'
+
 
 
 }

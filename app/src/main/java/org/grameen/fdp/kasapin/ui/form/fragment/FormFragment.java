@@ -6,9 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -25,10 +30,12 @@ import android.widget.Toast;
 
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.ui.base.BaseFragment;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
@@ -37,6 +44,7 @@ import java.io.File;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
+import static org.grameen.fdp.kasapin.utilities.ActivityUtils.getFormModelFragment;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
 /**
@@ -68,7 +76,7 @@ public abstract class FormFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        this.formModelFragment = ActivityUtils.getFormModelFragment(this.getActivity());
+        this.formModelFragment = getFormModelFragment(this.getActivity());
         this.formController = new MyFormController(context, formModelFragment.getModel());
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
@@ -167,6 +175,95 @@ public abstract class FormFragment extends BaseFragment {
     }
 
 
+
+
+    public void getCurrentLocation(final Context context, Question q) {
+
+       getModel().setValue(q.getLabelC(), "Getting location...");
+
+
+        boolean GpsStatus;
+        LocationManager locationManager;
+
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (GpsStatus) {
+
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+            criteria.setPowerRequirement(Criteria.POWER_LOW);
+            criteria.setAltitudeRequired(false);
+            criteria.setBearingRequired(false);
+            criteria.setSpeedRequired(false);
+            criteria.setCostAllowed(true);
+            criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+            criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+
+
+
+            // This is the Best And IMPORTANT part
+            final Looper looper = null;
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                locationManager.requestSingleUpdate(criteria, getLocationListener(q), looper);
+
+            }
+        } else {
+
+            CustomToast.makeToast(context, "Please Enable GPS First", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+
+
+    public LocationListener getLocationListener(Question q) {
+
+        return new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+                AppLogger.i(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
+
+                AppLogger.i(TAG, "lat:" + location.getLatitude() + " lon:" + location.getLongitude());
+
+                getModel().setValue(q.getLabelC(), location.getLatitude() + ", " + location.getLongitude());
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+                AppLogger.i(TAG, "^^^^^^^^^^ PROVIDER ENABLED ^^^^^^^^^^^^");
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+                AppLogger.i(TAG, "^^^^^^^^^^ PROVIDER DISABLED ^^^^^^^^^^^^");
+
+
+            }
+        };
+    }
+
+
+
+
+
+
+
     private File createTemporaryFile(String part, String ext) throws Exception {
 
         File dir = new File(ROOT_DIR + File.separator + ".temp/");
@@ -176,8 +273,6 @@ public abstract class FormFragment extends BaseFragment {
 
         return File.createTempFile(part, ext, dir);
     }
-
-
 
 
     boolean hasPermissions(Context context, String permission) {

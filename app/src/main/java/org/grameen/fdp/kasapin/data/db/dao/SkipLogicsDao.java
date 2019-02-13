@@ -12,6 +12,8 @@ import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 /**
  * Created by AangJnr on 18, September, 2018 @ 12:53 PM
  * Work Mail cibrahim@grameenfoundation.org
@@ -19,30 +21,26 @@ import java.util.List;
  */
 
 @Dao
-public interface SkipLogicsDao {
+public interface SkipLogicsDao extends BaseDao<SkipLogic>{
 
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<SkipLogic> objects);
 
 
     @Query("SELECT * FROM skip_logics")
     LiveData<List<SkipLogic>> getAll();
 
     @Query("SELECT * FROM skip_logics WHERE questionId = :questionId")
-    LiveData<List<SkipLogic>> getAllByQuestionId(String questionId);
+    Single<List<SkipLogic>> getAllByQuestionId(int questionId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSkipLogic(SkipLogic skipLogic);
 
 
     @Query("SELECT * FROM skip_logics WHERE id = :id")
-    SkipLogic getSkipLogicById(String id);
+    SkipLogic getSkipLogicById(int id);
 
 
     @Update
     int updateSkipLogic(SkipLogic skipLogic);
-
 
 
     @Query("DELETE FROM skip_logics")
@@ -50,7 +48,7 @@ public interface SkipLogicsDao {
 
 
     @Query("DELETE FROM skip_logics WHERE id = :id")
-    int deleteSkipLogicById(String id);
+    int deleteSkipLogicById(int id);
 
 
 

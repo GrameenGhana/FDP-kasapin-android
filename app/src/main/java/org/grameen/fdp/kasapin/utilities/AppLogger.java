@@ -72,9 +72,18 @@ public class AppLogger {
         Timber.d(s);
     }
 
-    public static void i(String s) {
-        Timber.i(s);
+    public static void i(String tag, String message) {
+        Timber.i("%s%s  -> %s", " ******** ",tag, message);
     }
+
+    public static void i(String message) {
+        Timber.i( "%s -> %s", " ******** ", message);
+    }
+
+    public static void e(String tag, String message) {
+        Timber.e("%s%s  -> %s", " ******** ",tag, message);
+    }
+
 
 
     private static final class CrashReportingTree extends Timber.Tree {

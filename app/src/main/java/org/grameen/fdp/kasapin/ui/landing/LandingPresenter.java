@@ -38,23 +38,19 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
 
 
 
+
     @Inject
     public LandingPresenter(AppDataManager appDataManager) {
         super(appDataManager);
         this.mAppDataManager = appDataManager;
 
 
+
+
     }
 
 
 
-
-    @Override
-    public void openNextActivity() {
-
-        getView().openNextActivity();
-
-    }
 
 
     @Override
@@ -73,7 +69,7 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
 
         if (logFiles.size() > 0) {
 
-            Crashlytics.setUserIdentifier(mAppDataManager.getCurrentUserName());
+            Crashlytics.setUserIdentifier(mAppDataManager.getUserEmail());
 
             Crashlytics.log(FileUtils.readFromFile(new File(logFiles.get(0).getAbsolutePath())));
 
@@ -120,9 +116,10 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
     }
 
 
+    @Override
+    public void openNextActivity() {
+        getView().openMainActivity();
 
 
-
-
-
+    }
 }

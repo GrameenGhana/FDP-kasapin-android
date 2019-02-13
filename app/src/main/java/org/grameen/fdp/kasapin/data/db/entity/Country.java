@@ -16,7 +16,9 @@ public class Country {
 
     @PrimaryKey
     @NonNull
-    String id;
+    int id;
+
+
     String Name;
 
     @SerializedName("currencySign__c")
@@ -33,12 +35,12 @@ public class Country {
     }
 
 
-    public void setId(@NonNull String id) {
+    public void setId(@NonNull int id) {
         this.id = id;
     }
 
     @NonNull
-    public String getId() {
+    public int getId() {
         return id;
     }
 

@@ -1,13 +1,7 @@
-package org.grameen.fdp.kasapin.ui.farmerProfile;
+package org.grameen.fdp.kasapin.ui.login;
 
 
-import android.support.annotation.Nullable;
-
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
-
-import java.util.List;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:09 PM
@@ -15,16 +9,26 @@ import java.util.List;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class AddFarmerContract {
+public class LoginContract {
 
 
 
     public interface View extends  BaseContract.View {
 
 
+        void openNextActivity();
+
     }
 
      public interface Presenter {
+
+        void makeLoginApiCall(String email, String password);
+
+        void fetchUserData(String token);
+
+        void fetchData();
+
+
 
     }
 

@@ -12,6 +12,8 @@ import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 /**
  * Created by AangJnr on 18, September, 2018 @ 12:44 PM
  * Work Mail cibrahim@grameenfoundation.org
@@ -19,22 +21,16 @@ import java.util.List;
  */
 
 @Dao
-public interface RealFarmersDao {
+public interface RealFarmersDao extends BaseDao<RealFarmer>{
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<RealFarmer> objects);
 
     @Query("SELECT * FROM farmers")
     LiveData<List<RealFarmer>> getAll();
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertFarmer(RealFarmer farmer);
-
-
     @Query("SELECT * FROM farmers WHERE id = :id")
-    RealFarmer getFarmerById(String id);
+    RealFarmer getFarmerById(int id);
 
 
     @Update
@@ -47,7 +43,7 @@ public interface RealFarmersDao {
 
 
     @Query("DELETE FROM farmers WHERE id = :id")
-    int deleteFarmerById(String id);
+    int deleteFarmerById(int id);
 
 
 

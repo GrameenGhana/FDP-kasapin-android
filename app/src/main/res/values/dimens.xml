@@ -101,4 +101,11 @@
     <dimen name="default_row_header_width">55dp</dimen>
     <dimen name="default_column_header_height">40dp</dimen>
 
+
+    <dimen name="sections_image_size">60dp</dimen>
+    <dimen name="sub_sections_image_size">30dp</dimen>
+    <dimen name="topics_image_size">20dp</dimen>
+    <dimen name="alert_def_padding">16dp</dimen>
+
+
 </resources>
