@@ -213,4 +213,27 @@ public class AppPreferencesHelper implements PreferencesHelper {
         mPrefs.edit().putBoolean(PREF_KEY_IS_TRANSLATION, isTranslationToggled).apply();
 
     }
+
+
+    @Override
+    public String getStringValue(String key) {
+        return mPrefs.getString(key, "");
+    }
+
+    @Override
+    public void setStringValue(String key, String value) {
+        mPrefs.edit().putString(key, value).apply();
+    }
+
+
+    @Override
+    public void setBooleanValue(String key, boolean value) {
+
+        mPrefs.edit().putBoolean(key, value).apply();
+    }
+
+    @Override
+    public boolean getBooleanValue(String key) {
+        return mPrefs.getBoolean(key, false);
+    }
 }

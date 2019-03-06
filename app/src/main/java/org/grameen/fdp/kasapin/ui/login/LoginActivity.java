@@ -56,6 +56,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         toggleFullScreen(false, getWindow());
 
         setContentView(R.layout.activity_login);

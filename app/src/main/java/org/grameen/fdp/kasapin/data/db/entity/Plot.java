@@ -24,6 +24,8 @@ public class Plot {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     int id;
+
+
     String distanceBetweenCocoaTrees;
     String EstimatedProduction;
     String farmerName;

@@ -38,7 +38,7 @@ import io.reactivex.schedulers.Schedulers;
 public class BasePresenter<V extends BaseContract.View> implements BaseContract.Presenter<V> {
 
     private V mView;
-    AppDataManager mAppDataManager;
+    public AppDataManager mAppDataManager;
     protected String TAG = "";
 
 

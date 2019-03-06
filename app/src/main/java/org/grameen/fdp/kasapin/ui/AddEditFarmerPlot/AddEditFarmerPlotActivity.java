@@ -76,10 +76,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         mPresenter.takeView(this);
         mAppDataManager = mPresenter.getAppDataManager();
 
+
         FARMER = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+
+        if(FARMER != null)
         FARMER_CODE = FARMER.getCode();
 
-        AppLogger.e(TAG, "Farmer Code is " + FARMER_CODE);
 
         setupViews();
 
@@ -127,7 +129,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     void setupViews(){
 
         //Edit Plot
-
         saveButton.setEnabled(false);
         plotNameEdittext.addTextChangedListener(new TextWatcher() {
             @Override
@@ -153,16 +154,23 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
         if (getIntent().getStringExtra("flag") != null && getIntent().getStringExtra("flag").equals("edit")) {
+
             isEditMode = true;
             setToolbar(getStringResources(R.string.edit_plot));
 
             PLOT = getGson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
-            plotNameEdittext.setText(PLOT.getName());
+            FARMER_CODE = PLOT.getFarmerCode();
 
+
+            plotNameEdittext.setText(PLOT.getName());
+            plotSizeEdittext.setText(PLOT.getArea());
+            estimatedProductionEdittext.setText(PLOT.getEstimatedProductionSize());
+            phEdittext.setText(PLOT.getPh());
 
 
 
         } else {
+
             PLOT = new Plot();
             PLOT.setFarmerCode(FARMER_CODE);
             PLOT.setAnswersData(new JSONObject().toString());
@@ -177,6 +185,8 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             //New Plot
             setToolbar(getStringResources(R.string.add_new_plot));
         }
+
+        AppLogger.e(TAG, "Farmer Code is " + FARMER_CODE);
 
 
         mPresenter.getPlotQuestions();
@@ -210,7 +220,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
 
-
     @Override
     public void showPlotDetailsActivity(Plot plot) {
 
@@ -234,6 +243,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         }, 500);
 
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
 

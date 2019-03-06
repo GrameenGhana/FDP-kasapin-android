@@ -87,6 +87,15 @@ public interface PreferencesHelper {
 
     void clearSecurePreferences();
 
+
+    String getStringValue(String key);
+
+    void setStringValue(String key, String value);
+
+
+    boolean getBooleanValue(String key);
+
+    void setBooleanValue(String key, boolean value);
  
 
 }

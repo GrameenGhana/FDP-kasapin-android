@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -36,7 +37,6 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.View> implements AddEditFarmerContract.Presenter{
 
-    private AppDataManager mAppDataManager;
 
     @Inject
     public AddEditFarmerPresenter(AppDataManager appDataManager) {
@@ -58,6 +58,8 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
     @Override
     public void loadFormFragment(String farmerCode, int formId) {
 
+        AppLogger.e(TAG, "Farmer code is " + farmerCode + " and Form id is " + formId);
+
 
         runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(farmerCode, formId)
                 .subscribeOn(Schedulers.io())
@@ -68,8 +70,7 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
                             getView().showFormFragment(null);
                         }
                 ));
-
-    }
+        }
 
 
 
@@ -77,35 +78,64 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
     public void saveData(RealFarmer farmer, FormAnswerData answerData, boolean exit) {
 
         answerData.setFarmerCode(farmer.getCode());
-
-
-        getAppDataManager()
-                .getCompositeDisposable()
-                .add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmer))
+        getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmer))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(id -> {
-
                             AppLogger.i(TAG, "Saving : " + getGson().toJson(answerData));
 
-                            runSingleCall(Single.fromCallable(() ->  getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData))
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe(aLong -> {
+                            //if(answerData.getId() == 0) {
 
-                                        getView().showMessage("Farmer data saved!");
+                                runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData))
+                                        .subscribeOn(Schedulers.io())
+                                        .subscribe(aLong -> {
 
-                                        if(!exit)
-                                            getView().moveToNextForm();
-                                        else
-                                            getView().finishActivity();
+                                            getView().showMessage("Farmer data saved!");
 
-                                    }, throwable -> {
-                                        getView().showMessage("An error occurred saving farmer data. Please try again.");
-                                        throwable.printStackTrace();
-                                    }));
+                                            if (!exit)
+                                                getView().moveToNextForm();
+                                            else {
+                                                getAppDataManager().setBooleanValue("reload", true);
+
+                                                getView().finishActivity();
+                                            }
+                                        }, throwable -> {
+                                            getView().showMessage("An error occurred saving farmer data. Please try again.");
+                                            throwable.printStackTrace();
+                                        }));
+/*
+
+                            }else{
+
+
+                                runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().formAnswerDao().updateOne(answerData))
+                                        .subscribeOn(Schedulers.io())
+                                        .subscribe(aLong -> {
+
+                                            getView().showMessage("Farmer data updated!");
+
+                                            if (!exit)
+                                                getView().moveToNextForm();
+                                            else {
+                                                getAppDataManager().setBooleanValue("reload", true);
+
+                                                getView().finishActivity();
+                                            }
+                                        }, throwable -> {
+                                            getView().showMessage("An error occurred saving farmer data. Please try again.");
+                                            throwable.printStackTrace();
+                                        }));
+
+
+
+
+                            }
+*/
+
+
+
                         }, throwable ->{ AppLogger.e(TAG, throwable.getMessage());
                             throwable.printStackTrace();}));
-
 
     }
 

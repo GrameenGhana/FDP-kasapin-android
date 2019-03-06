@@ -12,6 +12,7 @@ import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.main.FarmerListFragment;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
+import org.grameen.fdp.kasapin.ui.map.MapActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.ui.splash.SplashActivity;
 
@@ -37,6 +38,7 @@ public interface ActivityComponent {
     void inject(DynamicFormFragment view);
     void inject(AddEditFarmerPlotActivity view);
     void inject(PlotDetailsActivity view);
+    void inject(MapActivity view);
 
 
 

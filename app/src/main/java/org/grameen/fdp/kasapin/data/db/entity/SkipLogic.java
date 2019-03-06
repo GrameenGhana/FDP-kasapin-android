@@ -15,7 +15,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
  * Created by aangjnr on 02/01/2018.
  */
 
-@Entity(tableName = "skip_logics",  indices = {@Index(value = "questionId")}, foreignKeys = {@ForeignKey(entity = Question.class, parentColumns = "id", childColumns = "questionId", onDelete = CASCADE)})
+@Entity(tableName = "skip_logics",  indices = {@Index(value = "questionId")}, foreignKeys = {@ForeignKey(entity = Question.class, parentColumns = "id", childColumns = "questionId", deferred = true)})
 public class SkipLogic {
 
     @PrimaryKey

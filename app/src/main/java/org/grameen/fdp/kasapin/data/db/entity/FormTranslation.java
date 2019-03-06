@@ -23,16 +23,10 @@ import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
-@Entity(tableName = "form_translation", indices = {@Index(value = "formId"), @Index(value = "id", unique = true)}, foreignKeys = {@ForeignKey(entity = Form.class, parentColumns = "id", childColumns = "formId", onDelete = CASCADE)})
-public class FormTranslation {
+//, foreignKeys = {@ForeignKey(entity = Form.class, parentColumns = "id", childColumns = "formId", deferred = true)}
+@Entity(tableName = "form_translation", indices = {@Index(value = "formId"), @Index(value = "id", unique = true)})
+public class FormTranslation extends BaseModel{
 
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    int base_id;
-
-
-    @SerializedName("id")
-    private int id;
     @SerializedName("name")
     private String name;
     @SerializedName("form_id")
@@ -66,15 +60,6 @@ public class FormTranslation {
         this.formId = formId;
     }
 
-
-    @NonNull
-    public int getBase_id() {
-        return base_id;
-    }
-
-    public void setBase_id(@NonNull int base_id) {
-        this.base_id = base_id;
-    }
 
     public int getId() {
         return id;

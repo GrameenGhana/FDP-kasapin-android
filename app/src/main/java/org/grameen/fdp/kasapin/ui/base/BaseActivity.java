@@ -19,9 +19,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +48,7 @@ import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
+import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 
 import java.io.File;
 import java.util.List;
@@ -92,6 +98,8 @@ public abstract class BaseActivity extends AppCompatActivity
     public static int CURRENT_FORM;
     public static int CURRENT_PAGE;
 
+    public static boolean IS_TABLET;
+
 
 
     @Override
@@ -105,9 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity
         overridePendingTransition(R.anim.right_slide, R.anim.slide_out_left);
 
 
-
-
-
+        IS_TABLET = ScreenUtils.isTablet(this);
         DEVICE_ID = CommonUtils.getDeviceId(this);
 
     }
@@ -431,6 +437,15 @@ public abstract class BaseActivity extends AppCompatActivity
         finish();
     }
 
+
+
+    public static void runLayoutAnimation(final GridView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fall_down);
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.scheduleLayoutAnimation();
+    }
 
 
 }

@@ -10,6 +10,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class MainContract {
 
         void openAddNewFarmerActivity(FormAndQuestions formAndQuestions);
 
+        void viewFarmerProfile(RealFarmer farmer);
 
     }
 
@@ -55,7 +57,12 @@ public class MainContract {
 
          void syncData(boolean showProgress);
 
+         void downloadData(boolean showProgress);
 
+         void initializeSearchDialog(List<VillageAndFarmers> villageAndFarmers);
+
+
+         void getFarmer(String farmerCode);
      }
 
 

@@ -30,12 +30,17 @@ import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.map.PointsListAdapter.OnItemClickListener;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
+import org.grameen.fdp.kasapin.utilities.CommonUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
@@ -43,7 +48,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by aangjnr on 09/11/2017.
  */
 
-public class MapActivity extends BaseActivity {
+public class MapActivity extends BaseActivity implements MapContract.View{
+
+    @Inject
+    MapPresenter mPresenter;
+
 
     public static Float DEFAULT_ZOOM = 17.0f;
     ProgressDialog progressDialog;
@@ -66,10 +75,15 @@ public class MapActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        setUnBinder(ButterKnife.bind(this));
+        getActivityComponent().inject(this);
+        mPresenter.takeView(this);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setIndeterminate(true);
+
+
+        progressDialog = new ProgressDialog(this, R.style.DialogTheme);
+
+
 
         recyclerView = findViewById(R.id.recycler_view);
 
@@ -85,7 +99,7 @@ public class MapActivity extends BaseActivity {
            setToolbar("Plot GPS Area Calculation");
         }
 
-        Log.i(TAG, "PLOT POINTS " + plot.getGpsPoints());
+        AppLogger.i(TAG, "PLOT POINTS " + plot.getGpsPoints());
 
         if (plot.getGpsPoints() != null && !plot.getGpsPoints().equalsIgnoreCase("")) {
 
@@ -171,26 +185,23 @@ public class MapActivity extends BaseActivity {
                         "\nArea in Acres is " + new DecimalFormat("0.00").format(inAcres) +
                         "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
 
-                showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok), (dialog, which) -> {
 
-                        StringBuilder builder = new StringBuilder();
+                    StringBuilder builder = new StringBuilder();
 
-                        //Todo save latLngs
-                        for (LatLng latLng : latLngs) {
+                    //Todo save latLngs
+                    for (LatLng latLng : latLngs) {
 
-                            if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
-                                builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
-                            else
-                                builder.append(latLng.latitude).append(",").append(latLng.longitude);
-                        }
-
-                        plot.setGpsPoints(builder.toString());
-                        dialog.dismiss();
-                        saveData();
-
+                        if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
+                            builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
+                        else
+                            builder.append(latLng.latitude).append(",").append(latLng.longitude);
                     }
+
+                    plot.setGpsPoints(builder.toString());
+                    dialog.dismiss();
+                    saveData();
+
                 }, getStringResources(R.string.save), 0);
 
 
@@ -206,11 +217,17 @@ public class MapActivity extends BaseActivity {
 
         });
 
-        addPoint = (Button) findViewById(R.id.addPoint);
+        addPoint =  findViewById(R.id.addPoint);
         addPoint.setOnClickListener(v -> {
 
-            progressDialog.show();
-            addPoint.setEnabled(false);
+           // progressDialog = new ProgressDialog(this);
+            //progressDialog.setTitle("Please wait");
+            //progressDialog.setIndeterminate(true);
+
+
+           progressDialog = CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
+
+
             getCurrentLocation();
 
         });
@@ -222,7 +239,7 @@ public class MapActivity extends BaseActivity {
         locationListener = new android.location.LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
-                Log.i(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
+                AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
 
 
                 String msg = "Updated Location " + "\n" +
@@ -275,13 +292,13 @@ public class MapActivity extends BaseActivity {
 
             @Override
             public void onProviderEnabled(String s) {
-                Log.i(TAG, "^^^^^^^^^^ PROVIDER ENABLED ^^^^^^^^^^^^");
+                AppLogger.i(TAG, "^^^^^^^^^^ PROVIDER ENABLED ^^^^^^^^^^^^");
 
             }
 
             @Override
             public void onProviderDisabled(String s) {
-                Log.i(TAG, "^^^^^^^^^^ PROVIDER DISABLED ^^^^^^^^^^^^");
+                AppLogger.i(TAG, "^^^^^^^^^^ PROVIDER DISABLED ^^^^^^^^^^^^");
 
 
             }
@@ -300,7 +317,7 @@ public class MapActivity extends BaseActivity {
 
 
             AREA_OF_PLOT = SphericalUtil.computeArea(latLngs);
-            Log.d(TAG, "computeAreaInSquareMeters " + AREA_OF_PLOT);
+            AppLogger.d(TAG, "computeAreaInSquareMeters " + AREA_OF_PLOT);
 
         Double inHectares = convertToHectres(AREA_OF_PLOT);
         Double inAcres = convertToAcres(AREA_OF_PLOT);
@@ -326,7 +343,7 @@ public class MapActivity extends BaseActivity {
 
             plot.setGpsPoints(builder.toString());
 
-            Log.i(TAG, "STRING ARRAY OF LatLngs = " + builder);
+            AppLogger.i(TAG, "STRING ARRAY OF LatLngs = " + builder);
 
             dialog.dismiss();
 
@@ -447,4 +464,8 @@ public class MapActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void openMainActivity() {
+
+    }
 }

@@ -12,6 +12,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 /**
@@ -36,6 +37,10 @@ public interface QuestionDao extends BaseDao<Question>{
 
     @Query("SELECT * FROM questions WHERE formTranslationId = :formTranslationId")
     Single<List<Question>> getQuestionsByForm(int formTranslationId);
+
+
+    @Query("SELECT * FROM questions WHERE labelC  LIKE '%' || :label || '%'")
+    Maybe<Question> get(String label);
 
 
     @Update

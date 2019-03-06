@@ -199,28 +199,29 @@ public class DynamicFormFragment extends FormFragment{
 
 
         if (shouldLoadOldValues)
-                Observable.fromIterable(QUESTIONS)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(Schedulers.newThread())
-                        .doOnNext(question ->
-                                getAppDataManager().getCompositeDisposable().add(getAppDataManager()
-                                        .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
-                                        .subscribe(skipLogics ->{
-                                            if(skipLogics != null && skipLogics.size() > 0)
+            Observable.fromIterable(QUESTIONS)
+                    .subscribeOn(Schedulers.io())
+                    .doOnNext(question ->
+                            getAppDataManager().getCompositeDisposable().add(getAppDataManager()
+                                    .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
+                                    .subscribe(skipLogics ->{
+                                        if(skipLogics != null && skipLogics.size() > 0)
                                             applySkipLogicsAndHideViews(question, skipLogics);
-                                        }))).subscribe();
+
+                                    }))
+                    ).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
 
 
 
         Observable.fromIterable(QUESTIONS)
                 .subscribeOn(Schedulers.io())
-                .delay(3,TimeUnit.SECONDS )
-                .observeOn(Schedulers.newThread())
                 .doOnNext(question ->
                         getAppDataManager().getCompositeDisposable().add(Observable.just(question).subscribeOn(Schedulers.io())
                                 .filter(question1 -> question1.getTypeC().equalsIgnoreCase(AppConstants.TYPE_FORMULA))
                                 .observeOn(Schedulers.computation())
                                 .subscribe(this::applyFormulas)))
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
 
 

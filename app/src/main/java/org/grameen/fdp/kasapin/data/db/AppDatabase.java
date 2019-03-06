@@ -16,13 +16,14 @@ import org.grameen.fdp.kasapin.data.db.dao.FormTranslationDao;
 import org.grameen.fdp.kasapin.data.db.dao.FormsDao;
 import org.grameen.fdp.kasapin.data.db.dao.InputsDao;
 import org.grameen.fdp.kasapin.data.db.dao.LogicsDao;
+import org.grameen.fdp.kasapin.data.db.dao.MappingsDao;
 import org.grameen.fdp.kasapin.data.db.dao.MonitoringsDao;
 import org.grameen.fdp.kasapin.data.db.dao.PlotAndAssessmentsDao;
 import org.grameen.fdp.kasapin.data.db.dao.PlotAssessmentDao;
 import org.grameen.fdp.kasapin.data.db.dao.PlotsDao;
 import org.grameen.fdp.kasapin.data.db.dao.QuestionDao;
 import org.grameen.fdp.kasapin.data.db.dao.RealFarmersDao;
-import org.grameen.fdp.kasapin.data.db.dao.RecommendationPlusActivitiesDao;
+import org.grameen.fdp.kasapin.data.db.dao.RecommendationActivitiesDao;
 import org.grameen.fdp.kasapin.data.db.dao.RecommendationsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SkipLogicsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SubmissionsDao;
@@ -36,18 +37,18 @@ import org.grameen.fdp.kasapin.data.db.entity.ComplexCalculation;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.FarmResult;
 import org.grameen.fdp.kasapin.data.db.entity.Form;
-import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.FormTranslation;
 import org.grameen.fdp.kasapin.data.db.entity.Input;
 import org.grameen.fdp.kasapin.data.db.entity.Logic;
+import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.PlotAssessment;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
-import org.grameen.fdp.kasapin.data.db.entity.RecommendationsPlusActivity;
+import org.grameen.fdp.kasapin.data.db.entity.RecommendationActivity;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.SuppliesCost;
@@ -62,10 +63,10 @@ import javax.inject.Singleton;
  * Personal mail aang.jnr@gmail.com
  */
 @Singleton
-@Database(entities = {Country.class, Village.class, Form.class, FormTranslation.class, Question.class, SkipLogic.class, Logic.class, Recommendation.class,
-        RecommendationsPlusActivity.class, ActivitiesPlusInput.class, Activity.class, Input.class, Calculation.class, ComplexCalculation.class,
+@Database(entities = {Country.class, Village.class, Form.class, FormTranslation.class, Question.class, SkipLogic.class, Mapping.class, Logic.class, Recommendation.class,
+        RecommendationActivity.class, ActivitiesPlusInput.class, Activity.class, Input.class, Calculation.class, ComplexCalculation.class,
         RealFarmer.class, FormAnswerData.class, Plot.class, Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class
-}, version = 2, exportSchema = false)
+}, version = 1, exportSchema = false)
 
 @TypeConverters({DateTypeConverter.class, ListTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -76,9 +77,10 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract FormTranslationDao formTranslationDao();
     public abstract QuestionDao questionDao();
     public abstract SkipLogicsDao skipLogicsDao();
+    public abstract MappingsDao mappingDao();
     public abstract LogicsDao logicsDao();
     public abstract RecommendationsDao recommendationsDao();
-    public abstract RecommendationPlusActivitiesDao recommendationPlusActivitiesDao();
+    public abstract RecommendationActivitiesDao recommendationPlusActivitiesDao();
     public abstract ActivitiesPlusInputsDao activitiesPlusInputsDao();
     public abstract ActivitiesDao activitiesDao();
     public abstract InputsDao inputsDao();

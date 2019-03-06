@@ -217,7 +217,6 @@ public class ComputationUtils {
     public void initiateSkipLogicsAndHideViews(String label, List<SkipLogic> skipLogics) {
             if (skipLogics != null && skipLogics.size() > 0) {
 
-
                 for (final SkipLogic sl : skipLogics) {
                     String [] values = sl.getFormula().replace("\"", "").split(" ");
                     sl.setComparingQuestion(values[0]);
@@ -248,7 +247,6 @@ public class ComputationUtils {
 
 
                     } catch (Exception ignored) {
-                        ignored.printStackTrace();
                     }
 
 

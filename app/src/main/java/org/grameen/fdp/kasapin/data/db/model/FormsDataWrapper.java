@@ -15,7 +15,7 @@ import java.util.List;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class DataWrapper {
+public class FormsDataWrapper {
 
     @SerializedName("data")
     @Expose
@@ -25,14 +25,14 @@ public class DataWrapper {
      * No args constructor for use in serialization
      *
      */
-    public DataWrapper() {
+    public FormsDataWrapper() {
     }
 
     /**
      *
      * @param data
      */
-    public DataWrapper(List<FormTranslation> data) {
+    public FormsDataWrapper(List<FormTranslation> data) {
         super();
         this.data = data;
     }

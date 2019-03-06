@@ -12,6 +12,7 @@ import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 /**
@@ -28,23 +29,19 @@ public interface RealFarmersDao extends BaseDao<RealFarmer>{
     @Query("SELECT * FROM farmers")
     LiveData<List<RealFarmer>> getAll();
 
-
     @Query("SELECT * FROM farmers WHERE id = :id")
-    RealFarmer getFarmerById(int id);
+    RealFarmer get(int id);
 
+    @Query("SELECT * FROM farmers WHERE code = :code")
+    Maybe<RealFarmer> get(String code);
 
     @Update
     int updateFarmer(RealFarmer farmer);
 
-
-
     @Query("DELETE FROM farmers")
     void deleteAllFarmers();
 
-
     @Query("DELETE FROM farmers WHERE id = :id")
     int deleteFarmerById(int id);
-
-
 
 }

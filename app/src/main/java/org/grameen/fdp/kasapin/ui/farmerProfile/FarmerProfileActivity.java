@@ -360,6 +360,19 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(getAppDataManager().getBooleanValue("reload")){
+
+            mPresenter.getFarmersPlots(FARMER.getCode());
+
+            getAppDataManager().setBooleanValue("reload", false);
+        }
+    }
+
+
+
 
     @Override
     public void openLoginActivityOnTokenExpire() {
@@ -381,9 +394,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 //Todo go to add plot activity
                  intent = new Intent(FarmerProfileActivity.this, AddEditFarmerPlotActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
+                intent.putExtra("plotSize", plotsSize);
                 startActivity(intent);
-
-
                 break;
             case R.id.review_page:
 

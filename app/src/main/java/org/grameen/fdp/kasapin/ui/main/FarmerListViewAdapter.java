@@ -61,13 +61,11 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
 
         RelativeLayout mainLayout;
         RelativeLayout rl1;
-
         TextView name;
         TextView code;
         TextView initials;
         ImageView photo;
         ImageView imageView;
-
         ImageView syncStatus;
         ImageView fdpStatus;
 
@@ -79,7 +77,6 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
     public View getView(int position, @Nullable  View convertView, @NonNull ViewGroup parent) {
 
         RealFarmer realFarmer = farmers.get(position);
-        View view;
 
         ViewHolder viewHolder;
 
@@ -102,17 +99,15 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
             viewHolder.fdpStatus = convertView.findViewById(R.id.fdp_status);
 
 
-            view = convertView;
             convertView.setTag(viewHolder);
 
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
-            view = convertView;
 
         }
 
 
-        Animation animation;
+       /* Animation animation;
 
 
         if(CURRENT_PAGE == 0) {
@@ -126,7 +121,7 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
 
             view.startAnimation(animation);
         }
-        lastPosition = position;
+        lastPosition = position;*/
 
 
         setData(realFarmer, viewHolder);
@@ -195,7 +190,7 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
 
 
 /*
-
+f
     @Override
     public void onClick(View view) {
 

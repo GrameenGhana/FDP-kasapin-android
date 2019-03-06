@@ -64,6 +64,7 @@ public final class CommonUtils {
 
     public static ProgressDialog showLoadingDialog(ProgressDialog progressDialog, String title, String message, boolean indeterminate, @DrawableRes int icon, boolean cancelableOnTouchOutside) {
 
+
         progressDialog.setTitle(title);
         progressDialog.setMessage(message);
         if (icon != 0)

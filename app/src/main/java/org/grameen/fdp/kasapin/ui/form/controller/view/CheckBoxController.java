@@ -207,12 +207,8 @@ public class CheckBoxController extends MyLabeledFieldController {
 
         String value;
         try {
-
             value = getModel().getValue(getName()).toString();
-
-        }catch(NullPointerException e){
-
-            e.printStackTrace();
+        }catch(NullPointerException ignored){
             value = "";
         }
 
@@ -229,7 +225,6 @@ public class CheckBoxController extends MyLabeledFieldController {
         }*/
         Set<Object> modelValues = new HashSet<Object>();
         for(int i = 0; i < items.size(); i++){
-
             if(value.contains(items.get(i))){
                 modelValues.add(items.get(i));
             }

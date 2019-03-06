@@ -2,24 +2,21 @@ package org.grameen.fdp.kasapin.data.network;
 
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.model.DataWrapper;
+import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
+import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
-import org.grameen.fdp.kasapin.data.network.model.FormTranslation;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
-
-import java.util.List;
+import org.grameen.fdp.kasapin.data.network.model.Response;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
 
 /**
  * Created by AangJnr on 05, December, 2018 @ 4:03 PM
@@ -59,15 +56,22 @@ public class FdpApiService {
     }
 
 
-    public Single<DataWrapper> fetchSurveyData(int id, String token) {
+    public Single<FormsDataWrapper> fetchSurveyData(int id, String token) {
         return fdpApi.getSurveyData(id, token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<DataWrapper> fetchSurveyData2(int id, String token) {
-        return fdpApi.getSurveyData2(id, token).subscribeOn(Schedulers.io())
+    public Single<RecommendationsDataWrapper> fetchRecommendations(int id, String token) {
+        return fdpApi.getRecommendations(id, token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+
+    public Single<Response> pushFarmersData(String token, JSONObject data) {
+        return fdpApi.postFarmers(token, data).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 
 
 

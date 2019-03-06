@@ -63,7 +63,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     @Override
     public void getFarmersPlots(String farmerCode) {
 
-        AppLogger.i(TAG, "GETTING PLOTS DATA!");
+        AppLogger.i(TAG, "GETTING PLOTS DATA!. >>> FARMER CODE IS " + farmerCode);
         runSingleCall(getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmerCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

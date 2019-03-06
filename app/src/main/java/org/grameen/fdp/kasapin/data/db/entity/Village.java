@@ -14,7 +14,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
  * Created by aangjnr on 30/01/2018.
  */
 
-@Entity(tableName = "villages", indices = @Index(value = "countryId"), foreignKeys = @ForeignKey(entity = Country.class, parentColumns = "id", childColumns = "countryId", onDelete = CASCADE))
+@Entity(tableName = "villages", indices = @Index(value = "countryId"))
 public class Village {
 
     @PrimaryKey

@@ -20,11 +20,14 @@ public class PlotDetailsContract {
 
         void showForm(List<FormAndQuestions> formAndQuestionsList);
 
+        void setAreaUnits(String unit);
 
     }
 
      public interface Presenter {
          void getPlotQuestions();
+
+         void getAreaUnits(String farmerCode);
     }
 
 

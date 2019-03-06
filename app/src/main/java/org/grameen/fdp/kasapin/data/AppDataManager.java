@@ -341,4 +341,26 @@ public class AppDataManager implements DataManager {
     public FdpApiService getFdpApiService() {
         return fdpApiService;
     }
+
+
+    @Override
+    public void setStringValue(String key, String value) {
+        mPreferencesHelper.setStringValue(key, value);
+    }
+
+    @Override
+    public boolean getBooleanValue(String key) {
+        return mPreferencesHelper.getBooleanValue(key);
+    }
+
+    @Override
+    public void setBooleanValue(String key, boolean value) {
+        mPreferencesHelper.setBooleanValue(key, value);
+
+    }
+
+    @Override
+    public String getStringValue(String key) {
+        return mPreferencesHelper.getStringValue(key);
+    }
 }

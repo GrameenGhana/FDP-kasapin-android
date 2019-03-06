@@ -1,159 +1,67 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
  * Created by aangjnr on 04/01/2018.
  */
 
 
-@Entity(tableName = "calculations")
+@Entity(tableName = "calculations", indices = {@Index(value = "id", unique = true), @Index(value = "recommendationId")},
+        foreignKeys = {@ForeignKey(entity = Recommendation.class, parentColumns = "id", childColumns = "recommendationId", onDelete = CASCADE)})
+public class Calculation extends BaseModel{
 
-public class Calculation {
-
-    @PrimaryKey
-    @NonNull
-    @SerializedName("Id")
-    String id;
-
-    @SerializedName("Name")
-    String name;
-
-    @SerializedName("Question_1__c")
-    String question1;
-
-
-    @SerializedName("Operator_1__c")
-    String operator1;
-
-    @SerializedName("Question_2__c")
-    String question2;
-
-    @SerializedName("Operator_2__c")
-    String operator2;
-
-    @SerializedName("Question_3__c")
-    String question3;
-
-    @SerializedName("Operator_3__c")
-    String operator3;
-
-    @SerializedName("Question_4__c")
-    String question4;
-
-    @SerializedName("LastModifiedDate")
-    String lastModifiedDate;
-
-    @SerializedName("Calculation_order__c")
-    Integer hierarchy;
-
-
-
-    @SerializedName("Result_question__c")
-    String resultQuestion;
+    @SerializedName("recommendation_id")
+    int recommendationId;
+    @SerializedName("year_c")
+    int year;
+    @SerializedName("type_c")
+    String type;
+    @SerializedName("formula_c")
+    String formula;
 
 
     public Calculation() {
     }
 
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+
+    public int getRecommendationId() {
+        return recommendationId;
     }
 
-    public String getLastModifiedDate() {
-        return lastModifiedDate;
+    public void setRecommendationId(int recommendationId) {
+        this.recommendationId = recommendationId;
     }
 
-    public String getId() {
-        return id;
+    public int getYear() {
+        return year;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setYear(int year) {
+        this.year = year;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getOperator1() {
-        return operator1;
+    public String getFormula() {
+        return formula;
     }
 
-    public void setOperator1(String operator1) {
-        this.operator1 = operator1;
-    }
-
-    public String getOperator2() {
-        return operator2;
-    }
-
-    public void setOperator2(String operator2) {
-        this.operator2 = operator2;
-    }
-
-    public String getOperator3() {
-        return operator3;
-    }
-
-    public void setOperator3(String operator3) {
-        this.operator3 = operator3;
-    }
-
-    public String getQuestion1() {
-        return question1;
-    }
-
-    public void setQuestion1(String question1) {
-        this.question1 = question1;
-    }
-
-    public String getQuestion2() {
-        return question2;
-    }
-
-    public void setQuestion2(String question2) {
-        this.question2 = question2;
-    }
-
-    public String getQuestion3() {
-        return question3;
-    }
-
-    public void setQuestion3(String question3) {
-        this.question3 = question3;
-    }
-
-    public String getQuestion4() {
-        return question4;
-    }
-
-    public void setQuestion4(String question4) {
-        this.question4 = question4;
-    }
-
-    public String getResultQuestion() {
-        return resultQuestion;
-    }
-
-    public void setResultQuestion(String resultQuestion) {
-        this.resultQuestion = resultQuestion;
-    }
-
-
-    public Integer getHierarchy() {
-        return hierarchy;
-    }
-
-    public void setHierarchy(Integer hierarchy) {
-        this.hierarchy = hierarchy;
+    public void setFormula(String formula) {
+        this.formula = formula;
     }
 }

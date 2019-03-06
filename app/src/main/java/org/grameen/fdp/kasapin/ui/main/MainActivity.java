@@ -32,10 +32,13 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
+import org.grameen.fdp.kasapin.syncManager.UploadDataManager;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
+import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
@@ -181,23 +184,13 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
-
-
-
-
-
-
-
-
     }
 
 
 
     @Override
     public void setFragmentAdapter(List<VillageAndFarmers> villageAndFarmersList) {
-
-
+        int index = 0;
 
         FragmentPagerItems fragmentPagerItems = new FragmentPagerItems(this);
 
@@ -207,12 +200,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
            if(villageAndFarmers.getFarmerList() != null && villageAndFarmers.getFarmerList().size() > 0){
 
-
-
                 fragmentPagerItems.add(FragmentPagerItem.of(villageAndFarmers.getName(), FarmerListFragment.class, new Bundler()
                         .putString("villageName", SELECTED_VILLAGE)
+                        .putInt("index", index)
                         .putString("farmers", getGson().toJson(villageAndFarmers.getFarmerList())).get()));
 
+                index++;
 
         new Handler().postDelayed(() -> {
         viewPagerAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(), fragmentPagerItems);
@@ -247,6 +240,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             }
        }
 
+       mPresenter.initializeSearchDialog(villageAndFarmersList);
 
 
        if(fragmentPagerItems.size() > 0)
@@ -267,6 +261,19 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
     }
 
+    @Override
+    public void openAddNewFarmerActivity(@Nullable FormAndQuestions formAndQuestion) {
+
+        new Handler().post(() -> {
+
+            Intent intent = new Intent(MainActivity.this, AddEditFarmerActivity.class);
+            //intent.putExtra("formAndQuestions", getGson().toJson(formAndQuestion));
+            startActivity(intent);
+            finish();
+        });
+
+
+    }
 
     @Override
     public void cacheFormsAndQuestionsData(List<FormAndQuestions> formAndQuestions) {
@@ -278,18 +285,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
 
-    @Override
-    public void openAddNewFarmerActivity(@Nullable FormAndQuestions formAndQuestion) {
 
-        new Handler().post(() -> {
-
-            Intent intent = new Intent(MainActivity.this, AddEditFarmerActivity.class);
-            //intent.putExtra("formAndQuestions", getGson().toJson(formAndQuestion));
-            startActivity(intent);
-        });
-
-
-    }
 
     @Override
     public void instantiateSearchDialog(ArrayList<MySearchItem> items) {
@@ -302,11 +298,22 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 (SearchResultListener<MySearchItem>) (dialog, item, position) -> {
                     Toast.makeText(this, item.getTitle(),
                             Toast.LENGTH_SHORT).show();
+
+                   mPresenter.getFarmer(item.getmExtId());
+
                     dialog.dismiss();
                 });
 
-    }
+     }
 
+
+    @Override
+    public void viewFarmerProfile(RealFarmer farmer) {
+
+        Intent intent = new Intent(this, FarmerProfileActivity.class);
+        intent.putExtra("farmer", getGson().toJson(farmer));
+        startActivity(intent);
+    }
 
     @Override
     public void showSearchDialog(@Nullable View view) {
@@ -356,8 +363,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-
-
         final int id = menuItem.getItemId();
 
         mPresenter.toggleDrawer();
@@ -371,7 +376,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                         if (NetworkUtils.isNetworkConnected(MainActivity.this)) {
 
                             //Todo Sync data down
-                            new Handler().postDelayed(() -> mPresenter.syncData(true), 500);
+                            new Handler().postDelayed(() -> mPresenter.downloadData(true), 500);
 
                         }
 
@@ -390,7 +395,13 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                     case R.id.sync_farmer:
 
-                        //Todo Sync all unsynced data
+                        //Todo Sync all un synced farmer data
+                        //Generate the json object here, pass the object as a value
+
+                        if(NetworkUtils.isNetworkConnected(MainActivity.this))
+                            mPresenter.syncData(true);
+                        else
+                            showMessage(R.string.no_internet_connection_available);
 
                         break;
 
@@ -424,8 +435,18 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
      }
 
 
+   /* @Override
+    protected void onResume() {
+        super.onResume();
 
+        AppLogger.e(TAG, "On Resume...");
 
+        if(getAppDataManager().getBooleanValue("reload")){
+            AppLogger.e(TAG, "Reload data!");
 
+            mPresenter.getVillagesData();
+            getAppDataManager().setBooleanValue("reload", false);
 
+        }
+    }*/
 }

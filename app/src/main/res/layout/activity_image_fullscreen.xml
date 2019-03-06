@@ -11,7 +11,7 @@
 
 
 
-    <org.grameen.fdp.utility.TouchImageView
+    <org.grameen.fdp.kasapin.utilities.TouchImageView
         android:id="@+id/touch_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

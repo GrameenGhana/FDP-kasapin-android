@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
@@ -160,9 +161,7 @@ public class DynamicPlotFormFragment extends FormFragment{
         super.onActivityCreated(savedInstanceState);
         if (shouldLoadOldValues)
                 Observable.fromIterable(ALL_QUESTIONS)
-                .delay(1000, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(Schedulers.newThread())
                         .doOnNext(question ->
                                 getAppDataManager().getCompositeDisposable().add(getAppDataManager()
                                         .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
@@ -170,7 +169,9 @@ public class DynamicPlotFormFragment extends FormFragment{
                                             if(skipLogics != null && skipLogics.size() > 0)
                                             applySkipLogicsAndHideViews(question, skipLogics);
 
-                                        }))).subscribe();
+                                        }))
+                        ).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe();
 
     }
 

@@ -116,57 +116,46 @@ public class PhotoButtonController extends MyLabeledFieldController {
 
         this.IMAGE_VIEW = imageView;
 
-        getModel().addPropertyChangeListener(getName(), new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                Log.i("PHOTO BUTTON", evt.getNewValue().toString() );
+        getModel().addPropertyChangeListener(getName(), evt -> {
+            Log.i("PHOTO BUTTON", evt.getNewValue().toString() );
 
-                if(evt.getNewValue() != null && !evt.getNewValue().toString().equalsIgnoreCase(""))
-                try {
+            if(evt.getNewValue() != null && !evt.getNewValue().toString().equalsIgnoreCase(""))
+            try {
 
-                    imageView.setAdjustViewBounds(true);
-                    imageView.setMaxHeight(200);
-                    imageView.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
-                    linearLayout.addView(imageView);
-                    linearLayout.requestLayout();
+                imageView.setAdjustViewBounds(true);
+                imageView.setMaxHeight(200);
+                imageView.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
+                linearLayout.removeAllViews();
+                linearLayout.addView(imageView);
+                linearLayout.requestLayout();
 
-                }catch (Exception e){e.printStackTrace();}
+            }catch (Exception ignored){}
 
-            }
         });
 
-        imageView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        imageView.setOnClickListener(v -> {
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppDialog);
-                builder.setMessage(R.string.image_options);
-                builder.setCancelable(true);
-                    builder.setPositiveButton(R.string.view, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppDialog);
+            builder.setMessage(R.string.image_options);
+            builder.setCancelable(true);
+                builder.setPositiveButton(R.string.view, (dialog, which) -> {
 
-                            Intent intent = new Intent(context, ImageViewActivity.class);
-                            intent.putExtra("image_string", getModel().getValue(getName()).toString());
-                            context.startActivity(intent);
+                    Intent intent = new Intent(context, ImageViewActivity.class);
+                    intent.putExtra("image_string", getModel().getValue(getName()).toString());
+                    context.startActivity(intent);
 
 
-                        }
-                    });
-                     builder.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
-                         @Override
-                         public void onClick(DialogInterface dialog, int which) {
+                });
+                 builder.setNegativeButton(R.string.delete, (dialog, which) -> {
 
-                             imageView.setImageBitmap(null);
+                     imageView.setImageBitmap(null);
 
-                             getModel().setValue(getName(), "");
-                             dialog.dismiss();
-                             linearLayout.removeView(imageView);
-                             linearLayout.requestLayout();
-                         }
-                     });
-                builder.show();
-            }
+                     getModel().setValue(getName(), "");
+                     dialog.dismiss();
+                     linearLayout.removeView(imageView);
+                     linearLayout.requestLayout();
+                 });
+            builder.show();
         });
 
 

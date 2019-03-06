@@ -1,112 +1,75 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 /**
  * Created by aangjnr on 08/01/2018.
  */
 
-@Entity(tableName = "recommendations")
-public class Recommendation {
+@Entity(tableName = "recommendations", indices = {@Index(value = "id", unique = true), @Index(value = "country"), @Index(value = "cropId")})
+public class Recommendation extends BaseModel{
 
-    @PrimaryKey
-    @NonNull
-    @SerializedName("Id")
-    String id = "";
+    @SerializedName("crop_id")
+    int cropId;
 
-    @SerializedName("Translation__c")
-    String translation;
+    String label;
 
-    @SerializedName("LastModifiedDate")
-    String lastModifiedDate;
+    int hierarchy;
 
-    @SerializedName("Name")
-    String name = "";
+    @SerializedName("condition")
+    String condition;
 
-    @SerializedName("Condition__c")
-    String condition = "";
+    @SerializedName("change_condition")
+    String changeCondition;
 
-    @SerializedName("description__c")
-    String description = "";
+    @SerializedName("change_option")
+    String changeOption;
 
-    @SerializedName("Hierarchy__c")
-    String hierarchy = "";
+    int country;
 
-    @SerializedName("Cost_Year_0__c")
-    String cost0 = "";
+    @Ignore
+    List<Calculation> calculations;
 
-    @SerializedName("Cost_questions__c")
-    String costQuestions = "";
+    @Ignore
+    @SerializedName("recommendation_activity")
+    List<RecommendationActivity> recommendationActivities;
 
 
-    @SerializedName("Income_Year_0__c")
-    String income0 = "";
-
-    @SerializedName("Income_Year_1__c")
-    String income1 = "";
-
-    @SerializedName("Income_Year_2__c")
-    String income2 = "";
-
-    @SerializedName("Income_Year_3__c")
-    String income3 = "";
-
-    @SerializedName("Income_Year_4__c")
-    String income4 = "";
-
-    @SerializedName("Income_Year_5__c")
-    String income5 = "";
-
-    @SerializedName("Income_Year_6__c")
-    String income6 = "";
-
-    @SerializedName("Income_Year_7__c")
-    String income7 = "";
-
-    @SerializedName("Logic__c")
-    String logicId = "";
-
-    @SerializedName("Related_1__c")
-    String relatedOne = "";
-
-    @SerializedName("Related_2__c")
-    String relatedTwo = "";
-
-    @SerializedName("Year_back_to_Gaps__c")
-    String yearBackToGAPs = "";
-
-
-    @SerializedName("Income_questions__c")
-    String questionsInvolved = "";
 
     public Recommendation(){}
 
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+
+    public int getCropId() {
+        return cropId;
     }
 
-    public String getLastModifiedDate() {
-        return lastModifiedDate;
+    public void setCropId(int cropId) {
+        this.cropId = cropId;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public String getId() {
-        return id;
+    public int getHierarchy() {
+        return hierarchy;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setHierarchy(int hierarchy) {
+        this.hierarchy = hierarchy;
     }
 
     public String getCondition() {
@@ -117,148 +80,45 @@ public class Recommendation {
         this.condition = condition;
     }
 
-    public String getDescription() {
-        return description;
+    public String getChangeCondition() {
+        return changeCondition;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setChangeCondition(String changeCondition) {
+        this.changeCondition = changeCondition;
     }
 
-    public String getHierarchy() {
-        return hierarchy;
+    public String getChangeOption() {
+        return changeOption;
     }
 
-    public void setHierarchy(String hierarchy) {
-        this.hierarchy = hierarchy;
+    public void setChangeOption(String changeOption) {
+        this.changeOption = changeOption;
     }
 
-    public String getRelatedOne() {
-        return relatedOne;
+    public int getCountry() {
+        return country;
     }
 
-    public void setRelatedOne(String relatedOne) {
-        this.relatedOne = relatedOne;
+    public void setCountry(int country) {
+        this.country = country;
     }
 
-    public String getRelatedTwo() {
-        return relatedTwo;
+    public List<Calculation> getCalculations() {
+        return calculations;
     }
 
-    public void setRelatedTwo(String relatedTwo) {
-        this.relatedTwo = relatedTwo;
+    public void setCalculations(List<Calculation> calculations) {
+        this.calculations = calculations;
     }
 
-    public String getYearBackToGAPs() {
-        return yearBackToGAPs;
+    public List<RecommendationActivity> getRecommendationActivities() {
+        return recommendationActivities;
     }
 
-    public void setYearBackToGAPs(String yearBackToGAPs) {
-        this.yearBackToGAPs = yearBackToGAPs;
-    }
-
-    public String getLogicId() {
-        return logicId;
-    }
-
-    public void setLogicId(String logicId) {
-        this.logicId = logicId;
-    }
-
-    public String getIncome0() {
-        return income0;
-    }
-
-    public void setIncome0(String income0) {
-        this.income0 = income0;
-    }
-
-    public String getIncome1() {
-        return income1;
-    }
-
-    public void setIncome1(String income1) {
-        this.income1 = income1;
-    }
-
-    public String getIncome2() {
-        return income2;
-    }
-
-    public void setIncome2(String income2) {
-        this.income2 = income2;
-    }
-
-    public String getIncome3() {
-        return income3;
-    }
-
-    public void setIncome3(String income3) {
-        this.income3 = income3;
-    }
-
-    public String getIncome4() {
-        return income4;
-    }
-
-    public void setIncome4(String income4) {
-        this.income4 = income4;
-    }
-
-    public String getIncome5() {
-        return income5;
-    }
-
-    public void setIncome5(String income5) {
-        this.income5 = income5;
-    }
-
-    public String getIncome6() {
-        return income6;
-    }
-
-    public void setIncome6(String income6) {
-        this.income6 = income6;
-    }
-
-    public String getIncome7() {
-        return income7;
-    }
-
-    public void setIncome7(String income7) {
-        this.income7 = income7;
-    }
-
-    public String getQuestionsInvolved() {
-        return questionsInvolved;
-    }
-
-    public void setQuestionsInvolved(String questionsInvolved) {
-        this.questionsInvolved = questionsInvolved;
-    }
-
-    public String getTranslation() {
-        return translation;
-    }
-
-    public void setTranslation(String translation) {
-        this.translation = translation;
-    }
-
-    public void setCost0(String cost0) {
-        this.cost0 = cost0;
+    public void setRecommendationActivities(List<RecommendationActivity> recommendationActivities) {
+        this.recommendationActivities = recommendationActivities;
     }
 
 
-    public void setCostQuestions(String costQuestions) {
-        this.costQuestions = costQuestions;
-    }
-
-    public String getCost0() {
-        return cost0;
-    }
-
-    public String getCostQuestions() {
-        return costQuestions;
-    }
 }

@@ -18,35 +18,15 @@ import java.util.List;
  */
 
 @Dao
-public interface CalculationsDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Calculation> objects);
-
-    @Query("SELECT * FROM calculations")
-    List<Calculation> getAllCalculations();
+public interface CalculationsDao extends BaseDao<Calculation>{
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertCalculation(Calculation calculation);
-
-
-    @Query("SELECT * FROM calculations WHERE id = :id")
-    Calculation getCalculationById(String id);
-
-
-    @Update
-    int updateCalculation(Calculation calculation);
-
+    @Query("SELECT * FROM calculations WHERE recommendationId = :id")
+    Calculation getByRecommendation(String id);
 
 
     @Query("DELETE FROM calculations")
     void deleteAllCalculations();
-
-
-    @Query("DELETE FROM calculations WHERE id = :id")
-    int deleteCalculationById(String id);
-
 
 
 

@@ -150,7 +150,8 @@ public abstract class FormFragment extends BaseFragment {
                 photo = this.createTemporaryFile("picture", ".jpg");
                 photo.delete();
                 //URI = Uri.fromFile(photo);
-                URI = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".org.grameen.fdp.provider", photo);
+                URI = FileProvider.getUriForFile(getActivity(),
+                        getActivity().getApplicationContext().getPackageName() + ".org.grameen.fdp.provider", photo);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, URI);
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);

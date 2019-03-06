@@ -17,7 +17,7 @@ import java.util.List;
  * Created by aangjnr on 29/11/2017.
  */
 
-@Entity(tableName = "forms", indices = {@Index(value = "id", unique = true)})
+@Entity(tableName = "forms", indices = {@Index(value = "id", unique = true), @Index(value = "formNameC", unique = true)})
 public class Form {
 
     @PrimaryKey(autoGenerate = true)

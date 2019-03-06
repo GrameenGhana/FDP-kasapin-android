@@ -23,20 +23,15 @@ import java.util.List;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
-@Entity(tableName = "form_answers", indices = {@Index(value = "formId", unique = true), @Index(value = "farmerCode", unique = true)},
-        foreignKeys = {@ForeignKey(entity = Form.class, parentColumns = "id", childColumns = "formId", onDelete = CASCADE),
-        @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE)})
+@Entity(tableName = "form_answers", indices = @Index("farmerCode"))
 public class FormAnswerData {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    int base_id;
-
-    @SerializedName("id")
-    private int id;
+    int id;
 
     @SerializedName("data")
-    private String data;
+    String data;
 
 
     @SerializedName("form_id")
@@ -63,21 +58,13 @@ public class FormAnswerData {
     }
 
 
+    public void setId(@NonNull int id) {
+        this.id = id;
+    }
+
     @NonNull
-    public int getBase_id() {
-        return base_id;
-    }
-
-    public void setBase_id(@NonNull int base_id) {
-        this.base_id = base_id;
-    }
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setData(String data) {

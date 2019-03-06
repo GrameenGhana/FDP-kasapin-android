@@ -32,8 +32,8 @@ public interface FormAndQuestionsDao {
     Flowable<List<FormAndQuestions>> getFormAndQuestionsByType(String formType, String displayType);
 
     @Transaction
-    @Query("SELECT * FROM forms WHERE typeC LIKE '%' || :formType|| '%' ORDER BY displayOrderC ASC")
-    Flowable<List<FormAndQuestions>> getFormAndQuestionsByType(String formType);
+    @Query("SELECT * FROM forms WHERE displayTypeC LIKE '%' || :displayType|| '%' ORDER BY displayOrderC ASC")
+    Single<List<FormAndQuestions>> getFormAndQuestionsByDisplayType(String displayType);
 
 
 

@@ -18,7 +18,6 @@ import java.util.List;
  */
 
  public interface BaseDao<T> {
-
      @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<T> objects);

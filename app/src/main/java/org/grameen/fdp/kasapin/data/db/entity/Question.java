@@ -19,14 +19,16 @@ import java.util.List;
 import timber.log.Timber;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
+import static android.arch.persistence.room.ForeignKey.NO_ACTION;
 
 
 /**
  * Created by aangjnr on 29/11/2017.
  */
 
+//, foreignKeys = {@ForeignKey(entity = FormTranslation.class, parentColumns = "id", childColumns = "formTranslationId", deferred = true)}
 @Entity(tableName = "questions", indices = {@Index(value = "formTranslationId"),
-        @Index(value = "id", unique = true)}, foreignKeys = {@ForeignKey(entity = FormTranslation.class, parentColumns = "id", childColumns = "formTranslationId", onDelete = CASCADE)})
+        @Index(value = "id", unique = true), @Index(value = "labelC", unique = true)})
 public class Question {
 
 
@@ -84,6 +86,8 @@ public class Question {
 
         @Ignore
         List<SkipLogic> skipLogics;
+
+
 
         /**
          * No args constructor for use in serialization
@@ -368,7 +372,6 @@ public class Question {
 
 
     }
-
 
     public void setSkipLogics(List<SkipLogic> skipLogics) {
         this.skipLogics = skipLogics;

@@ -13,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.LinearInterpolator;
 import android.widget.GridView;
 
 import com.google.gson.Gson;
@@ -34,6 +37,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.IS_TABLET;
 
 /**
  * Created by aangjnr on 11/12/2017.
@@ -58,6 +63,7 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     List<RealFarmer> mFarmers;
     FarmerListViewAdapter farmerListViewAdapter;
 
+    int index = 0;
 
 
     String SELECTED_VILLAGE;
@@ -94,11 +100,15 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
         if (getArguments() != null) {
             mFarmers = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<RealFarmer>>() {}.getType());
             SELECTED_VILLAGE = getArguments().getString("village");
+
+            index = getArguments().getInt("index");
+
+            setListAdapter(mFarmers);
         }
 
         //mPresenter.getFarmerData();
 
-        setListAdapter(mFarmers);
+
 
     }
 
@@ -174,55 +184,58 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     public void setListAdapter(List<RealFarmer> mFarmers) {
 
 
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-
-
-
-        AppLogger.i(TAG, "Farmers Array Size is " + mFarmers.size());
-
-        if(mFarmers.size() > 0) {
-
-            if (ScreenUtils.isTablet((AppCompatActivity) getActivity()))
-                listView.setNumColumns(AppConstants.TABLET_COLUMN_COUNT);
-            else
-                listView.setNumColumns(AppConstants.PHONE_COLUMN_COUNT);
-
-
-            farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
-            listView.setAdapter(farmerListViewAdapter);
-
-
-            listView.setOnItemClickListener((adapterView, view, i, l) -> {
-
-                AppLogger.i(TAG, "ON CLICK ");
-
-                RealFarmer farmer = mFarmers.get(i);
-                //Todo uncomment this
-
-                Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
-                intent.putExtra("farmer", BaseActivity.getGson().toJson(farmer));
-                startActivity(intent);
-
-            });
-
-
-            listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
-
-                if (getAppDataManager().isMonitoring())
-                    return false;
-
-                final RealFarmer farmer = mFarmers.get(i);
-                mPresenter.showDeleteFarmerDialog(farmer, i);
-            return false;
-
-
-            });
+        if(index == 0) {
+            listView.setAlpha(0);
+            listView.animate().alpha(1).setDuration(1000).setInterpolator(new LinearInterpolator()).start();
         }
 
 
-            }
+        new Handler().post(() -> {
+
+
+        if(mFarmers.size() > 0) {
+
+        if (IS_TABLET)
+            listView.setNumColumns(AppConstants.TABLET_COLUMN_COUNT);
+        else
+            listView.setNumColumns(AppConstants.PHONE_COLUMN_COUNT);
+
+
+        farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
+        listView.setAdapter(farmerListViewAdapter);
+
+
+       // BaseActivity.runLayoutAnimation(listView);
+
+
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+
+            AppLogger.i(TAG, "ON CLICK ");
+
+            RealFarmer farmer = mFarmers.get(i);
+            //Todo uncomment this
+
+            Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
+            intent.putExtra("farmer", BaseActivity.getGson().toJson(farmer));
+            startActivity(intent);
+
+        });
+
+
+        listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+
+            if (getAppDataManager().isMonitoring())
+                return false;
+
+            final RealFarmer farmer = mFarmers.get(i);
+            mPresenter.showDeleteFarmerDialog(farmer, i);
+        return true;
+
+
+        });
+    }
+
+
         });
 
     }
@@ -243,8 +256,6 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
                     dialogInterface.dismiss();
                     mPresenter.deleteFarmer(farmer, position);
                 }, getString(R.string.yes), (dialogInterface, j) -> dialogInterface.dismiss(), getString(R.string.no), 0);
-
-
     }
 
     @Override
@@ -311,6 +322,7 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     public void onDestroy() {
         if(mPresenter != null)
         mPresenter.dropView();
+
 
         super.onDestroy();
 

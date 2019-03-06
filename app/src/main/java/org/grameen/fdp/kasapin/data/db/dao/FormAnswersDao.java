@@ -25,12 +25,12 @@ import io.reactivex.Single;
 @Dao
 public interface FormAnswersDao extends BaseDao<FormAnswerData>{
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<FormAnswerData> objects);
+
+   /* @Insert
+    long insertOne(FormAnswerData answerData);
 
     @Update
-    int updateAnswerData(FormAnswerData answerData);
-
+    int updateOne(FormAnswerData answerData);*/
 
     @Query("DELETE FROM form_answers WHERE id = :id AND farmerCode = :farmerCode")
     int deleteAnswerData(int id, String farmerCode);

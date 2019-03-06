@@ -56,8 +56,6 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
 
     @Override
     public void deleteFarmer(RealFarmer farmer, int position) {
-
-
      /*   runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().deleteFarmerById(farmer.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -67,8 +65,7 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
                             else
                                 getView().showMessage(R.string.could_not_delete_data);
                         }
-                ));
-*/
+                ));*/
 
     }
 }

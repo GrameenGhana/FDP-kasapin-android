@@ -18,36 +18,15 @@ import java.util.List;
  */
 
 @Dao
-public interface RecommendationsDao {
+public interface RecommendationsDao extends BaseDao<Recommendation>{
 
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<Recommendation> objects);
-
-    @Query("SELECT * FROM recommendations")
-    List<Recommendation> getAllRecommendations();
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertRecommendation(Recommendation recommendation);
-
-
-    @Query("SELECT * FROM recommendations WHERE id = :id")
-    Recommendation getRecommendationById(String id);
-
-
-    @Update
-    int updateRecommendation(Recommendation recommendation);
-
+    @Query("SELECT * FROM recommendations WHERE cropId = :id")
+    Recommendation getByCrop(int id);
 
 
     @Query("DELETE FROM recommendations")
     void deleteAllRecommendations();
 
-
-    @Query("DELETE FROM recommendations WHERE id = :id")
-    int deleteRecommendationById(String id);
 
 
 }

@@ -54,6 +54,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * A login screen that offers login via email/password.
@@ -154,6 +155,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
      .subscribe(onSuccess -> {
 
          villageSpinner.setItems(villageList);
+         if(!villageList.isEmpty())
          villageSpinner.setSelectedIndex(0);
      }));
 
@@ -284,18 +286,26 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     void saveAndContinue() {
 
 
-        if(farmerName.getText().toString().trim().isEmpty() || farmerName.getText().toString().trim().equalsIgnoreCase(" "))
+        if(farmerName.getText().toString().trim().isEmpty() || farmerName.getText().toString().trim().equalsIgnoreCase(" ")) {
             showMessage(R.string.enter_valid_farmer_name);
-        else {
+            return;
+        }
+
+        if(birthYearEdittext.getText().toString().isEmpty()) {
+            showMessage("Please enter birth year of farmer");
+            return;
+
+        }
+
+
+
             if (isNewFarmer) {
                 FARMER = new RealFarmer();
                 FARMER.setFirstVisitDate(new Date(System.currentTimeMillis()));
-
-
             }
-            FARMER.setFarmerName(farmerName.getText().toString());
-            FARMER.setBirthYear(birthYearEdittext.getText().toString());
-            FARMER.setCode(farmerCode.getText().toString());
+            FARMER.setFarmerName(farmerName.getText().toString().trim());
+            FARMER.setBirthYear(birthYearEdittext.getText().toString().trim());
+            FARMER.setCode(farmerCode.getText().toString().trim());
             FARMER.setGender(genders[genderSpinner.getSelectedIndex()]);
             FARMER.setEducationLevel(educationLevels[educationLevelSpinner.getSelectedIndex()]);
             FARMER.setVillageId(villageSpinner.getSelectedIndex());
@@ -303,9 +313,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setLastModifiedDate(TimeUtils.getDateTime());
             FARMER.setImageUrl(BASE64_STRING);
 
-            mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
 
-        }
+
+            mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
 
 
 
@@ -316,6 +326,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @Override
     public void moveToNextForm() {
+
+
        /* if(dynamicFormFragment != null)
             getSupportFragmentManager().beginTransaction().remove(dynamicFormFragment);
 */
@@ -326,10 +338,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
             Intent intent = new Intent(this, this.getClass());
             intent.putExtra("farmer", getGson().toJson(FARMER));
-            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            overridePendingTransition(0, 0);
             finish();
+            overridePendingTransition(0, 0);
            //mPresenter.loadFormFragment(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), mAppDataManager.isMonitoring());
 
         }else
@@ -337,17 +348,28 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     }
 
+
+
     @Override
     public void showFarmerDetailsActivity(RealFarmer farmer) {
 
         Intent intent = new Intent(this, FarmerProfileActivity.class);
         intent.putExtra("farmer", getGson().toJson(FARMER));
-        intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-
         finish();
 
     }
+
+    @Override
+    public void finishActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(0, 0);
+    }
+
+
 
     @Override
     public void disableViews() {
@@ -361,18 +383,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         takePhoto.setVisibility(View.GONE);
     }
 
-    protected String getSaltString() {
-        String UUID = getAppDataManager().getUserUuid() + System.currentTimeMillis();
-        StringBuilder salt = new StringBuilder();
-        Random r = new Random(System.currentTimeMillis());
-        while (salt.length() < 8) { // length of the random string.
-            int index = (int) (r.nextFloat() * UUID.length());
-            salt.append(UUID.charAt(index));
-        }
-
-        return salt.toString().toUpperCase();
-
-    }
 
     @OnClick(R.id.takeImage)
     @Override
@@ -433,6 +443,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
                 Bitmap bitmap = null;
                 try {
+
+
                     bitmap = ImageUtil.handleSamplingAndRotationBitmap(AddEditFarmerActivity.this, URI);
                     BASE64_STRING = ImageUtil.bitmapToBase64(bitmap);
 
@@ -478,13 +490,22 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 (dialogInterface, i) -> {
                     dialogInterface.dismiss();
 
-                    mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), true);
+                    isNewFarmer = true;
+
+                    saveAndContinue();
                 }
                 , getStringResources(R.string.yes),
 
                 (dialogInterface, i) -> {
                     dialogInterface.dismiss();
+
+                    Intent intent = new Intent(AddEditFarmerActivity.this, FarmerProfileActivity.class);
+                    intent.putExtra("farmer", getGson().toJson(FARMER));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     finish();
+                    overridePendingTransition(0, 0);
+
                 }, getStringResources(R.string.no), 0);
 
     }

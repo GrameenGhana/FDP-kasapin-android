@@ -1,19 +1,17 @@
 package org.grameen.fdp.kasapin.data.network;
 
 
-import org.grameen.fdp.kasapin.data.db.model.DataWrapper;
+import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
+import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
-import org.grameen.fdp.kasapin.data.network.model.FormTranslation;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
+import org.grameen.fdp.kasapin.data.network.model.Response;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-
-import java.util.List;
+import org.json.JSONObject;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -34,11 +32,19 @@ public interface FdpApi {
     Single<User> getUser(@Query("token") String token);
 
     @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
-    Single<DataWrapper> getSurveyData(@Path("id") int countryId, @Query("token") String token);
+    Single<FormsDataWrapper> getSurveyData(@Path("id") int countryId, @Query("token") String token);
 
 
     @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
-    Observable<DataWrapper> getSurveyData2(@Path("id") int countryId, @Query("token") String token);
+    Single<FormsDataWrapper> getSurveyData2(@Path("id") int countryId, @Query("token") String token);
+
+    @GET(AppConstants.API_VERSION + "auth/user/recommendation/{crop_id}")
+    Single<RecommendationsDataWrapper> getRecommendations(@Path("crop_id") int countryId, @Query("token") String token);
+
+
+    @POST(AppConstants.API_VERSION + "auth/user/farmers")
+    Single<Response> postFarmers(@Query("token") String token, @Body JSONObject farmersJson);
+
 
 
 

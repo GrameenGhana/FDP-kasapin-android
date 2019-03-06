@@ -95,7 +95,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
        mPresenter.getPlotQuestions();
 
-
     }
 
 
@@ -104,24 +103,25 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         BaseActivity.PLOT_FORM_AND_QUESTIONS = formAndQuestions;
 
-
         dynamicPlotFormFragment = DynamicPlotFormFragment.newInstance(true, PLOT.getFarmerCode(),
-                getAppDataManager().isMonitoring(), PLOT.getAnswersData());
+                true, PLOT.getAnswersData());
 
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, PLOT.getFarmerCode());
 
 
     }
 
-    void setupViews() {
+    void setupViews(){
 
         //Todo get units and apply
         setToolbar(getStringResources(R.string.plot_info));
 
         plotName.setText(PLOT.getName());
 
-        estimatedProductionSize.setText(PLOT.getEstimatedProductionSize());
+        mPresenter.getAreaUnits(PLOT.getFarmerCode());
+
         ph.setText(PLOT.getPh());
+
 
         //Todo apply formula
 
@@ -138,6 +138,16 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
     }
+
+
+    @Override
+    public void setAreaUnits(String unit) {
+
+        estimatedProductionSize.setText(PLOT.getEstimatedProductionSize() + " " + unit);
+
+    }
+
+
 
 
     @Override
@@ -159,6 +169,11 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 
     @Override
     public void onBackClicked(View v) {
