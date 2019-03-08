@@ -2,28 +2,16 @@ package org.grameen.fdp.kasapin.syncManager;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
-import org.grameen.fdp.kasapin.data.db.entity.Form;
-import org.grameen.fdp.kasapin.data.db.entity.Mapping;
-import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
-import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
-import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
-import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
+ import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
-import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
+ import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 

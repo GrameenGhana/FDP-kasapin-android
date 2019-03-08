@@ -12,7 +12,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class UploadDataManager {
+public class UploadData {
 
     private FdpCallbacks.UploadDataListener uploadDataListener;
 
@@ -23,11 +23,11 @@ public class UploadDataManager {
     private String token;
 
 
-    public static UploadDataManager newInstance(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress){
-        return new UploadDataManager(view, appDataManager, listener, showProgress);
+    public static UploadData newInstance(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress){
+        return new UploadData(view, appDataManager, listener, showProgress);
     }
 
-    private UploadDataManager(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress){
+    private UploadData(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress){
         this.mAppDataManager = appDataManager;
         this.mView = view;
         this.uploadDataListener = listener;

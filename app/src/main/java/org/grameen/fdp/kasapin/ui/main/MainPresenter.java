@@ -3,17 +3,14 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
-import org.grameen.fdp.kasapin.syncManager.UploadDataManager;
+import org.grameen.fdp.kasapin.syncManager.UploadData;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.syncManager.DownloadResources;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
-import org.grameen.fdp.kasapin.utilities.NetworkUtils;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,7 +158,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
             getView().showLoading("Syncing data","Please wait...", true, 0,false);
 
         //Todo replace null with the json data
-        UploadDataManager.newInstance(getView(), getAppDataManager(), this, true).uploadFarmersData(null);
+        UploadData.newInstance(getView(), getAppDataManager(), this, true).uploadFarmersData(null);
 
     }
 
