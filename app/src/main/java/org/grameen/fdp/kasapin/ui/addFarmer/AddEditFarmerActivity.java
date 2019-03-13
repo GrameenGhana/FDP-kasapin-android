@@ -127,6 +127,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         if (getIntent() != null) {
 
             FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+            CURRENT_FORM_QUESTION = gson.fromJson(getIntent().getStringExtra("formAndQuestions"), FormAndQuestions.class);
             if (FARMER != null) {
                 isNewFarmer = false;
 
@@ -179,7 +180,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
          *
          */
 
-        CURRENT_FORM_QUESTION = FORM_AND_QUESTIONS.get(CURRENT_FORM);
+//        CURRENT_FORM_QUESTION = FORM_AND_QUESTIONS.get(CURRENT_FORM);
 
 
         //Fix Spinners

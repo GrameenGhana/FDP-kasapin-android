@@ -25,7 +25,12 @@ public class AppConstants {
 
 
 
-    public static final String DISPLAY_TYPE_FORM = "form";
+    public static final String DISPLAY_TYPE_FORM = "Form";
+    public static final String DISPLAY_TYPE_PLOT_FORM = "Plot form";
+    public static final String DISPLAY_TYPE_HISTORICAL = "Historical";
+    public static final String DISPLAY_TYPE_P_AND_L = "P&L";
+
+
 
 
 
@@ -154,15 +159,34 @@ public class AppConstants {
     //Token Constants
     public static int TOKEN_IF = 1;
     public static int TOKEN_VARIABLE = 2;
-    public static int TOKEN_EQUAL_TO = 3;
     public static int TOKEN_BRAKET_CLOSED = 4;
     public static int TOKEN_BRACKET_OPEN = 5;
-    public static int TOKEN_PLUS_MINUS = 6;
+    public static int TOKEN_ARITHMETIC_PLUS_MINUS = 6;
+    public static int TOKEN_ARITHMETIC_MULTI_DIV = 6;
+
     public static int TOKEN_INT = 7;
     public static int TOKEN_MUL_DIV = 8;
     public static int TOKEN_EXP = 9;
     public static int TOKEN_MULTIPLIER = 10;
     public static int TOKEN_CHAR = 11;
+    public static int TOKEN_OPEN_BRACES = 16;
+    public static int TOKEN_CLOSE_BRACES = 17;
+    public static int TOKEN_ELSE = 18;
+    public static int TOKEN_QUOTATION = 19;
+
+    public static int TOKEN_OPERATOR = 3;
+    public static int TOKEN_OPERATOR_OR = 3;
+    public static int TOKEN_OPERATOR_EQUAL_TO = 3;
+    public static int TOKEN_OPERATOR_GREATER_THAN = 3;
+    public static int TOKEN_OPERATOR_LESS_THAN =3;
+    public static int TOKEN_OPERATOR_GREATER_THAN_EQUALS = 3;
+    public static int TOKEN_OPERATOR_LESS_THAN_EQUALS = 3;
+
+
+
+
+
+
     String complexCalculation = "IF(farm_weight_units_ghana == Kg,cocoa_production_ly_ghana,cocoa_production_ly_ghana*62.5)";
 
 

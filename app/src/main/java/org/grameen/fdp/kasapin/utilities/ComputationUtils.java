@@ -122,10 +122,7 @@ public class ComputationUtils {
         }
 
         AppLogger.i(getClass().getSimpleName(), "GETTING VALUE FOR " + q.getLabelC() + " --> Value = " + defVal);
-
         return defVal;
-
-
     }
 
 
@@ -165,9 +162,6 @@ public class ComputationUtils {
             });
         }
     }
-
-
-
 
 
     public void setUpPropertyChangeListeners2(String questiontoHide, List<SkipLogic> skipLogics) {
@@ -271,18 +265,14 @@ public class ComputationUtils {
                     String equation = question.getFormulaC();
 
                     try {
-
                         for (String operand : operands) {
                             equation = equation.replace(operand, getFormController().getModel().getValue(operand).toString());
                         }
                     } catch (Exception i) {
                         i.printStackTrace();
-                        equation = "0";
-                    }
-
+                        equation = "0";}
 
                     AppLogger.e("Computation Utils", "Applying Formula calc " + equation);
-
 
                     String newValue = "0.00";
                     try {
@@ -293,12 +283,9 @@ public class ComputationUtils {
                         getModel().setValue(question.getLabelC(), newValue);
                     }
                     System.out.println("####### NEW VALUE IS " + newValue);
-
                 });
 
-        }
-
-        }
+        } }
     }
 
 
@@ -313,7 +300,6 @@ public class ComputationUtils {
 
     Boolean compareValues(SkipLogic sl, String newValue) {
         String equation = sl.getAnswerValue() + sl.getLogicalOperator() +  newValue;
-
         AppLogger.e(getClass().getSimpleName(), "Equation is " + equation);
 
         boolean value = false;
@@ -322,7 +308,6 @@ public class ComputationUtils {
 
         } catch (ScriptException | NumberFormatException e) {
             System.out.println("******* EXCEPTION ****** " + e.getMessage());
-
             value = sl.getAnswerValue().equalsIgnoreCase(newValue);
 
         } finally {
@@ -332,11 +317,7 @@ public class ComputationUtils {
     }
 
 
-
-
-
     List<String> getOperands(String formula){
-        //List<String> operatorList = new ArrayList<>();
         List<String> operandList = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(formula, "+-*/", true);
         while (st.hasMoreTokens()) {
@@ -346,6 +327,24 @@ public class ComputationUtils {
             }
         }
         return operandList;
+    }
+
+
+
+
+    public static boolean parseEquation(String v1, String operator, String v2, ScriptEngine _engine){
+        String equation = v1 + operator + v2;
+        AppLogger.e(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
+        boolean value = false;
+        try {
+            value = (Boolean) _engine.eval(equation.trim());
+        } catch (ScriptException | NumberFormatException e) {
+            System.out.println("******* EXCEPTION ****** " + e.getMessage());
+            value = v1.equalsIgnoreCase(v2);
+        } finally {
+            System.out.println(equation + " --> " + value);
+        }
+        return value;
     }
 
 

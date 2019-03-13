@@ -113,15 +113,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         AppLogger.e(TAG, "Plot Questions size is " + formAndQuestionsList.size());
 
-
         PLOT_FORM_AND_QUESTIONS = formAndQuestionsList;
 
         dynamicPlotFormFragment = DynamicPlotFormFragment.newInstance(isEditMode, FARMER_CODE,
                 getAppDataManager().isMonitoring(), PLOT.getAnswersData());
 
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, FARMER_CODE);
-
-
 
     }
 
@@ -190,14 +187,52 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
         mPresenter.getPlotQuestions();
-        saveButton.setOnClickListener(v->{savePlotData(null);});
+        saveButton.setOnClickListener(v-> savePlotData(null));
 
     }
 
 
 
     void savePlotData(String flag){
-    PLOT.setAnswersData(dynamicPlotFormFragment.getAnswersData().toString());
+
+        showLoading();
+
+        JSONObject jsonObject = dynamicPlotFormFragment.getAnswersData();
+
+
+        String soilPhLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_ph_").blockingGet();
+        String estProductionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_ph_").blockingGet();
+
+        try {
+            if(jsonObject.has(soilPhLabel))
+                jsonObject.remove(soilPhLabel);
+
+            if(jsonObject.has(estProductionLabel))
+                jsonObject.remove(estProductionLabel);
+
+            jsonObject.put(soilPhLabel, phEdittext.getText().toString());
+            jsonObject.put(estProductionLabel, estimatedProductionEdittext.getText().toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        //Calculate recommendations here, put values into the json
+
+
+
+
+
+
+
+
+
+
+
+
+
+        PLOT.setAnswersData(jsonObject.toString());
     PLOT.setPh(phEdittext.getText().toString());
     PLOT.setName(plotNameEdittext.getText().toString());
     PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());

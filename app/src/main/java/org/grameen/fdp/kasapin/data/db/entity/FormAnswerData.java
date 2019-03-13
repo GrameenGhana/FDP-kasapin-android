@@ -17,6 +17,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 
 import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.List;
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "form_answers", indices = @Index("farmerCode"))
-public class FormAnswerData {
+public class FormAnswerData extends BaseModel{
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -39,14 +41,6 @@ public class FormAnswerData {
 
     @SerializedName("farmer_code")
     String farmerCode;
-
-
-    @SerializedName("created_at")
-    Date dateCreated = new Date(System.currentTimeMillis());
-
-
-    @SerializedName("updated_at")
-    Date dateUpdated;
 
 
 
@@ -86,6 +80,17 @@ public class FormAnswerData {
     }
 
 
+
+    @Ignore
+    public JSONObject getJsonData(){
+        try {
+            return new JSONObject(data);
+        } catch (JSONException ignored) {
+            return new JSONObject();
+        }
+    }
+
+
     public void setFormId(int formId) {
         this.formId = formId;
     }
@@ -94,19 +99,4 @@ public class FormAnswerData {
         return formId;
     }
 
-    public void setDateUpdated(Date dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public Date getDateUpdated() {
-        return dateUpdated;
-    }
 }

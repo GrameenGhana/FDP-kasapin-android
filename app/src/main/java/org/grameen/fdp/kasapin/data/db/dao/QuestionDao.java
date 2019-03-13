@@ -27,7 +27,6 @@ public interface QuestionDao extends BaseDao<Question>{
     @Query("SELECT * FROM questions")
     Single <List<Question> >getAllQuestions();
 
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertQuestion(Question question);
 
@@ -42,10 +41,14 @@ public interface QuestionDao extends BaseDao<Question>{
     @Query("SELECT * FROM questions WHERE labelC  LIKE '%' || :label || '%'")
     Maybe<Question> get(String label);
 
+    @Query("SELECT labelC FROM questions WHERE labelC  LIKE :label || '%'")
+    Maybe<String> getLabel(String label);
+
+    @Query("SELECT labelC FROM questions WHERE id = :id")
+    Maybe<String> getLabel(int id);
 
     @Update
     int updateQuestion(Question question);
-
 
 
     @Query("DELETE FROM questions")

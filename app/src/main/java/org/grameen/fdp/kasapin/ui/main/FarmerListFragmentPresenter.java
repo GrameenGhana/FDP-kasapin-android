@@ -43,8 +43,10 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
     @Override
     public void getFarmerData() {
 
-       getAppDataManager().getDatabaseManager().realFarmersDao().getAll()
-               .observe(getContext(), realFarmers -> getView().setListAdapter(realFarmers));
+       getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().realFarmersDao().getAll()
+               .subscribeOn(Schedulers.io())
+               .observeOn(AndroidSchedulers.mainThread())
+               .subscribe(realFarmers -> getView().setListAdapter(realFarmers), throwable -> getView().showMessage("An error occurred obtaining farmer data!")));
 
     }
 

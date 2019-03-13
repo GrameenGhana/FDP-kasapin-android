@@ -3,22 +3,33 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
+import org.grameen.fdp.kasapin.data.db.entity.Mapping;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
+import org.grameen.fdp.kasapin.syncManager.DownloadResources;
 import org.grameen.fdp.kasapin.syncManager.UploadData;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
-import org.grameen.fdp.kasapin.syncManager.DownloadResources;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -29,9 +40,10 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MainPresenter extends BasePresenter<MainContract.View> implements MainContract.Presenter,
-        FdpCallbacks.OnDownloadResourcesListener, FdpCallbacks.UploadDataListener{
+        FdpCallbacks.OnDownloadResourcesListener, FdpCallbacks.UploadDataListener {
 
     AppDataManager mAppDataManager;
+    int count = 0;
 
 
     @Inject
@@ -41,7 +53,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
 
     }
-
 
     @Override
     public void getFarmerProfileFormAndQuestions() {
@@ -54,7 +65,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                     throwable.printStackTrace();
                 }));
     }
-
 
     @Override
     public void getFormsAndQuestionsData() {
@@ -88,85 +98,212 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         getView().toggleDrawer();
     }
 
-
     @Override
     public void getVillagesData() {
 
         AppLogger.e(TAG, "Getting villages data!");
 
 
-
         runSingleCall(getAppDataManager().getDatabaseManager().villageAndFarmersDao().getVillagesAndFarmers()
                 .filter(villageAndFarmers -> villageAndFarmers != null && villageAndFarmers.size() > 0)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                 .subscribe(villageAndFarmers -> {
+                .subscribe(villageAndFarmers -> {
 
-                     if(villageAndFarmers.size() > 0) {
-                         AppLogger.i(TAG, "VILLAGES & FARMERS SIZE IS " + villageAndFarmers.size());
-                         getView().setFragmentAdapter(villageAndFarmers);
+                    if (villageAndFarmers.size() > 0) {
+                        AppLogger.i(TAG, "VILLAGES & FARMERS SIZE IS " + villageAndFarmers.size());
+                        getView().setFragmentAdapter(villageAndFarmers);
 
-                     }else{
-                         AppLogger.i(TAG, "VILLAGES & FARMERS SIZE IS EMPTY " + villageAndFarmers.size());
+                    } else {
+                        AppLogger.i(TAG, "VILLAGES & FARMERS SIZE IS EMPTY " + villageAndFarmers.size());
 
-                     }}, throwable -> {throwable.printStackTrace();
-
-                 }));
+                    }
+                }, Throwable::printStackTrace));
 
     }
-
 
     @Override
     public void downloadData(boolean showProgress) {
 
-        if(showProgress)
-            getView().showLoading("Syncing data","Please wait...", true, 0,false);
+        if (showProgress)
+            getView().showLoading("Syncing data", "Please wait...", true, 0, false);
 
         DownloadResources.newInstance(getView(), mAppDataManager, this, showProgress).getSurveyData();
 
     }
 
-
     @Override
     public void syncData(boolean showProgress) {
 
         /**Todo Sync all un synced data
-        Callbacks can be declared at the global or local level
-        In this context, declaring the callback at the global level is okay since we'll be syncing all farmers data
-        when user clicks on Upload farmer data button in the MainActivity, the json object containing the json array of farmers plus some extra fields is
-        bundled and passed to the method uploadFarmersData(@param JSONObject object) in the UploadDataManager class
-        A scenario where we might declare a callback listener at the local level is in the FarmerProfileActivity where
+         Callbacks can be declared at the global or local level
+         In this context, declaring the callback at the global level is okay since we'll be syncing all farmers data
+         when user clicks on Upload farmer data button in the MainActivity, the json object containing the json array of farmers plus some extra fields is
+         bundled and passed to the method uploadFarmersData(@param JSONObject object) in the UploadDataManager class
+         A scenario where we might declare a callback listener at the local level is in the FarmerProfileActivity where
          we're only syncing one farmer
-        */
-
+         */
 
 
         /**
          * Generate the Json object here.
          * You can have access to the database via the @param AppDataManager.getAppDatabase().farmersDao().getAll()
          * Same for plots, answers, etc.
-        * */
+         *
+         * First check if there are un synced data
+         **/
 
-
-
-
-
-
+        if(getAppDataManager().getDatabaseManager().realFarmersDao().checkIfUnsyncedAvailable().blockingGet() <= 0){
+           getView().showMessage(R.string.no_new_data);
+           return;
+        }
 
 
         if(showProgress)
-            getView().showLoading("Syncing data","Please wait...", true, 0,false);
+            getView().showLoading("Uploading data", "Please wait...", false, 0, false);
 
-        //Todo replace null with the json data
-        UploadData.newInstance(getView(), getAppDataManager(), this, true).uploadFarmersData(null);
 
+
+        JSONObject payloadData = new JSONObject();
+
+        Submission submission = new Submission();
+        submission.setSurveyor__c(getAppDataManager().getUserEmail());
+
+        try {
+            payloadData.put("submission", submission);
+        } catch (JSONException ignored) {
+        }
+
+
+        JSONArray farmerData = new JSONArray();
+
+
+        runSingleCall(getAppDataManager().getDatabaseManager().mappingDao().getAll()
+                .subscribeOn(Schedulers.io())
+                .map(mappings -> Observable.fromIterable(mappings)
+                        .groupBy(Mapping::getObjectName)
+                        .flatMapSingle(groups -> groups.collect(() -> Collections.singletonMap(groups.getKey(), new ArrayList<Mapping>()),
+                                (m, mapping) -> m.get(groups.getKey()).add(mapping)))
+                        .toList()
+                        .subscribe(groupedMappings -> {
+
+                            //AppLogger.e("GROUPED MAPPINGS = " + new Gson().toJson(groupedMappings));
+                            //AppLogger.e("GROUPED MAPPINGS SIZE IS = " + groupedMappings.size());
+
+                            /**
+                             * Group mappings are in the form List<String> List<Mapping>> groupMappings;
+                             * First parameter is the Object name (Object_c) eg. farmer_c and List<Mapping> has all mapping with object_c = farmer_c
+                             * Since we're sending only farmer data first, lets loop through group mappings and get list of mappings which has object_c = farmer_c;
+                             */
+
+                            Observable.fromIterable(getAppDataManager().getDatabaseManager().realFarmersDao().getAllNotSynced().blockingGet())
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new DisposableObserver<RealFarmer>() {
+                                        @Override
+                                        public void onNext(RealFarmer farmer) {
+                                            /**Since the answers are separated by forms in the Answers table. ie. every Form filled has an answer data in the db
+                                             * we should get all answers of the farmer and bundle it into one object where we can just get values to questions
+                                             * using the question id
+                                             * */
+
+                                            JSONObject allAnswersJsonObject = buildAllAnswersJsonDataPerFarmer(farmer.getCode());
+
+                                            JSONObject jsonObject = new JSONObject();
+
+                                            try {
+                                                jsonObject.put("farmerData", farmer);
+
+                                                for (int i = 0; i < groupedMappings.size(); i++) {
+
+                                                    for (Map.Entry<String, ArrayList<Mapping>> mappingEntry : groupedMappings.get(i).entrySet()) {
+
+                                                        JSONArray arrayOfValues = new JSONArray();
+
+                                                        for (Mapping mapping : mappingEntry.getValue()) {
+
+                                                            JSONObject answerJson = new JSONObject();
+
+                                                            String questionLabel = getAppDataManager().getDatabaseManager().questionDao()
+                                                                    .getLabel(mapping.getQuestionId()).blockingGet();
+                                                            answerJson.put(questionLabel, allAnswersJsonObject.get(questionLabel));
+
+                                                            answerJson.put("field_name", mapping.getFieldName());
+
+                                                            arrayOfValues.put(answerJson);
+                                                        }
+
+                                                        jsonObject.put(mappingEntry.getKey(), arrayOfValues);
+                                                    }
+                                                }
+
+
+                                                farmerData.put(jsonObject);
+
+                                            } catch (JSONException e) {
+                                                getView().showMessage(e.getMessage());
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            getView().hideLoading();
+                                            getView().showMessage(e.getMessage());
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+                                            try {
+                                                payloadData.put("data", farmerData);
+
+                                                UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
+                                                        .uploadFarmersData(payloadData);
+
+
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+
+                                                getView().hideLoading();
+                                                getView().showMessage(R.string.error_has_occurred_loading_data);
+                                            }
+                                        }
+                                    });
+
+                        }, throwable -> {
+                            getView().hideLoading();
+                            getView().showMessage(R.string.error_has_occurred);
+                        }))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(disposable -> {
+
+                }, throwable -> {
+                    getView().hideLoading();
+                    getView().showMessage(R.string.error_has_occurred_loading_data);
+
+                }));
     }
 
+    private JSONObject buildAllAnswersJsonDataPerFarmer(String code) {
+        JSONObject jsonObject = new JSONObject();
+        for (FormAnswerData answerData : getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswersData(code)
+                .blockingGet()) {
+            Iterator iterator = answerData.getJsonData().keys();
 
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                try {
+                    if (jsonObject.has(key))
+                        jsonObject.remove(key);
 
+                    jsonObject.put(key, answerData.getJsonData().get(key));
 
+                } catch (JSONException ignored) {
+                }
+            }
+        }
+        return jsonObject;
+    }
 
-    int count = 0;
     @Override
     public void initializeSearchDialog(List<VillageAndFarmers> villageAndFarmers) {
         ArrayList<MySearchItem> farmerNames = new ArrayList<>();
@@ -180,7 +317,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                     count++;
 
-                    if(villageAndFarmers1.getFarmerList().size() > 0)
+                    if (villageAndFarmers1.getFarmerList().size() > 0)
                         Observable.fromIterable(villageAndFarmers1.getFarmerList())
                                 .map(farmer -> new MySearchItem(farmer.getCode(), farmer.getFarmerName()))
                                 .toList()
@@ -200,8 +337,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                 })
                 .subscribe(items -> {
 
-                    if(count == villageAndFarmers.size() -1)
-                    getView().instantiateSearchDialog(farmerNames);
+                    if (count == villageAndFarmers.size() - 1)
+                        getView().instantiateSearchDialog(farmerNames);
 
                 }));
     }
@@ -215,32 +352,22 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(farmer -> {
 
-                    if(farmer != null)
+                    if (farmer != null)
                         getView().viewFarmerProfile(farmer);
 
                     else
                         getView().showMessage("Could not load farmer data");
 
-                },throwable -> {
+                }, throwable -> {
 
                     throwable.printStackTrace();
-                    AppLogger.e(TAG, throwable.getMessage() );
+                    AppLogger.e(TAG, throwable.getMessage());
 
 
-
-        }));
-
-
-
-
-
+                }));
 
 
     }
-
-
-
-
 
 
     //Download Data Callbacks declared at the global level
@@ -251,6 +378,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         getView().hideLoading();
         getView().showMessage(message);
     }
+
     //Download Data Callbacks declared at the global level
     @Override
     public void onError(Throwable throwable) {
@@ -262,11 +390,10 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
         throwable.printStackTrace();
 
-        if(throwable.getMessage().contains("401")) {
+        if (throwable.getMessage().contains("401")) {
             getView().openLoginActivityOnTokenExpire();
         }
     }
-
 
 
     //Upload Data Callbacks declared at the global level

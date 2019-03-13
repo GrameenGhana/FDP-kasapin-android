@@ -83,6 +83,18 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                 }));
     }
 
+
+    @Override
+    public void getRecommendations(int cropId) {
+
+        runSingleCall(getAppDataManager().getDatabaseManager().recommendationsDao().getRecommendationsByCrop(cropId)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(recommendations -> getView().loadRecommendation(recommendations),
+                throwable -> getView().showMessage(R.string.error_has_occurred_loading_data)));
+
+    }
+
     @Override
     public void openNextActivity() {
 

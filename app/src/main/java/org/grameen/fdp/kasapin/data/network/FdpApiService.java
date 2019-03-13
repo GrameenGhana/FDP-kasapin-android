@@ -36,10 +36,6 @@ public class FdpApiService {
         this.fdpApi = _fdpApi;
     }
 
-
-
-
-
     public Single<LoginResponse> makeLoginCall(String email, String password) {
         LoginRequest.ServerLoginRequest loginRequest = new LoginRequest.ServerLoginRequest(email, password);
 
@@ -52,20 +48,16 @@ public class FdpApiService {
 
         return fdpApi.getUser(token) .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-
     }
-
 
     public Single<FormsDataWrapper> fetchSurveyData(int id, String token) {
         return fdpApi.getSurveyData(id, token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<RecommendationsDataWrapper> fetchRecommendations(int id, String token) {
-        return fdpApi.getRecommendations(id, token).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+    public Single<RecommendationsDataWrapper> fetchRecommendations(int cropId, int countryId, String token) {
+        return fdpApi.getRecommendations(cropId, countryId, token).subscribeOn(Schedulers.io());
     }
-
 
     public Single<Response> pushFarmersData(String token, JSONObject data) {
         return fdpApi.postFarmers(token, data).subscribeOn(Schedulers.io())

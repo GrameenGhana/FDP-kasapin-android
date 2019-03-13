@@ -14,6 +14,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Created by AangJnr on 20, September, 2018 @ 5:57 PM
@@ -26,6 +27,6 @@ public interface VillageAndFarmersDao {
 
     @Transaction
     @Query("SELECT id, name FROM villages")
-    Flowable<List<VillageAndFarmers>> getVillagesAndFarmers();
+    Single<List<VillageAndFarmers>> getVillagesAndFarmers();
 
 }

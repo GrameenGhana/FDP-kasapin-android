@@ -268,7 +268,6 @@ public abstract class BaseActivity extends AppCompatActivity
         return activityComponent;
     }
 
-
     @Override
     public void openLoginActivityOnTokenExpire() {
 
@@ -297,11 +296,7 @@ public abstract class BaseActivity extends AppCompatActivity
         return getString(resource);
     }
 
-
-
     protected void logOut(){
-
-
         //Todo show dialog to confirm logout
         CommonUtils.showAlertDialog(mAlertDialogBuilder, true, getString(R.string.log_out), getString(R.string.log_out_rational),
                 (dialogInterface, i) ->   {
@@ -319,10 +314,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     }
 
-
-
     protected Toolbar setToolbar(String title) {
-
         Toolbar toolbar = null;
         try {
             toolbar = findViewById(R.id.toolbar);
@@ -335,17 +327,11 @@ public abstract class BaseActivity extends AppCompatActivity
             toolbar.setNavigationOnClickListener((v) ->{
                     onBackPressed();
             });
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return toolbar;
-
     }
-
-
 
     public AppDataManager getAppDataManager() {
         return mAppDataManager;
@@ -362,7 +348,6 @@ public abstract class BaseActivity extends AppCompatActivity
     public void hideNoDataView(){
          findViewById(R.id.place_holder).setVisibility(View.GONE);
      }
-
 
     public void setBackListener(@Nullable View view){
         onBackPressed();
@@ -400,23 +385,11 @@ public abstract class BaseActivity extends AppCompatActivity
         return File.createTempFile(part, ext, dir);
     }
 
-
-    public  void openNextActivity(){};
-
-
-
+    public  void openNextActivity(){}
 
     public void onBackClicked() {
-
         try {
-
-            findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    onBackPressed();
-                }
-            });
+            findViewById(R.id.back).setOnClickListener(view -> onBackPressed());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -426,18 +399,14 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onBackClicked(View v) {
         try {
             onBackPressed();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void finishActivity(){
         finish();
     }
-
-
 
     public static void runLayoutAnimation(final GridView recyclerView) {
         final Context context = recyclerView.getContext();

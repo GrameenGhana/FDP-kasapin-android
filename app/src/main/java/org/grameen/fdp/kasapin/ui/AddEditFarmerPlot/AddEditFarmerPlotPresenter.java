@@ -48,7 +48,7 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
 
     @Override
     public void getPlotQuestions() {
-        runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType("Plot form")
+        runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType(AppConstants.DISPLAY_TYPE_PLOT_FORM)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(formAndQuestions -> getView().showForm(formAndQuestions), throwable -> {
@@ -69,6 +69,9 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
                     getView().showMessage("Plot data saved!");
 
                     getAppDataManager().setBooleanValue("reload", true);
+                    getAppDataManager().setBooleanValue("reloadRecommendation", true);
+
+                    getView().hideLoading();
 
                     if(flag != null && flag.equalsIgnoreCase("map"))
                         getView().moveToMapActivity(plot);

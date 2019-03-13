@@ -74,6 +74,7 @@ public class ApplicationModule {
         };*/
         return Room.databaseBuilder(application, AppDatabase.class, AppConstants.DATABASE_NAME)
                 .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
                 .build();
 
     }

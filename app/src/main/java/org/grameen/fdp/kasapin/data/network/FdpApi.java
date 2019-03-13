@@ -38,8 +38,8 @@ public interface FdpApi {
     @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
     Single<FormsDataWrapper> getSurveyData2(@Path("id") int countryId, @Query("token") String token);
 
-    @GET(AppConstants.API_VERSION + "auth/user/recommendation/{crop_id}")
-    Single<RecommendationsDataWrapper> getRecommendations(@Path("crop_id") int countryId, @Query("token") String token);
+    @GET(AppConstants.API_VERSION + "auth/user/recommendation/{crop_id}/{country_id}")
+    Single<RecommendationsDataWrapper> getRecommendations(@Path("crop_id") int cropId, @Path("country_id") int countryId, @Query("token") String token);
 
 
     @POST(AppConstants.API_VERSION + "auth/user/farmers")

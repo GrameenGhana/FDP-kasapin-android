@@ -2,46 +2,27 @@ package org.grameen.fdp.kasapin.ui.landing;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.balsikandar.crashreporter.CrashReporter;
 import com.balsikandar.crashreporter.ui.CrashReporterActivity;
 import com.balsikandar.crashreporter.utils.CrashUtil;
-import com.balsikandar.crashreporter.utils.FileUtils;
 import com.crashlytics.android.Crashlytics;
 
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.exceptions.ParserException;
+import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
 import org.grameen.fdp.kasapin.ui.test.CrashTestingActivity;
-import org.grameen.fdp.kasapin.utilities.ComplexCalculationParser;
-import org.grameen.fdp.kasapin.utilities.CustomToast;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
+import org.grameen.fdp.kasapin.utilities.FileUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
-import org.grameen.fdp.kasapin.utilities.Tokenizer;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -106,12 +87,18 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
         });
 
 
+        FileUtils.createNoMediaFile();
 
 
+        try {
+            LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
+            //logicFormulaParser.setFormula("IF(plot_ph_ghana <= 5,Yes,No)");
+            logicFormulaParser.setFormula("IF(ao_tree_density_ghana == \"2x2\")");
 
+            logicFormulaParser.setJsonObject(new JSONObject());
 
-
-        org.grameen.fdp.kasapin.utilities.FileUtils.createNoMediaFile();
+            AppLogger.e(TAG, "LOGIC FORMULA PARSER >>> " + logicFormulaParser.evaluate());
+        }catch(Exception e){e.printStackTrace();}
 
 
      }

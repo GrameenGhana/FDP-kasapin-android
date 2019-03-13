@@ -2,6 +2,7 @@ package org.grameen.fdp.kasapin.ui.plotDetails;
 
 
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 import java.util.List;
@@ -22,12 +23,15 @@ public class PlotDetailsContract {
 
         void setAreaUnits(String unit);
 
+        void loadRecommendation(List<Recommendation> recommendations);
+
     }
 
      public interface Presenter {
          void getPlotQuestions();
-
          void getAreaUnits(String farmerCode);
+
+         void getRecommendations(int cropId);
     }
 
 

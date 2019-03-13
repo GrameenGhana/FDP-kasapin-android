@@ -15,11 +15,16 @@ import com.google.gson.Gson;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
+import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,6 +32,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -64,8 +72,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     @BindView(R.id.editButton)
     Button editButton;
 
-
-    String limeNeededValue = "--";
+    JSONObject PLOT_ANSWERS_JSON;
+    //String limeNeededValue = "--";
     private DynamicPlotFormFragment dynamicPlotFormFragment;
 
 
@@ -87,13 +95,17 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
         PLOT = getGson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
-        if (PLOT != null)
+        if (PLOT != null) {
             setupViews();
-        else
-            showMessage(R.string.generic_error);
+            mPresenter.getPlotQuestions();
+
+        }
+        else {
+            showMessage(R.string.error_has_occurred);
+            finish();
+        }
 
 
-       mPresenter.getPlotQuestions();
 
     }
 
@@ -109,6 +121,9 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, PLOT.getFarmerCode());
 
 
+        //
+        checkRecommendation();
+
     }
 
     void setupViews(){
@@ -122,20 +137,38 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         ph.setText(PLOT.getPh());
 
+        //Get values
 
-        //Todo apply formula
+        try {
+             PLOT_ANSWERS_JSON = PLOT.getAOJsonData();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            PLOT_ANSWERS_JSON = new JSONObject();
+        }
 
-        if (limeNeededValue.equalsIgnoreCase("yes") || limeNeededValue.equalsIgnoreCase("--")) {
-            limeNeeded.setText(limeNeededValue);
-            limeNeeded.setTextColor(ContextCompat.getColor(this, R.color.cpb_red));
-        } else
-            limeNeeded.setText("No");
 
+        Iterator iterator = PLOT_ANSWERS_JSON.keys();
+        while (iterator.hasNext()){
+            String tmp_key = (String) iterator.next();
+            if(tmp_key.toLowerCase().contains("lime")){
+                try {
+                    limeNeeded.setText(PLOT_ANSWERS_JSON.getString(tmp_key));
+                    limeNeeded.setTextColor(ContextCompat.getColor(this, R.color.cpb_red));
+                    break;
+                } catch (JSONException ignored) {}
+            }
+        }
 
 
         if(getAppDataManager().isMonitoring())
             editButton.setVisibility(View.GONE);
 
+
+        LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
+        logicFormulaParser.setFormula("IF(plot_ph_ghana < 5.8 ){\"Yes\"}else{\"No\"}");
+        logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON);
+
+        logicFormulaParser.evaluate();
 
     }
 
@@ -148,7 +181,48 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     }
 
 
+    void checkRecommendation(){
 
+        if(PLOT.getRecommendationId() != -1){
+            String recommendationLabel = getAppDataManager().getDatabaseManager().recommendationsDao().getLabel(PLOT.getRecommendationId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .blockingGet();
+            recommendedIntervention.setText(recommendationLabel);
+            recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent));
+            return;
+        }
+
+        if(PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")){
+            recommendedIntervention.setText(R.string.fill_out_ao_data);
+            recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red));
+            return;
+        }
+
+
+        recommendedIntervention.setText("");
+        recommendationProgress.setVisibility(View.VISIBLE);
+
+        mPresenter.getRecommendations(1);
+
+
+    }
+
+
+    @Override
+    public void loadRecommendation(List<Recommendation> recommendations) {
+
+
+
+
+
+
+
+//        recommendationProgress.setVisibility(View.GONE);
+//        recommendedIntervention.setText(recNames);
+//        recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent));
+
+    }
 
     @Override
     protected void onDestroy() {

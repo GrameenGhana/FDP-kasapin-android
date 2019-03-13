@@ -1,18 +1,16 @@
-package org.grameen.fdp.kasapin.utilities;
+package org.grameen.fdp.kasapin.parser;
 
-
-import android.util.Log;
 
 import org.grameen.fdp.kasapin.exceptions.ParserException;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.Tokenizer;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mozilla.javascript.Parser;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 /**
  * Created by AangJnr on 12, October, 2018 @ 10:57 AM
@@ -49,28 +47,28 @@ $: Matches the ending position of the string
 
 */
 
-public class ComplexCalculationParser extends Tokenizer {
+public class MathFormulaParser extends Tokenizer {
 
     String complexCalculation = null;
     JSONObject jsonObject = null;
     Tokenizer TOKENIZER;
 
-    private ComplexCalculationParser() {
+    private MathFormulaParser() {
         TOKENIZER = initializeTokenizer();
     }
 
-    public static ComplexCalculationParser getInstance() {
-        return new ComplexCalculationParser();
+    public static MathFormulaParser getInstance() {
+        return new MathFormulaParser();
     }
 
     private static Tokenizer initializeTokenizer() {
 
         Tokenizer tokenizer = new Tokenizer();
         tokenizer.add("IF", AppConstants.TOKEN_IF); // function
-        tokenizer.add("==", AppConstants.TOKEN_EQUAL_TO); // equals
+        tokenizer.add("==", AppConstants.TOKEN_OPERATOR_EQUAL_TO); // equals
         tokenizer.add("\\(", AppConstants.TOKEN_BRACKET_OPEN); // open bracket
         tokenizer.add("\\)", AppConstants.TOKEN_BRAKET_CLOSED); // close bracket
-        tokenizer.add("[+-]", AppConstants.TOKEN_PLUS_MINUS); // plus or minus
+        tokenizer.add("[+-]", AppConstants.TOKEN_ARITHMETIC_PLUS_MINUS); // plus or minus
         tokenizer.add("[,]", AppConstants.TOKEN_CHAR); // plus or minus
         tokenizer.add("[0-9]+|[a-zA-Z][a-zA-Z0-9_]*[[*/]-?[0-9]*\\.[0-9]+]*", AppConstants.TOKEN_VARIABLE); // variable
         return tokenizer;
@@ -106,7 +104,7 @@ public class ComplexCalculationParser extends Tokenizer {
 
         String value;
 
-        for (Tokenizer.Token tok : getTokenizer().getTokens())
+        for (Token tok : getTokenizer().getTokens())
             if (Objects.equals(tok.token, AppConstants.TOKEN_VARIABLE))
                 sequenceList.add(tok.sequence);
 

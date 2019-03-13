@@ -4,7 +4,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import org.grameen.fdp.kasapin.utilities.TimeUtils;
+
 import java.sql.Date;
+import java.util.Calendar;
 
 
 /**
@@ -17,11 +20,10 @@ public class Submission {
     @NonNull
     String Id;
 
-    Date End__c;
+    String End__c;
     String External_id__c;
     String Respondent__c;
-
-    Date Start__c;
+    String Start__c = TimeUtils.getCurrentDateTime();
     String Surveyor__c;
 
 
@@ -36,9 +38,6 @@ public class Submission {
         return Id;
     }
 
-    public void setEnd__c(Date end__c) {
-        End__c = end__c;
-    }
 
     public void setExternal_id__c(String external_id__c) {
         External_id__c = external_id__c;
@@ -48,8 +47,13 @@ public class Submission {
         Respondent__c = respondent__c;
     }
 
-    public void setStart__c(Date start__c) {
+
+    public void setStart__c(String start__c) {
         Start__c = start__c;
+    }
+
+    public String getStart__c() {
+        return Start__c;
     }
 
     public void setSurveyor__c(String surveyor__c) {
@@ -57,12 +61,12 @@ public class Submission {
     }
 
 
-    public Date getEnd__c() {
-        return End__c;
+    public void setEnd__c(String end__c) {
+        End__c = end__c;
     }
 
-    public Date getStart__c() {
-        return Start__c;
+    public String getEnd__c() {
+        return End__c;
     }
 
     public String getExternal_id__c() {

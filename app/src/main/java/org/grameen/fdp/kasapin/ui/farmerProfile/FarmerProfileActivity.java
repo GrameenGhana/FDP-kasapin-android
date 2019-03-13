@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
@@ -30,9 +31,11 @@ import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -112,6 +115,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     private PlotsListAdapter plotsListAdapter;
 
     int plotsSize = 0;
+    List<FormAndQuestions> FORMS = new ArrayList<>();
+
 
 
     @Override
@@ -221,9 +226,13 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
 
+        for(FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS){
+            if(formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
+                FORMS.add(formAndQuestions);
+        }
 
 
-        mPresenter.loadDynamicButtons(FORM_AND_QUESTIONS);
+        mPresenter.loadDynamicButtons(FORMS);
 
         /*
 
@@ -343,6 +352,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                 Intent intent = new Intent(FarmerProfileActivity.this, AddEditFarmerActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
+                intent.putExtra("formAndQuestions", getGson().toJson(FORMS.get(CURRENT_FORM)));
                 startActivity(intent);
 
             });

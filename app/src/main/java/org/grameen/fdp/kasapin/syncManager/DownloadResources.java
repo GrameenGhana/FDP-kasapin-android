@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -117,18 +118,16 @@ public class DownloadResources {
 
 
        getAppDataManager().getFdpApiService()
-                .fetchRecommendations(1, mAppDataManager.getAccessToken())
-                .subscribe(new DisposableSingleObserver<RecommendationsDataWrapper>() {
+               .fetchRecommendations(1, 1, mAppDataManager.getAccessToken())
+               .subscribe(new DisposableSingleObserver<RecommendationsDataWrapper>() {
                     @Override
                     public void onSuccess(RecommendationsDataWrapper recommendationsDataWrapper) {
 
                         getAppDataManager().getCompositeDisposable().add(Observable.fromIterable(recommendationsDataWrapper.getData())
-                                .subscribeOn(Schedulers.io())
                                 .doOnNext(recommendation -> {
                                     getAppDataManager().getDatabaseManager().recommendationsDao().insertOne(recommendation);
                                     getAppDataManager().getDatabaseManager().calculationsDao().insertAll(recommendation.getCalculations());
                                     getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao().insertAll(recommendation.getRecommendationActivities());
-
                                 })
                                 .observeOn(AndroidSchedulers.mainThread())
                                .subscribe(questionsAndSkipLogic -> showSuccess("Data download completed!"), this::onError));

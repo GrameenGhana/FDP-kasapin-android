@@ -7,8 +7,12 @@ import android.arch.persistence.room.Transaction;
 
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+
+import java.util.List;
 
 import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 12:25 PM
@@ -27,6 +31,10 @@ public interface MappingsDao extends BaseDao<Mapping>{
 
     @Query("DELETE FROM mappings")
     void deleteAll();
+
+
+    @Query("SELECT * FROM mappings")
+    Single<List<Mapping>> getAll();
 
 
 }

@@ -11,6 +11,9 @@ import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
+import io.reactivex.Single;
+
 /**
  * Created by AangJnr on 18, September, 2018 @ 12:47 PM
  * Work Mail cibrahim@grameenfoundation.org
@@ -24,8 +27,19 @@ public interface RecommendationsDao extends BaseDao<Recommendation>{
     Recommendation getByCrop(int id);
 
 
+    @Query("SELECT * FROM recommendations WHERE cropId = :id")
+    Single<List<Recommendation>> getRecommendationsByCrop(int id);
+
+
+
+
+    @Query("SELECT label FROM recommendations WHERE id = :id")
+    Maybe<String> getLabel(int id);
+
+
     @Query("DELETE FROM recommendations")
     void deleteAllRecommendations();
+
 
 
 

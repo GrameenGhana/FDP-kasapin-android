@@ -9,6 +9,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import org.grameen.fdp.kasapin.ui.base.model.Loc;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -39,9 +41,10 @@ public class Plot {
     String lastVisitDate;
     String estimatedProductionSize;
     String answersData;
-
     String gpsPoints;
 
+    int recommendationId = -1;
+    int gapsId = -1;
 
 
     public Plot() {
@@ -171,5 +174,27 @@ public class Plot {
 
     public String getGpsPoints() {
         return gpsPoints;
+    }
+
+
+    public void setRecommendationId(int recommendationId) {
+        this.recommendationId = recommendationId;
+    }
+
+    public void setGapsId(int gapsId) {
+        this.gapsId = gapsId;
+    }
+
+    public int getGapsId() {
+        return gapsId;
+    }
+
+    public int getRecommendationId() {
+        return recommendationId;
+    }
+
+    @Ignore
+    public JSONObject getAOJsonData() throws JSONException {
+        return new JSONObject(answersData);
     }
 }
