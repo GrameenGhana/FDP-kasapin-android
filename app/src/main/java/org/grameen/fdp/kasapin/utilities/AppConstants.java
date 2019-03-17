@@ -176,6 +176,8 @@ public class AppConstants {
 
     public static int TOKEN_OPERATOR = 3;
     public static int TOKEN_OPERATOR_OR = 3;
+    public static int TOKEN_OPERATOR_AND = 3;
+
     public static int TOKEN_OPERATOR_EQUAL_TO = 3;
     public static int TOKEN_OPERATOR_GREATER_THAN = 3;
     public static int TOKEN_OPERATOR_LESS_THAN =3;

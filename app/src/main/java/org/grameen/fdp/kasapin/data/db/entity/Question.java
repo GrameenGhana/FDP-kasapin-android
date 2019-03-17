@@ -27,8 +27,7 @@ import static android.arch.persistence.room.ForeignKey.NO_ACTION;
  */
 
 //, foreignKeys = {@ForeignKey(entity = FormTranslation.class, parentColumns = "id", childColumns = "formTranslationId", deferred = true)}
-@Entity(tableName = "questions", indices = {@Index(value = "formTranslationId"),
-        @Index(value = "id", unique = true), @Index(value = "labelC", unique = true)})
+@Entity(tableName = "questions", indices = {@Index(value = "formTranslationId"), @Index(value = "id", unique = true), @Index(value = "labelC", unique = true)})
 public class Question {
 
 

@@ -339,7 +339,7 @@ public class ComputationUtils {
         try {
             value = (Boolean) _engine.eval(equation.trim());
         } catch (ScriptException | NumberFormatException e) {
-            System.out.println("******* EXCEPTION ****** " + e.getMessage());
+            System.out.println("******* Evaluating boolean ****** " + e.getMessage());
             value = v1.equalsIgnoreCase(v2);
         } finally {
             System.out.println(equation + " --> " + value);
@@ -348,6 +348,24 @@ public class ComputationUtils {
     }
 
 
+
+    public static boolean parseEquation(String equation, ScriptEngine _engine){
+        AppLogger.i(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
+        boolean value = false;
+        try {
+            value = (Boolean) _engine.eval(equation.trim());
+        } catch (ScriptException | NumberFormatException ignored) {
+
+            String[] disposableValues = equation.split("==");
+
+            System.out.println("******* Evaluating boolean ****** ");
+            value = disposableValues[0].equalsIgnoreCase(disposableValues[1]);
+
+        } finally {
+            System.out.println(equation + " --> " + value);
+        }
+        return value;
+    }
 
 
 

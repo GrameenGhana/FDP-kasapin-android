@@ -16,8 +16,8 @@ import org.grameen.fdp.kasapin.data.db.entity.PlotAndAssessments;
 @Dao
 public interface PlotAndAssessmentsDao {
 
-    @Transaction
+  /*  @Transaction
     @Query("SELECT * FROM plots WHERE id = :id")
-    PlotAndAssessments loadPlotAssessments(String id);
+    PlotAndAssessments loadPlotAssessments(String id);*/
 
 }

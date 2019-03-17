@@ -1,8 +1,11 @@
 package org.grameen.fdp.kasapin.parser;
 
 
+import android.support.v4.content.ContextCompat;
+
 import com.google.gson.Gson;
 
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.exceptions.ParserException;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -12,12 +15,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * Created by AangJnr on 12, October, 2018 @ 10:57 AM
@@ -53,11 +58,19 @@ $: Matches the ending position of the string
 |: The alternation operator
 
 */
-    //String formula = "IF(farm_weight_units_ghana == Kg,cocoa_production_ly_ghana,cocoa_production_ly_ghana*62.5)";
 
     //logic formula example : IF(plot_ph_ghana < 5.8,Yes,No)
 
-    //math formula example : cocoa_production_ly_ghana*cocoa_avg_price_ghana
+//    farm_condition_ghana == "B"
+// || ao_tree_age_ghana > 30
+// &&  filling_thinning_option_ghana == "Yes"
+// && ao_planting_ghana == "G"
+// && ao_disease_ghana == "G"
+// &&  ao_tree_density_ghana == "3.5x4"
+// || ao_tree_density_ghana == "4x4",
+
+// TRUE, FALSE
+
 
 
 public class LogicFormulaParser extends Tokenizer {
@@ -70,7 +83,7 @@ public class LogicFormulaParser extends Tokenizer {
 
 
     private LogicFormulaParser() {
-        TOKENIZER = initializeTokenizer();
+       // TOKENIZER = initializeTokenizer();
     }
 
     public static LogicFormulaParser getInstance() {
@@ -89,7 +102,9 @@ public class LogicFormulaParser extends Tokenizer {
         tokenizer.add(">=", AppConstants.TOKEN_OPERATOR_LESS_THAN_EQUALS);
         tokenizer.add("<", AppConstants.TOKEN_OPERATOR_GREATER_THAN);
         tokenizer.add(">", AppConstants.TOKEN_OPERATOR_LESS_THAN);
-       // tokenizer.add("||", AppConstants.TOKEN_OPERATOR_OR);
+
+        tokenizer.add("||", AppConstants.TOKEN_OPERATOR_OR);
+        tokenizer.add("&&", AppConstants.TOKEN_OPERATOR_AND);
 
         tokenizer.add("\"", AppConstants.TOKEN_QUOTATION);
 
@@ -125,38 +140,112 @@ public class LogicFormulaParser extends Tokenizer {
     }
 
 
-    public String evaluate() {
 
-        if (formula == null)
+
+    private String evaluate() {
+
+        String returnValue = "";
+        boolean isNestedIfFormula = false;
+
+
+
+       /* if (formula == null)
             throw new ParserException("Equation to evaluate is null or not in the right format");
+*/
+
+        formula = formula.replace(" ", "");
+
+        AppLogger.e(TAG, "**** UN PARSED EQUATION " + formula);
 
 
-        AppLogger.e(TAG, "Tokens >>> " + new Gson().toJson(getTokenizer().getTokens()));
+
+        String[] nestedFormulas = formula.split("else");
+
+        for (String nestedFormula : nestedFormulas) {
+
+            if(nestedFormulas.length > 1) {
+                isNestedIfFormula = true;
+                AppLogger.i(TAG, "==============   FORMULA IS A NESTED IF    ================");
+            }
+
+            AppLogger.e(TAG, "**** NESTED >>>> " + nestedFormula);
 
 
 
+            String rawFormula = nestedFormula.replace(" ", "")
+                    .replace("I", "")
+                    .replace("F(", "")
+                    .replace(")", "");
 
-        List<String> sequenceList = new ArrayList<>();
-        String value = "";
 
-        String operator = "";
+            String[] sections = rawFormula.split(",");
 
-        for (Token tok : getTokenizer().getTokens()) {
-            if (Objects.equals(tok.token, AppConstants.TOKEN_VARIABLE))
-                sequenceList.add(tok.sequence);
 
-            if (Objects.equals(tok.token, AppConstants.TOKEN_OPERATOR))
-                operator = tok.sequence;
+            String formulaToEvaluate = sections[0];
+
+            String trueValue = sections[1];
+
+            String falseValue = "";
+            try {
+                falseValue = sections[2];
+            }catch(Exception ignored){}
+
+
+            Iterator iterator = jsonObject.keys();
+            while (iterator.hasNext()) {
+                String tmp_key = (String) iterator.next();
+
+                if (formulaToEvaluate.contains(tmp_key))
+                    formulaToEvaluate = formulaToEvaluate.replace(tmp_key, getValue(tmp_key));
+
+            }
+
+
+            String[] subSections = formulaToEvaluate.split("&&|\\|\\|");
+
+            String evaluatedFormula = formulaToEvaluate;
+
+            for (int i = 0; i < subSections.length; i++) {
+
+
+                Boolean answerValue = ComputationUtils.parseEquation(subSections[i].replace("\"", ""), _engine);
+
+                AppLogger.e(TAG, "SECTION " + (i + 1) + " = " + subSections[i] + " Answer >>>  " + answerValue);
+
+                evaluatedFormula = evaluatedFormula.replace(subSections[i], String.valueOf(answerValue));
+
+                AppLogger.i(TAG, "### Replacing " + subSections[i] + " with Answer >>>  " + answerValue);
+            }
+
+
+            boolean valueAfterParsing = ComputationUtils.parseEquation(evaluatedFormula, _engine);
+
+            AppLogger.e(TAG, "EQUATION BEFORE REPLACEMENT >>> " + formulaToEvaluate);
+
+            AppLogger.e(TAG, "PARSED EQUATION = " + evaluatedFormula + " Answer >>>  " + valueAfterParsing);
+
+            AppLogger.e(TAG, "TRUE VALUE = " + trueValue);
+            AppLogger.e(TAG, "FALSE VALUE = " + falseValue);
+
+
+            if (valueAfterParsing) {
+                returnValue = trueValue.replace("\"", "");
+                break;
+            }
+            else if(!isNestedIfFormula) {
+                returnValue = falseValue.replace("\"", "");
+                break;
+            }
+
+
+
         }
 
-
-        AppLogger.e(TAG, "Sequence List >>> " + new Gson().toJson(sequenceList));
-        AppLogger.e(TAG, "Operator is >>> " + operator);
-
-        return (ComputationUtils.parseEquation(getValue(sequenceList.get(0)),  operator, sequenceList.get(1), _engine))
-                ? sequenceList.get(2) : sequenceList.get(3);
-
+        return returnValue;
     }
+
+
+
 
 
 
@@ -176,6 +265,8 @@ public class LogicFormulaParser extends Tokenizer {
 
 
     public void setJsonObject(JSONObject jsonObject) {
+        AppLogger.e(TAG, "JSON DATA IS " + jsonObject);
+
         this.jsonObject = jsonObject;
     }
 
@@ -183,5 +274,20 @@ public class LogicFormulaParser extends Tokenizer {
     public void setFormula(String formula) {
         this.formula = formula;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 

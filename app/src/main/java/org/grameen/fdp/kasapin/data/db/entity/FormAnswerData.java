@@ -28,10 +28,6 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 @Entity(tableName = "form_answers", indices = @Index("farmerCode"))
 public class FormAnswerData extends BaseModel{
 
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    int id;
-
     @SerializedName("data")
     String data;
 

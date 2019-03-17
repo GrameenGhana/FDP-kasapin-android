@@ -226,6 +226,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
 
+        if(FORM_AND_QUESTIONS != null)
         for(FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS){
             if(formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
                 FORMS.add(formAndQuestions);

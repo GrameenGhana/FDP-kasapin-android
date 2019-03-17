@@ -149,17 +149,23 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void showLoading() {
+        runOnUiThread(()->{
+
+
+
         hideLoading();
         mProgressDialog = CommonUtils.showLoadingDialog(mProgressDialog);
+        });
     }
 
 
     @Override
     public void setLoadingMessage(String message) {
-        if(mProgressDialog != null && mProgressDialog.isShowing())
-        mProgressDialog.setMessage(message);
+        runOnUiThread(() -> {
+            if(mProgressDialog != null && mProgressDialog.isShowing())
+                mProgressDialog.setMessage(message);
 
-
+        });
     }
 
 
@@ -189,11 +195,14 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void onError(String message) {
+        runOnUiThread(() -> {
         if (message != null) {
             showSnackBar(message);
         } else {
             showSnackBar(getString(R.string.some_error));
         }
+    });
+
     }
 
     @Override

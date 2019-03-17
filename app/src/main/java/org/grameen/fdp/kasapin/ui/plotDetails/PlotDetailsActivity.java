@@ -164,11 +164,11 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             editButton.setVisibility(View.GONE);
 
 
-        LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
+       /* LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
         logicFormulaParser.setFormula("IF(plot_ph_ghana < 5.8 ){\"Yes\"}else{\"No\"}");
         logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON);
 
-        logicFormulaParser.evaluate();
+        logicFormulaParser.evaluate();*/
 
     }
 

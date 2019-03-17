@@ -2,17 +2,20 @@ package org.grameen.fdp.kasapin.syncManager;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
+import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
- import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
+import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
+import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
- import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
+import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -53,7 +56,7 @@ public class DownloadResources {
     public void getSurveyData(){
 
         if(showProgress)
-        getView().setLoadingMessage("Getting survey data...");
+            getView().setLoadingMessage("Getting survey data...");
 
         List<Village> villageList = new ArrayList<>();
         for(int i =0; i < 10; i++){
@@ -81,7 +84,7 @@ public class DownloadResources {
                     @Override
                     public void onSuccess(FormsDataWrapper dataWrapper) {
 
-                        getAppDataManager().getCompositeDisposable().add(Observable.fromIterable(dataWrapper.getData())
+                        Observable.fromIterable(dataWrapper.getData())
                                 .subscribeOn(Schedulers.io())
                                 .doOnNext(formTranslation -> {
                                     getAppDataManager().getDatabaseManager().formsDao().insertForm(formTranslation.getForm());
@@ -98,7 +101,20 @@ public class DownloadResources {
 
                                 })
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(questionsAndSkipLogic -> getRecommendationsData(), this::onError));
+                                .subscribe(new DisposableObserver<QuestionsAndSkipLogic>() {
+                                    @Override
+                                    public void onNext(QuestionsAndSkipLogic questionsAndSkipLogic) {}
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                     onError(e);
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        getRecommendationsData();
+                                    }
+                                });
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -117,20 +133,37 @@ public class DownloadResources {
             getView().setLoadingMessage("Getting recommendations, calculations and recommendations plus activities data...");
 
 
-       getAppDataManager().getFdpApiService()
-               .fetchRecommendations(1, 1, mAppDataManager.getAccessToken())
-               .subscribe(new DisposableSingleObserver<RecommendationsDataWrapper>() {
+        getAppDataManager().getFdpApiService()
+                .fetchRecommendations(1, 1, mAppDataManager.getAccessToken())
+                .subscribe(new DisposableSingleObserver<RecommendationsDataWrapper>() {
                     @Override
                     public void onSuccess(RecommendationsDataWrapper recommendationsDataWrapper) {
-
-                        getAppDataManager().getCompositeDisposable().add(Observable.fromIterable(recommendationsDataWrapper.getData())
+                        Observable.fromIterable(recommendationsDataWrapper.getData())
                                 .doOnNext(recommendation -> {
                                     getAppDataManager().getDatabaseManager().recommendationsDao().insertOne(recommendation);
                                     getAppDataManager().getDatabaseManager().calculationsDao().insertAll(recommendation.getCalculations());
                                     getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao().insertAll(recommendation.getRecommendationActivities());
                                 })
                                 .observeOn(AndroidSchedulers.mainThread())
-                               .subscribe(questionsAndSkipLogic -> showSuccess("Data download completed!"), this::onError));
+                                .subscribe(new DisposableObserver<Recommendation>() {
+                                    @Override
+                                    public void onNext(Recommendation recommendation) {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                        onError(e);
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        showSuccess("Data download completed!");
+
+
+                                    }
+                                });
 
                     }
                     @Override
@@ -158,5 +191,6 @@ public class DownloadResources {
         onDownloadResourcesListener = null;
 
     }
+
 
 }

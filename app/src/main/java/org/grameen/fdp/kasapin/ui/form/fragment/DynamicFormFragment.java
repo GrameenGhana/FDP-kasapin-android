@@ -41,6 +41,7 @@ import org.grameen.fdp.kasapin.ui.form.controller.view.TimePickerController;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
+import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -168,7 +169,7 @@ public class DynamicFormFragment extends FormFragment{
         ANSWER_DATA = new FormAnswerData();
         ANSWER_DATA.setFormId(FORM_AND_QUESTIONS.getForm().getId());
         ANSWER_DATA.setFarmerCode(FARMER_ID);
-        ANSWER_DATA.setDateCreated(new Date(System.currentTimeMillis()));
+        ANSWER_DATA.setCreatedAt(TimeUtils.getCurrentDateTime());
 
     }
 

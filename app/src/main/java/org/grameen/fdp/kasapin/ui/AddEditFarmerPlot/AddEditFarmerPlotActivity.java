@@ -17,17 +17,21 @@ import com.google.gson.Gson;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
 import org.grameen.fdp.kasapin.ui.map.MapActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,6 +67,9 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     RealFarmer FARMER;
 
     DynamicPlotFormFragment dynamicPlotFormFragment;
+
+
+
 
 
     @Override
@@ -201,7 +208,9 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
         String soilPhLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_ph_").blockingGet();
-        String estProductionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_ph_").blockingGet();
+        String estProductionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_estimate_production_").blockingGet();
+        String plotArea = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_area_ha_").blockingGet();
+
 
         try {
             if(jsonObject.has(soilPhLabel))
@@ -210,24 +219,57 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             if(jsonObject.has(estProductionLabel))
                 jsonObject.remove(estProductionLabel);
 
+            if(jsonObject.has(plotArea))
+                jsonObject.remove(plotArea);
+
             jsonObject.put(soilPhLabel, phEdittext.getText().toString());
             jsonObject.put(estProductionLabel, estimatedProductionEdittext.getText().toString());
+            jsonObject.put(plotArea, plotSizeEdittext.getText().toString());
+
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        //Calculate recommendations here, put values into the json
+        LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
+        logicFormulaParser.setJsonObject(jsonObject);
 
 
 
+        //Calculate AOR and AI question values here, put values into the json
+        for(FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS){
+            if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADOPTION_OBSERVATION_RESULTS)
+                    || formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADDITIONAL_INTERVENTION)){
 
 
+                for(Question question : formAndQuestions.getQuestions()){
+                    if(question.getFormulaC() != null && !question.getFormulaC().equalsIgnoreCase("null")){
 
 
+                        AppLogger.e(TAG, "---------------------------------------------------------------------------");
+                        AppLogger.e(TAG, "---------------------------------------------------------------------------");
+
+                        AppLogger.e(TAG, "Question name is ***** " + question.getLabelC() + " *****");
+
+                    try {
+
+                        String value = logicFormulaParser.evaluate(question.getFormulaC());
+
+                        if(jsonObject.has(question.getLabelC()))
+                            jsonObject.remove(question.getLabelC());
+                        jsonObject.put(question.getLabelC(), value);
+                    }catch(Exception e){e.printStackTrace();
+                    }
+                }
+                }
+                //AOR_AI_QUESTIONS.addAll(formAndQuestions.getQuestions());
+            }
+        }
 
 
+        AppLogger.i(TAG, "-----------------------  FINAL JSON VALUE   ------------------------");
+        AppLogger.i(TAG, jsonObject.toString());
 
 
 

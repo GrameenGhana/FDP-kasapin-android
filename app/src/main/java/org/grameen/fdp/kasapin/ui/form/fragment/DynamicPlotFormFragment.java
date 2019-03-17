@@ -165,14 +165,13 @@ public class DynamicPlotFormFragment extends FormFragment{
                         .doOnNext(question ->
                                 getAppDataManager().getCompositeDisposable().add(getAppDataManager()
                                         .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
+                                        .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(skipLogics ->{
                                             if(skipLogics != null && skipLogics.size() > 0)
                                             applySkipLogicsAndHideViews(question, skipLogics);
 
                                         }))
-                        ).observeOn(AndroidSchedulers.mainThread())
-                        .subscribe();
-
+                        ).subscribe();
     }
 
 

@@ -89,18 +89,6 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
         FileUtils.createNoMediaFile();
 
-
-        try {
-            LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
-            //logicFormulaParser.setFormula("IF(plot_ph_ghana <= 5,Yes,No)");
-            logicFormulaParser.setFormula("IF(ao_tree_density_ghana == \"2x2\")");
-
-            logicFormulaParser.setJsonObject(new JSONObject());
-
-            AppLogger.e(TAG, "LOGIC FORMULA PARSER >>> " + logicFormulaParser.evaluate());
-        }catch(Exception e){e.printStackTrace();}
-
-
      }
 
 

@@ -16,10 +16,10 @@ import io.reactivex.SingleObserver;
 public interface FormAndQuestionsDao {
 
 
-    @Transaction
+    /*@Transaction
     @Query("SELECT * FROM forms")
     Single<List<FormAndQuestions>> getAllFormAndQuestions();
-
+*/
 
 
     @Transaction
