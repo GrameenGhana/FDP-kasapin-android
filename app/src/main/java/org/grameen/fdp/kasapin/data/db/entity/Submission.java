@@ -24,7 +24,7 @@ public class Submission {
     String External_id__c;
     String Respondent__c;
     String Start__c = TimeUtils.getCurrentDateTime();
-    String Surveyor__c;
+    int Surveyor__c;
 
 
     public Submission() {
@@ -56,10 +56,13 @@ public class Submission {
         return Start__c;
     }
 
-    public void setSurveyor__c(String surveyor__c) {
+
+    public void setSurveyor__c(int surveyor__c) {
         Surveyor__c = surveyor__c;
     }
-
+    public int getSurveyor__c() {
+        return Surveyor__c;
+    }
 
     public void setEnd__c(String end__c) {
         End__c = end__c;
@@ -77,9 +80,6 @@ public class Submission {
         return Respondent__c;
     }
 
-    public String getSurveyor__c() {
-        return Surveyor__c;
-    }
 
 
 }

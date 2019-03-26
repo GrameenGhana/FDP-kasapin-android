@@ -150,8 +150,7 @@ public class LogicFormulaParser extends Tokenizer {
 
 
        /* if (formula == null)
-            throw new ParserException("Equation to evaluate is null or not in the right format");
-*/
+            throw new ParserException("Equation to evaluate is null or not in the right format");*/
 
         formula = formula.replace(" ", "");
 
@@ -210,7 +209,7 @@ public class LogicFormulaParser extends Tokenizer {
 
                 Boolean answerValue = ComputationUtils.parseEquation(subSections[i].replace("\"", ""), _engine);
 
-                AppLogger.e(TAG, "SECTION " + (i + 1) + " = " + subSections[i] + " Answer >>>  " + answerValue);
+                AppLogger.e(TAG, "SECTION " + (i + 1) + " =>>> " + subSections[i] + " Answer >>>  " + answerValue);
 
                 evaluatedFormula = evaluatedFormula.replace(subSections[i], String.valueOf(answerValue));
 

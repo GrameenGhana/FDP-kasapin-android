@@ -41,8 +41,19 @@ public class RealFarmer{
 
     String villageName;
 
+    @Ignore
+    String externalId;
+
     public RealFarmer(){}
 
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
 
     public void setFirstVisitDate(Date firstVisitDate) {
         this.firstVisitDate = firstVisitDate;

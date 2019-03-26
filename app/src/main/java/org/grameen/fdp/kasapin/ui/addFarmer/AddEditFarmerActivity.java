@@ -242,7 +242,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         } else {
 
             FARMER = new RealFarmer();
-            FARMER.setCode(UUID.randomUUID().toString());
+            FARMER.setExternalId(UUID.randomUUID().toString());
+            FARMER.setCode(FARMER.getExternalId());
             farmerCode.setText(FARMER.getCode());
 
 

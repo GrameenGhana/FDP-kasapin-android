@@ -26,7 +26,6 @@ public interface PlotsDao extends BaseDao<Plot>{
 
 
 
-
     @Transaction
     @Query("SELECT * FROM plots WHERE farmerCode = :farmerCode")
     Single<List<Plot>> getFarmersPlots(String farmerCode);
@@ -42,7 +41,6 @@ public interface PlotsDao extends BaseDao<Plot>{
 
     @Query("DELETE FROM plots WHERE farmerCode = :farmerCode")
     int deleteFarmersPlotsByFarmerCode(String farmerCode);
-
 
 
 

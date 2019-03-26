@@ -1,6 +1,8 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
+import com.google.gson.Gson;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -32,6 +34,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:06 PM
@@ -167,10 +171,11 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         JSONObject payloadData = new JSONObject();
 
         Submission submission = new Submission();
-        submission.setSurveyor__c(getAppDataManager().getUserEmail());
+        //Todo pass user id
+        submission.setSurveyor__c(1);
 
         try {
-            payloadData.put("submission", submission);
+            payloadData.put("submission", new JSONObject(getGson().toJson(submission)));
         } catch (JSONException ignored) {
         }
 
@@ -188,7 +193,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                         .subscribe(groupedMappings -> {
 
                             //AppLogger.e("GROUPED MAPPINGS = " + new Gson().toJson(groupedMappings));
-                            //AppLogger.e("GROUPED MAPPINGS SIZE IS = " + groupedMappings.size());
+                            //ppLogger.e("GROUPED MAPPINGS SIZE IS = " + groupedMappings.size());
 
                             /**
                              * Group mappings are in the form List<String> List<Mapping>> groupMappings;
@@ -212,7 +217,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                             JSONObject jsonObject = new JSONObject();
 
                                             try {
-                                                jsonObject.put("farmerData", farmer);
+                                               jsonObject.put("external_id",  farmer.getCode());
 
                                                 for (int i = 0; i < groupedMappings.size(); i++) {
 
@@ -220,17 +225,25 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                         JSONArray arrayOfValues = new JSONArray();
 
+                                                        if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
+                                                            formatFarmerObjectData(farmer, arrayOfValues);
+
                                                         for (Mapping mapping : mappingEntry.getValue()) {
 
-                                                            JSONObject answerJson = new JSONObject();
+                                                            //AppLogger.i(TAG, "MAPPING OBJECT NAME IS >>> " + mapping.getObjectName());
 
-                                                            String questionLabel = getAppDataManager().getDatabaseManager().questionDao()
-                                                                    .getLabel(mapping.getQuestionId()).blockingGet();
-                                                            answerJson.put(questionLabel, allAnswersJsonObject.get(questionLabel));
 
-                                                            answerJson.put("field_name", mapping.getFieldName());
+                                                            String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
 
-                                                            arrayOfValues.put(answerJson);
+                                                            if(allAnswersJsonObject.has(questionLabel)) {
+                                                                JSONObject answerJson = new JSONObject();
+
+
+                                                                answerJson.put("answer", allAnswersJsonObject.get(questionLabel));
+                                                                answerJson.put("field_name", mapping.getFieldName());
+
+                                                                arrayOfValues.put(answerJson);
+                                                            }
                                                         }
 
                                                         jsonObject.put(mappingEntry.getKey(), arrayOfValues);
@@ -241,12 +254,14 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                 farmerData.put(jsonObject);
 
                                             } catch (JSONException e) {
+                                                e.printStackTrace();
                                                 getView().showMessage(e.getMessage());
                                             }
                                         }
 
                                         @Override
                                         public void onError(Throwable e) {
+                                            e.printStackTrace();
                                             getView().hideLoading();
                                             getView().showMessage(e.getMessage());
                                         }
@@ -256,8 +271,13 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                             try {
                                                 payloadData.put("data", farmerData);
 
-                                                UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
-                                                        .uploadFarmersData(payloadData);
+
+
+                                                AppLogger.e(TAG, "Payload data is "  + payloadData.toString());
+
+
+                                                getView().hideLoading();
+                                                //UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true).uploadFarmersData(payloadData);
 
 
                                             } catch (JSONException e) {
@@ -282,6 +302,56 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                 }));
     }
+
+    private void formatFarmerObjectData(RealFarmer farmer, JSONArray arrayOfValues) {
+
+        JSONObject farmerDataJson;
+
+        try {
+        farmerDataJson= new JSONObject();
+
+        farmerDataJson.put("answer", farmer.getFarmerName());
+        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_NAME_FIELD);
+        arrayOfValues.put(farmerDataJson);
+
+        farmerDataJson= new JSONObject();
+        farmerDataJson.put("answer", farmer.getCode());
+        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_EXTERNAL_ID_FIELD);
+        arrayOfValues.put(farmerDataJson);
+
+        farmerDataJson= new JSONObject();
+        farmerDataJson.put("answer", farmer.getCode());
+        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_CODE_FIELD);
+        arrayOfValues.put(farmerDataJson);
+
+        farmerDataJson= new JSONObject();
+        farmerDataJson.put("answer", farmer.getEducationLevel());
+        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_EDUCATION_LEVEL_FIELD);
+        arrayOfValues.put(farmerDataJson);
+
+        farmerDataJson= new JSONObject();
+        farmerDataJson.put("answer", farmer.getImageUrl());
+        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_PHOTO_FIELD);
+        arrayOfValues.put(farmerDataJson);
+
+        farmerDataJson= new JSONObject();
+        farmerDataJson.put("answer", farmer.getGender());
+        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_GENDER_FIELD);
+        arrayOfValues.put(farmerDataJson);
+
+        farmerDataJson= new JSONObject();
+        farmerDataJson.put("answer", farmer.getBirthYear());
+        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_BIRTHDAY_FIELD);
+        arrayOfValues.put(farmerDataJson);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 
     private JSONObject buildAllAnswersJsonDataPerFarmer(String code) {
         JSONObject jsonObject = new JSONObject();

@@ -267,18 +267,23 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             }
         }
 
-
         AppLogger.i(TAG, "-----------------------  FINAL JSON VALUE   ------------------------");
         AppLogger.i(TAG, jsonObject.toString());
 
 
 
+        //Todo check if farm size corresponds
+        //Todo check if checkIfFarmProductionCorresponds
+        //Todo checkIfPlotWasRenovatedRecently
 
-        PLOT.setAnswersData(jsonObject.toString());
+
+
+    PLOT.setAnswersData(jsonObject.toString());
     PLOT.setPh(phEdittext.getText().toString());
     PLOT.setName(plotNameEdittext.getText().toString());
     PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
     PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
+    PLOT.setExternalId(String.valueOf(System.currentTimeMillis()));
 
     mPresenter.saveData(PLOT, flag);
   }

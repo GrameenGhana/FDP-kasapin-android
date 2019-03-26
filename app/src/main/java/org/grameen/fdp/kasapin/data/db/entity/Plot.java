@@ -20,13 +20,15 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
  * Created by aangjnr on 08/11/2017.
  */
 
-@Entity(tableName = "plots", indices = @Index("farmerCode"), foreignKeys = @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE))
+@Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)}, foreignKeys = @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE))
 public class Plot {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
     int id;
 
+
+    String externalId;
 
     String distanceBetweenCocoaTrees;
     String EstimatedProduction;
@@ -51,8 +53,13 @@ public class Plot {
 
     }
 
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
 
-
+    public String getExternalId() {
+        return externalId;
+    }
 
     public String getEstimatedProductionSize() {
         return estimatedProductionSize;

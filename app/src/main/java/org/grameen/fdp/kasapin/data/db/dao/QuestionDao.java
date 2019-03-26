@@ -38,7 +38,7 @@ public interface QuestionDao extends BaseDao<Question>{
     Single<List<Question>> getQuestionsByForm(int formTranslationId);
 
 
-    @Query("SELECT * FROM questions WHERE labelC  LIKE '%' || :label || '%'")
+    @Query("SELECT * FROM questions WHERE labelC  LIKE :label || '%'")
     Maybe<Question> get(String label);
 
     @Query("SELECT labelC FROM questions WHERE labelC  LIKE :label || '%'")

@@ -27,18 +27,24 @@ public interface RecommendationsDao extends BaseDao<Recommendation>{
     Recommendation getByCrop(int id);
 
 
-    @Query("SELECT * FROM recommendations WHERE cropId = :id")
-    Single<List<Recommendation>> getRecommendationsByCrop(int id);
-
-
+    @Query("SELECT * FROM recommendations WHERE cropId = :id ORDER BY hierarchy ASC")
+    Maybe<List<Recommendation>> getRecommendationsByCrop(int id);
 
 
     @Query("SELECT label FROM recommendations WHERE id = :id")
     Maybe<String> getLabel(int id);
 
+    @Query("SELECT * FROM recommendations WHERE label  LIKE '%' || :label || '%'")
+    Maybe<Recommendation> getLabel(String label);
+
 
     @Query("DELETE FROM recommendations")
     void deleteAllRecommendations();
+
+
+
+
+
 
 
 

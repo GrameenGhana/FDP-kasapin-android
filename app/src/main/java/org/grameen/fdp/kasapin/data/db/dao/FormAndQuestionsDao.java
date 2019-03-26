@@ -9,6 +9,7 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 
@@ -33,7 +34,7 @@ public interface FormAndQuestionsDao {
 
     @Transaction
     @Query("SELECT * FROM forms WHERE displayTypeC LIKE '%' || :displayType|| '%' ORDER BY displayOrderC ASC")
-    Single<List<FormAndQuestions>> getFormAndQuestionsByDisplayType(String displayType);
+    Maybe<List<FormAndQuestions>> getFormAndQuestionsByDisplayType(String displayType);
 
 
 
