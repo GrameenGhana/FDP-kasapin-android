@@ -115,7 +115,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     private PlotsListAdapter plotsListAdapter;
 
     int plotsSize = 0;
-    List<FormAndQuestions> FORMS = new ArrayList<>();
 
 
 
@@ -148,6 +147,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             showMessage(getStringResources(R.string.error_getting_farmer_info));
 
 
+        CURRENT_FORM = 0;
     }
 
 
@@ -225,15 +225,16 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         }
 
 
+        FILTERED_FORMS = new ArrayList<>();
 
         if(FORM_AND_QUESTIONS != null)
         for(FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS){
             if(formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
-                FORMS.add(formAndQuestions);
+                FILTERED_FORMS.add(formAndQuestions);
         }
 
 
-        mPresenter.loadDynamicButtons(FORMS);
+        mPresenter.loadDynamicButtons(FILTERED_FORMS);
 
         /*
 
@@ -353,7 +354,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                 Intent intent = new Intent(FarmerProfileActivity.this, AddEditFarmerActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
-                intent.putExtra("formAndQuestions", getGson().toJson(FORMS.get(CURRENT_FORM)));
+                //intent.putExtra("formAndQuestions", getGson().toJson(FILTERED_FORMS.get(CURRENT_FORM)));
                 startActivity(intent);
 
             });

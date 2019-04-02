@@ -161,8 +161,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public int getUserLoggedInMode() {
-        return mPrefs.getInt(PREF_KEY_USER_LOGGED_IN_MODE,
-                DataManager.LoggedInMode.LOGGED_OUT.getType());
+        return mPrefs.getInt(PREF_KEY_USER_LOGGED_IN_MODE, DataManager.LoggedInMode.LOGGED_OUT.getType());
     }
 
     @Override

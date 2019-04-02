@@ -176,6 +176,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         } else {
 
             PLOT = new Plot();
+            PLOT.setExternalId(String.valueOf(System.currentTimeMillis()));
             PLOT.setFarmerCode(FARMER_CODE);
             PLOT.setAnswersData(new JSONObject().toString());
 
@@ -283,8 +284,8 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     PLOT.setName(plotNameEdittext.getText().toString());
     PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
     PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
-    PLOT.setExternalId(String.valueOf(System.currentTimeMillis()));
-
+    PLOT.setRecommendationId(-1);
+    PLOT.setArea(plotSizeEdittext.getText().toString());
     mPresenter.saveData(PLOT, flag);
   }
 

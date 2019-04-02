@@ -7,12 +7,14 @@ import org.grameen.fdp.kasapin.di.module.ViewModule;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
+import org.grameen.fdp.kasapin.ui.fdpStatus.FDPStatusActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.main.FarmerListFragment;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.ui.map.MapActivity;
+import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.ui.splash.SplashActivity;
 
@@ -39,6 +41,8 @@ public interface ActivityComponent {
     void inject(AddEditFarmerPlotActivity view);
     void inject(PlotDetailsActivity view);
     void inject(MapActivity view);
+    void inject(ProfitAndLossActivity view);
+    void inject(FDPStatusActivity view);
 
 
 

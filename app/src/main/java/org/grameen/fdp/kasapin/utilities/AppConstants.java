@@ -24,7 +24,6 @@ public class AppConstants {
     public static final String DATABASE_NAME = "fdp_database";
 
 
-
     public static final String DISPLAY_TYPE_FORM = "Form";
     public static final String DISPLAY_TYPE_PLOT_FORM = "Plot form";
     public static final String DISPLAY_TYPE_HISTORICAL = "Historical";
@@ -39,6 +38,21 @@ public class AppConstants {
     public static final String FARMER_TABLE_NAME_FIELD = "full_name_c";
     public static final String FARMER_TABLE_GENDER_FIELD = "gender_c";
     public static final String FARMER_TABLE_BIRTHDAY_FIELD = "birthday_c";
+
+    public static final String PLOT_TABLE = "plot_c";
+    public static final String PLOT_EXTERNAL_ID_FIELD = "external_id";
+
+    public static final String PLOT_NAME_FIELD = "name_c";
+    public static final String PLOT_AGE_FIELD = "age_c";
+    public static final String PLOT_AREA_FIELD = "area_c";
+    public static final String PLOT_EST_PROD_FIELD = "estimated_production_kg_c";
+
+
+    public static final String OBSERVATION_TABLE = "observation_c";
+
+    public static final String DIAGONOSTIC_MONITORING_TABLE = "diagnostic_monitoring_c";
+
+
 
     public static final String STATUS_CODE_SUCCESS = "success";
     public static final String STATUS_CODE_FAILED = "failed";
@@ -188,13 +202,8 @@ public class AppConstants {
     public static int TOKEN_OPERATOR_GREATER_THAN_EQUALS = 3;
     public static int TOKEN_OPERATOR_LESS_THAN_EQUALS = 3;
 
-
-
-
-
-
-    String complexCalculation = "IF(farm_weight_units_ghana == Kg,cocoa_production_ly_ghana,cocoa_production_ly_ghana*62.5)";
-
+    public static final String YES = "yes";
+    public static final String NO = "no";
 
 
 

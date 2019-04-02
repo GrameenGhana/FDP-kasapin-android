@@ -64,9 +64,11 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
         runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(farmerCode, formId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(formAnswerData -> getView().showFormFragment(formAnswerData)
+                .subscribe(formAnswerData ->
+                                getView().showFormFragment(formAnswerData)
+
                         , throwable -> {
-                            AppLogger.e(TAG, throwable.getMessage());
+                            //throwable.printStackTrace();
                             getView().showFormFragment(null);
                         }
                 ));

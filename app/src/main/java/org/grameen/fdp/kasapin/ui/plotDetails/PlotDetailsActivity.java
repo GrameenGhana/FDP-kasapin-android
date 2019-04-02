@@ -127,7 +127,10 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, PLOT.getFarmerCode());
 
-//        mPresenter.getAreaUnits(PLOT.getFarmerCode());
+        mPresenter.getAreaUnits(PLOT.getFarmerCode());
+
+
+
         checkRecommendation();
         //
 
@@ -140,9 +143,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         setToolbar(getStringResources(R.string.plot_info));
 
         plotName.setText(PLOT.getName());
-
-
-
         ph.setText(PLOT.getPh());
 
         //Get values
@@ -189,11 +189,12 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
         if(PLOT.getRecommendationId() != -1){
-            String recommendationLabel = getAppDataManager().getDatabaseManager().recommendationsDao().getLabel(PLOT.getRecommendationId())
+
+            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getLabel(PLOT.getRecommendationId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .blockingGet();
-            recommendedIntervention.setText(recommendationLabel);
+            .subscribe(s -> recommendedIntervention.setText(s), throwable -> {}));
+
             recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent));
             return;
         }

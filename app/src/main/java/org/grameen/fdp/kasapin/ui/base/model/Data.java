@@ -21,9 +21,9 @@ public class Data {
     String v2;
 
 
-    public Data(String label, @Nullable List<String> yearsDataFormula, String tag) {
+    public Data(String label, @Nullable List<String> formula, String tag) {
         this.label = label;
-        this.yearsDataFormula = yearsDataFormula;
+        this.yearsDataFormula = formula;
         this.tag = tag;
     }
 

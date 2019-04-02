@@ -7,6 +7,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
+import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -188,7 +190,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                 .map(mappings -> Observable.fromIterable(mappings)
                         .groupBy(Mapping::getObjectName)
                         .flatMapSingle(groups -> groups.collect(() -> Collections.singletonMap(groups.getKey(), new ArrayList<Mapping>()),
-                                (m, mapping) -> m.get(groups.getKey()).add(mapping)))
+                                (m, mapping) -> Objects.requireNonNull(m.get(groups.getKey())).add(mapping)))
                         .toList()
                         .subscribe(groupedMappings -> {
 
@@ -223,30 +225,96 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                     for (Map.Entry<String, ArrayList<Mapping>> mappingEntry : groupedMappings.get(i).entrySet()) {
 
+
+                                                        List<Plot> farmersPlots = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmer.getCode()).blockingGet();
+
+
                                                         JSONArray arrayOfValues = new JSONArray();
 
-                                                        if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
-                                                            formatFarmerObjectData(farmer, arrayOfValues);
-
-                                                        for (Mapping mapping : mappingEntry.getValue()) {
-
-                                                            //AppLogger.i(TAG, "MAPPING OBJECT NAME IS >>> " + mapping.getObjectName());
+                                                        if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)){
 
 
-                                                            String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+                                                            for(Plot plot :farmersPlots) {
+                                                                JSONArray plotsArray = new JSONArray();
 
-                                                            if(allAnswersJsonObject.has(questionLabel)) {
-                                                                JSONObject answerJson = new JSONObject();
+                                                                formatPlotsData(plot, plotsArray);
 
+                                                                arrayOfValues.put(plotsArray);
 
-                                                                answerJson.put("answer", allAnswersJsonObject.get(questionLabel));
-                                                                answerJson.put("field_name", mapping.getFieldName());
-
-                                                                arrayOfValues.put(answerJson);
                                                             }
+
+
+
+                                                        }else if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)){
+                                                            for(Plot plot :farmersPlots) {
+                                                                JSONArray plotsArray = new JSONArray();
+
+                                                                for (Mapping mapping : mappingEntry.getValue()) {
+
+                                                                    String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+
+                                                                    if (plot.getAOJsonData().has(questionLabel)) {
+                                                                        JSONObject answerJson = new JSONObject();
+
+                                                                        answerJson.put("answer", plot.getAOJsonData().get(questionLabel));
+                                                                        answerJson.put("field_name", mapping.getFieldName());
+
+                                                                        arrayOfValues.put(answerJson);
+                                                                    }
+                                                                }
+                                                                arrayOfValues.put(plotsArray);
+                                                            }
+                                                        }else if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.OBSERVATION_TABLE)){
+
+                                                            for(Plot plot :farmersPlots) {
+                                                                JSONArray plotsArray = new JSONArray();
+
+                                                                for (Mapping mapping : mappingEntry.getValue()) {
+
+                                                                    String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+
+                                                                    if (plot.getAOJsonData().has(questionLabel)) {
+                                                                        JSONObject answerJson = new JSONObject();
+
+                                                                        answerJson.put("answer", plot.getAOJsonData().get(questionLabel));
+                                                                        answerJson.put("field_name", mapping.getFieldName());
+
+                                                                        arrayOfValues.put(answerJson);
+                                                                    }
+                                                                }
+                                                                arrayOfValues.put(plotsArray);
+                                                            }
+                                                        }else {
+
+
+                                                            if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
+                                                                formatFarmerObjectData(farmer, arrayOfValues);
+
+                                                            for (Mapping mapping : mappingEntry.getValue()) {
+
+                                                                //AppLogger.i(TAG, "MAPPING OBJECT NAME IS >>> " + mapping.getObjectName());
+
+
+                                                                String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+
+                                                                if (allAnswersJsonObject.has(questionLabel)) {
+                                                                    JSONObject answerJson = new JSONObject();
+
+
+                                                                    answerJson.put("answer", allAnswersJsonObject.get(questionLabel));
+                                                                    answerJson.put("field_name", mapping.getFieldName());
+
+                                                                    arrayOfValues.put(answerJson);
+                                                                }
+                                                            }
+
+
                                                         }
 
+
                                                         jsonObject.put(mappingEntry.getKey(), arrayOfValues);
+
+
                                                     }
                                                 }
 
@@ -350,6 +418,40 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     }
 
 
+    private void formatPlotsData(Plot plot, JSONArray arrayOfValues) {
+
+        JSONObject plotsJsonData;
+
+        try {
+            plotsJsonData= new JSONObject();
+
+            plotsJsonData.put("answer", plot.getExternalId());
+            plotsJsonData.put("field_name", AppConstants.PLOT_EXTERNAL_ID_FIELD);
+            arrayOfValues.put(plotsJsonData);
+
+            plotsJsonData.put("answer", plot.getName());
+            plotsJsonData.put("field_name", AppConstants.PLOT_NAME_FIELD);
+            arrayOfValues.put(plotsJsonData);
+
+            plotsJsonData= new JSONObject();
+            plotsJsonData.put("answer", plot.getArea());
+            plotsJsonData.put("field_name", AppConstants.PLOT_AREA_FIELD);
+            arrayOfValues.put(plotsJsonData);
+
+            plotsJsonData= new JSONObject();
+            plotsJsonData.put("answer", plot.getPlotAge());
+            plotsJsonData.put("field_name", AppConstants.PLOT_AGE_FIELD);
+            arrayOfValues.put(plotsJsonData);
+
+            plotsJsonData= new JSONObject();
+            plotsJsonData.put("answer", plot.getEstimatedProductionSize());
+            plotsJsonData.put("field_name", AppConstants.PLOT_EST_PROD_FIELD);
+            arrayOfValues.put(plotsJsonData);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

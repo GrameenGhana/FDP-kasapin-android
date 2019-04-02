@@ -127,13 +127,18 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         if (getIntent() != null) {
 
             FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
-            CURRENT_FORM_QUESTION = gson.fromJson(getIntent().getStringExtra("formAndQuestions"), FormAndQuestions.class);
-            if (FARMER != null) {
-                isNewFarmer = false;
+            //CURRENT_FORM_QUESTION = gson.fromJson(getIntent().getStringExtra("formAndQuestions"), FormAndQuestions.class);
 
-            }
+
+
+            AppLogger.e(TAG, "CURRENT FORM IS >>> " + getGson().toJson(CURRENT_FORM_QUESTION));
+
+
+            if (FARMER != null)
+                isNewFarmer = false;
                 setUpViews();
             }
+
 
 
     }
@@ -193,6 +198,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         genderSpinner.setSelectedIndex(0);
 
         if (!isNewFarmer) {
+            CURRENT_FORM_QUESTION = FILTERED_FORMS.get(CURRENT_FORM);
+
 
             if (getAppDataManager().isMonitoring() || (FARMER.hasAgreed() && FARMER.getSyncStatus() == 1)) {
                 disableViews();
@@ -234,6 +241,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 drawable.setColor(randomColor);
                 circleImageView.setBackground(drawable);
             }
+
+
 
 
             mPresenter.loadFormFragment(FARMER.getCode(), CURRENT_FORM_QUESTION.getForm().getId());
@@ -335,7 +344,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 */
         CURRENT_FORM++;
 
-        if (CURRENT_FORM < FORM_AND_QUESTIONS.size()) {
+        if (CURRENT_FORM < FILTERED_FORMS.size()) {
             //CURRENT_FORM_QUESTION = FORM_AND_QUESTIONS.get(CURRENT_FORM);
 
             Intent intent = new Intent(this, this.getClass());

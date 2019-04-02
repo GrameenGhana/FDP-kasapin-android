@@ -254,10 +254,10 @@ public class DynamicFormFragment extends FormFragment{
                         break;
 
                     case AppConstants.TYPE_NUMBER_DECIMAL:
-                      /*  formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_NUMBER_FLAG_DECIMAL, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));
+                     formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));
                         //getValue(q);
 
-                        break;*/
+                        break;
 
                     case AppConstants.TYPE_NUMBER:
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(),  q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));

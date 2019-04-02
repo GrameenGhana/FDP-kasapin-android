@@ -3,11 +3,16 @@ package org.grameen.fdp.kasapin.ui.plotDetails;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -42,15 +47,31 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
     @Override
     public void getPlotQuestions() {
 
+        List<FormAndQuestions> formAndQuestionsList = new ArrayList<>();
+
         AppLogger.e(TAG, "All Forms size is " + BaseActivity.FORM_AND_QUESTIONS.size());
+
+        if(BaseActivity.FORM_AND_QUESTIONS != null)
+            for(FormAndQuestions formAndQuestions : BaseActivity.FORM_AND_QUESTIONS){
+                if(formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_PLOT_FORM))
+                    formAndQuestionsList.add(formAndQuestions);
+            }
+
+        AppLogger.e(TAG, "Plot  Forms size is " + formAndQuestionsList.size());
+
+
+        getView().showForm(formAndQuestionsList);
+
+/*
+
 
         runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType("Plot form")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(formAndQuestions -> getView().showForm(formAndQuestions), throwable -> {
+                .subscribe(formAndQuestions -> , throwable -> {
                     getView().showMessage(R.string.error_has_occurred);
                     throwable.printStackTrace();
-                }));
+                }));*/
 
     }
 
@@ -59,6 +80,7 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
     public void getAreaUnits(String farmerCode) {
         runSingleCall(getAppDataManager().getDatabaseManager().questionDao().get("Farm_area_units")
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(question -> {
                     if(question != null){
 

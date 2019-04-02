@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -93,6 +96,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     public static List<FormAndQuestions> FORM_AND_QUESTIONS;
     public static List<FormAndQuestions> PLOT_FORM_AND_QUESTIONS;
+    public static List<FormAndQuestions> FILTERED_FORMS;
 
 
     public static int CURRENT_FORM;
@@ -425,5 +429,39 @@ public abstract class BaseActivity extends AppCompatActivity
         recyclerView.scheduleLayoutAnimation();
     }
 
+
+    protected String captureScreenshot(View v, String activityName) {
+        String fileLocation = null;
+
+        String dir = ROOT_DIR + "/screenCaptures/";
+
+        File file = new File(dir);
+        if (!file.exists()) file.mkdirs();
+
+
+        try {
+            // image naming and path  to include sd card  appending name you choose for file
+            fileLocation = dir + activityName + ".jpg";
+
+
+            // create bitmap screen capture
+            v.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v.getDrawingCache());
+            v.setDrawingCacheEnabled(false);
+
+            File imageFile = new File(fileLocation);
+
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+        } catch (Throwable e) {
+            // Several error may come out with file handling or DOM
+            e.printStackTrace();
+        }
+        return fileLocation;
+    }
 
 }
