@@ -3,14 +3,25 @@ package org.grameen.fdp.kasapin.parser;
 
 import org.grameen.fdp.kasapin.exceptions.ParserException;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
+import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.Tokenizer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by AangJnr on 12, October, 2018 @ 10:57 AM
@@ -49,34 +60,36 @@ $: Matches the ending position of the string
 
 public class MathFormulaParser extends Tokenizer {
 
-    String complexCalculation = null;
+    String mathFormula = null;
     JSONObject jsonObject = null;
     Tokenizer TOKENIZER;
+    ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
 
-    private MathFormulaParser() {
-        TOKENIZER = initializeTokenizer();
-    }
+
 
     public static MathFormulaParser getInstance() {
         return new MathFormulaParser();
     }
 
+    private MathFormulaParser() {
+        TOKENIZER = initializeTokenizer();
+    }
     private static Tokenizer initializeTokenizer() {
 
         Tokenizer tokenizer = new Tokenizer();
-        tokenizer.add("IF", AppConstants.TOKEN_IF); // function
+        /*tokenizer.add("IF", AppConstants.TOKEN_IF); // function
         tokenizer.add("==", AppConstants.TOKEN_OPERATOR_EQUAL_TO); // equals
         tokenizer.add("\\(", AppConstants.TOKEN_BRACKET_OPEN); // open bracket
         tokenizer.add("\\)", AppConstants.TOKEN_BRAKET_CLOSED); // close bracket
         tokenizer.add("[+-]", AppConstants.TOKEN_ARITHMETIC_PLUS_MINUS); // plus or minus
-        tokenizer.add("[,]", AppConstants.TOKEN_CHAR); // plus or minus
+        tokenizer.add("[,]", AppConstants.TOKEN_CHAR); // plus or minus*/
         tokenizer.add("[0-9]+|[a-zA-Z][a-zA-Z0-9_]*[[*/]-?[0-9]*\\.[0-9]+]*", AppConstants.TOKEN_VARIABLE); // variable
         return tokenizer;
     }
 
-    public Tokenizer getTokenizer() {
+     Tokenizer getTokenizer() {
 
-        tokenize(complexCalculation);
+        tokenize(mathFormula);
 
         return TOKENIZER;
     }
@@ -95,40 +108,61 @@ public class MathFormulaParser extends Tokenizer {
 
 
     public String evaluate() {
-
-        if (complexCalculation == null)
-            throw new ParserException("Equation to evaluate is null or not in the right format");
-
-
         List<String> sequenceList = new ArrayList<>();
-
-        String value;
-
         for (Token tok : getTokenizer().getTokens())
             if (Objects.equals(tok.token, AppConstants.TOKEN_VARIABLE))
                 sequenceList.add(tok.sequence);
 
 
-        if (getValue(sequenceList.get(0)).equalsIgnoreCase(sequenceList.get(1)))
-            value = getValue(sequenceList.get(2));
-        else
-            value = sequenceList.get(3).replace(sequenceList.get(2), getValue(sequenceList.get(2)));
-        return value;
+        AppLogger.e("###  MathFormulaParser >> ", "Sequence list is " + getGson().toJson(sequenceList));
+
+        String newFormula = mathFormula;
+
+        for(String label : sequenceList)
+            newFormula = newFormula.replace(label, getValue(label));
+
+        try {
+            return calculate(newFormula);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+            return "0";
+        }
+    }
+
+
+    public String evaluate(String formula){
+        mathFormula = formula;
+             AppLogger.e("###  MathFormulaParser >> ","Equation to evaluate is null");
+
+            try {
+                return calculate(mathFormula);
+            } catch (ScriptException e) {
+                e.printStackTrace();
+                return "0";
+            }
+    }
+
+    public String evaluateWithoutFormatting(String formula){
+        mathFormula = formula;
+        AppLogger.e("###  MathFormulaParser >> ","Equation to evaluate is null");
+
+        try {
+            return  String.valueOf(engine.eval(formula.trim().replace(",", "")));
+        } catch (ScriptException e) {
+            e.printStackTrace();
+            return "0";
+        }
     }
 
 
     private String getValue(String id) {
-
-        if (jsonObject == null)
-            throw new ParserException("Json Object is null or was not provided");
-
 
         try {
             if (jsonObject.has(id))
                 return jsonObject.get(id).toString();
             else return id;
         } catch (JSONException ignore) {
-            return "";
+            return "0";
         }
     }
 
@@ -138,8 +172,17 @@ public class MathFormulaParser extends Tokenizer {
     }
 
 
-    public void setComplexCalculation(String complexCalculation) {
-        this.complexCalculation = complexCalculation;
+    public void setMathFormula(String mathFormula) {
+        this.mathFormula = mathFormula;
     }
+
+    public String calculate(String equation) throws ScriptException {
+        Double value = (Double) engine.eval(equation.trim().replace(",", ""));
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat formatter = (DecimalFormat) nf;
+        formatter.applyPattern("#,###,###.##");
+        return (formatter.format(value));
+    }
+
 }
 

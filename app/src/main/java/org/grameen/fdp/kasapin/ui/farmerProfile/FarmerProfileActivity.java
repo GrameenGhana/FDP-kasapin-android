@@ -24,16 +24,22 @@ import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
+import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -421,6 +427,36 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 break;
             case R.id.pandl:
 
+                List<Plot> plots = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(FARMER.getCode()).blockingGet();
+                if(plots != null && plots.size() > 0) {
+                    if(!checkIfFarmSizeCorresponds(plots))
+                        return;
+
+                    else if(!checkIfCocoaProdCorresponds(plots))
+                        return;
+
+                    else {
+
+                        for (Plot plot : plots) {
+                            if (plot.getRecommendationId() == -1) {
+                                showMessage(getStringResources(R.string.enter_all_ao_data) + plot.getName());
+                                return;
+                            }
+                        }
+
+                        intent = new Intent(this, ProfitAndLossActivity.class);
+                        intent.putExtra("farmer", new Gson().toJson(FARMER));
+                        startActivity(intent);
+
+
+
+                    }
+
+                } else
+                    showDialog(true, getStringResources(R.string.no_plots), getStringResources(R.string.add_plot_to_access_pl),
+                            (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok),
+                            null, "", 0);
+
 
                 break;
             case R.id.farm_assessment:
@@ -459,4 +495,152 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
 
+
+    void openProfitAndLossActivity(){
+
+
+
+
+    }
+
+
+
+
+    boolean checkIfFarmSizeCorresponds(List<Plot> plots){
+
+        boolean value = true;
+
+        Double farmAcre;
+
+        Question cocoaAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_area_").blockingGet();
+
+        if(cocoaAreaQuestion != null) {
+
+            FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaAreaQuestion.getFormTranslationId()).blockingGet();
+            if(answer != null){
+                try {
+                    farmAcre = round(Double.parseDouble(answer.getJsonData().get(cocoaAreaQuestion.getLabelC()).toString().replace(",", "")), 2);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    farmAcre = 0.0; }
+
+
+                StringBuilder stringBuilder = new StringBuilder();
+                // StringBuilder stringUnitBuilder = new StringBuilder();
+
+
+
+                Double totalSizes = -1.0;
+
+                if(plots != null)
+                for (Plot plot : plots) {
+
+                    try {
+                        AppLogger.i(TAG, "******* PLOT NAME " + plot.getName() + " AND DATA IS " + plot.getAnswersData());
+
+
+                        stringBuilder.append(plot.getArea()).append("+");
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        stringBuilder.append("0").append("+");
+                    }
+
+                }
+                stringBuilder.append("0");
+
+                totalSizes = round(Double.parseDouble(MathFormulaParser.getInstance().evaluate(stringBuilder.toString())), 2);
+
+
+                AppLogger.i(TAG, "$$$$$$$$$$$$$    TOTAL SIZES " + farmAcre + " AND TOTAL PLOTS SIZES " + totalSizes);
+
+
+                if (totalSizes > farmAcre || totalSizes < farmAcre) {
+                    value = false;
+                    showMessage(R.string.ensure_farm_acre_equal);
+                }
+
+                return value;
+
+            }else{
+                showMessage(R.string.fill_in_plot_size_values);
+                return false;
+            }
+        }else{
+
+            showMessage(R.string.error_has_occurred);
+            return false;
+        }
+
+    }
+
+
+    boolean checkIfCocoaProdCorresponds(List<Plot> plots){
+
+        boolean value = true;
+
+        Double farmAcre;
+
+        Question cocoaProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_production_ly").blockingGet();
+
+        if(cocoaProdQuestion != null) {
+
+            FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaProdQuestion.getFormTranslationId()).blockingGet();
+            if(answer != null){
+                try {
+                    farmAcre = round(Double.parseDouble(answer.getJsonData().get(cocoaProdQuestion.getLabelC()).toString().replace(",", "")), 2);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    farmAcre = 0.0; }
+
+
+                StringBuilder stringBuilder = new StringBuilder();
+                // StringBuilder stringUnitBuilder = new StringBuilder();
+
+
+                Double totalSizes = -1.0;
+
+                if(plots != null)
+                    for (Plot plot : plots) {
+
+                        try {
+                            AppLogger.i(TAG, "******* PLOT NAME " + plot.getName() + " AND DATA IS " + plot.getAnswersData());
+
+
+                            stringBuilder.append(plot.getEstimatedProductionSize()).append("+");
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            stringBuilder.append("0").append("+");
+                        }
+
+                    }
+                stringBuilder.append("0");
+
+                totalSizes = round(Double.parseDouble(MathFormulaParser.getInstance().evaluateWithoutFormatting(stringBuilder.toString())), 2);
+
+
+                AppLogger.i(TAG, "$$$$$$$$$$$$$    TOTAL FARM PROD " + farmAcre + " AND TOTAL PLOTS PROD SIZES " + totalSizes);
+
+
+                if (totalSizes > farmAcre || totalSizes < farmAcre) {
+                    value = false;
+                    showMessage(R.string.error_total_plot_estimated_production);
+                }
+
+                return value;
+
+            }else{
+                showMessage(R.string.error_missing_estimated_production);
+                return false;
+            }
+        }else{
+
+            showMessage(R.string.error_has_occurred);
+            return false;
+        }
+
+    }
 }

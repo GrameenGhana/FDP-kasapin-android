@@ -40,8 +40,7 @@ public class AppConstants {
     public static final String FARMER_TABLE_BIRTHDAY_FIELD = "birthday_c";
 
     public static final String PLOT_TABLE = "plot_c";
-    public static final String PLOT_EXTERNAL_ID_FIELD = "external_id";
-
+    public static final String PLOT_EXTERNAL_ID_FIELD = "external_id_c";
     public static final String PLOT_NAME_FIELD = "name_c";
     public static final String PLOT_AGE_FIELD = "age_c";
     public static final String PLOT_AREA_FIELD = "area_c";

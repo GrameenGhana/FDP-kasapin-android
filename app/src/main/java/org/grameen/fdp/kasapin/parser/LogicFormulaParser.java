@@ -14,11 +14,15 @@ import org.grameen.fdp.kasapin.utilities.Tokenizer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -59,17 +63,8 @@ $: Matches the ending position of the string
 
 */
 
-    //logic formula example : IF(plot_ph_ghana < 5.8,Yes,No)
 
-//    farm_condition_ghana == "B"
-// || ao_tree_age_ghana > 30
-// &&  filling_thinning_option_ghana == "Yes"
-// && ao_planting_ghana == "G"
-// && ao_disease_ghana == "G"
-// &&  ao_tree_density_ghana == "3.5x4"
-// || ao_tree_density_ghana == "4x4",
-
-// TRUE, FALSE
+//    IF((farm_condition_ghana == "B") || (ao_tree_age_ghana > 30)  && (ao_planting_ghana == "G") && (ao_disease_ghana == "G")  || (ao_tree_density_ghana == "4x4"), G, B)
 
 
 
@@ -235,6 +230,115 @@ public class LogicFormulaParser extends Tokenizer {
                 returnValue = falseValue.replace("\"", "");
                 break;
             }
+        }
+
+        //Check if it contains any arithmetic equation
+
+        if(Pattern.compile("[-+*/]").matcher(returnValue).find()){
+            MathFormulaParser mathFormulaParser = MathFormulaParser.getInstance();
+            mathFormulaParser.setJsonObject(jsonObject);
+            mathFormulaParser.setMathFormula(returnValue);
+
+            return mathFormulaParser.evaluate();
+
+        }else
+        return returnValue;
+    }
+
+
+    private String evaluateNestedParentChildFormula() {
+
+        String returnValue = "";
+        boolean isNestedIfFormula = false;
+
+
+
+       /* if (formula == null)
+            throw new ParserException("Equation to evaluate is null or not in the right format");*/
+
+        formula = formula.replace(" ", "");
+
+        AppLogger.e(TAG, "**** UN PARSED EQUATION " + formula);
+
+
+
+        String[] nestedFormulas = formula.split("else");
+
+        for (String nestedFormula : nestedFormulas) {
+
+            if(nestedFormulas.length > 1) {
+                isNestedIfFormula = true;
+                AppLogger.i(TAG, "==============   FORMULA IS A NESTED IF    ================");
+            }
+
+            AppLogger.e(TAG, "**** NESTED >>>> " + nestedFormula);
+
+
+
+            String rawFormula = nestedFormula.replace(" ", "")
+                    .replace("I", "")
+                    .replace("F(", "")
+                    .replace(")", "");
+
+
+            String[] sections = rawFormula.split(",");
+
+
+            String formulaToEvaluate = sections[0];
+
+            String trueValue = sections[1];
+
+            String falseValue = "";
+            try {
+                falseValue = sections[2];
+            }catch(Exception ignored){}
+
+
+            Iterator iterator = jsonObject.keys();
+            while (iterator.hasNext()) {
+                String tmp_key = (String) iterator.next();
+
+                if (formulaToEvaluate.contains(tmp_key))
+                    formulaToEvaluate = formulaToEvaluate.replace(tmp_key, getValue(tmp_key));
+
+            }
+
+
+            String[] subSections = formulaToEvaluate.split("&&|\\|\\|");
+
+            String evaluatedFormula = formulaToEvaluate;
+
+            for (int i = 0; i < subSections.length; i++) {
+
+
+                Boolean answerValue = ComputationUtils.parseEquation(subSections[i].replace("\"", ""), _engine);
+
+                AppLogger.e(TAG, "SECTION " + (i + 1) + " =>>> " + subSections[i] + " Answer >>>  " + answerValue);
+
+                evaluatedFormula = evaluatedFormula.replace(subSections[i], String.valueOf(answerValue));
+
+                AppLogger.i(TAG, "### Replacing " + subSections[i] + " with Answer >>>  " + answerValue);
+            }
+
+
+            boolean logicValue = ComputationUtils.parseEquation(evaluatedFormula, _engine);
+
+            AppLogger.e(TAG, "EQUATION BEFORE REPLACEMENT >>> " + formulaToEvaluate);
+
+            AppLogger.e(TAG, "PARSED EQUATION = " + evaluatedFormula + " Answer >>>  " + logicValue);
+
+            AppLogger.e(TAG, "TRUE VALUE = " + trueValue);
+            AppLogger.e(TAG, "FALSE VALUE = " + falseValue);
+
+
+            if (logicValue) {
+                returnValue = trueValue.replace("\"", "");
+                break;
+            }
+            else if(!isNestedIfFormula) {
+                returnValue = falseValue.replace("\"", "");
+                break;
+            }
 
 
 
@@ -242,10 +346,6 @@ public class LogicFormulaParser extends Tokenizer {
 
         return returnValue;
     }
-
-
-
-
 
 
 
@@ -273,9 +373,6 @@ public class LogicFormulaParser extends Tokenizer {
     public void setFormula(String formula) {
         this.formula = formula;
     }
-
-
-
 
 
 

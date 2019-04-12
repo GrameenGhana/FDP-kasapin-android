@@ -81,8 +81,19 @@ public class AppLogger {
     }
 
     public static void e(String tag, String message) {
-        Timber.e("%s%s  -> %s", " ******** ",tag, message);
+        //Timber.e("%s%s  -> %s", " ******** ",tag, message);
+        largeLog(tag, message);
     }
+
+     static void largeLog(String tag, String content) {
+        if (content.length() > 4000) {
+            Timber.e("%s%s  -> %s", " ******** ",tag, content.substring(0, 4000));
+            largeLog(tag, content.substring(4000));
+        } else {
+            Timber.e("%s%s  -> %s", " ******** ",tag, content);
+        }
+    }
+
 
 
 

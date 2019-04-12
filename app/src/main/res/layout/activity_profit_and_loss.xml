@@ -167,7 +167,7 @@
 
 
             <TextView
-                android:id="@+id/fdpStatus"
+                android:id="@+id/fdp_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fdp_status"

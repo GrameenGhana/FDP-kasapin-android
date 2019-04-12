@@ -253,9 +253,13 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                                 PLOT_RECOMMENDATION = recommendation;
 
                                 break;
-                            }else
+                            }else {
                                 GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                         .getLabel("Maintenance (GAPs)").blockingGet();
+
+                                break;
+
+                            }
 
                         }catch(Exception e){e.printStackTrace();
                         }

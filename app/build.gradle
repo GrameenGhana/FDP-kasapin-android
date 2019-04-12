@@ -56,7 +56,10 @@ android {
         }
     }
 
-/*        productFlavors {
+
+
+
+    /*        productFlavors {
             internal {
                 applicationId "$appPackageId" + ".internal"
                 versionName "i$appVersionName"
@@ -68,8 +71,6 @@ android {
             }
         }
     }*/
-
-
 
 
 

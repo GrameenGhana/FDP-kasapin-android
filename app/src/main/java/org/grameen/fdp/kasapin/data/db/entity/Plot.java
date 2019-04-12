@@ -29,7 +29,6 @@ public class Plot {
 
 
     String externalId;
-
     String distanceBetweenCocoaTrees;
     String EstimatedProduction;
     String farmerName;
@@ -44,10 +43,13 @@ public class Plot {
     String estimatedProductionSize;
     String answersData;
     String gpsPoints;
-
     int recommendationId = -1;
     int gapsId = -1;
 
+
+
+    @Ignore
+    int startYear = 1;
 
     public Plot() {
 
@@ -203,5 +205,13 @@ public class Plot {
     @Ignore
     public JSONObject getAOJsonData() throws JSONException {
         return new JSONObject(answersData);
+    }
+
+    public void setStartYear(int startYear) {
+        this.startYear = startYear;
+    }
+
+    public int getStartYear() {
+        return startYear;
     }
 }

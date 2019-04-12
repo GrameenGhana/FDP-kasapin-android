@@ -3,7 +3,9 @@ package org.grameen.fdp.kasapin.ui.pandl;
 
 import android.support.annotation.Nullable;
 
+import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
+import org.json.JSONObject;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:09 PM
@@ -20,16 +22,19 @@ public class ProfitAndLossContract {
         void issuePrint();
         void setUpViews();
         void moveToFdpStatusActivity();
-        void getAllFarmerDataValues();
+        void setAnswerData(JSONObject jsonObject);
         boolean checkIfFarmerFdpStatusFormFilled(String code);
+        void populateTableData();
 
+        void reloadTableData();
 
     }
 
      public interface Presenter {
 
+        void getAllAnswers(String farmerCode);
 
-
+        void updatePlotData(Plot plot, boolean reloadTable);
 
     }
 

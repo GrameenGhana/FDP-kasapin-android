@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import javax.annotation.Nullable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -35,7 +36,7 @@ public class ComputationUtils {
     }
 
 
-   private ComputationUtils(MyFormController controller){
+   private ComputationUtils(@Nullable MyFormController controller){
 
         engine = new ScriptEngineManager().getEngineByName("rhino");
         this.formController = controller;
@@ -122,6 +123,26 @@ public class ComputationUtils {
         }
 
         AppLogger.i(getClass().getSimpleName(), "GETTING VALUE FOR " + q.getLabelC() + " --> Value = " + defVal);
+        return defVal;
+    }
+
+
+
+    public static String getValue(String label, JSONObject ANSWERS_JSON) {
+        String defVal;
+        try {
+
+            if (ANSWERS_JSON.has(label)) {
+                defVal = ANSWERS_JSON.get(label).toString();
+            } else
+                defVal = "";
+
+
+        } catch (JSONException ignored) {
+            defVal = "";
+        }
+
+        AppLogger.e("Computation Utils", "GETTING VALUE FOR " + label + " --> Value = " + defVal);
         return defVal;
     }
 
@@ -289,16 +310,19 @@ public class ComputationUtils {
     }
 
 
-    String calculate(String equation) throws ScriptException {
-
-        Double value = (Double) engine.eval(equation.trim());
+    private String calculate(String equation) throws ScriptException {
+        Double value = (Double) engine.eval(equation.trim().replace(",", ""));
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
         DecimalFormat formatter = (DecimalFormat) nf;
         formatter.applyPattern("#,###,###.##");
         return (formatter.format(value));
     }
 
-    Boolean compareValues(SkipLogic sl, String newValue) {
+
+
+
+
+    public Boolean compareValues(SkipLogic sl, String newValue) {
         String equation = sl.getAnswerValue() + sl.getLogicalOperator() +  newValue;
         AppLogger.e(getClass().getSimpleName(), "Equation is " + equation);
 
@@ -315,6 +339,10 @@ public class ComputationUtils {
         }
         return value;
     }
+
+
+
+
 
 
     List<String> getOperands(String formula){

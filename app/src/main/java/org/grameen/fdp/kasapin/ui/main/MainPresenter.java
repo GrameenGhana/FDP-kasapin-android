@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
-import com.google.gson.Gson;
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -342,10 +340,12 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
 
                                                 AppLogger.e(TAG, "Payload data is "  + payloadData.toString());
-
-
                                                 getView().hideLoading();
-                                                //UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true).uploadFarmersData(payloadData);
+
+
+                                                UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
+                                                        .uploadFarmersData(payloadData);
+
 
 
                                             } catch (JSONException e) {
@@ -457,7 +457,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
     private JSONObject buildAllAnswersJsonDataPerFarmer(String code) {
         JSONObject jsonObject = new JSONObject();
-        for (FormAnswerData answerData : getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswersData(code)
+        for (FormAnswerData answerData : getAppDataManager().getDatabaseManager().formAnswerDao().getAll(code)
                 .blockingGet()) {
             Iterator iterator = answerData.getJsonData().keys();
 

@@ -15,6 +15,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Form;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
@@ -43,6 +44,10 @@ public interface FormsDao {
 
     @Query("SELECT * FROM forms WHERE id = :id")
     Single<Form> getFormById(int id);
+
+
+    @Query("SELECT id FROM forms WHERE formNameC COLLATE NOCASE LIKE :label || '%'")
+    Maybe<Integer> getId(String label);
 
 
     @Query("SELECT * FROM forms ORDER BY id ASC LIMIT 1")

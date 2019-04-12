@@ -20,6 +20,7 @@ import org.grameen.fdp.kasapin.data.db.AppDatabase;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.ui.base.model.Data;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -118,7 +119,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
                 }
             } catch (Exception e) {
-                Log.i("MY TABLE ADAPTER", e.getMessage());
+                AppLogger.i("MY TABLE ADAPTER", e.getMessage());
 
             }
 
@@ -144,105 +145,114 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
         if (data.getTag() != null) {
 
-            if (data.getTag().equals(TAG_TITLE_TEXT_VIEW)) {
-                TextView textView = new TextView(getContext());
-                textView.setText(data.getLabel());
-                textView.setPadding(20, 10, 20, 10);
-                textView.setTextSize(TITLE_TEXT_SIZE);
-                textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-                textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+            switch (data.getTag()) {
+                case TAG_TITLE_TEXT_VIEW: {
+                    TextView textView = new TextView(getContext());
+                    textView.setText(data.getLabel());
+                    textView.setPadding(20, 10, 20, 10);
+                    textView.setTextSize(TITLE_TEXT_SIZE);
+                    textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
 
-                view = textView;
+                    view = textView;
 
-            } else if (data.getTag().equals(TAG_OTHER_TEXT_VIEW)) {
-
-                TextView textView = new TextView(getContext());
-                textView.setText(data.getLabel());
-                textView.setPadding(20, 10, 20, 10);
-                textView.setTextSize(TEXT_SIZE);
-                view = textView;
-
-
-            } else if (data.getTag().equals(BUTTON_VIEW)) {
-
-                @SuppressLint("RestrictedApi") ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PrimaryButton);
-
-                final Button button = new Button(newContext);
-                // button.setBackgroundResource(R.drawable.button_background_accent);
-
-                String name = "";
-                try {
-                    Recommendation recommendation = mAppDatabase.recommendationsDao().getLabel(data.getLabel().split("_")[1]).blockingGet();
-
-                    if(recommendation != null) {
-                        name = (recommendation.getLabel());
-                        name = getResources().getString(R.string.change_to) + " " + name;
-                    }
-                } catch (Exception ignored) {
-
-                    name = getResources().getString(R.string.change_to) + " " + data.getLabel().split("_")[1];
-
+                    break;
                 }
-                // String text = getResources().getString(R.string.change_to) + " " + data.getLabel().split("_")[1];
+                case TAG_OTHER_TEXT_VIEW: {
 
-                button.setText(name);
-                // button.setTextColor(ContextCompat.getColor(context, R.color.white));
-                button.setTag(data.getLabel());
-                button.setPadding(20, 10, 20, 10);
-                button.setTextSize(9);
-                button.setOnClickListener(view12 -> {
-
-                    if (mOnClickListener != null)
-                        mOnClickListener.onClick(button);
+                    TextView textView = new TextView(getContext());
+                    textView.setText(data.getLabel());
+                    textView.setPadding(20, 10, 20, 10);
+                    textView.setTextSize(TEXT_SIZE);
+                    view = textView;
 
 
-                });
-                view = button;
+                    break;
+                }
+                case BUTTON_VIEW:
+
+                    @SuppressLint("RestrictedApi") ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PrimaryButton);
+
+                    final Button button = new Button(newContext);
+                    // button.setBackgroundResource(R.drawable.button_background_accent);
+
+                    String name = "";
+                    try {
+                        Recommendation recommendation = mAppDatabase.recommendationsDao().get(Integer.parseInt(data.getLabel())).blockingGet();
+
+                        if (recommendation != null) {
+                            name = (recommendation.getLabel());
+                            name = getResources().getString(R.string.change_to) + " " + name;
+                        }
+                    } catch (Exception ignored) {
+
+                        name = getResources().getString(R.string.change_to) + " " + data.getLabel().split("_")[1];
+
+                    }
 
 
-            } else if (data.getTag().equals(TAG_VIEW)) {
 
+                    button.setText(name);
+                    // button.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    button.setTag(data.getLabel());
+                    button.setPadding(20, 10, 20, 10);
+                    button.setTextSize(9);
+                    button.setOnClickListener(view12 -> {
 
-                Question startYearQuestion = mAppDatabase.questionDao().get("Start year").blockingGet();
+                        if (mOnClickListener != null)
+                            mOnClickListener.onClick(button);
 
-
-                if(startYearQuestion != null) {
-
-                    final MaterialSpinner spinner = new MaterialSpinner(getContext());
-                    spinner.setItems(startYearQuestion.formatQuestionOptions());
-                    spinner.setTag(data.getLabel());
-                    spinner.setPadding(20, 10, 20, 10);
-                    spinner.setTextSize(TEXT_SIZE);
-                    spinner.setOnItemSelectedListener((view1, position, id, item) -> {
-
-                        Log.i("TABLE ADAPTER", "Spinner item selected with tag " + spinner.getTag());
-
-                        if (itemSelectedListener != null)
-                            itemSelectedListener.onItemSelected(view1, position, id, item);
 
                     });
-                    try {
-                        spinner.setSelectedIndex(Integer.parseInt(data.getLabel().split("_")[1]));
-                    } catch (Exception ignored) {
-                        ignored.getMessage();
+                    view = button;
+
+
+                    break;
+                case TAG_VIEW:
+
+
+                    Question startYearQuestion = mAppDatabase.questionDao().get("start_year_").blockingGet();
+                    if (startYearQuestion != null) {
+
+                        String [] values = data.getLabel().split("_");
+
+                        final MaterialSpinner spinner = new MaterialSpinner(getContext());
+                        spinner.setItems(startYearQuestion.formatQuestionOptions());
+                        spinner.setTag(values[0]);
+                        spinner.setPadding(20, 10, 20, 10);
+                        spinner.setTextSize(TEXT_SIZE);
+                        spinner.setOnItemSelectedListener((view1, position, id, item) -> {
+
+                            AppLogger.i("TABLE ADAPTER", "Spinner item selected with tag " + spinner.getTag());
+
+                            if (itemSelectedListener != null)
+                                itemSelectedListener.onItemSelected(view1, position, id, item);
+
+                        });
+                        try {
+                            spinner.setSelectedIndex(Integer.parseInt(values[1]));
+                        } catch (Exception ignored) {
+                            ignored.getMessage();
+                        }
+
+
+                        view = spinner;
                     }
 
 
-                    view = spinner;
+                    break;
+                case TAG_RESULTS: {
+                    TextView textView = new TextView(getContext());
+
+                    textView.setText(data.getLabel());
+                    textView.setPadding(20, 10, 20, 10);
+                    textView.setTextSize(TITLE_TEXT_SIZE);
+                    textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+                    textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                    view = textView;
+
+                    break;
                 }
-
-
-
-            } else if (data.getTag().equals(TAG_RESULTS)) {
-                TextView textView = new TextView(getContext());
-
-                textView.setText(data.getLabel());
-                textView.setPadding(20, 10, 20, 10);
-                textView.setTextSize(TITLE_TEXT_SIZE);
-                textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-                textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-                view = textView;
-
             }
         } else {
 

@@ -38,6 +38,8 @@ public interface SkipLogicsDao extends BaseDao<SkipLogic>{
     @Query("SELECT * FROM skip_logics WHERE id = :id")
     SkipLogic getSkipLogicById(int id);
 
+    @Query("SELECT * FROM skip_logics WHERE questionId = :id")
+    SkipLogic getSkipLogicByQuestionId(int id);
 
     @Update
     int updateSkipLogic(SkipLogic skipLogic);

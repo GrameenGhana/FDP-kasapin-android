@@ -284,7 +284,8 @@ public class DynamicPlotFormFragment extends FormFragment{
                 getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
                         .subscribeOn(Schedulers.io())
                         .observeOn(Schedulers.newThread())
-                        .subscribe(skipLogics -> applyPropertyChangeListeners(q, skipLogics))
+                        .subscribe(skipLogics -> applyPropertyChangeListeners(q, skipLogics),
+                                Throwable::printStackTrace)
                 );
 
 

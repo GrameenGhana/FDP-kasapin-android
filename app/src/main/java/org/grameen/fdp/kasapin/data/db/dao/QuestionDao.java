@@ -34,7 +34,7 @@ public interface QuestionDao extends BaseDao<Question>{
     @Query("SELECT * FROM questions WHERE id = :id")
     Question getQuestionById(int id);
 
-    @Query("SELECT * FROM questions WHERE formTranslationId = :formTranslationId")
+    @Query("SELECT * FROM questions WHERE formTranslationId = :formTranslationId ORDER BY displayOrderC ASC ")
     Single<List<Question>> getQuestionsByForm(int formTranslationId);
 
 

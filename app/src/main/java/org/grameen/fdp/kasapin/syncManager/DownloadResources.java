@@ -126,8 +126,6 @@ public class DownloadResources {
     }
 
 
-
-
     private void getRecommendationsData() {
         if (showProgress)
             getView().setLoadingMessage("Getting recommendations, calculations and recommendations plus activities data...");

@@ -39,7 +39,7 @@ public interface FormAnswersDao extends BaseDao<FormAnswerData>{
     Single<FormAnswerData> getFormAnswerData(String farmerCode, int formId);
 
     @Query("SELECT * FROM form_answers WHERE farmerCode = :farmerCode")
-    Single<List<FormAnswerData>> getFormAnswersData(String farmerCode);
+    Single<List<FormAnswerData>> getAll(String farmerCode);
 
 
 

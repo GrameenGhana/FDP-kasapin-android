@@ -1,7 +1,5 @@
-package org.grameen.fdp.kasapin.ui.fdpStatus;
+package org.grameen.fdp.kasapin.ui.detailedYearMonthlyView;
 
-
-import android.support.annotation.Nullable;
 
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
@@ -11,7 +9,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseContract;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class FDPStatusContract {
+public class DetailedMonthContract {
 
 
 
