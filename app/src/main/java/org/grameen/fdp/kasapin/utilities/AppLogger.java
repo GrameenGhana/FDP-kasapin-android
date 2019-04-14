@@ -94,9 +94,6 @@ public class AppLogger {
         }
     }
 
-
-
-
     private static final class CrashReportingTree extends Timber.Tree {
 
 

@@ -210,7 +210,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         String soilPhLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_ph_").blockingGet();
         String estProductionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_estimate_production_").blockingGet();
-        String plotArea = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_area_ha_").blockingGet();
+        String plotArea = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_area_").blockingGet();
 
 
         try {
@@ -265,7 +265,29 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 }
                 }
                 //AOR_AI_QUESTIONS.addAll(formAndQuestions.getQuestions());
-            }
+            }/*else if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.PLOT_INFORMATION)){
+
+                for(Question question : formAndQuestions.getQuestions()){
+                    if(question.getTypeC().equalsIgnoreCase(AppConstants.FORMULA_TYPE_COMPLEX_FORMULA) && !question.getFormulaC().equalsIgnoreCase("null")){
+
+
+                        AppLogger.e(TAG, "---------------------------------------------------------------------------");
+                        AppLogger.e(TAG, "---------------------------------------------------------------------------");
+
+                        AppLogger.e(TAG, "Question name is ***** " + question.getLabelC() + " *****");
+
+                        try {
+
+                            String value = logicFormulaParser.evaluate(question.getFormulaC());
+
+                            if(jsonObject.has(question.getLabelC()))
+                                jsonObject.remove(question.getLabelC());
+                            jsonObject.put(question.getLabelC(), value);
+                        }catch(Exception e){e.printStackTrace();
+                        }
+                    }
+                }
+            }*/
         }
 
         AppLogger.i(TAG, "-----------------------  FINAL JSON VALUE   ------------------------");

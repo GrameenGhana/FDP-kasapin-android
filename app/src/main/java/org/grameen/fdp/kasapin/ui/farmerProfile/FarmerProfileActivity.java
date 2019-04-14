@@ -619,7 +619,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     }
                 stringBuilder.append("0");
 
-                totalSizes = round(Double.parseDouble(MathFormulaParser.getInstance().evaluateWithoutFormatting(stringBuilder.toString())), 2);
+                totalSizes = round(Double.parseDouble(MathFormulaParser.getInstance().evaluate(stringBuilder.toString())), 2);
 
 
                 AppLogger.i(TAG, "$$$$$$$$$$$$$    TOTAL FARM PROD " + farmAcre + " AND TOTAL PLOTS PROD SIZES " + totalSizes);

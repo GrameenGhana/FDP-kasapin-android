@@ -91,7 +91,7 @@ public final class CommonUtils {
 
 
 
-    public String toCamelCase(String value) {
+    public static String toCamelCase(String value) {
 
         if (value == null || value.equals("null")) return "";
         else {
@@ -100,7 +100,7 @@ public final class CommonUtils {
                 return value;
 
             else
-                return (value.substring(0, 1).toUpperCase() + value.substring(1, value.length()).toLowerCase());
+                return (value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase());
 
         }
     }

@@ -1,7 +1,10 @@
 package org.grameen.fdp.kasapin.ui.detailedYearMonthlyView;
 
 
+import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
+
+import java.util.List;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:09 PM
@@ -16,6 +19,9 @@ public class DetailedMonthContract {
     public interface View extends  BaseContract.View {
 
 
+        void setPlotsData(List<Plot> plotsData);
+
+        void setData();
 
 
 
@@ -23,11 +29,7 @@ public class DetailedMonthContract {
 
      public interface Presenter {
 
-
-
-
-
-
+        void getPlotsData(String farmerCode);
     }
 
 

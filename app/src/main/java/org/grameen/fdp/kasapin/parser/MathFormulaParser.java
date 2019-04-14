@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +63,7 @@ public class MathFormulaParser extends Tokenizer {
 
     String mathFormula = null;
     JSONObject jsonObject = null;
+    JSONObject allValuesJson = null;
     Tokenizer TOKENIZER;
     ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
 
@@ -72,7 +74,7 @@ public class MathFormulaParser extends Tokenizer {
     }
 
     private MathFormulaParser() {
-        TOKENIZER = initializeTokenizer();
+       // TOKENIZER = initializeTokenizer();
     }
     private static Tokenizer initializeTokenizer() {
 
@@ -83,7 +85,8 @@ public class MathFormulaParser extends Tokenizer {
         tokenizer.add("\\)", AppConstants.TOKEN_BRAKET_CLOSED); // close bracket
         tokenizer.add("[+-]", AppConstants.TOKEN_ARITHMETIC_PLUS_MINUS); // plus or minus
         tokenizer.add("[,]", AppConstants.TOKEN_CHAR); // plus or minus*/
-        tokenizer.add("[0-9]+|[a-zA-Z][a-zA-Z0-9_]*[[*/]-?[0-9]*\\.[0-9]+]*", AppConstants.TOKEN_VARIABLE); // variable
+        //tokenizer.add("[0-9]+|[a-zA-Z][a-zA-Z0-9_]*[[*/]-?[0-9]*\\.[0-9]+]*", AppConstants.TOKEN_VARIABLE); // variable
+        tokenizer.add("([a-zA-Z0-9_-]{1,})", AppConstants.TOKEN_VARIABLE);
         return tokenizer;
     }
 
@@ -108,18 +111,52 @@ public class MathFormulaParser extends Tokenizer {
 
 
     public String evaluate() {
-        List<String> sequenceList = new ArrayList<>();
+      /*  List<String> sequenceList = new ArrayList<>();
         for (Token tok : getTokenizer().getTokens())
             if (Objects.equals(tok.token, AppConstants.TOKEN_VARIABLE))
-                sequenceList.add(tok.sequence);
+                sequenceList.add(tok.sequence);*/
 
 
-        AppLogger.e("###  MathFormulaParser >> ", "Sequence list is " + getGson().toJson(sequenceList));
+
+      AppLogger.e("###  MathFormulaParser >> ", "OLD FORMULA IS  " + mathFormula);
 
         String newFormula = mathFormula;
 
-        for(String label : sequenceList)
-            newFormula = newFormula.replace(label, getValue(label));
+
+        Iterator iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String tmp_key = (String) iterator.next();
+
+            if (mathFormula.contains(tmp_key))
+                if(tmp_key.equals(mathFormula))
+                    newFormula = getValue(tmp_key);
+                else
+                    newFormula = newFormula.replace(tmp_key, getValue(tmp_key));
+        }
+
+
+        if(allValuesJson != null) {
+            iterator = allValuesJson.keys();
+            while (iterator.hasNext()) {
+                String tmp_key = (String) iterator.next();
+
+                if (mathFormula.contains(tmp_key)) {
+                    if(tmp_key.equals(mathFormula))
+                        newFormula = getValue(tmp_key);
+                    else
+                    newFormula = newFormula.replace(tmp_key, getValue(tmp_key));
+
+
+                }
+            }
+        }
+
+
+        AppLogger.e("###  MathFormulaParser >> ", "NEW FORMULA IS  " + newFormula);
+
+
+
+
 
         try {
             return calculate(newFormula);
@@ -132,7 +169,7 @@ public class MathFormulaParser extends Tokenizer {
 
     public String evaluate(String formula){
         mathFormula = formula;
-             AppLogger.e("###  MathFormulaParser >> ","Equation to evaluate is null");
+             AppLogger.e("###  MathFormulaParser >> ","Equation to evaluate is " + mathFormula);
 
             try {
                 return calculate(mathFormula);
@@ -142,12 +179,16 @@ public class MathFormulaParser extends Tokenizer {
             }
     }
 
-    public String evaluateWithoutFormatting(String formula){
+    public String evaluateWithFormatting(String formula){
         mathFormula = formula;
-        AppLogger.e("###  MathFormulaParser >> ","Equation to evaluate is null");
+        AppLogger.e("###  MathFormulaParser >> ","Equation to evaluate is " + formula);
 
         try {
-            return  String.valueOf(engine.eval(formula.trim().replace(",", "")));
+            Double value = (Double) engine.eval(mathFormula.trim().replace(",", ""));
+            NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+            DecimalFormat formatter = (DecimalFormat) nf;
+            formatter.applyPattern("#,###,###.##");
+            return (formatter.format(value));
         } catch (ScriptException e) {
             e.printStackTrace();
             return "0";
@@ -159,9 +200,15 @@ public class MathFormulaParser extends Tokenizer {
 
         try {
             if (jsonObject.has(id))
-                return jsonObject.get(id).toString();
+                return jsonObject.getString(id);
+
+            else if(allValuesJson.has(id))
+                return allValuesJson.getString(id);
+
             else return id;
+
         } catch (JSONException ignore) {
+            AppLogger.e("###  MathFormulaParser >> ", ignore.getMessage());
             return "0";
         }
     }
@@ -171,18 +218,28 @@ public class MathFormulaParser extends Tokenizer {
         this.jsonObject = jsonObject;
     }
 
+    public void setAllValuesJsonObject(JSONObject jsonObject) {
+        this.allValuesJson = jsonObject;
+    }
+
 
     public void setMathFormula(String mathFormula) {
         this.mathFormula = mathFormula;
     }
 
-    public String calculate(String equation) throws ScriptException {
+     String calculate(String equation) throws ScriptException {
         Double value = (Double) engine.eval(equation.trim().replace(",", ""));
-        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
-        DecimalFormat formatter = (DecimalFormat) nf;
-        formatter.applyPattern("#,###,###.##");
-        return (formatter.format(value));
+        return (String.valueOf(value));
     }
 
+
+
+   /* public String calculate(String equation) throws ScriptException {
+        Double value = (Double) engine.eval(equation.trim().replace(",", ""));
+       *//* NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat formatter = (DecimalFormat) nf;
+        formatter.applyPattern("#,###,###.##");*//*
+        return (formatter.format(value));
+    }*/
 }
 

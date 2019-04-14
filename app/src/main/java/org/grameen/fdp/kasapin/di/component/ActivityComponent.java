@@ -6,6 +6,7 @@ import org.grameen.fdp.kasapin.di.Scope.PerActivity;
 import org.grameen.fdp.kasapin.di.module.ViewModule;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
+import org.grameen.fdp.kasapin.ui.detailedYearMonthlyView.DetailedMonthActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.fdpStatus.FDPStatusActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
@@ -43,6 +44,7 @@ public interface ActivityComponent {
     void inject(MapActivity view);
     void inject(ProfitAndLossActivity view);
     void inject(FDPStatusActivity view);
+    void inject(DetailedMonthActivity view);
 
 
 

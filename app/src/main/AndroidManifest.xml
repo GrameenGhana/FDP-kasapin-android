@@ -74,7 +74,10 @@
         <activity android:name=".ui.AddEditFarmerPlot.AddEditFarmerPlotActivity" />
         <activity android:name=".ui.plotDetails.PlotDetailsActivity" />
         <activity android:name=".ui.map.MapActivity" />
-        <activity android:name=".ui.pandl.ProfitAndLossActivity" />
+        <activity android:name=".ui.pandl.ProfitAndLossActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ui.detailedYearMonthlyView.DetailedMonthActivity"
+            android:screenOrientation="landscape"/>
 
 
         <service android:name=".services.SyncService" />

@@ -73,6 +73,8 @@ public class LogicFormulaParser extends Tokenizer {
     String TAG = this.getClass().getSimpleName();
     String formula = null;
     JSONObject jsonObject = null;
+    JSONObject allValuesJson = null;
+
     Tokenizer TOKENIZER;
     ScriptEngine _engine = new ScriptEngineManager().getEngineByName("rhino");
 
@@ -194,6 +196,19 @@ public class LogicFormulaParser extends Tokenizer {
 
             }
 
+            if(allValuesJson != null) {
+                iterator = allValuesJson.keys();
+                while (iterator.hasNext()) {
+                    String tmp_key = (String) iterator.next();
+
+                    if (formulaToEvaluate.contains(tmp_key))
+                        formulaToEvaluate = formulaToEvaluate.replace(tmp_key, getValue(tmp_key));
+
+                }
+            }
+
+
+
 
             String[] subSections = formulaToEvaluate.split("&&|\\|\\|");
 
@@ -211,12 +226,22 @@ public class LogicFormulaParser extends Tokenizer {
                 AppLogger.i(TAG, "### Replacing " + subSections[i] + " with Answer >>>  " + answerValue);
             }
 
+            AppLogger.e(TAG, "EQUATION BEFORE REPLACEMENT >>> " + formulaToEvaluate);
+            AppLogger.e(TAG, "EQUATION AFTER REPLACEMENT >>> " + evaluatedFormula);
+
+
+
+
+
+
+
 
             boolean valueAfterParsing = ComputationUtils.parseEquation(evaluatedFormula, _engine);
 
-            AppLogger.e(TAG, "EQUATION BEFORE REPLACEMENT >>> " + formulaToEvaluate);
 
-            AppLogger.e(TAG, "PARSED EQUATION = " + evaluatedFormula + " Answer >>>  " + valueAfterParsing);
+
+
+            AppLogger.e(TAG,  "Answer >>>  " + valueAfterParsing);
 
             AppLogger.e(TAG, "TRUE VALUE = " + trueValue);
             AppLogger.e(TAG, "FALSE VALUE = " + falseValue);
@@ -242,6 +267,12 @@ public class LogicFormulaParser extends Tokenizer {
             return mathFormulaParser.evaluate();
 
         }else
+
+            if(jsonObject.has(returnValue))
+            try{
+                returnValue = jsonObject.getString(returnValue);
+            }   catch(JSONException ignored){}
+
         return returnValue;
     }
 
@@ -356,12 +387,19 @@ public class LogicFormulaParser extends Tokenizer {
         try {
             if (jsonObject.has(id))
                 return jsonObject.get(id).toString();
+            else if (allValuesJson.has(id))
+                return allValuesJson.get(id).toString();
             else return "--";
         } catch (JSONException ignore) {
             return "--";
         }
     }
 
+
+
+    public void setAllValuesJsonObject(JSONObject jsonObject) {
+        this.allValuesJson = jsonObject;
+    }
 
     public void setJsonObject(JSONObject jsonObject) {
         AppLogger.e(TAG, "JSON DATA IS " + jsonObject);

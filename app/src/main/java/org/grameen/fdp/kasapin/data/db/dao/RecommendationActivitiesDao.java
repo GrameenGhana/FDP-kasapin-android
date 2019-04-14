@@ -28,8 +28,15 @@ public interface RecommendationActivitiesDao extends BaseDao<RecommendationActiv
     void insertAll(List<RecommendationActivity> objects);
 
 
-    @Query("SELECT * FROM recommendation_activities WHERE recommendationId = :recommendationId")
-    Single<List<RecommendationActivity>> getAllByRecommendation(int recommendationId);
+    @Query("SELECT * FROM recommendation_activities WHERE recommendationId = :recommendationId " +
+            "AND month = :month AND year = :year AND seasonal = :labour")
+    Single<List<RecommendationActivity>> getAllByRecommendation(int recommendationId, String month, String year, String labour);
+
+
+    @Query("SELECT * FROM recommendation_activities WHERE recommendationId = :recommendationId " +
+            "AND month = :month AND year = :year")
+    Single<List<RecommendationActivity>> getAllByRecommendation(int recommendationId, String month, String year);
+
 
 
     @Query("SELECT * FROM recommendation_activities WHERE activityId = :activityId")

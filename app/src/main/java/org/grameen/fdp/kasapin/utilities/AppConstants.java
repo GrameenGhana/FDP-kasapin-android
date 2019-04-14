@@ -80,6 +80,9 @@ public class AppConstants {
     public static final String TYPE_NUMBER_DECIMAL = "decimal";
     public static final String TYPE_COMPLEX_CALCULATION = "complex calculation";
 
+    public static final String FORMULA_TYPE_COMPLEX_FORMULA= "Complex formula";
+
+
     public static final String ANSWERS = "fpd_Answer__c";
 
     public static final String EMPTY_STRING = "";
