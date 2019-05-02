@@ -240,6 +240,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         //Calculate AOR and AI question values here, put values into the json
         for(FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS){
+
             if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADOPTION_OBSERVATION_RESULTS)
                     || formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADDITIONAL_INTERVENTION)){
 
@@ -265,7 +266,10 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 }
                 }
                 //AOR_AI_QUESTIONS.addAll(formAndQuestions.getQuestions());
-            }/*else if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.PLOT_INFORMATION)){
+            }
+
+
+            /*else if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.PLOT_INFORMATION)){
 
                 for(Question question : formAndQuestions.getQuestions()){
                     if(question.getTypeC().equalsIgnoreCase(AppConstants.FORMULA_TYPE_COMPLEX_FORMULA) && !question.getFormulaC().equalsIgnoreCase("null")){
