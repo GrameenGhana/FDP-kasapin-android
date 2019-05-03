@@ -390,15 +390,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                         break;
 
                     case R.id.sync_farmer:
-
                         //Todo Sync all un synced farmer data
                         //Generate the json object here, pass the object as a value
-
                         if(NetworkUtils.isNetworkConnected(MainActivity.this))
                             mPresenter.syncData(true);
                         else
                             showMessage(R.string.no_internet_connection_available);
-
                         break;
 
                     case R.id.download_farmer_data:

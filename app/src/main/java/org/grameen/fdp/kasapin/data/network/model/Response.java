@@ -9,7 +9,6 @@ public class Response {
     public Response(){
     }
 
-
     public void setStatus(int status) {
         this.status = status;
     }

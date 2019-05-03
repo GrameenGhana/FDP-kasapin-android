@@ -1,6 +1,9 @@
 package org.grameen.fdp.kasapin.data.network;
 
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
@@ -60,7 +63,11 @@ public class FdpApiService {
     }
 
     public Single<Response> pushFarmersData(String token, JSONObject data) {
-        return fdpApi.postFarmers(token, data).subscribeOn(Schedulers.io())
+
+        JsonObject gson = new JsonParser().parse(data.toString()).getAsJsonObject();
+
+
+        return fdpApi.postFarmers(token, gson).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

@@ -13,6 +13,7 @@ public class AppConstants {
 
     public static final String SERVER_URL = "http://104.236.220.235/";
     public static final String API_VERSION = "fdp/api/v1/";
+    public static final String API = "fdp/api/";
 
 
     public static final int PERMISSION_FINE_LOCATION = 1001;

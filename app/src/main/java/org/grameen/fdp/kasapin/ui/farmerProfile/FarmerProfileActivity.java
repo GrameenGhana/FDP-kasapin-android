@@ -448,8 +448,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                         intent.putExtra("farmer", new Gson().toJson(FARMER));
                         startActivity(intent);
 
-
-
                     }
 
                 } else
@@ -464,17 +462,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                 break;
             case R.id.sync_farmer:
-
-              /*
-                if (FARMER.getSyncStatus() != Constants.SYNC_OK) {
-
-                    Intent intent = new Intent(FarmerDetailsActivity.this, SyncUpActivity.class);
-                    intent.putExtra("FARMER", new Gson().toJson(FARMER));
-                    startActivity(intent);
-                } else
-                    CustomToast.makeToast(FarmerDetailsActivity.this, getResources(R.string.farmer) + " " + FARMER.getFarmerName() + getResources(R.string.apostrophe_s) + getResources(R.string.data_already_synced), Toast.LENGTH_LONG).show();
-*/
-
 
 
                 break;

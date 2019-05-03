@@ -19,8 +19,8 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 /**
  * Created by aangjnr on 08/11/2017.
  */
-
-@Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)}, foreignKeys = @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE))
+//, foreignKeys = @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE)
+@Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
 public class Plot {
 
     @PrimaryKey(autoGenerate = true)

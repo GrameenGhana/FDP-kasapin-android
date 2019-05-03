@@ -44,13 +44,6 @@ public class UploadData {
         return mView;
     }
 
-
-
-
-
-
-
-
    public void uploadFarmersData(JSONObject farmersJsonObject){
 
         if(showProgress)

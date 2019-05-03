@@ -182,7 +182,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
         JSONArray farmerData = new JSONArray();
 
-
         runSingleCall(getAppDataManager().getDatabaseManager().mappingDao().getAll()
                 .subscribeOn(Schedulers.io())
                 .map(mappings -> Observable.fromIterable(mappings)
@@ -305,11 +304,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                     arrayOfValues.put(answerJson);
                                                                 }
                                                             }
-
-
                                                         }
-
-
                                                         jsonObject.put(mappingEntry.getKey(), arrayOfValues);
 
 
@@ -337,20 +332,14 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                             try {
                                                 payloadData.put("data", farmerData);
 
-
-
                                                 AppLogger.e(TAG, "Payload data is "  + payloadData.toString());
                                                 getView().hideLoading();
-
 
                                                 UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
                                                         .uploadFarmersData(payloadData);
 
-
-
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
-
                                                 getView().hideLoading();
                                                 getView().showMessage(R.string.error_has_occurred_loading_data);
                                             }

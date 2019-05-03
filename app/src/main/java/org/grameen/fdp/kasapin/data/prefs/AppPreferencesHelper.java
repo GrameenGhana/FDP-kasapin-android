@@ -54,12 +54,12 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     private final SharedPreferences mPrefs;
 
-    private SecurePreferences securedPreferences;
+   // private SecurePreferences securedPreferences;
 
     @Inject
     public AppPreferencesHelper(SharedPreferences preferences) {
         mPrefs = preferences;
-        securedPreferences = new SecurePreferences(mPrefs, BaseActivity.DEVICE_ID, false);
+        //securedPreferences = new SecurePreferences(mPrefs, BaseActivity.DEVICE_ID, false);
     }
 
     @Override
@@ -96,22 +96,33 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getUserEmail() {
-        return securedPreferences.getString(PREF_KEY_USER_EMAIL);
+        //return securedPreferences.getString(PREF_KEY_USER_EMAIL);
+        return mPrefs.getString(PREF_KEY_USER_EMAIL, null);
+
     }
 
     @Override
     public void setUserEmail(String email) {
-        securedPreferences.put(PREF_KEY_USER_EMAIL, email);
+
+        //securedPreferences.put(PREF_KEY_USER_EMAIL, email);
+        mPrefs.edit().putString(PREF_KEY_USER_EMAIL, email).apply();
+
+
     }
 
     @Override
     public String getUserUuid() {
-        return securedPreferences.getString(PREF_KEY_USER_UUID);
+
+        //return securedPreferences.getString(PREF_KEY_USER_UUID);
+        return mPrefs.getString(PREF_KEY_USER_UUID, null);
+
+
     }
 
     @Override
     public void setUserUuid(String uuid) {
-        securedPreferences.put(PREF_KEY_USER_UUID, uuid);
+        //securedPreferences.put(PREF_KEY_USER_UUID, uuid);
+        mPrefs.edit().putString(PREF_KEY_USER_UUID, uuid).apply();
 
     }
 
@@ -171,12 +182,18 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getAccessToken() {
-        return securedPreferences.getString(PREF_KEY_ACCESS_TOKEN);
+        //return securedPreferences.getString(PREF_KEY_ACCESS_TOKEN);
+        return mPrefs.getString(PREF_KEY_ACCESS_TOKEN, null);
+
     }
 
     @Override
     public void setAccessToken(String accessToken) {
-        securedPreferences.put(PREF_KEY_ACCESS_TOKEN, accessToken);
+
+        //securedPreferences.put(PREF_KEY_ACCESS_TOKEN, accessToken);
+        mPrefs.edit().putString(PREF_KEY_ACCESS_TOKEN, accessToken).apply();
+
+
     }
 
     @Override
@@ -203,7 +220,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public void clearSecurePreferences() {
-        securedPreferences.clear();
+        //securedPreferences.clear();
     }
 
     @Override
