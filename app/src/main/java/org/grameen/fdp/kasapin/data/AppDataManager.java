@@ -60,9 +60,7 @@ public class AppDataManager implements DataManager {
         mContext = context;
         mAppDatabase = appDatabase;
         mPreferencesHelper = preferencesHelper;
-     }
-
-
+    }
 
 
     @Override
@@ -156,7 +154,7 @@ public class AppDataManager implements DataManager {
 
     @Override
     public String getUserUuid() {
-        return (mPreferencesHelper.getUserUuid() != null) ? mPreferencesHelper.getUserUuid(): getUserEmail();
+        return (mPreferencesHelper.getUserUuid() != null) ? mPreferencesHelper.getUserUuid() : getUserEmail();
     }
 
     @Override
@@ -185,7 +183,7 @@ public class AppDataManager implements DataManager {
     }
 
 
-    public String getUserFullName(){
+    public String getUserFullName() {
         return getUserFirstName() + " " + getUserLastName();
     }
 
@@ -261,15 +259,15 @@ public class AppDataManager implements DataManager {
     @Override
     public void setUserAsLoggedOut() {
 
-       updateUserInfo(new User(-1,
-               "",
-               "",
-               "",
-               "",
-               "",
-               false,
-               "",
-               false));
+        updateUserInfo(new User(-1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                "",
+                false));
 
         clearPreferences();
         clearSecurePreferences();

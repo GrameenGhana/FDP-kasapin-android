@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.form.controller;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
@@ -204,7 +206,22 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         }
     }
 
+    public View inflateViewOnlyView() {
+        MaterialEditText textView = new MaterialEditText(getContext());
+        textView.setPaddings(20, 0, 0, 0);
+        textView.setTextSize(15f);
+        //textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black_87));
 
+
+        if (getModel().getValue(getName()) != null) {
+            textView.setText(getModel().getValue(getName()).toString());
+            textView.setTypeface(null, Typeface.BOLD);
+        }
+
+        textView.setEnabled(false);
+
+        return textView;
+    }
 
 
     public boolean hasPermissions(Context context, String permission) {

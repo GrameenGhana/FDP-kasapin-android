@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
 
     <LinearLayout
+        android:id="@+id/ll1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/ll1"
         android:layout_above="@+id/bottom_buttons"
+        android:orientation="vertical"
 
         >
 
 
-        <include layout="@layout/toolbar"/>
-
-
-
+        <include layout="@layout/toolbar" />
 
 
         <RelativeLayout
             android:id="@+id/currencyLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/spacing_normal"
             android:layout_marginBottom="@dimen/spacing_half"
-            >
+            android:paddingTop="@dimen/spacing_normal">
 
             <LinearLayout
                 android:id="@+id/nameLayout"
@@ -38,47 +32,41 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/spacing_normal"
-                android:paddingRight="@dimen/spacing_normal"
-                >
+                android:paddingRight="@dimen/spacing_normal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/spacing_normal"
-                    >
+                    android:layout_marginRight="@dimen/spacing_normal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/farmer_name"
                         android:layout_marginRight="@dimen/spacing_half"
-                        android:textColor="@color/text_black_87"
-                        />
+                        android:text="@string/farmer_name"
+                        android:textColor="@color/text_black_87" />
 
                     <TextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Aang Junior"
-                        android:textStyle="bold"
                         android:textColor="@color/text_black_87"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
-
 
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_quarter"
-                    >
+                    android:layout_marginBottom="@dimen/spacing_quarter">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/farmer_code"
                         android:layout_marginRight="@dimen/spacing_half"
+                        android:text="@string/farmer_code"
 
                         />
 
@@ -87,15 +75,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="23445"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>
-
-
-
-
 
 
             </LinearLayout>
@@ -103,18 +86,17 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="@dimen/spacing_normal"
                 android:layout_alignParentRight="true"
+                android:paddingRight="@dimen/spacing_normal"
 
                 >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/currency"
                     android:layout_marginRight="@dimen/spacing_half"
-                    android:textColor="@color/text_black_87"
-                    />
+                    android:text="@string/currency"
+                    android:textColor="@color/text_black_87" />
 
                 <TextView
                     android:id="@+id/currency"
@@ -122,100 +104,85 @@
                     android:layout_height="wrap_content"
                     android:text="GHS"
                     android:textAllCaps="true"
-                    android:textStyle="bold"
                     android:textColor="?attr/colorAccent"
-                    />
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
         </RelativeLayout>
 
 
-                <FrameLayout
-                    android:id="@+id/horizontalView"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="horizontal|vertical"
-                    android:layout_width="wrap_content"
-                    android:isScrollContainer="true"
-                    >
+        <FrameLayout
+            android:id="@+id/horizontalView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="true"
+            android:scrollbars="horizontal|vertical">
 
 
+            <de.codecrafters.tableview.TableView xmlns:table="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/tableView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_view_border_background"
+                android:dividerHeight="0.5dip"
+                android:orientation="horizontal"
+                android:scrollbarAlwaysDrawHorizontalTrack="true"
+                table:tableView_headerColor="@color/divider"
+                table:tableView_headerElevation="2"
 
-                        <de.codecrafters.tableview.TableView
-                            xmlns:table="http://schemas.android.com/apk/res-auto"
-                            android:id="@+id/tableView"
-                            android:orientation="horizontal"
-                            android:scrollbarAlwaysDrawHorizontalTrack="true"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            table:tableView_headerElevation="2"
-                            android:background="@drawable/table_view_border_background"
-                            android:dividerHeight="0.5dip"
-                            table:tableView_headerColor="@color/divider"
-
-                            />
+                />
 
 
-
-                </FrameLayout>
+        </FrameLayout>
 
     </LinearLayout>
 
 
     <LinearLayout
 
+        android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:id="@+id/bottom_buttons"
-        android:paddingLeft="@dimen/spacing_normal"
         android:layout_marginRight="@dimen/spacing_normal"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/spacing_normal"
         android:paddingBottom="@dimen/spacing_normal"
 
         >
 
 
-
-
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:clipToPadding="false"
             android:clipChildren="false"
-            >
+            android:clipToPadding="false"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/back"
                 android:layout_width="0dp"
-                android:layout_weight="2"
                 android:layout_height="wrap_content"
-                android:theme="@style/PrimaryButtonGrey"
-                android:text="@string/back"
+                android:layout_weight="2"
                 android:padding="@dimen/spacing_normal"
-                />
-
-
+                android:text="@string/back"
+                android:theme="@style/PrimaryButtonGrey" />
 
 
             <Button
                 android:id="@+id/save"
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:text="@string/save"
-                android:padding="@dimen/spacing_normal"
                 android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_weight="3"
+                android:padding="@dimen/spacing_normal"
+                android:text="@string/save"
 
                 />
 
         </LinearLayout>
     </LinearLayout>
-
 
 
 </RelativeLayout>

@@ -5,7 +5,6 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
 
 import org.grameen.fdp.kasapin.data.db.entity.Question;
@@ -22,10 +21,10 @@ import io.reactivex.Single;
  */
 
 @Dao
-public interface QuestionDao extends BaseDao<Question>{
+public interface QuestionDao extends BaseDao<Question> {
 
     @Query("SELECT * FROM questions")
-    Single <List<Question> >getAllQuestions();
+    Single<List<Question>> getAllQuestions();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertQuestion(Question question);
@@ -40,7 +39,6 @@ public interface QuestionDao extends BaseDao<Question>{
 
     @Query("SELECT * FROM questions WHERE labelC  LIKE :label || '%'")
     Single<Question> get(String label);
-
 
 
     @Query("SELECT labelC FROM questions WHERE labelC  LIKE :label || '%'")

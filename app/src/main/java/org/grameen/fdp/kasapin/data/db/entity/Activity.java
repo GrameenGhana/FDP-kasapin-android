@@ -8,9 +8,8 @@ import android.support.annotation.NonNull;
  * Created by aangjnr on 27/01/2018.
  */
 
-@Entity(tableName = "activities" )
+@Entity(tableName = "activities")
 public class Activity {
-
 
 
     @PrimaryKey
@@ -18,7 +17,8 @@ public class Activity {
     String Id;
     String Name;
 
-    public Activity(){}
+    public Activity() {
+    }
 
     public String getName() {
         return Name;
@@ -35,7 +35,6 @@ public class Activity {
     public void setId(String id) {
         Id = id;
     }
-
 
 
 }

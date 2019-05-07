@@ -1,13 +1,11 @@
-
 package org.grameen.fdp.kasapin.data.network.model;
 
-import java.util.List;
-
 import com.google.gson.annotations.SerializedName;
-import com.squareup.moshi.Json;
 
 import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
+
+import java.util.List;
 
 public class FormTranslation {
 
@@ -25,13 +23,11 @@ public class FormTranslation {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public FormTranslation() {
     }
 
     /**
-     * 
      * @param id
      * @param form
      * @param formId

@@ -30,21 +30,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DownloadResourcesBak {
 
-    private FdpCallbacks.OnDownloadResourcesListener onDownloadResourcesListener;
-
     String TAG = "DownloadResources";
+    boolean showProgress;
+    private FdpCallbacks.OnDownloadResourcesListener onDownloadResourcesListener;
     private BaseContract.View mView;
     private AppDataManager mAppDataManager;
-    boolean showProgress;
 
 
-
-    public static DownloadResourcesBak newInstance(BaseContract.View view, AppDataManager appDataManager,
-                                                   FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress){
-        return new DownloadResourcesBak(view, appDataManager, listener, showProgress);
-    }
-
-    public DownloadResourcesBak(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress){
+    public DownloadResourcesBak(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress) {
 
         this.mAppDataManager = appDataManager;
         this.mView = view;
@@ -52,6 +45,10 @@ public class DownloadResourcesBak {
         this.onDownloadResourcesListener = listener;
     }
 
+    public static DownloadResourcesBak newInstance(BaseContract.View view, AppDataManager appDataManager,
+                                                   FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress) {
+        return new DownloadResourcesBak(view, appDataManager, listener, showProgress);
+    }
 
     public AppDataManager getAppDataManager() {
         return mAppDataManager;
@@ -62,7 +59,7 @@ public class DownloadResourcesBak {
     }
 
 
-    public void getSurveyData(){
+    public void getSurveyData() {
 
         List<Village> villages = new ArrayList<>();
         List<Form> forms = new ArrayList<>();
@@ -71,11 +68,10 @@ public class DownloadResourcesBak {
         List<Mapping> mappings = new ArrayList<>();
 
 
+        if (showProgress)
+            getView().setLoadingMessage("Getting survey data...");
 
-        if(showProgress)
-        getView().setLoadingMessage("Getting survey data...");
-
-         for(int i =0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
 
             Village v = new Village();
             v.setId(i);
@@ -91,7 +87,6 @@ public class DownloadResourcesBak {
         country.setCurrency("GHS");
         country.setIsoCode("GHA");
         country.setName("Ghana");
-
 
 
         getAppDataManager().getCompositeDisposable().add(mAppDataManager.getFdpApiService()
@@ -138,7 +133,7 @@ public class DownloadResourcesBak {
                                                 public void onSubscribe(Disposable d) {
                                                     AppLogger.e(TAG, ">>>>>>>  ON SUBSCRIBE");
 
-                                                    if(d.isDisposed())
+                                                    if (d.isDisposed())
                                                         getAppDataManager().getCompositeDisposable().add(d);
                                                 }
 
@@ -148,6 +143,7 @@ public class DownloadResourcesBak {
                                                     getRecommendationsData();
 
                                                 }
+
                                                 @Override
                                                 public void onError(Throwable e) {
                                                     AppLogger.e(TAG, ">>>>>>>  ON ERROR");
@@ -159,6 +155,7 @@ public class DownloadResourcesBak {
 
                                 }, this::onError));
                     }
+
                     @Override
                     public void onError(Throwable e) {
 
@@ -169,8 +166,6 @@ public class DownloadResourcesBak {
     }
 
 
-
-
     private void getRecommendationsData() {
 
         List<Recommendation> recommendations = new ArrayList<>();
@@ -178,14 +173,13 @@ public class DownloadResourcesBak {
         List<RecommendationActivity> recommendationActivities = new ArrayList<>();
 
 
-
         if (showProgress)
             getView().setLoadingMessage("Getting recommendations, calculations and recommendations plus activities data...");
 
 
-       getAppDataManager().getFdpApiService()
-               .fetchRecommendations(1, 1, mAppDataManager.getAccessToken())
-               .subscribe(new DisposableSingleObserver<RecommendationsDataWrapper>() {
+        getAppDataManager().getFdpApiService()
+                .fetchRecommendations(1, 1, mAppDataManager.getAccessToken())
+                .subscribe(new DisposableSingleObserver<RecommendationsDataWrapper>() {
                     @Override
                     public void onSuccess(RecommendationsDataWrapper recommendationsDataWrapper) {
 
@@ -197,43 +191,45 @@ public class DownloadResourcesBak {
                                     recommendationActivities.addAll(recommendation.getRecommendationActivities());
 
                                 })
-                               .subscribe(questionsAndSkipLogic -> {
+                                .subscribe(questionsAndSkipLogic -> {
 
 
-                                   Completable one = Completable.fromAction(() -> {
-                                       getAppDataManager().getDatabaseManager().recommendationsDao().insertAll(recommendations);
-                                       getAppDataManager().getDatabaseManager().calculationsDao().insertAll(calculations);
-                                       getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao().insertAll(recommendationActivities);
+                                    Completable one = Completable.fromAction(() -> {
+                                        getAppDataManager().getDatabaseManager().recommendationsDao().insertAll(recommendations);
+                                        getAppDataManager().getDatabaseManager().calculationsDao().insertAll(calculations);
+                                        getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao().insertAll(recommendationActivities);
 
-                                   });
+                                    });
 
-                                   Completable.concatArray(one)
-                                           .observeOn(AndroidSchedulers.mainThread()) // OFF UI THREAD
-                                           .subscribeOn(Schedulers.single())
-                                           .subscribe(new CompletableObserver() {
-                                               @Override
-                                               public void onSubscribe(Disposable d) {
-                                                   AppLogger.e(TAG, ">>>>>>>  ON SUBSCRIBE");
+                                    Completable.concatArray(one)
+                                            .observeOn(AndroidSchedulers.mainThread()) // OFF UI THREAD
+                                            .subscribeOn(Schedulers.single())
+                                            .subscribe(new CompletableObserver() {
+                                                @Override
+                                                public void onSubscribe(Disposable d) {
+                                                    AppLogger.e(TAG, ">>>>>>>  ON SUBSCRIBE");
 
-                                                   if(d.isDisposed())
-                                                       getAppDataManager().getCompositeDisposable().add(d);
-                                               }
+                                                    if (d.isDisposed())
+                                                        getAppDataManager().getCompositeDisposable().add(d);
+                                                }
 
-                                               @Override
-                                               public void onComplete() {
-                                                   AppLogger.e(TAG, ">>>>>>>  ON COMPLETE");
+                                                @Override
+                                                public void onComplete() {
+                                                    AppLogger.e(TAG, ">>>>>>>  ON COMPLETE");
 
-                                                   showSuccess("Data download completed!");
-                                               }
-                                               @Override
-                                               public void onError(Throwable e) {
-                                                   AppLogger.e(TAG, ">>>>>>>  ON ERROR");
-                                                   showError(e);
-                                               }
-                                           });
-                               }, this::onError));
+                                                    showSuccess("Data download completed!");
+                                                }
+
+                                                @Override
+                                                public void onError(Throwable e) {
+                                                    AppLogger.e(TAG, ">>>>>>>  ON ERROR");
+                                                    showError(e);
+                                                }
+                                            });
+                                }, this::onError));
 
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -243,19 +239,16 @@ public class DownloadResourcesBak {
     }
 
 
+    void showError(Throwable e) {
 
-
-
-    void showError(Throwable e){
-
-        if(onDownloadResourcesListener != null)
+        if (onDownloadResourcesListener != null)
             onDownloadResourcesListener.onError(e);
 
         onDownloadResourcesListener = null;
     }
 
-    void showSuccess(String message){
-        if(onDownloadResourcesListener != null)
+    void showSuccess(String message) {
+        if (onDownloadResourcesListener != null)
             onDownloadResourcesListener.onSuccess(message);
         onDownloadResourcesListener = null;
 

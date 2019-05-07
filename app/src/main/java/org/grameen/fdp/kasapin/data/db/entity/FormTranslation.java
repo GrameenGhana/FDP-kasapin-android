@@ -8,30 +8,23 @@ package org.grameen.fdp.kasapin.data.db.entity;
  */
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-
-import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
-import com.squareup.moshi.Json;
 
 import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
+import java.util.List;
 
 //, foreignKeys = {@ForeignKey(entity = Form.class, parentColumns = "id", childColumns = "formId", deferred = true)}
 @Entity(tableName = "form_translation", indices = {@Index(value = "formId"), @Index(value = "id", unique = true)})
-public class FormTranslation extends BaseModel{
+public class FormTranslation extends BaseModel {
 
-    @SerializedName("name")
-    private String name;
     @SerializedName("form_id")
     String formId;
-
+    @SerializedName("name")
+    private String name;
     @Ignore
     @SerializedName("form")
     private Form form;
@@ -78,23 +71,21 @@ public class FormTranslation extends BaseModel{
         this.name = name;
     }
 
-
-    public void setFormId(String formId) {
-        this.formId = formId;
-    }
-
     public String getFormId() {
         return formId;
     }
 
-    public void setForm(Form form) {
-        this.form = form;
+    public void setFormId(String formId) {
+        this.formId = formId;
     }
 
     public Form getForm() {
         return form;
     }
 
+    public void setForm(Form form) {
+        this.form = form;
+    }
 
     public List<QuestionsAndSkipLogic> getQuestionsAndSkipLogics() {
         return questionsAndSkipLogics;

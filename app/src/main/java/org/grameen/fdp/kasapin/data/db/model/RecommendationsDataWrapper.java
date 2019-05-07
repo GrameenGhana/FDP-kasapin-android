@@ -4,7 +4,6 @@ package org.grameen.fdp.kasapin.data.db.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.grameen.fdp.kasapin.data.db.entity.FormTranslation;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 
 import java.util.List;
@@ -23,13 +22,11 @@ public class RecommendationsDataWrapper {
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public RecommendationsDataWrapper() {
     }
 
     /**
-     *
      * @param data
      */
     public RecommendationsDataWrapper(List<Recommendation> data) {
@@ -44,7 +41,6 @@ public class RecommendationsDataWrapper {
     public void setData(List<Recommendation> data) {
         this.data = data;
     }
-
 
 
 }

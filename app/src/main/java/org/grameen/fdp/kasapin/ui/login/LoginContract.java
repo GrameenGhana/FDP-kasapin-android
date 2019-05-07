@@ -12,15 +12,14 @@ import org.grameen.fdp.kasapin.ui.base.BaseContract;
 public class LoginContract {
 
 
-
-    public interface View extends  BaseContract.View {
+    public interface View extends BaseContract.View {
 
 
         void openNextActivity();
 
     }
 
-     public interface Presenter {
+    public interface Presenter {
 
         void makeLoginApiCall(String email, String password);
 
@@ -29,9 +28,7 @@ public class LoginContract {
         void fetchData();
 
 
-
     }
-
 
 
 }

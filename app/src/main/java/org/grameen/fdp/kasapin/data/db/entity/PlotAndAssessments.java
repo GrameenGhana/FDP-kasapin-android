@@ -2,7 +2,6 @@ package org.grameen.fdp.kasapin.data.db.entity;
 
 
 import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Relation;
 
 import java.util.List;
@@ -20,7 +19,6 @@ public class PlotAndAssessments {
 
     @Relation(parentColumn = "id", entityColumn = "plotId", entity = PlotAssessment.class)
     public List<PlotAssessment> assessmentList;
-
 
 
 }

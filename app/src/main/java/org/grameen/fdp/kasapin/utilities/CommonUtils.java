@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.utilities;
 
 
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.provider.Settings;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
 import org.grameen.fdp.kasapin.R;
@@ -90,7 +88,6 @@ public final class CommonUtils {
     }
 
 
-
     public static String toCamelCase(String value) {
 
         if (value == null || value.equals("null")) return "";
@@ -104,10 +101,6 @@ public final class CommonUtils {
 
         }
     }
-
-
-
-
 
 
     public static void showAlertDialog(AlertDialog.Builder builder, Boolean cancelable, @Nullable String title, @Nullable String message,
@@ -174,10 +167,6 @@ public final class CommonUtils {
     public static String getDateStamp() {
         return new SimpleDateFormat(AppConstants.DATE_FORMAT, Locale.US).format(new Date());
     }
-
-
-
-
 
 
 }

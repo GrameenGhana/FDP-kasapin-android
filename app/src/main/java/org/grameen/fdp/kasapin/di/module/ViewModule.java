@@ -53,25 +53,22 @@ public class ViewModule {
     }
 
 
-
     @Provides
-    AlertDialog.Builder provideAppDialogBuilder(){
-        return new  AlertDialog.Builder(mActivity, R.style.AppDialog);
+    AlertDialog.Builder provideAppDialogBuilder() {
+        return new AlertDialog.Builder(mActivity, R.style.AppDialog);
     }
 
 
     @Provides
-    ProgressDialog provideProgressDialog(){
+    ProgressDialog provideProgressDialog() {
         return new ProgressDialog(mActivity);
     }
 
 
     @Provides
-    ScriptEngine providesScriptEngine(){
+    ScriptEngine providesScriptEngine() {
         return new ScriptEngineManager().getEngineByName("rhino");
     }
-
-
 
 
 }

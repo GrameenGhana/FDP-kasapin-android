@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by aangjnr on 22/01/2018.
  */
 
-@Entity(tableName = "activities_plus_inputs" )
+@Entity(tableName = "activities_plus_inputs")
 public class ActivitiesPlusInput {
 
     @SerializedName("LastModifiedDate")
@@ -46,12 +46,12 @@ public class ActivitiesPlusInput {
     public ActivitiesPlusInput() {
     }
 
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     public String getLastModifiedDate() {
         return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public String getId() {

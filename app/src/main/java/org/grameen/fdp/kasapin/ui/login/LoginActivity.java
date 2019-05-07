@@ -41,7 +41,7 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @Inject
-    LoginPresenter  mPresenter;
+    LoginPresenter mPresenter;
 
     @BindView(R.id.email)
     EditText mEmailView;
@@ -75,13 +75,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
             return false;
 
 
-
-
         });
 
 
         mPasswordView.setOnTouchListener((v, motionEvent) -> {
-            switch ( motionEvent.getAction() ) {
+            switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mPasswordView.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     mPasswordView.requestFocus();
@@ -100,15 +98,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         });
 
 
-
-
         permissionManager = new PermissionManager() {
             @Override
             public void ifCancelledAndCanRequest(Activity activity) {
 
                 AppLogger.i("****** Can request");
 
-                 showDialog(false, getString(R.string.permissions_needed),
+                showDialog(false, getString(R.string.permissions_needed),
                         getString(R.string.permissions_needed_rationale), (dialogInterface, i) ->
                                 permissionManager.checkAndRequestPermissions(LoginActivity.this),
                         getString(R.string.grant_permissions), (dialogInterface, i) -> supportFinishAfterTransition(),
@@ -130,7 +126,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         };
 
 
-
         new Handler().postDelayed(() -> showDialog(false, getString(R.string.hello),
                 getString(R.string.provide_all_permissions_rationale), (dialogInterface, i) -> {
                     permissionManager.checkAndRequestPermissions(LoginActivity.this);
@@ -142,21 +137,18 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @OnClick(R.id.sign_in_button)
     void onServerLoginClick() {
-        if(isNetworkConnected())
-        validateData();
+        if (isNetworkConnected())
+            validateData();
         else
             showMessage(R.string.no_internet_connection_available);
-     }
-
-
+    }
 
 
     @Override
     protected void onDestroy() {
-         mPresenter.dropView();
+        mPresenter.dropView();
         super.onDestroy();
     }
-
 
 
     @Override
@@ -168,7 +160,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         finish();
 
 
-      }
+    }
 
     @Override
     public void openLoginActivityOnTokenExpire() {

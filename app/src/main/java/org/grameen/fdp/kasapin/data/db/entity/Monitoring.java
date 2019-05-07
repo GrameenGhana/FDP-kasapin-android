@@ -24,50 +24,48 @@ public class Monitoring {
     String plotId;
 
 
-
-    public Monitoring(){}
-
-    public void setYear(String year) {
-        this.year = year;
+    public Monitoring() {
     }
 
     public String getYear() {
         return year;
     }
 
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     public String getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getJson() {
-        return json;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getJson() {
+        return json;
     }
 
     public void setJson(String json) {
         this.json = json;
     }
 
-    public void setPlotId(String plotId) {
-        this.plotId = plotId;
-    }
-
     public String getPlotId() {
         return plotId;
     }
 
-
+    public void setPlotId(String plotId) {
+        this.plotId = plotId;
+    }
 
 
 }

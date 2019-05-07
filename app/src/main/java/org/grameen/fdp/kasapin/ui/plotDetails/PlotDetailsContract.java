@@ -17,12 +17,13 @@ import java.util.List;
 public class PlotDetailsContract {
 
 
-
-    public interface View extends  BaseContract.View {
+    public interface View extends BaseContract.View {
 
         void showForm(List<FormAndQuestions> formAndQuestionsList);
 
         void setAreaUnits(String unit);
+
+        void setProductionUnit(String unit);
 
         void loadRecommendation(List<Recommendation> recommendations);
 
@@ -30,13 +31,15 @@ public class PlotDetailsContract {
 
     }
 
-     public interface Presenter {
-         void getPlotQuestions();
-         void getAreaUnits(String farmerCode);
-         void getRecommendations(int cropId);
-         void saveData(Plot plot);
-    }
+    public interface Presenter {
+        void getPlotQuestions();
 
+        void getAreaUnits(String farmerCode);
+
+        void getRecommendations(int cropId);
+
+        void saveData(Plot plot);
+    }
 
 
 }

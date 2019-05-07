@@ -1,13 +1,13 @@
 package org.grameen.fdp.kasapin.ui.login;
 
 
+import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.DataManager;
 import org.grameen.fdp.kasapin.data.db.model.User;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
-import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.syncManager.DownloadResources;
+import org.grameen.fdp.kasapin.ui.base.BasePresenter;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import javax.inject.Inject;
@@ -25,7 +25,6 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     private AppDataManager mAppDataManager;
 
 
-
     @Inject
     public LoginPresenter(AppDataManager appDataManager) {
         super(appDataManager);
@@ -36,54 +35,52 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
 
 
     @Override
-    public void makeLoginApiCall(String email, String password){
-        getView().showLoading("Signing In","Please wait...", true, 0,false);
+    public void makeLoginApiCall(String email, String password) {
+        getView().showLoading("Signing In", "Please wait...", true, 0, false);
 
-      runSingleCall( mAppDataManager.getFdpApiService().makeLoginCall(email, password)
+        runSingleCall(mAppDataManager.getFdpApiService().makeLoginCall(email, password)
                 .subscribeWith(
-                new DisposableSingleObserver<LoginResponse>() {
+                        new DisposableSingleObserver<LoginResponse>() {
+                            @Override
+                            public void onSuccess(LoginResponse responseBody) {
+
+
+                                String token = responseBody.getToken();
+                                mAppDataManager.setAccessToken(token);
+                                fetchUserData(token);
+
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                AppLogger.e(TAG, e.getMessage());
+                                getView().hideLoading();
+                                getView().showMessage(e.getMessage());
+                            }
+                        }));
+    }
+
+
+    @Override
+    public void fetchUserData(String token) {
+
+        runSingleCall(mAppDataManager.getFdpApiService().fetchUserData(token)
+                .subscribeWith(new DisposableSingleObserver<User>() {
                     @Override
-                    public void onSuccess(LoginResponse responseBody) {
-
-
-
-                        String token = responseBody.getToken();
-                        mAppDataManager.setAccessToken(token);
-                        fetchUserData(token);
-
-
+                    public void onSuccess(User user) {
+                        mAppDataManager.updateUserInfo(user);
+                        fetchData();
                     }
+
                     @Override
                     public void onError(Throwable e) {
-                        AppLogger.e(TAG, e.getMessage());
+                        AppLogger.e(TAG, e);
                         getView().hideLoading();
                         getView().showMessage(e.getMessage());
                     }
                 }));
     }
-
-
-    @Override
-    public void fetchUserData(String token){
-
-        runSingleCall( mAppDataManager.getFdpApiService().fetchUserData(token)
-                .subscribeWith(new DisposableSingleObserver<User>() {
-                            @Override
-                            public void onSuccess(User user) {
-                                mAppDataManager.updateUserInfo(user);
-                                fetchData();
-                            }
-                            @Override
-                            public void onError(Throwable e) {
-                                AppLogger.e(TAG, e);
-                                getView().hideLoading();
-                                getView().showMessage(e.getMessage());
-                            }
-                        }));
-        }
-
-
-
 
 
     @Override
@@ -97,7 +94,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     public void openNextActivity() {
 
 
-       getView().openNextActivity();
+        getView().openNextActivity();
 
 
     }
@@ -113,7 +110,6 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
         //Todo go to next activity
         getAppDataManager().setUserLoggedInMode(DataManager.LoggedInMode.LOGGED_IN);
         getView().openNextActivity();
-
 
 
     }

@@ -7,14 +7,12 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONObject;
-
 /**
  * Created by aangjnr on 02/01/2018.
  */
 
 
-@Entity(tableName = "logics" )
+@Entity(tableName = "logics")
 public class Logic {
 
     @PrimaryKey
@@ -180,13 +178,12 @@ public class Logic {
     public Logic() {
     }
 
+    public String getLastModifiedDate() {
+        return lastModifiedDate;
+    }
 
     public void setLastModifiedDate(String lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getLastModifiedDate() {
-        return lastModifiedDate;
     }
 
     public String getEvaluatedValue() {
@@ -579,6 +576,7 @@ public class Logic {
     public String getQUESTION() {
         return QUESTION;
     }
+
     @Ignore
     public void setQUESTION(String QUESTION) {
         this.QUESTION = QUESTION;
@@ -588,6 +586,7 @@ public class Logic {
     public String getVALUE() {
         return VALUE;
     }
+
     @Ignore
     public void setVALUE(String VALUE) {
         this.VALUE = VALUE;

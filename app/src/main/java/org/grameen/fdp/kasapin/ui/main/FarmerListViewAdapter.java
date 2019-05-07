@@ -5,12 +5,9 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -19,14 +16,10 @@ import android.widget.TextView;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
-import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 
 import java.util.List;
 import java.util.Random;
-
-import static org.grameen.fdp.kasapin.ui.base.BaseActivity.CURRENT_PAGE;
 
 
 /**
@@ -45,9 +38,7 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
     private OnLongClickListener longClickListener;
 
 
-
-
-    public FarmerListViewAdapter(Context c, List<RealFarmer> _farmers){
+    public FarmerListViewAdapter(Context c, List<RealFarmer> _farmers) {
         super(c, R.layout.farmer_grid_item_view, _farmers);
 
         this.context = c;
@@ -56,37 +47,21 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
         layoutInflater = LayoutInflater.from(context);
     }
 
-
-    private static class ViewHolder{
-
-        RelativeLayout mainLayout;
-        RelativeLayout rl1;
-        TextView name;
-        TextView code;
-        TextView initials;
-        ImageView photo;
-        ImageView imageView;
-        ImageView syncStatus;
-        ImageView fdpStatus;
-
-    }
-
-
     @NonNull
     @Override
-    public View getView(int position, @Nullable  View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         RealFarmer realFarmer = farmers.get(position);
 
         ViewHolder viewHolder;
 
-        if(convertView == null){
+        if (convertView == null) {
 
             viewHolder = new ViewHolder();
             convertView = layoutInflater.inflate(R.layout.farmer_grid_item_view, parent, false);
 
 
-            viewHolder.mainLayout =  convertView.findViewById(R.id.mainLayout);
+            viewHolder.mainLayout = convertView.findViewById(R.id.mainLayout);
             viewHolder.rl1 = convertView.findViewById(R.id.rl1);
 
             viewHolder.name = convertView.findViewById(R.id.name);
@@ -101,7 +76,7 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
 
             convertView.setTag(viewHolder);
 
-        }else{
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
 
         }
@@ -129,13 +104,12 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
         return convertView;
     }
 
+    private void setData(RealFarmer farmer, ViewHolder viewHolder) {
 
-    private void setData(RealFarmer farmer, ViewHolder viewHolder){
-
-        if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")){
+        if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")) {
             viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));
             //Picasso.with(context).load(farmer.getImageUrl()).resize(200, 200).into(viewHolder.photo);
-           // viewHolder.setIsRecyclable(false);
+            // viewHolder.setIsRecyclable(false);
         } else {
             //viewHolder.setIsRecyclable(true);
 
@@ -168,12 +142,12 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
         viewHolder.code.setText(farmer.getCode());
 
 
-             if(farmer.getSyncStatus() == 1) {
-                viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_black_18dp);
-                viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
-            }else if(farmer.getSyncStatus() == 0) {
-                viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_problem_black_18dp);
-                viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.cpb_red));
+        if (farmer.getSyncStatus() == 1) {
+            viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_black_18dp);
+            viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
+        } else if (farmer.getSyncStatus() == 0) {
+            viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_problem_black_18dp);
+            viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.cpb_red));
         }
 
 
@@ -184,8 +158,12 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
             }
         }
 
-       // viewHolder.mainLayout.setOnClickListener(this);
+        // viewHolder.mainLayout.setOnClickListener(this);
         //viewHolder.mainLayout.setOnLongClickListener(this);
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
     }
 
 
@@ -215,16 +193,9 @@ f
     }
 */
 
-
-
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
-    }
-
     public void OnLongClickListener(final OnLongClickListener mLongClickListener) {
         this.longClickListener = mLongClickListener;
     }
-
 
     public interface OnItemClickListener {
         void onItemClick(View view);
@@ -233,5 +204,19 @@ f
 
     public interface OnLongClickListener {
         void onLongClick(View view);
+    }
+
+    private static class ViewHolder {
+
+        RelativeLayout mainLayout;
+        RelativeLayout rl1;
+        TextView name;
+        TextView code;
+        TextView initials;
+        ImageView photo;
+        ImageView imageView;
+        ImageView syncStatus;
+        ImageView fdpStatus;
+
     }
 }

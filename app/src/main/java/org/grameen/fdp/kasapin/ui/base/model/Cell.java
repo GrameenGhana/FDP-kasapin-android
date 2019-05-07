@@ -56,7 +56,9 @@ public class Cell implements ISortableModel, IFilterableModel {
         return mData;
     }
 
-    public void setData(String data) { mData = data; }
+    public void setData(String data) {
+        mData = data;
+    }
 
     public String getFilterKeyword() {
         return mFilterKeyword;

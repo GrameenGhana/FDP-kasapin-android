@@ -28,13 +28,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.ui.base.BaseFragment;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
-import org.grameen.fdp.kasapin.utilities.ActivityUtils;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
@@ -53,17 +51,15 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
 public abstract class FormFragment extends BaseFragment {
 
+    public static int CAMERA_INTENT = 506;
+    final int PERMISSION_CAMERA = 505;
     String ID;
     Uri URI;
-
     String TAG = "FormFragment";
     SharedPreferences preferences;
+    ImageView imageView;
     private FormModelFragment formModelFragment;
     private MyFormController formController;
-    final int PERMISSION_CAMERA = 505;
-    public static int CAMERA_INTENT = 506;
-
-    ImageView imageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -130,7 +126,6 @@ public abstract class FormFragment extends BaseFragment {
     }
 
 
-
     public void startCameraIntent(String id) {
         this.ID = id;
         File photo;
@@ -176,11 +171,9 @@ public abstract class FormFragment extends BaseFragment {
     }
 
 
-
-
     public void getCurrentLocation(final Context context, Question q) {
 
-       getModel().setValue(q.getLabelC(), "Getting location...");
+        getModel().setValue(q.getLabelC(), "Getting location...");
 
 
         boolean GpsStatus;
@@ -202,7 +195,6 @@ public abstract class FormFragment extends BaseFragment {
             criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
 
 
-
             // This is the Best And IMPORTANT part
             final Looper looper = null;
 
@@ -221,7 +213,6 @@ public abstract class FormFragment extends BaseFragment {
 
         }
     }
-
 
 
     public LocationListener getLocationListener(Question q) {
@@ -258,11 +249,6 @@ public abstract class FormFragment extends BaseFragment {
             }
         };
     }
-
-
-
-
-
 
 
     private File createTemporaryFile(String part, String ext) throws Exception {
@@ -350,14 +336,14 @@ public abstract class FormFragment extends BaseFragment {
                 }
 
 
-            } else CustomToast.makeToast(getActivity(), getResources().getString(R.string.no_image_taken), Toast.LENGTH_LONG).show();
+            } else
+                CustomToast.makeToast(getActivity(), getResources().getString(R.string.no_image_taken), Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {
             e.printStackTrace();
             CustomToast.makeToast(getActivity(), getResources().getString(R.string.something_went_wrong), Toast.LENGTH_LONG)
                     .show();
         }
-
 
 
     }

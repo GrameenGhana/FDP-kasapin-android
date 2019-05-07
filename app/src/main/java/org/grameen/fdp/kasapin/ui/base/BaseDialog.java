@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.ui.base;
 
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -19,8 +18,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
 
-import org.grameen.fdp.kasapin.ui.base.BaseActivity;
-import org.grameen.fdp.kasapin.ui.base.DialogView;
 import org.grameen.fdp.kasapin.di.component.ActivityComponent;
 
 import butterknife.Unbinder;
@@ -109,7 +106,6 @@ public abstract class BaseDialog extends DialogFragment implements DialogView {
             mActivity.hideKeyboard();
         }
     }
-
 
 
     public BaseActivity getBaseActivity() {

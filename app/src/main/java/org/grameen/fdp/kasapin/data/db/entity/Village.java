@@ -1,14 +1,11 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-
-import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
  * Created by aangjnr on 30/01/2018.
@@ -24,7 +21,7 @@ public class Village {
     @SerializedName("LastModifiedDate")
     String lastModifiedDate;
 
-     @NonNull
+    @NonNull
     String name;
     int countryId;
 
@@ -35,22 +32,20 @@ public class Village {
     public Village() {
     }
 
-
-    public void setId(@NonNull int id) {
-        this.id = id;
-    }
-
-
     public int getCountryId() {
         return countryId;
     }
 
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
 
     public String getLastModifiedDate() {
         return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public String getName() {
@@ -61,13 +56,13 @@ public class Village {
         this.name = name;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
-    }
-
     @NonNull
     public int getId() {
         return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public String getDistrict() {

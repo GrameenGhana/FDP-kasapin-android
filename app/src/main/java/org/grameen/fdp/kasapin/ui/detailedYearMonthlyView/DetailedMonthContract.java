@@ -15,8 +15,7 @@ import java.util.List;
 public class DetailedMonthContract {
 
 
-
-    public interface View extends  BaseContract.View {
+    public interface View extends BaseContract.View {
 
 
         void setPlotsData(List<Plot> plotsData);
@@ -24,14 +23,12 @@ public class DetailedMonthContract {
         void setData();
 
 
-
     }
 
-     public interface Presenter {
+    public interface Presenter {
 
         void getPlotsData(String farmerCode);
     }
-
 
 
 }

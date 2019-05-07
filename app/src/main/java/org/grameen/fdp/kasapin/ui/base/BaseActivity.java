@@ -20,14 +20,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +53,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -75,38 +72,45 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 public abstract class BaseActivity extends AppCompatActivity
         implements BaseContract.View, BaseFragment.Callback {
 
-    private Unbinder mUnBinder;
-    public String TAG;
-
-    @Inject
-    public AppDataManager mAppDataManager;
-
-    @Inject
-    public AlertDialog.Builder mAlertDialogBuilder;
-
-    @Inject
-    ProgressDialog mProgressDialog;
-
-    @Inject
-    ScriptEngine scriptEngine;
-
-    ActivityComponent activityComponent;
-
     public static String DEVICE_ID;
-
     public static Gson gson = new Gson();
-
     public static List<FormAndQuestions> FORM_AND_QUESTIONS;
     public static List<FormAndQuestions> PLOT_FORM_AND_QUESTIONS;
     public static List<FormAndQuestions> FILTERED_FORMS;
-
-
     public static int CURRENT_FORM;
     public static int CURRENT_PAGE;
-
     public static boolean IS_TABLET;
+    public String TAG;
+    @Inject
+    public AppDataManager mAppDataManager;
+    @Inject
+    public AlertDialog.Builder mAlertDialogBuilder;
+    @Inject
+    ProgressDialog mProgressDialog;
+    @Inject
+    ScriptEngine scriptEngine;
+    ActivityComponent activityComponent;
+    private Unbinder mUnBinder;
 
+    public static Gson getGson() {
+        return gson;
+    }
 
+    public static void runLayoutAnimation(final GridView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fall_down);
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.scheduleLayoutAnimation();
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,7 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity
         TAG = getClass().getSimpleName();
 
         //Sets theme for if Diagnostic or Monitoring mode
-         if (getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE).getBoolean(AppPreferencesHelper.PREF_KEY_IS_MONITORING_MODE, true))
+        if (getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE).getBoolean(AppPreferencesHelper.PREF_KEY_IS_MONITORING_MODE, true))
             setTheme(R.style.AppTheme_Monitoring);
         overridePendingTransition(R.anim.right_slide, R.anim.slide_out_left);
 
@@ -122,11 +126,6 @@ public abstract class BaseActivity extends AppCompatActivity
         IS_TABLET = ScreenUtils.isTablet(this);
         DEVICE_ID = CommonUtils.getDeviceId(this);
 
-    }
-
-
-    public static Gson getGson() {
-        return gson;
     }
 
     @Override
@@ -155,25 +154,22 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void showLoading() {
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
 
 
-
-        hideLoading();
-        mProgressDialog = CommonUtils.showLoadingDialog(mProgressDialog);
+            hideLoading();
+            mProgressDialog = CommonUtils.showLoadingDialog(mProgressDialog);
         });
     }
-
 
     @Override
     public void setLoadingMessage(String message) {
         runOnUiThread(() -> {
-            if(mProgressDialog != null && mProgressDialog.isShowing())
+            if (mProgressDialog != null && mProgressDialog.isShowing())
                 mProgressDialog.setMessage(message);
 
         });
     }
-
 
     @Override
     public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
@@ -202,12 +198,12 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public void onError(String message) {
         runOnUiThread(() -> {
-        if (message != null) {
-            showSnackBar(message);
-        } else {
-            showSnackBar(getString(R.string.some_error));
-        }
-    });
+            if (message != null) {
+                showSnackBar(message);
+            } else {
+                showSnackBar(getString(R.string.some_error));
+            }
+        });
 
     }
 
@@ -221,11 +217,11 @@ public abstract class BaseActivity extends AppCompatActivity
 
         runOnUiThread(() -> {
 
-    if (message != null) {
-        CustomToast.makeText(BaseActivity.this, message, Toast.LENGTH_LONG).show();
-    } else {
-        CustomToast.makeText(BaseActivity.this, getString(R.string.some_error), Toast.LENGTH_LONG).show();
-    }
+            if (message != null) {
+                CustomToast.makeText(BaseActivity.this, message, Toast.LENGTH_LONG).show();
+            } else {
+                CustomToast.makeText(BaseActivity.this, getString(R.string.some_error), Toast.LENGTH_LONG).show();
+            }
 
         });
     }
@@ -257,7 +253,6 @@ public abstract class BaseActivity extends AppCompatActivity
         }
     }
 
-
     public void setUnBinder(Unbinder unBinder) {
         mUnBinder = unBinder;
     }
@@ -271,10 +266,8 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-
-
     public ActivityComponent getActivityComponent() {
-       if (activityComponent == null) {
+        if (activityComponent == null) {
             activityComponent = DaggerActivityComponent.builder()
                     .viewModule(new ViewModule(this))
                     .applicationComponent(FDPKasapin.getAppContext(this).getComponent())
@@ -311,14 +304,14 @@ public abstract class BaseActivity extends AppCompatActivity
         return getString(resource);
     }
 
-    protected void logOut(){
+    protected void logOut() {
         //Todo show dialog to confirm logout
         CommonUtils.showAlertDialog(mAlertDialogBuilder, true, getString(R.string.log_out), getString(R.string.log_out_rational),
-                (dialogInterface, i) ->   {
-                        mAppDataManager.setUserAsLoggedOut();
-                         dialogInterface.dismiss();
+                (dialogInterface, i) -> {
+                    mAppDataManager.setUserAsLoggedOut();
+                    dialogInterface.dismiss();
                 }, getString(R.string.yes), (dialogInterface, i) -> {
-                        dialogInterface.dismiss();
+                    dialogInterface.dismiss();
                 }, getString(R.string.no), 0);
     }
 
@@ -339,8 +332,8 @@ public abstract class BaseActivity extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_white_24dp);
 
-            toolbar.setNavigationOnClickListener((v) ->{
-                    onBackPressed();
+            toolbar.setNavigationOnClickListener((v) -> {
+                onBackPressed();
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -356,17 +349,17 @@ public abstract class BaseActivity extends AppCompatActivity
         return scriptEngine;
     }
 
-    public void showNoDataView(){
+    public void showNoDataView() {
         findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
     }
 
-    public void hideNoDataView(){
-         findViewById(R.id.place_holder).setVisibility(View.GONE);
-     }
+    public void hideNoDataView() {
+        findViewById(R.id.place_holder).setVisibility(View.GONE);
+    }
 
-    public void setBackListener(@Nullable View view){
+    public void setBackListener(@Nullable View view) {
         onBackPressed();
-     }
+    }
 
     protected boolean hasPermissions(Context context, String permission) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
@@ -400,7 +393,8 @@ public abstract class BaseActivity extends AppCompatActivity
         return File.createTempFile(part, ext, dir);
     }
 
-    public  void openNextActivity(){}
+    public void openNextActivity() {
+    }
 
     public void onBackClicked() {
         try {
@@ -419,18 +413,9 @@ public abstract class BaseActivity extends AppCompatActivity
         }
     }
 
-    public void finishActivity(){
+    public void finishActivity() {
         finish();
     }
-
-    public static void runLayoutAnimation(final GridView recyclerView) {
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fall_down);
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.scheduleLayoutAnimation();
-    }
-
 
     protected String captureScreenshot(View v, String activityName) {
         String fileLocation = null;
@@ -464,15 +449,6 @@ public abstract class BaseActivity extends AppCompatActivity
             e.printStackTrace();
         }
         return fileLocation;
-    }
-
-
-    public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
     }
 
 

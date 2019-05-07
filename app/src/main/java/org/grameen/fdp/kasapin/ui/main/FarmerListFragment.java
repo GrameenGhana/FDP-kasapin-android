@@ -6,15 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.view.animation.LinearInterpolator;
 import android.widget.GridView;
 
@@ -25,11 +21,9 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseFragment;
-import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
-import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 
 import java.util.List;
 
@@ -44,7 +38,7 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.IS_TABLET;
  * Created by aangjnr on 11/12/2017.
  */
 
-public class FarmerListFragment extends BaseFragment implements MainContract.FragmentView{
+public class FarmerListFragment extends BaseFragment implements MainContract.FragmentView {
 
 
     @Inject
@@ -67,7 +61,6 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
 
 
     String SELECTED_VILLAGE;
-
 
 
     public FarmerListFragment() {
@@ -94,11 +87,11 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     }
 
 
-
     @Override
     protected void setUp(View view) {
         if (getArguments() != null) {
-            mFarmers = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<RealFarmer>>() {}.getType());
+            mFarmers = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<RealFarmer>>() {
+            }.getType());
             SELECTED_VILLAGE = getArguments().getString("village");
 
             index = getArguments().getInt("index");
@@ -109,9 +102,7 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
         //mPresenter.getFarmerData();
 
 
-
     }
-
 
 
     @Override
@@ -184,7 +175,7 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     public void setListAdapter(List<RealFarmer> mFarmers) {
 
 
-        if(index == 0) {
+        if (index == 0) {
             listView.setAlpha(0);
             listView.animate().alpha(1).setDuration(1000).setInterpolator(new LinearInterpolator()).start();
         }
@@ -193,47 +184,47 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
         new Handler().post(() -> {
 
 
-        if(mFarmers.size() > 0) {
+            if (mFarmers.size() > 0) {
 
-        if (IS_TABLET)
-            listView.setNumColumns(AppConstants.TABLET_COLUMN_COUNT);
-        else
-            listView.setNumColumns(AppConstants.PHONE_COLUMN_COUNT);
-
-
-        farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
-        listView.setAdapter(farmerListViewAdapter);
+                if (IS_TABLET)
+                    listView.setNumColumns(AppConstants.TABLET_COLUMN_COUNT);
+                else
+                    listView.setNumColumns(AppConstants.PHONE_COLUMN_COUNT);
 
 
-       // BaseActivity.runLayoutAnimation(listView);
+                farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
+                listView.setAdapter(farmerListViewAdapter);
 
 
-        listView.setOnItemClickListener((adapterView, view, i, l) -> {
-
-            AppLogger.i(TAG, "ON CLICK ");
-
-            RealFarmer farmer = mFarmers.get(i);
-            //Todo uncomment this
-
-            Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
-            intent.putExtra("farmer", BaseActivity.getGson().toJson(farmer));
-            startActivity(intent);
-
-        });
+                // BaseActivity.runLayoutAnimation(listView);
 
 
-        listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+                listView.setOnItemClickListener((adapterView, view, i, l) -> {
 
-            if (getAppDataManager().isMonitoring())
-                return false;
+                    AppLogger.i(TAG, "ON CLICK ");
 
-            final RealFarmer farmer = mFarmers.get(i);
-            mPresenter.showDeleteFarmerDialog(farmer, i);
-        return true;
+                    RealFarmer farmer = mFarmers.get(i);
+                    //Todo uncomment this
+
+                    Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
+                    intent.putExtra("farmer", BaseActivity.getGson().toJson(farmer));
+                    startActivity(intent);
+
+                });
 
 
-        });
-    }
+                listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+
+                    if (getAppDataManager().isMonitoring())
+                        return false;
+
+                    final RealFarmer farmer = mFarmers.get(i);
+                    mPresenter.showDeleteFarmerDialog(farmer, i);
+                    return true;
+
+
+                });
+            }
 
 
         });
@@ -280,7 +271,15 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
 
     }
 
+    @Override
+    public void onDestroy() {
+        if (mPresenter != null)
+            mPresenter.dropView();
 
+
+        super.onDestroy();
+
+    }
 
     public static class SpacesGridItemDecoration extends RecyclerView.ItemDecoration {
         private final int mSpace;
@@ -314,17 +313,6 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
             }
 
         }
-
-    }
-
-
-    @Override
-    public void onDestroy() {
-        if(mPresenter != null)
-        mPresenter.dropView();
-
-
-        super.onDestroy();
 
     }
 }

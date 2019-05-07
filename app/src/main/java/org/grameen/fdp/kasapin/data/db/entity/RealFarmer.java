@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,7 +15,7 @@ import java.util.Date;
  */
 
 @Entity(tableName = "farmers", indices = {@Index(value = "id", unique = true), @Index(value = "code", unique = true)})
-public class RealFarmer{
+public class RealFarmer {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -44,49 +43,47 @@ public class RealFarmer{
     @Ignore
     String externalId;
 
-    public RealFarmer(){}
-
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
+    public RealFarmer() {
     }
 
     public String getExternalId() {
         return externalId;
     }
 
-    public void setFirstVisitDate(Date firstVisitDate) {
-        this.firstVisitDate = firstVisitDate;
-    }
-
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public void setLastVisitDate(Date lastVisitDate) {
-        this.lastVisitDate = lastVisitDate;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public Date getFirstVisitDate() {
         return firstVisitDate;
     }
 
+    public void setFirstVisitDate(Date firstVisitDate) {
+        this.firstVisitDate = firstVisitDate;
+    }
+
     public Date getLastModifiedDate() {
         return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Date getLastVisitDate() {
         return lastVisitDate;
     }
 
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setLastVisitDate(Date lastVisitDate) {
+        this.lastVisitDate = lastVisitDate;
     }
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getLandArea() {
@@ -122,14 +119,13 @@ public class RealFarmer{
         this.hasSubmitted = hasSubmitted;
     }
 
-
-    public void setId(@NonNull int id) {
-        this.id = id;
-    }
-
     @NonNull
     public int getId() {
         return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public String getBirthYear() {
@@ -157,7 +153,6 @@ public class RealFarmer{
     }
 
 
-
     public String getGender() {
         return gender;
     }
@@ -175,16 +170,15 @@ public class RealFarmer{
         this.villageId = villageId;
     }
 
-    public void setVillageName(String villageName) {
-        this.villageName = villageName;
-    }
-
     public String getVillageName() {
         return villageName;
     }
 
+    public void setVillageName(String villageName) {
+        this.villageName = villageName;
+    }
 
-    public boolean hasAgreed(){
+    public boolean hasAgreed() {
         return hasSubmitted.equalsIgnoreCase("YES");
     }
 }

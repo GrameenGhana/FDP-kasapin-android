@@ -6,8 +6,6 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
-import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ import io.reactivex.Single;
  */
 
 @Dao
-public interface MappingsDao extends BaseDao<Mapping>{
+public interface MappingsDao extends BaseDao<Mapping> {
 
 
     @Transaction

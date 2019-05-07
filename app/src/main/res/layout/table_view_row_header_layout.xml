@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2018. Evren Coşkun
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +15,12 @@
   ~
   -->
 
-<RelativeLayout android:id="@+id/root"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/cell_background_color"
+    android:id="@+id/root"
     android:layout_width="@dimen/row_header_width"
-    android:layout_height="@dimen/cell_height">
+    android:layout_height="@dimen/cell_height"
+    android:background="@color/cell_background_color">
 
     <LinearLayout
         android:id="@+id/row_header_container"
@@ -39,7 +38,7 @@
             android:maxLines="1"
             android:textColor="@color/table_view_default_text_color"
             android:textSize="@dimen/text_size"
-            tools:text="Row Data"/>
+            tools:text="Row Data" />
 
     </LinearLayout>
 

@@ -1,23 +1,18 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-
-import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
  * Created by aangjnr on 17/01/2018.
  */
 
 @Entity(tableName = "recommendation_activities",
-        indices = {@Index("recommendationId"), @Index("activityId") })
+        indices = {@Index("recommendationId"), @Index("activityId")})
 
-public class RecommendationActivity extends BaseModel{
+public class RecommendationActivity extends BaseModel {
 
 
     @SerializedName("recommendation_id")
@@ -42,16 +37,22 @@ public class RecommendationActivity extends BaseModel{
     @SerializedName("labor_days_c")
     double laborDays;
 
+    @SerializedName("labor_cost_c")
+    double laborCost;
+
+    @SerializedName("supplies_cost_c")
+    double suppliesCost;
+
+
     public RecommendationActivity() {
-    }
-
-
-    public void setLaborDays(double laborDays) {
-        this.laborDays = laborDays;
     }
 
     public double getLaborDays() {
         return laborDays;
+    }
+
+    public void setLaborDays(double laborDays) {
+        this.laborDays = laborDays;
     }
 
     public int getRecommendationId() {
@@ -100,5 +101,21 @@ public class RecommendationActivity extends BaseModel{
 
     public void setSeasonal(int seasonal) {
         this.seasonal = seasonal;
+    }
+
+    public double getLaborCost() {
+        return laborCost;
+    }
+
+    public void setLaborCost(double laborCost) {
+        this.laborCost = laborCost;
+    }
+
+    public double getSuppliesCost() {
+        return suppliesCost;
+    }
+
+    public void setSuppliesCost(double suppliesCost) {
+        this.suppliesCost = suppliesCost;
     }
 }

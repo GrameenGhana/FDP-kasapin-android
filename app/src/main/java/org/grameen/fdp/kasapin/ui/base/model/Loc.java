@@ -5,15 +5,13 @@ package org.grameen.fdp.kasapin.ui.base.model;
  */
 
 
-import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
- public class Loc {
-     Integer id;
+public class Loc {
+    Integer id;
 
     String plotId;
     @SerializedName("latitude")

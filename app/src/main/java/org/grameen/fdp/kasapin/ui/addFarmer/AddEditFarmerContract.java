@@ -1,13 +1,9 @@
 package org.grameen.fdp.kasapin.ui.addFarmer;
 
 
-import android.support.annotation.NonNull;
-
-import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
-import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:09 PM
@@ -18,8 +14,7 @@ import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
 public class AddEditFarmerContract {
 
 
-
-    public interface View extends  BaseContract.View {
+    public interface View extends BaseContract.View {
 
         void startCameraIntent();
 
@@ -37,14 +32,13 @@ public class AddEditFarmerContract {
         void finishActivity();
     }
 
-     public interface Presenter {
+    public interface Presenter {
 
-         void loadFormFragment(String farmerId, int formId);
+        void loadFormFragment(String farmerId, int formId);
 
-         void saveData(RealFarmer farmer, FormAnswerData answerData, boolean exit);
+        void saveData(RealFarmer farmer, FormAnswerData answerData, boolean exit);
 
-     }
-
+    }
 
 
 }

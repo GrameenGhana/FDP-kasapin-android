@@ -384,8 +384,6 @@
     <string name="logs_sent">Logs have been sent!</string>
 
 
-
-
     <string name="permissions_needed">Permission needed</string>
     <string name="permissions_needed_rationale">This permission is needed. Please provide permission</string>
     <string name="grant_permissions">Grant</string>
@@ -421,8 +419,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."</string>
     <string name="could_not_delete_data">The data was not deleted!</string>
-
-
 
 
     <string name="error_has_occurred">An error has occurred!</string>

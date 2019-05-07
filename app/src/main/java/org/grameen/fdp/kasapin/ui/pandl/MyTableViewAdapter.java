@@ -3,17 +3,14 @@ package org.grameen.fdp.kasapin.ui.pandl;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ContextThemeWrapper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
-
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
@@ -30,7 +27,11 @@ import java.util.Locale;
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-import static org.grameen.fdp.kasapin.utilities.AppConstants.*;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.BUTTON_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_VIEW;
 
 
 /**
@@ -46,7 +47,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
     Context context;
     AppDatabase mAppDatabase;
-   // String[] YEARS = {"YEAR 1", "YEAR 2", "YEAR 3", "YEAR 4", "YEAR 5"};
+    // String[] YEARS = {"YEAR 1", "YEAR 2", "YEAR 3", "YEAR 4", "YEAR 5"};
 
 
     public MyTableViewAdapter(final Context context, final List<Data> data, final TableView<Data> tableView, AppDatabase appDatabase) {
@@ -191,7 +192,6 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     }
 
 
-
                     button.setText(name);
                     // button.setTextColor(ContextCompat.getColor(context, R.color.white));
                     button.setTag(data.getLabel());
@@ -214,7 +214,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     Question startYearQuestion = mAppDatabase.questionDao().get("start_year_").blockingGet();
                     if (startYearQuestion != null) {
 
-                        String [] values = data.getLabel().split("_");
+                        String[] values = data.getLabel().split("_");
 
                         final MaterialSpinner spinner = new MaterialSpinner(getContext());
                         spinner.setItems(startYearQuestion.formatQuestionOptions());

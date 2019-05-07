@@ -7,8 +7,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
 
-import org.grameen.fdp.kasapin.data.db.entity.Country;
-
 import java.util.List;
 
 /**
@@ -17,8 +15,8 @@ import java.util.List;
  * Personal mail aang.jnr@gmail.com
  */
 
- public interface BaseDao<T> {
-     @Transaction
+public interface BaseDao<T> {
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<T> objects);
 
@@ -32,8 +30,6 @@ import java.util.List;
 
     @Delete
     int deleteOne(T object);
-
-
 
 
 }

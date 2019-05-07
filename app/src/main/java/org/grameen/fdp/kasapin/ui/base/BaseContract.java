@@ -2,15 +2,9 @@ package org.grameen.fdp.kasapin.ui.base;
 
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
 import android.view.Window;
-
-import org.grameen.fdp.kasapin.data.db.entity.Activity;
 
 /**
  * Created by AangJnr on 19, September, 2018 @ 4:25 PM
@@ -20,7 +14,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Activity;
 
 public class BaseContract {
 
-     public interface Presenter<T extends View> {
+    public interface Presenter<T extends View> {
 
         /**
          * Binds presenter with a view when resumed. The Presenter will perform initialization here.
@@ -42,8 +36,7 @@ public class BaseContract {
 
         void onTokenExpire();
 
-     }
-
+    }
 
 
     public interface View<T> {

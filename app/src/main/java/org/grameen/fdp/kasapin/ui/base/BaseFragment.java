@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.ui.base;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -9,14 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 
-import javax.inject.Inject;
 import javax.script.ScriptEngine;
 
 import butterknife.Unbinder;
@@ -33,7 +29,6 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
     public String TAG;
     private BaseActivity mActivity;
     private Unbinder mUnBinder;
-
 
 
     @Override
@@ -125,17 +120,18 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
     }
 
 
-
     public BaseActivity getBaseActivity() {
         return mActivity;
     }
 
-    public AppDataManager getAppDataManager(){
+    public AppDataManager getAppDataManager() {
         return mActivity.mAppDataManager;
     }
 
 
-    public ScriptEngine getScriptEngine(){return mActivity.getScriptEngine();}
+    public ScriptEngine getScriptEngine() {
+        return mActivity.getScriptEngine();
+    }
 
     public void setUnBinder(Unbinder unBinder) {
         mUnBinder = unBinder;
@@ -151,14 +147,6 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
         super.onDestroy();
     }
 
-    public interface Callback {
-
-        void onFragmentAttached();
-
-        void onFragmentDetached(String tag);
-    }
-
-
     @Override
     public void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable) {
         CommonUtils.showAlertDialog(mActivity.mAlertDialogBuilder, cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener,
@@ -167,13 +155,19 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
 
     }
 
-
     @Override
     public void setLoadingMessage(String message) {
-        if(mActivity.mProgressDialog != null && mActivity.mProgressDialog.isShowing())
+        if (mActivity.mProgressDialog != null && mActivity.mProgressDialog.isShowing())
             mActivity.mProgressDialog.setMessage(message);
     }
 
+    public abstract void openNextActivity();
 
-    public  abstract void openNextActivity();
+
+    public interface Callback {
+
+        void onFragmentAttached();
+
+        void onFragmentDetached(String tag);
+    }
 }

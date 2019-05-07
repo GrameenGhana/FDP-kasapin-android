@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
-    <include layout="@layout/toolbar"/>
-
-
-
+    <include layout="@layout/toolbar" />
 
 
     <RelativeLayout
@@ -18,41 +14,34 @@
         android:layout_height="match_parent">
 
 
-
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_buttons"
-            >
-
+            android:layout_above="@+id/bottom_buttons">
 
 
         </android.support.v7.widget.RecyclerView>
-
-
-
 
 
         <LinearLayout
             android:id="@+id/placeHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="@dimen/spacing_normal"
-            android:gravity="center_horizontal"
-            android:layout_centerInParent="true"
 
             >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_quarter"
                 android:text="@string/no_points"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:layout_marginBottom="@dimen/spacing_quarter"
 
                 />
 
@@ -67,50 +56,46 @@
 
 
         <LinearLayout
+            android:id="@+id/bottom_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:id="@+id/bottom_buttons"
-            android:padding="@dimen/spacing_normal"
-            android:clipToPadding="false"
             android:clipChildren="false"
-            >
-
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:padding="@dimen/spacing_normal">
 
 
             <Button
                 android:id="@+id/back"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:theme="@style/PrimaryButtonGrey"
-                android:text="Back"
+                android:layout_weight="1"
                 android:padding="@dimen/spacing_normal"
-                />
+                android:text="Back"
+                android:theme="@style/PrimaryButtonGrey" />
 
 
             <Button
                 android:id="@+id/addPoint"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="add GPS point"
-                android:padding="@dimen/spacing_normal"
                 android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_weight="1"
+                android:padding="@dimen/spacing_normal"
+                android:text="add GPS point"
 
                 />
-
 
 
             <Button
                 android:id="@+id/calculate"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="calculate area"
-                android:padding="@dimen/spacing_normal"
                 android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_weight="1"
+                android:padding="@dimen/spacing_normal"
+                android:text="calculate area"
 
                 />
 

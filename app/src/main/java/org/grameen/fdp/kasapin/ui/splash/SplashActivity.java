@@ -21,7 +21,6 @@ import butterknife.ButterKnife;
 import static java.lang.Thread.sleep;
 
 
-
 public class SplashActivity extends BaseActivity implements SplashContract.View {
 
     @Inject
@@ -34,10 +33,9 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     View textLayout;
 
 
-
     public static Intent getStartIntent(Context context) {
         return new Intent(context, SplashActivity.class);
-     }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +57,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         textLayout.setAlpha(0f);
 
 
-
-
-
-     }
+    }
 
 
     @Override
@@ -88,7 +83,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         finish();
 
 
-
     }
 
     @Override
@@ -102,15 +96,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     }
 
 
-
-
-
-
     @Override
     public void animateLogoAndWait() {
 
         startAnimations();
-
 
 
     }

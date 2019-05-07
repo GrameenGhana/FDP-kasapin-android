@@ -4,7 +4,6 @@ package org.grameen.fdp.kasapin.data.db.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
 import org.grameen.fdp.kasapin.data.db.entity.FormTranslation;
 
 import java.util.List;
@@ -23,13 +22,11 @@ public class FormsDataWrapper {
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public FormsDataWrapper() {
     }
 
     /**
-     *
      * @param data
      */
     public FormsDataWrapper(List<FormTranslation> data) {
@@ -44,7 +41,6 @@ public class FormsDataWrapper {
     public void setData(List<FormTranslation> data) {
         this.data = data;
     }
-
 
 
 }

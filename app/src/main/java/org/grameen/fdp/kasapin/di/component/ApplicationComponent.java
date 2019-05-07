@@ -1,16 +1,11 @@
 package org.grameen.fdp.kasapin.di.component;
 
 
-import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
 
 import org.grameen.fdp.kasapin.FDPKasapin;
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.DataManager;
-import org.grameen.fdp.kasapin.data.db.AppDatabase;
-import org.grameen.fdp.kasapin.data.network.RetrofitInterceptor;
-import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
 import org.grameen.fdp.kasapin.di.module.ApplicationModule;
 import org.grameen.fdp.kasapin.services.SyncService;
@@ -30,6 +25,7 @@ import dagger.Component;
 public interface ApplicationComponent {
 
     void inject(FDPKasapin app);
+
     void inject(SyncService service);
     //void inject(RetrofitInterceptor interceptor);
 

@@ -16,7 +16,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 /**
@@ -30,32 +29,6 @@ public class ArithmeticUtils {
 
     String TAG = "Arithmetic Utils";
 
-    String calculate(@NonNull ScriptEngine scriptEngine, String equation) throws ScriptException {
-        Double value = 0.0;
-        try {
-            value = (Double) scriptEngine.eval(equation.trim().replace(",", ""));
-        } catch (Exception e) {
-            e.printStackTrace();
-            value = 0.0;
-        }
-
-        return String.valueOf(value);
-    }
-
-
-    Double calculateDouble(@NonNull ScriptEngine scriptEngine, String equation) {
-        Log.i(TAG, "Evaluating " + equation);
-        Double value;
-        try {
-            value = (Double) scriptEngine.eval(equation.trim().replace(",", ""));
-        } catch (Exception e) {
-            e.printStackTrace();
-            value = null;
-        }
-
-        return value;
-    }
-
     public static String calculateAndFormatDouble(@NonNull ScriptEngine scriptEngine, String equation) throws ScriptException {
 
         Double value = (Double) scriptEngine.eval(equation.trim());
@@ -66,7 +39,6 @@ public class ArithmeticUtils {
 
         return (formatter.format(value));
     }
-
 
     public static Boolean compareBooleanValues(@NonNull ScriptEngine engine, SkipLogic sl, String newValue) {
         boolean value = false;
@@ -93,6 +65,26 @@ public class ArithmeticUtils {
      */
 
         return value;
+    }
+
+    public static double roundDoubleTo2dp(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    String calculate(@NonNull ScriptEngine scriptEngine, String equation) throws ScriptException {
+        Double value = 0.0;
+        try {
+            value = (Double) scriptEngine.eval(equation.trim().replace(",", ""));
+        } catch (Exception e) {
+            e.printStackTrace();
+            value = 0.0;
+        }
+
+        return String.valueOf(value);
     }
 
 /*
@@ -122,7 +114,18 @@ public class ArithmeticUtils {
 
     */
 
+    Double calculateDouble(@NonNull ScriptEngine scriptEngine, String equation) {
+        Log.i(TAG, "Evaluating " + equation);
+        Double value;
+        try {
+            value = (Double) scriptEngine.eval(equation.trim().replace(",", ""));
+        } catch (Exception e) {
+            e.printStackTrace();
+            value = null;
+        }
 
+        return value;
+    }
 
     Boolean compareValues(@NonNull ScriptEngine engine, Logic logic, JSONObject ALL_MONITORING_VALUES_JSON) {
 
@@ -163,7 +166,6 @@ public class ArithmeticUtils {
 
     }
 
-
     String getValue(String id, JSONObject jsonObject) {
         String value = null;
 
@@ -181,22 +183,6 @@ public class ArithmeticUtils {
 
         return value;
     }
-
-
-    public static double roundDoubleTo2dp(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
-
-
-
-
-
-
 
 
 }

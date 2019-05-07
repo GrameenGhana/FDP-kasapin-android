@@ -1,93 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                  android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <android.support.v7.widget.CardView
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/content"
         android:orientation="vertical"
         app:cardCornerRadius="0dp"
-        app:cardElevation="2dp"
-        >
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
-        <include layout="@layout/toolbar"/>
+            <include layout="@layout/toolbar" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                     android:paddingLeft="@dimen/spacing_normal"
-                    android:paddingRight="@dimen/spacing_normal"
-                    android:paddingTop="@dimen/spacing_normal"
-                    android:paddingBottom="@dimen/spacing_half"
                     android:orientation="horizontal"
-                     >
-
-                        <TextView
-                            android:id="@+id/plotName"
-                             android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="Plot Name"
-                            android:textSize="@dimen/text_size_medium"
-                            android:textColor="@android:color/primary_text_light"
-                            android:textStyle="bold"
-
-
-                            />
-
+                    android:paddingLeft="@dimen/spacing_normal"
+                    android:paddingTop="@dimen/spacing_normal"
+                    android:paddingRight="@dimen/spacing_normal"
+                    android:paddingBottom="@dimen/spacing_half">
 
                     <TextView
-                        android:id="@+id/landSize"
+                        android:id="@+id/plotName"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:textSize="@dimen/text_size_normal"
+                        android:layout_weight="1"
+                        android:text="Plot Name"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold"
 
 
                         />
 
 
+                    <TextView
+                        android:id="@+id/landSize"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:textSize="@dimen/text_size_normal" />
 
 
-
-
-
-                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/spacing_normal"
-                    android:paddingRight="@dimen/spacing_normal"
                     android:paddingTop="@dimen/spacing_half"
-                    android:paddingBottom="@dimen/spacing_half"                     >
+                    android:paddingRight="@dimen/spacing_normal"
+                    android:paddingBottom="@dimen/spacing_half">
 
 
                     <TextView
                         android:id="@+id/plot_est_prod_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/estimated_production_size"
                         android:layout_marginRight="@dimen/spacing_quarter"
+                        android:text="@string/estimated_production_size"
                         android:textColor="@android:color/primary_text_light"
                         android:textSize="@dimen/text_size_normal"
 
@@ -98,9 +86,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textSize="@dimen/text_size_normal"
-                        />
-
+                        android:textSize="@dimen/text_size_normal" />
 
 
                 </LinearLayout>
@@ -109,94 +95,83 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/spacing_normal"
-                    android:paddingRight="@dimen/spacing_normal"
-                    android:paddingTop="@dimen/spacing_half"
-                    android:paddingBottom="@dimen/spacing_half"
                     android:gravity="center_vertical"
-                    >
+                    android:paddingLeft="@dimen/spacing_normal"
+                    android:paddingTop="@dimen/spacing_half"
+                    android:paddingRight="@dimen/spacing_normal"
+                    android:paddingBottom="@dimen/spacing_half">
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/spacing_quarter"
                         android:text="@string/recommended_intervention"
                         android:textColor="@android:color/primary_text_light"
                         android:textSize="@dimen/text_size_normal"
-                        android:layout_marginRight="@dimen/spacing_quarter"
 
                         />
 
 
                     <ProgressBar
                         android:id="@+id/recommendationProgress"
+                        style="?android:attr/progressBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:indeterminate="true"
                         android:layout_marginLeft="@dimen/spacing_half"
-                        style="?android:attr/progressBarStyleSmall"
-                        android:visibility="gone"
-                         />
+                        android:indeterminate="true"
+                        android:visibility="gone" />
 
 
                     <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scrollbars="horizontal"
-                        >
+                        android:scrollbars="horizontal">
 
 
                         <TextView
                             android:id="@+id/recommended_intervention"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="--"
-                            android:textStyle="bold"
                             android:maxLines="1"
-                            android:textSize="@dimen/text_size_normal"
+                            android:text="--"
                             android:textColor="?attr/colorAccent"
-                            />
-
-
+                            android:textSize="@dimen/text_size_normal"
+                            android:textStyle="bold" />
 
 
                     </HorizontalScrollView>
 
 
-
-
                 </LinearLayout>
 
 
-
                 <LinearLayout
-                        android:id="@+id/ll3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                         android:gravity="center_vertical"
-                         android:orientation="horizontal"
-                        android:paddingLeft="@dimen/spacing_half"
-                        android:paddingRight="@dimen/spacing_half"
-                        android:layout_marginBottom="@dimen/spacing_normal"
-                        >
+                    android:id="@+id/ll3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_normal"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/spacing_half"
+                    android:paddingRight="@dimen/spacing_half">
 
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="@dimen/spacing_half"
-                        >
+                        android:padding="@dimen/spacing_half">
 
 
                         <TextView
                             android:id="@+id/plot_ph_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/spacing_quarter"
                             android:text="@string/soil_ph"
                             android:textColor="@android:color/primary_text_light"
                             android:textSize="@dimen/text_size_normal"
-                            android:layout_marginRight="@dimen/spacing_quarter"
 
 
                             />
@@ -206,10 +181,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""
-                            android:textStyle="bold"
                             android:textSize="@dimen/text_size_normal"
-                            />
-
+                            android:textStyle="bold" />
 
 
                     </LinearLayout>
@@ -218,18 +191,17 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="@dimen/spacing_half"
-                        >
+                        android:padding="@dimen/spacing_half">
 
 
                         <TextView
                             android:id="@+id/lime_needed_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/spacing_quarter"
                             android:text="@string/lime_needed"
                             android:textColor="@android:color/primary_text_light"
                             android:textSize="@dimen/text_size_normal"
-                            android:layout_marginRight="@dimen/spacing_quarter"
 
                             />
 
@@ -238,37 +210,32 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="--"
-                            android:textStyle="bold"
                             android:textColor="?attr/colorAccent"
                             android:textSize="@dimen/text_size_normal"
+                            android:textStyle="bold"
 
                             />
 
 
-
                     </LinearLayout>
 
-                    </LinearLayout>
+                </LinearLayout>
 
 
+                <LinearLayout
+                    android:id="@+id/ll4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/spacing_normal"
+                    android:layout_toRightOf="@+id/ll3"
+                    android:orientation="vertical"
+                    app:layout_widthPercent="80%"
 
-                    <LinearLayout
-                        android:id="@+id/ll4"
-                        android:layout_toRightOf="@+id/ll3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_widthPercent="80%"
-                        android:orientation="vertical"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/spacing_normal"
-
-                        >
-
+                    >
 
 
-
-
-                    </LinearLayout>
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -279,31 +246,26 @@
     </android.support.v7.widget.CardView>
 
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white"
-        android:layout_below="@id/content"
         android:layout_above="@+id/conditionsLayout"
+        android:layout_below="@id/content"
         android:layout_marginTop="@dimen/spacing_half"
-         >
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/aos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Adoption Observations (AO)"
             android:padding="@dimen/spacing_normal"
+            android:text="Adoption Observations (AO)"
             android:textAllCaps="true"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/text_size_tiny"
             android:textStyle="bold"
-            />
-
+            android:visibility="gone" />
 
 
         <ScrollView
@@ -315,182 +277,154 @@
             >
 
 
-
             <LinearLayout
                 android:id="@+id/dynamicLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                android:padding="@dimen/spacing_normal"
                 android:animateLayoutChanges="true"
                 android:background="@drawable/border_background_white"
-                />
-
-
-
-
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_normal" />
 
 
         </ScrollView>
 
 
-
     </LinearLayout>
 
 
-
-
     <android.support.v7.widget.CardView
+        android:id="@+id/conditionsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_buttons"
         android:layout_marginTop="@dimen/spacing_half"
         android:layout_marginBottom="@dimen/spacing_half"
-        android:layout_above="@+id/bottom_buttons"
-        android:id="@+id/conditionsLayout"
         android:visibility="gone"
 
         >
 
 
-
-
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-
-        >
-
-
-
-        <TextView
-             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Adoption Observations Results"
-            android:padding="@dimen/spacing_normal"
-            android:textAllCaps="true"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/text_size_tiny"
-            android:textStyle="bold"
-            />
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             android:layout_marginLeft="@dimen/spacing_normal"
-            android:layout_marginRight="@dimen/spacing_normal"
-            android:layout_marginBottom="@dimen/spacing_half"
+            android:orientation="vertical"
+
             >
 
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Good: "
-                android:textColor="@color/green_indicator"
-                android:textStyle="bold"
+                android:padding="@dimen/spacing_normal"
+                android:text="Adoption Observations Results"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_size_tiny"
+                android:textStyle="bold" />
 
 
-                />
-
-            <TextView
-                android:id="@+id/good"
-                android:layout_width="0dp"
-                android:layout_weight="5"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Genetics of plant Material, GAP's ESM"
-                 android:textColor="@android:color/primary_text_light"
-                />
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginRight="@dimen/spacing_normal"
+                android:layout_marginBottom="@dimen/spacing_half">
 
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Good: "
+                    android:textColor="@color/green_indicator"
+                    android:textStyle="bold"
+
+
+                    />
+
+                <TextView
+                    android:id="@+id/good"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="Genetics of plant Material, GAP's ESM"
+                    android:textColor="@android:color/primary_text_light" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginRight="@dimen/spacing_normal"
+                android:layout_marginBottom="@dimen/spacing_normal">
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bad: "
+                    android:textColor="@color/cpb_red"
+                    android:textStyle="bold"
+
+
+                    />
+
+                <TextView
+                    android:id="@+id/bad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="Farm Condition"
+                    android:textColor="@android:color/primary_text_light" />
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/spacing_normal"
-            android:layout_marginRight="@dimen/spacing_normal"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            >
-
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Bad: "
-                android:textColor="@color/cpb_red"
-                android:textStyle="bold"
-
-
-                />
-
-            <TextView
-                android:id="@+id/bad"
-                android:layout_width="0dp"
-                android:layout_weight="5"
-                android:layout_height="wrap_content"
-                android:text="Farm Condition"
-                 android:textColor="@android:color/primary_text_light"
-                />
-
-
-        </LinearLayout>
-
-
-
-
-    </LinearLayout>
 
 
     </android.support.v7.widget.CardView>
 
 
-
     <LinearLayout
+        android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:id="@+id/bottom_buttons"
-        android:padding="@dimen/spacing_normal"
-        android:clipToPadding="false"
         android:clipChildren="false"
-        >
-
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_normal">
 
 
         <Button
             android:id="@+id/back"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:theme="@style/PrimaryButtonGrey"
-            android:text="@string/back"
+            android:layout_weight="2"
             android:onClick="onBackClicked"
             android:padding="@dimen/spacing_normal"
-            />
+            android:text="@string/back"
+            android:theme="@style/PrimaryButtonGrey" />
 
 
         <Button
             android:id="@+id/editButton"
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:text="@string/edit"
-            android:padding="@dimen/spacing_normal"
             android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_weight="3"
+            android:padding="@dimen/spacing_normal"
+            android:text="@string/edit"
 
             />
 
     </LinearLayout>
-
 
 
 </RelativeLayout>

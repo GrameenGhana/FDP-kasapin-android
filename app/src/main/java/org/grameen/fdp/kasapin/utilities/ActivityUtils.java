@@ -28,10 +28,9 @@ public class ActivityUtils {
     /**
      * The {@code fragment} is added to the container view with id {@code frameId}. The operation is
      * performed by the {@code fragmentManager}.
-     *
      */
-    public static void addFragmentToActivity (@NonNull FragmentManager fragmentManager,
-                                              @NonNull Fragment fragment, int frameId) {
+    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
+                                             @NonNull Fragment fragment, int frameId) {
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
 
@@ -41,18 +40,18 @@ public class ActivityUtils {
     }
 
 
-    public static void loadDynamicView(@NonNull FragmentManager fragmentManager,  @NonNull Fragment fragment, int frameId) {
+    public static void loadDynamicView(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment, int frameId) {
         //Todo add parameter to load data from the database, if is in editing mode else display default forms with their resp values
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
 
-         fragmentManager.beginTransaction()
+        fragmentManager.beginTransaction()
                 .add(frameId, fragment, fragment.getClass().getSimpleName())
                 .commit();
     }
 
 
-    public static void loadDynamicView(@NonNull FragmentManager fragmentManager,  @NonNull Fragment fragment, String formName) {
+    public static void loadDynamicView(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment, String formName) {
         //Todo add parameter to load data from the database, if is in editing mode else display default forms with their resp values
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
@@ -62,7 +61,6 @@ public class ActivityUtils {
                 .addToBackStack(null)
                 .commit();
     }
-
 
 
     /**

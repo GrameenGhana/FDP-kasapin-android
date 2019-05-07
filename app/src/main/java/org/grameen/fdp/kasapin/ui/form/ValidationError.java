@@ -13,8 +13,8 @@ public abstract class ValidationError {
     /**
      * Creates a new instance with the specified field name.
      *
-     * @param fieldName     the field name
-     * @param fieldLabel    the field label
+     * @param fieldName  the field name
+     * @param fieldLabel the field label
      */
     public ValidationError(String fieldName, String fieldLabel) {
         this.fieldName = fieldName;
@@ -24,7 +24,7 @@ public abstract class ValidationError {
     /**
      * Returns the name of the field associated with the validation error.
      *
-     * @return  the name of the field that has the error
+     * @return the name of the field that has the error
      */
     public String getFieldName() {
         return fieldName;
@@ -33,7 +33,7 @@ public abstract class ValidationError {
     /**
      * Returns the label associated to the field.
      *
-     * @return  the display value of the field.
+     * @return the display value of the field.
      */
     public String getFieldLabel() {
         return fieldLabel;
@@ -42,7 +42,7 @@ public abstract class ValidationError {
     /**
      * Returns a human-readable description of the validation error.
      *
-     * @param resources     the application's resources
+     * @param resources the application's resources
      * @return a string describing the error
      */
     public abstract String getMessage(Resources resources);

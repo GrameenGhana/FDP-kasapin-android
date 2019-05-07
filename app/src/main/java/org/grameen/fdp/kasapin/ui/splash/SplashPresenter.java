@@ -7,18 +7,15 @@ import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 
 import javax.inject.Inject;
 
-import static java.lang.Thread.sleep;
-
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:06 PM
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */
 
-public class SplashPresenter extends BasePresenter<SplashContract.View> implements SplashContract.Presenter{
+public class SplashPresenter extends BasePresenter<SplashContract.View> implements SplashContract.Presenter {
 
     AppDataManager mAppDataManager;
-
 
 
     @Inject
@@ -30,18 +27,15 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
     }
 
 
-
-
     @Override
     public void openNextActivity() {
 
-        if(mAppDataManager.getUserLoggedInMode() == DataManager.LoggedInMode.LOGGED_OUT.getType())
+        if (mAppDataManager.getUserLoggedInMode() == DataManager.LoggedInMode.LOGGED_OUT.getType())
             getView().openLoginActivity();
         else
             getView().openNextActivity();
 
     }
-
 
 
     @Override
@@ -50,9 +44,6 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
         getView().animateLogoAndWait();
 
     }
-
-
-
 
 
 }

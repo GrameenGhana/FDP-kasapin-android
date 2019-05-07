@@ -14,30 +14,31 @@ public class QuestionsAndSkipLogic {
 
     List<Mapping> map;
 
-    public QuestionsAndSkipLogic(){}
-
-    public void setMap(List<Mapping> map) {
-        this.map = map;
+    public QuestionsAndSkipLogic() {
     }
 
     public List<Mapping> getMap() {
         return map;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public void setSkiplogic(List<SkipLogic> skiplogic) {
-        this.skiplogic = skiplogic;
+    public void setMap(List<Mapping> map) {
+        this.map = map;
     }
 
     public List<SkipLogic> getSkiplogic() {
         return skiplogic;
     }
 
+    public void setSkiplogic(List<SkipLogic> skiplogic) {
+        this.skiplogic = skiplogic;
+    }
+
     public Question getQuestion() {
         return question;
     }
 
- }
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+}

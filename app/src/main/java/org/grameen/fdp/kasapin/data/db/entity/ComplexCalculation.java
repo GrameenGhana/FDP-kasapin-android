@@ -30,48 +30,44 @@ public class ComplexCalculation {
     String condition;
 
 
-
-
-    public ComplexCalculation(){}
-
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public ComplexCalculation() {
     }
 
     public String getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-
-    public void setCondition(String condition) {
-        this.condition = condition;
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
-
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
-    }
-
 
     public String getCondition() {
         return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
 
     public String getQuestionId() {
         return questionId;
     }
 
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
 
     @NonNull
     public String getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setId(@NonNull String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {

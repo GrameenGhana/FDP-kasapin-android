@@ -2,16 +2,14 @@ package org.grameen.fdp.kasapin.utilities;
 
 
 import android.app.Application;
-import android.os.Environment;
 import android.util.Log;
 
 import com.balsikandar.crashreporter.CrashReporter;
 import com.crashlytics.android.Crashlytics;
 
+import org.grameen.fdp.kasapin.BuildConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import org.grameen.fdp.kasapin.BuildConfig;
 
 import java.io.File;
 
@@ -68,16 +66,16 @@ public class AppLogger {
         Timber.e(throwable, s, objects);
     }
 
-    public static void d( String s) {
+    public static void d(String s) {
         Timber.d(s);
     }
 
     public static void i(String tag, String message) {
-        Timber.i("%s%s  -> %s", " ******** ",tag, message);
+        Timber.i("%s%s  -> %s", " ******** ", tag, message);
     }
 
     public static void i(String message) {
-        Timber.i( "%s -> %s", " ******** ", message);
+        Timber.i("%s -> %s", " ******** ", message);
     }
 
     public static void e(String tag, String message) {
@@ -85,12 +83,12 @@ public class AppLogger {
         largeLog(tag, message);
     }
 
-     static void largeLog(String tag, String content) {
+    static void largeLog(String tag, String content) {
         if (content.length() > 4000) {
-            Timber.e("%s%s  -> %s", " ******** ",tag, content.substring(0, 4000));
+            Timber.e("%s%s  -> %s", " ******** ", tag, content.substring(0, 4000));
             largeLog(tag, content.substring(4000));
         } else {
-            Timber.e("%s%s  -> %s", " ******** ",tag, content);
+            Timber.e("%s%s  -> %s", " ******** ", tag, content);
         }
     }
 

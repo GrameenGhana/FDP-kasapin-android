@@ -2,18 +2,12 @@ package org.grameen.fdp.kasapin.data.db.dao;
 
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
-import org.grameen.fdp.kasapin.data.db.entity.Activity;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 
 import java.util.List;
 
-import io.reactivex.Completable;
-import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 /**
@@ -23,7 +17,7 @@ import io.reactivex.Single;
  */
 
 @Dao
-public interface FormAnswersDao extends BaseDao<FormAnswerData>{
+public interface FormAnswersDao extends BaseDao<FormAnswerData> {
 
 
    /* @Insert
@@ -40,11 +34,6 @@ public interface FormAnswersDao extends BaseDao<FormAnswerData>{
 
     @Query("SELECT * FROM form_answers WHERE farmerCode = :farmerCode")
     Single<List<FormAnswerData>> getAll(String farmerCode);
-
-
-
-
-
 
 
 }

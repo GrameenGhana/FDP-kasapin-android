@@ -1,376 +1,325 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
     <android.support.v7.widget.CardView
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/content"
         android:orientation="vertical"
         app:cardCornerRadius="0dp"
-        app:cardElevation="2dp"
-        >
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
-        <include layout="@layout/toolbar"/>
-
-
+        app:cardElevation="2dp">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
-            <android.support.percent.PercentRelativeLayout
+            <include layout="@layout/toolbar" />
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_normal"
-                android:layout_marginRight="@dimen/spacing_normal"
-                android:layout_marginTop="@dimen/spacing_normal"
-                 >
+                android:orientation="vertical">
 
-
-
-                <LinearLayout
-                    android:id="@+id/ll1"
+                <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_widthPercent="50%"
-                    android:gravity="center_vertical"
-                    android:layout_centerVertical="true"
-                    android:orientation="vertical"
-                     >
-
-                    <TextView
-                        android:id="@+id/plot_name_text"
-                        style="@style/TextAppearance.AppCompat.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/plot_name"
-                         android:textStyle="bold"
-                         android:layout_marginBottom="@dimen/spacing_half"
-
-                        />
-
-
-                    <EditText
-                         android:id="@+id/plotNameEdittext"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                         android:background="@drawable/border_background"
-                        android:maxLines="1"
-                        android:paddingLeft="@dimen/spacing_normal"
-                         android:inputType="textPersonName"
-                        />
-
-
-
-                </LinearLayout>
-
-
-
-                <LinearLayout
-                    android:id="@+id/ll2"
-                    android:layout_toRightOf="@+id/ll1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                     app:layout_widthPercent="50%"
-                    android:orientation="vertical"
-                    android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/spacing_normal"
-
-                    >
-
-
-                    <TextView
-                        android:id="@+id/plot_size_text"
-
-                        style="@style/TextAppearance.AppCompat.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Plot Size"
-                         android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/spacing_half"
-                        />
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:layout_marginRight="@dimen/spacing_normal">
 
 
-
-
-                    <android.support.percent.PercentRelativeLayout
+                    <LinearLayout
+                        android:id="@+id/ll1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        app:layout_widthPercent="50%">
+
+                        <TextView
+                            android:id="@+id/plot_name_text"
+                            style="@style/TextAppearance.AppCompat.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_half"
+                            android:text="@string/plot_name"
+                            android:textStyle="bold"
+
+                            />
 
 
                         <EditText
-                            android:id="@+id/plotSizeEdittext"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/plotNameEdittext"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/border_background"
-                            android:ellipsize="end"
-                            android:paddingLeft="@dimen/spacing_normal"
+                            android:inputType="textPersonName"
                             android:maxLines="1"
-                            android:inputType="numberDecimal"
-                            app:layout_widthPercent="50%"
-                            app:ms_arrow_tint="@color/colorPrimary"
-                            app:ms_background_color="@color/background"
-                            android:layout_marginRight="@dimen/spacing_half"
-                            />
+                            android:paddingLeft="@dimen/spacing_normal" />
 
 
-
-                        <TextView
-                            android:id="@+id/plotSizeUnitSpinner"
-                            android:layout_toRightOf="@id/plotSizeEdittext"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="@dimen/spacing_half"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:gravity="center_vertical"
-                            app:layout_widthPercent="50%"
-
-                            />
+                    </LinearLayout>
 
 
-
-                    </android.support.percent.PercentRelativeLayout>
-
-
-                </LinearLayout>
-
-
-
-            </android.support.percent.PercentRelativeLayout>
-
-
-
-
-            <android.support.percent.PercentRelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:layout_marginBottom="@dimen/spacing_normal"
-                android:layout_marginLeft="@dimen/spacing_normal"
-                android:layout_marginRight="@dimen/spacing_normal"
-                   >
-
-
-
-                <LinearLayout
-                    android:id="@+id/ll3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_widthPercent="50%"
-                    android:orientation="vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/spacing_normal"
-                      >
-
-                    <TextView
-                        android:id="@+id/plot_est_prod_text"
-
-                        style="@style/TextAppearance.AppCompat.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/est_production_size"
-                         android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/spacing_half"
-
-                        />
-
-
-                    <android.support.percent.PercentRelativeLayout
+                    <LinearLayout
+                        android:id="@+id/ll2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/spacing_normal"
+                        android:layout_toRightOf="@+id/ll1"
+                        android:orientation="vertical"
+                        app:layout_widthPercent="50%"
 
-
-                        <EditText
-                            android:id="@+id/estimatedProductionEdittext"
-                            android:layout_width="wrap_content"
-                             android:background="@drawable/border_background"
-                            android:ellipsize="end"
-                             app:layout_widthPercent="50%"
-                            app:ms_arrow_tint="@color/colorPrimary"
-                            app:ms_background_color="@color/background"
-                            android:layout_marginRight="@dimen/spacing_half"
-                            android:inputType="numberDecimal"
-                            android:layout_height="wrap_content"
-                             android:maxLines="1"
-                            android:paddingLeft="@dimen/spacing_normal"
-                            />
-
+                        >
 
 
                         <TextView
-                            android:id="@+id/productionSizeUnitSpinner"
-                            android:layout_toRightOf="@id/estimatedProductionEdittext"
+                            android:id="@+id/plot_size_text"
+
+                            style="@style/TextAppearance.AppCompat.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="@dimen/spacing_half"
-                            android:ellipsize="end"
-                             android:gravity="center_vertical"
-                            android:maxLines="1"
-                            app:layout_widthPercent="50%"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_half"
+                            android:text="Plot Size"
+                            android:textStyle="bold" />
+
+
+                        <android.support.percent.PercentRelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+
+                            <EditText
+                                android:id="@+id/plotSizeEdittext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/spacing_half"
+                                android:background="@drawable/border_background"
+                                android:ellipsize="end"
+                                android:inputType="numberDecimal"
+                                android:maxLines="1"
+                                android:paddingLeft="@dimen/spacing_normal"
+                                app:layout_widthPercent="50%"
+                                app:ms_arrow_tint="@color/colorPrimary"
+                                app:ms_background_color="@color/background" />
+
+
+                            <TextView
+                                android:id="@+id/plotSizeUnitSpinner"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginLeft="@dimen/spacing_half"
+                                android:layout_toRightOf="@id/plotSizeEdittext"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                app:layout_widthPercent="50%"
+
+                                />
+
+
+                        </android.support.percent.PercentRelativeLayout>
+
+
+                    </LinearLayout>
+
+
+                </android.support.percent.PercentRelativeLayout>
+
+
+                <android.support.percent.PercentRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_normal"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/spacing_normal">
+
+
+                    <LinearLayout
+                        android:id="@+id/ll3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:orientation="vertical"
+                        app:layout_widthPercent="50%">
+
+                        <TextView
+                            android:id="@+id/plot_est_prod_text"
+
+                            style="@style/TextAppearance.AppCompat.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_half"
+                            android:text="@string/est_production_size"
+                            android:textStyle="bold"
+
                             />
 
 
-
-                    </android.support.percent.PercentRelativeLayout>
-
-
-
-                </LinearLayout>
+                        <android.support.percent.PercentRelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
 
+                            <EditText
+                                android:id="@+id/estimatedProductionEdittext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/spacing_half"
+                                android:background="@drawable/border_background"
+                                android:ellipsize="end"
+                                android:inputType="numberDecimal"
+                                android:maxLines="1"
+                                android:paddingLeft="@dimen/spacing_normal"
+                                app:layout_widthPercent="50%"
+                                app:ms_arrow_tint="@color/colorPrimary"
+                                app:ms_background_color="@color/background" />
 
-                <LinearLayout
-                    android:id="@+id/ll4"
-                    android:layout_toRightOf="@+id/ll3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                     app:layout_widthPercent="30%"
-                    android:orientation="vertical"
-                    android:layout_centerVertical="true"
+
+                            <TextView
+                                android:id="@+id/productionSizeUnitSpinner"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_marginLeft="@dimen/spacing_half"
+                                android:layout_toRightOf="@id/estimatedProductionEdittext"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                app:layout_widthPercent="50%" />
 
 
-                    >
+                        </android.support.percent.PercentRelativeLayout>
 
 
-                    <TextView
-                        android:id="@+id/plot_ph_text"
-                        style="@style/TextAppearance.AppCompat.Small"
-                        android:layout_width="wrap_content"
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/ll4"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/soil_ph"
-                         android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/spacing_half"                        />
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/ll3"
+                        android:orientation="vertical"
+                        app:layout_widthPercent="30%"
 
+
+                        >
+
+
+                        <TextView
+                            android:id="@+id/plot_ph_text"
+                            style="@style/TextAppearance.AppCompat.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_half"
+                            android:text="@string/soil_ph"
+                            android:textStyle="bold" />
 
 
                         <EditText
                             android:id="@+id/phEdittext"
-                             android:layout_width="match_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:layout_marginLeft="@dimen/spacing_half"
-                            android:paddingLeft="@dimen/spacing_normal"
                             android:background="@drawable/border_background"
                             android:ellipsize="end"
+                            android:inputType="numberDecimal"
                             android:maxLength="3"
                             android:maxLines="1"
-                            android:inputType="numberDecimal"
-                             />
+                            android:paddingLeft="@dimen/spacing_normal" />
 
 
+                    </LinearLayout>
 
 
-
-                </LinearLayout>
-
+                </android.support.percent.PercentRelativeLayout>
 
 
-            </android.support.percent.PercentRelativeLayout>
+                <TextView
+                    android:id="@+id/plot_area_calculation"
+                    style="@style/TextAppearance.AppCompat.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="@dimen/spacing_half"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="@dimen/spacing_normal"
+                    android:text="@string/calc_area"
+                    android:textColor="@color/colorAccent" />
 
+            </LinearLayout>
 
-
-
-
-
-
-
-
-
-
-
-
-
-            <TextView
-                android:id="@+id/plot_area_calculation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/calc_area"
-                style="@style/TextAppearance.AppCompat.Button"
-                android:padding="@dimen/spacing_normal"
-                android:layout_gravity="right"
-                android:textColor="@color/colorAccent"
-                android:layout_marginBottom="@dimen/spacing_half"
-                android:background="?attr/selectableItemBackground"
-                />
 
         </LinearLayout>
 
-
-    </LinearLayout>
-
     </android.support.v7.widget.CardView>
-            <ScrollView
-                android:orientation="vertical"
-                android:background="@color/white"
-                android:layout_below="@id/content"
-                android:layout_above="@+id/buttonsLayout"
-                android:layout_marginTop="@dimen/spacing_half"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:id="@+id/dynamicLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_normal"
-                    android:animateLayoutChanges="true"
-                    android:background="@drawable/border_background_white"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttonsLayout"
+        android:layout_below="@id/content"
+        android:layout_marginTop="@dimen/spacing_half"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/dynamicLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/border_background_white"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_normal" />
     </ScrollView>
 
 
-        <android.support.percent.PercentRelativeLayout
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:padding="@dimen/spacing_normal">
+
+
+        <Button
+            android:id="@+id/back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/buttonsLayout"
-            android:layout_marginTop="@dimen/spacing_normal"
+            android:onClick="onBackClicked"
             android:padding="@dimen/spacing_normal"
-            >
+            android:text="@string/cancel"
+            android:theme="@style/PrimaryButtonGrey"
+            app:layout_widthPercent="40%" />
 
 
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_toRightOf="@id/back"
+            android:padding="@dimen/spacing_normal"
+            android:text="@string/save"
+            app:layout_widthPercent="60%"
 
-            <Button
-                android:id="@+id/back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/PrimaryButtonGrey"
-                android:text="@string/cancel"
-                android:onClick="onBackClicked"
-                android:padding="@dimen/spacing_normal"
-                app:layout_widthPercent="40%"
-                 />
+            />
 
-
-            <Button
-                android:id="@+id/saveButton"
-                android:layout_toRightOf="@id/back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_widthPercent="60%"
-                android:text="@string/save"
-                android:padding="@dimen/spacing_normal"
-                android:layout_marginLeft="@dimen/spacing_normal"
-
-                />
-
-        </android.support.percent.PercentRelativeLayout>
-
+    </android.support.percent.PercentRelativeLayout>
 
 
 </RelativeLayout>

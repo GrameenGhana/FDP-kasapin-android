@@ -2,370 +2,327 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/appBarLayout"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
 
-    <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
     </LinearLayout>
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appBarLayout"
         android:layout_above="@+id/bottom_buttons"
+        android:layout_below="@id/appBarLayout"
         android:clipChildren="false"
-        android:clipToPadding="false"
-        >
+        android:clipToPadding="false">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-             >
+            android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                  app:cardCornerRadius="0dp"
-                app:cardElevation="3dp"
-                >
+                app:cardCornerRadius="0dp"
+                app:cardElevation="3dp">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:id="@+id/rl1"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/spacing_normal"
-                        >
-
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <RelativeLayout
-                            android:id="@+id/rl2"
-                            android:layout_width="@dimen/mini_image_height"
-                            android:layout_height="@dimen/mini_image_height"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="@dimen/spacing_normal"
-                            >
+                            android:id="@+id/rl1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:padding="@dimen/spacing_normal">
 
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/photo"
+                            <RelativeLayout
+                                android:id="@+id/rl2"
                                 android:layout_width="@dimen/mini_image_height"
                                 android:layout_height="@dimen/mini_image_height"
-                                android:src="@drawable/icon_farmer_color"
-                                />
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginBottom="@dimen/spacing_normal">
+
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/photo"
+                                    android:layout_width="@dimen/mini_image_height"
+                                    android:layout_height="@dimen/mini_image_height"
+                                    android:src="@drawable/icon_farmer_color" />
+
+
+                                <TextView
+                                    android:id="@+id/initials"
+                                    style="@style/TextAppearance.AppCompat.Display1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:fontFamily="sans-serif-light"
+                                    android:textAllCaps="true"
+                                    android:textColor="@color/white" />
+
+
+                            </RelativeLayout>
 
 
                             <TextView
-                                android:id="@+id/initials"
-                                style="@style/TextAppearance.AppCompat.Display1"
+                                android:id="@+id/takeImage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@+id/rl2"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/custom_button_selectable_background_grey"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:padding="@dimen/spacing_half"
+                                android:text="@string/take_picture"
                                 android:textAllCaps="true"
-                                android:fontFamily="sans-serif-light"
-                                android:layout_centerInParent="true"
-                                android:textColor="@color/white"
-                                />
-
+                                android:textColor="@android:color/primary_text_light"
+                                android:textSize="@dimen/text_size_tiny"
+                                android:textStyle="bold" />
 
                         </RelativeLayout>
 
-
-                        <TextView
-                            android:id="@+id/takeImage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:textAllCaps="true"
-                            android:gravity="center"
-                            android:textColor="@android:color/primary_text_light"
-                            android:layout_centerHorizontal="true"
-                            android:background="@drawable/custom_button_selectable_background_grey"
-                            android:text="@string/take_picture"
-                            android:layout_below="@+id/rl2"
-                            android:padding="@dimen/spacing_half"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:textSize="@dimen/text_size_tiny"
-                            />
-
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="2"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="@dimen/spacing_normal"
-                        android:gravity="center"
-
-                        >
-
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/spacing_half"
-                            android:gravity="center"
-
-                            >
-
-
-                            <TextView
-                                android:id="@+id/farmer_name_text"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Farmer Name:"
-                                android:textSize="@dimen/spacing_normal"
-                                />
-
-
-                            <EditText
-                                android:id="@+id/farmerName"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColor="@android:color/primary_text_light"
-                                android:inputType="textPersonName"
-                                android:background="@drawable/border_background"
-                                android:maxLines="1"
-                                android:paddingLeft="@dimen/spacing_normal"
-                                android:paddingRight="@dimen/spacing_normal"
-                                style="@style/TextAppearance.AppCompat.Medium"
-
-                                />
-
-
-
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/spacing_half"
-                            android:gravity="center"
-
-                            >
-
-
-                            <TextView
-                                android:id="@+id/farmer_code_text"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Farmer Code:"
-                                android:textSize="@dimen/spacing_normal"
-                                />
-
-
-                            <EditText
-                                android:id="@+id/farmerCode"
-                                android:layout_width="0dp"
-                                android:background="@drawable/border_background"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:maxLines="1"
-                                android:maxLength="10"
-                                android:enabled="false"
-                                android:paddingLeft="@dimen/spacing_normal"
-                                android:paddingRight="@dimen/spacing_normal"
-                                android:textColor="@android:color/primary_text_light" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-
-                            >
-
-
-                            <TextView
-                                android:id="@+id/village_text"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Village:"
-                                android:textSize="@dimen/spacing_normal"
-                                />
-
-
-
-                            <com.jaredrummler.materialspinner.MaterialSpinner
-                                android:id="@+id/villageSpinner"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                app:ms_arrow_tint="@color/colorPrimary"
-                                app:ms_background_color="@color/background"
-                                />
-
-
-
-
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginTop="@dimen/spacing_half"
-                            >
-
-
-                            <TextView
-                                android:id="@+id/education_level_text"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Education Level:"
-                                android:textSize="@dimen/spacing_normal"
-                                />
-
-
-
-                            <com.jaredrummler.materialspinner.MaterialSpinner
-                                android:id="@+id/educationLevelSpinner"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                app:ms_arrow_tint="@color/colorPrimary"
-                                app:ms_background_color="@color/background"
-                                />
-
-
-
-
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/spacing_normal"
-                    android:paddingRight="@dimen/spacing_normal"
-                    android:layout_marginBottom="@dimen/spacing_normal"
-                    >
-
-
-
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_marginRight="@dimen/spacing_half"
-
-                        >
-
-
-                        <TextView
-                            android:id="@+id/birth_year_text"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
-                            android:text="Birthday Year:"
-                            android:textSize="@dimen/spacing_normal"
-                            />
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_normal"
+
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/spacing_half"
+                                android:gravity="center"
+
+                                >
 
 
-
-                        <EditText
-                            android:id="@+id/birthdayYearEdittext"
-                            android:layout_width="0dp"
-                            android:layout_weight="2"
-                            android:layout_height="40dp"
-                            android:paddingLeft="@dimen/spacing_normal"
-                            android:background="@drawable/border_background"
-                            android:maxLines="1"
-                            android:maxLength="4"
-                            android:inputType="numberDecimal"
-
-                            />
+                                <TextView
+                                    android:id="@+id/farmer_name_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Farmer Name:"
+                                    android:textSize="@dimen/spacing_normal" />
 
 
+                                <EditText
+                                    android:id="@+id/farmerName"
+                                    style="@style/TextAppearance.AppCompat.Medium"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/border_background"
+                                    android:inputType="textPersonName"
+                                    android:maxLines="1"
+                                    android:paddingLeft="@dimen/spacing_normal"
+                                    android:paddingRight="@dimen/spacing_normal"
+                                    android:textColor="@android:color/primary_text_light"
+
+                                    />
 
 
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/spacing_half"
+                                android:gravity="center"
+
+                                >
+
+
+                                <TextView
+                                    android:id="@+id/farmer_code_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Farmer Code:"
+                                    android:textSize="@dimen/spacing_normal" />
+
+
+                                <EditText
+                                    android:id="@+id/farmerCode"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/border_background"
+                                    android:enabled="false"
+                                    android:maxLength="10"
+                                    android:maxLines="1"
+                                    android:paddingLeft="@dimen/spacing_normal"
+                                    android:paddingRight="@dimen/spacing_normal"
+                                    android:textColor="@android:color/primary_text_light" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+
+                                >
+
+
+                                <TextView
+                                    android:id="@+id/village_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Village:"
+                                    android:textSize="@dimen/spacing_normal" />
+
+
+                                <com.jaredrummler.materialspinner.MaterialSpinner
+                                    android:id="@+id/villageSpinner"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    app:ms_arrow_tint="@color/colorPrimary"
+                                    app:ms_background_color="@color/background" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_half"
+                                android:gravity="center">
+
+
+                                <TextView
+                                    android:id="@+id/education_level_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Education Level:"
+                                    android:textSize="@dimen/spacing_normal" />
+
+
+                                <com.jaredrummler.materialspinner.MaterialSpinner
+                                    android:id="@+id/educationLevelSpinner"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    app:ms_arrow_tint="@color/colorPrimary"
+                                    app:ms_background_color="@color/background" />
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
 
                     </LinearLayout>
 
-
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_marginLeft="@dimen/spacing_half"
+                        android:layout_marginBottom="@dimen/spacing_normal"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/spacing_normal"
+                        android:paddingRight="@dimen/spacing_normal">
 
-                        >
 
-
-                        <TextView
-                            android:id="@+id/gender_text"
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/spacing_half"
                             android:layout_weight="1"
-                            android:text="Gender:"
-                            android:textSize="@dimen/spacing_normal"
-                            />
+                            android:gravity="center"
+
+                            >
 
 
+                            <TextView
+                                android:id="@+id/birth_year_text"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:text="Birthday Year:"
+                                android:textSize="@dimen/spacing_normal" />
 
-                        <com.jaredrummler.materialspinner.MaterialSpinner
-                            android:id="@+id/genderSpinner"
+
+                            <EditText
+                                android:id="@+id/birthdayYearEdittext"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="2"
+                                android:background="@drawable/border_background"
+                                android:inputType="numberDecimal"
+                                android:maxLength="4"
+                                android:maxLines="1"
+                                android:paddingLeft="@dimen/spacing_normal"
+
+                                />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            app:ms_arrow_tint="@color/colorPrimary"
-                            app:ms_background_color="@color/background"
-                            />
+                            android:layout_marginLeft="@dimen/spacing_half"
+                            android:layout_weight="1"
+                            android:gravity="center"
+
+                            >
 
 
+                            <TextView
+                                android:id="@+id/gender_text"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Gender:"
+                                android:textSize="@dimen/spacing_normal" />
 
 
+                            <com.jaredrummler.materialspinner.MaterialSpinner
+                                android:id="@+id/genderSpinner"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                app:ms_arrow_tint="@color/colorPrimary"
+                                app:ms_background_color="@color/background" />
+
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                </LinearLayout>
 
                 </LinearLayout>
 
@@ -373,26 +330,21 @@
             </android.support.v7.widget.CardView>
 
 
-
-
-
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="3dp"
                 android:layout_marginTop="@dimen/spacing_normal"
                 android:animateLayoutChanges="true"
-                >
+                app:cardCornerRadius="0dp"
+                app:cardElevation="3dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="@dimen/spacing_normal"
-                android:id="@+id/dynamicLayout"
-               />
+                <LinearLayout
+                    android:id="@+id/dynamicLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_normal" />
 
             </android.support.v7.widget.CardView>
 
@@ -402,40 +354,36 @@
     </ScrollView>
 
 
-
     <LinearLayout
+        android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:id="@+id/bottom_buttons"
-        android:padding="@dimen/spacing_normal"
-        android:clipToPadding="false"
         android:clipChildren="false"
-        >
-
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_normal">
 
 
         <Button
             android:id="@+id/back"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:theme="@style/PrimaryButtonGrey"
-            android:text="@string/back"
-            android:padding="@dimen/spacing_normal"
+            android:layout_weight="2"
             android:onClick="setBackListener"
-            />
+            android:padding="@dimen/spacing_normal"
+            android:text="@string/back"
+            android:theme="@style/PrimaryButtonGrey" />
 
 
         <Button
             android:id="@+id/save"
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:text="@string/save_and_continue"
-            android:padding="@dimen/spacing_normal"
             android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_weight="3"
+            android:padding="@dimen/spacing_normal"
+            android:text="@string/save_and_continue"
 
             />
 

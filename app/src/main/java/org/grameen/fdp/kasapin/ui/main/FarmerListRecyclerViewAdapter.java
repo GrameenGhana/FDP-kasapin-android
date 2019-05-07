@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -76,13 +75,11 @@ public class FarmerListRecyclerViewAdapter extends RecyclerView.Adapter<FarmerLi
         RealFarmer farmer = farmers.get(position);
 
 
-        if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")){
+        if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")) {
             viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));
             //Picasso.with(context).load(farmer.getImageUrl()).resize(200, 200).into(viewHolder.photo);
-        viewHolder.setIsRecyclable(false);
-        }
-
-        else {
+            viewHolder.setIsRecyclable(false);
+        } else {
             viewHolder.setIsRecyclable(true);
 
             try {
@@ -115,14 +112,13 @@ public class FarmerListRecyclerViewAdapter extends RecyclerView.Adapter<FarmerLi
         viewHolder.code.setText(farmer.getCode());
 
 
-
-            if(farmer.getSyncStatus() == 1) {
-                viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_black_18dp);
-                viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
-            }else if(farmer.getSyncStatus() == 0) {
-                viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_problem_black_18dp);
-                viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.cpb_red));
-            }
+        if (farmer.getSyncStatus() == 1) {
+            viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_black_18dp);
+            viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
+        } else if (farmer.getSyncStatus() == 0) {
+            viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_problem_black_18dp);
+            viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.cpb_red));
+        }
 
 
         if (farmer.getHasSubmitted() != null) {
@@ -131,8 +127,6 @@ public class FarmerListRecyclerViewAdapter extends RecyclerView.Adapter<FarmerLi
                 viewHolder.fdpStatus.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
             }
         }
-
-
 
 
     }
@@ -177,8 +171,6 @@ public class FarmerListRecyclerViewAdapter extends RecyclerView.Adapter<FarmerLi
         ImageView fdpStatus;
 
 
-
-
         ViewHolder(final View itemView) {
             super(itemView);
 
@@ -201,10 +193,10 @@ public class FarmerListRecyclerViewAdapter extends RecyclerView.Adapter<FarmerLi
                 }
             });
 
-                mainLayout.setOnLongClickListener(view -> {
-                    longClickListener.onLongClick(view, getAdapterPosition());
-                    return true;
-                });
+            mainLayout.setOnLongClickListener(view -> {
+                longClickListener.onLongClick(view, getAdapterPosition());
+                return true;
+            });
 
         }
 

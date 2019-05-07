@@ -9,9 +9,9 @@ import ir.mirrajabi.searchdialog.core.Searchable;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class MySearchItem  implements Searchable {
-    private String mName;
+public class MySearchItem implements Searchable {
     String mExtId;
+    private String mName;
 
     public MySearchItem(String extId, String name) {
         mName = name;
@@ -28,16 +28,15 @@ public class MySearchItem  implements Searchable {
         return this;
     }
 
-
-    public void setmExtId(String mExtId) {
-        this.mExtId = mExtId;
-    }
-
     public String getmName() {
         return mName;
     }
 
     public String getmExtId() {
         return mExtId;
+    }
+
+    public void setmExtId(String mExtId) {
+        this.mExtId = mExtId;
     }
 }

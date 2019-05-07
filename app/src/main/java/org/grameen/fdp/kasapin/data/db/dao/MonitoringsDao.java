@@ -7,7 +7,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 
 import java.util.List;
@@ -42,16 +41,12 @@ public interface MonitoringsDao {
     int updateMonitoring(Monitoring monitoring);
 
 
-
     @Query("DELETE FROM monitorings")
     void deleteAllMonitoring();
 
 
     @Query("DELETE FROM monitorings WHERE id = :id")
     int deleteMonitoringById(String id);
-
-
-
 
 
 }

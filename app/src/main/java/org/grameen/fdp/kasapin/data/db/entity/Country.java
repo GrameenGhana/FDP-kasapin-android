@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by aangjnr on 30/01/2018.
  */
 
-@Entity(tableName = "countries" )
+@Entity(tableName = "countries")
 public class Country {
 
 
@@ -34,14 +34,13 @@ public class Country {
     public Country() {
     }
 
-
-    public void setId(@NonNull int id) {
-        this.id = id;
-    }
-
     @NonNull
     public int getId() {
         return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public String getName() {

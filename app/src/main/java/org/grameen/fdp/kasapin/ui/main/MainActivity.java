@@ -32,9 +32,9 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
+import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
-import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
@@ -93,7 +93,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     private FragmentPagerItemAdapter viewPagerAdapter;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,10 +104,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         mPresenter.takeView(this);
 
 
-
-
-        if(FORM_AND_QUESTIONS == null)
-        mPresenter.getFormsAndQuestionsData();
+        if (FORM_AND_QUESTIONS == null)
+            mPresenter.getFormsAndQuestionsData();
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -145,7 +142,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
-        if(mPresenter.getAppDataManager().isMonitoring()) {
+        if (mPresenter.getAppDataManager().isMonitoring()) {
             addFarmerButton.setVisibility(View.GONE);
 
             toolBarLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.gradient_background_monitoring));
@@ -162,7 +159,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             TextView nameTV = headerLayout.findViewById(R.id.name_textView);
             TextView emailTV = headerLayout.findViewById(R.id.email_textView);
             TextView versionNumberTV = navigationView.findViewById(R.id.version_number);
-
 
 
             nameTV.setText(getAppDataManager().getUserFullName());
@@ -183,18 +179,17 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
 
-
     @Override
     public void setFragmentAdapter(List<VillageAndFarmers> villageAndFarmersList) {
         int index = 0;
 
         FragmentPagerItems fragmentPagerItems = new FragmentPagerItems(this);
 
-       for(VillageAndFarmers villageAndFarmers : villageAndFarmersList){
+        for (VillageAndFarmers villageAndFarmers : villageAndFarmersList) {
 
-           AppLogger.i(TAG, "VILLAGE NAME IS " + villageAndFarmers.name + " AND FARMERS SIZE IS " + villageAndFarmers.getFarmerList().size() );
+            AppLogger.i(TAG, "VILLAGE NAME IS " + villageAndFarmers.name + " AND FARMERS SIZE IS " + villageAndFarmers.getFarmerList().size());
 
-           if(villageAndFarmers.getFarmerList() != null && villageAndFarmers.getFarmerList().size() > 0){
+            if (villageAndFarmers.getFarmerList() != null && villageAndFarmers.getFarmerList().size() > 0) {
 
                 fragmentPagerItems.add(FragmentPagerItem.of(villageAndFarmers.getName(), FarmerListFragment.class, new Bundler()
                         .putString("villageName", SELECTED_VILLAGE)
@@ -203,56 +198,53 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                 index++;
 
-        new Handler().postDelayed(() -> {
-        viewPagerAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(), fragmentPagerItems);
-        viewPager.setAdapter(viewPagerAdapter);
-        smartTabLayout.setViewPager(viewPager);
-        }, 500);
+                new Handler().postDelayed(() -> {
+                    viewPagerAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(), fragmentPagerItems);
+                    viewPager.setAdapter(viewPagerAdapter);
+                    smartTabLayout.setViewPager(viewPager);
+                }, 500);
 
 
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int i, float v, int i1) {
 
-           viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-               @Override
-               public void onPageScrolled(int i, float v, int i1) {
+                    }
 
-               }
+                    @Override
+                    public void onPageSelected(int i) {
 
-               @Override
-               public void onPageSelected(int i) {
+                        SELECTED_VILLAGE = fragmentPagerItems.get(i).getTitle().toString();
 
-                   SELECTED_VILLAGE  = fragmentPagerItems.get(i).getTitle().toString();
+                        CURRENT_PAGE = i;
 
-                   CURRENT_PAGE = i;
+                    }
 
-               }
+                    @Override
+                    public void onPageScrollStateChanged(int i) {
 
-               @Override
-               public void onPageScrollStateChanged(int i) {
+                    }
+                });
 
-               }
-           });
-
-           SELECTED_VILLAGE  = fragmentPagerItems.get(0).getTitle().toString();
+                SELECTED_VILLAGE = fragmentPagerItems.get(0).getTitle().toString();
             }
-       }
+        }
 
-       mPresenter.initializeSearchDialog(villageAndFarmersList);
+        mPresenter.initializeSearchDialog(villageAndFarmersList);
 
 
-       if(fragmentPagerItems.size() > 0)
-           hideNoDataView();
+        if (fragmentPagerItems.size() > 0)
+            hideNoDataView();
 
- }
+    }
 
 
     @OnClick(R.id.add_farmer)
-     void addFarmerActivity() {
+    void addFarmerActivity() {
         //Todo get forms, check size of forms, move to next activity
 
         //mPresenter.getFarmerProfileFormAndQuestions();
         openAddNewFarmerActivity(null);
-
-
 
 
     }
@@ -281,8 +273,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
 
-
-
     @Override
     public void instantiateSearchDialog(ArrayList<MySearchItem> items) {
 
@@ -295,12 +285,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                     Toast.makeText(this, item.getTitle(),
                             Toast.LENGTH_SHORT).show();
 
-                   mPresenter.getFarmer(item.getmExtId());
+                    mPresenter.getFarmer(item.getmExtId());
 
                     dialog.dismiss();
                 });
 
-     }
+    }
 
 
     @Override
@@ -314,18 +304,17 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public void showSearchDialog(@Nullable View view) {
 
-        if(searchDialogCompat != null)
-        searchDialogCompat.show();
+        if (searchDialogCompat != null)
+            searchDialogCompat.show();
         else
             showNoFarmersMessage();
 
     }
 
 
-
     @Override
     protected void onDestroy() {
-        if(mPresenter != null)
+        if (mPresenter != null)
             mPresenter.dropView();
         super.onDestroy();
     }
@@ -338,22 +327,19 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
 
-
     @Override
     public void toggleDrawer() {
 
-        if(drawerLayout.isDrawerOpen(Gravity.START))
+        if (drawerLayout.isDrawerOpen(Gravity.START))
             drawerLayout.closeDrawers();
         else
-        drawerLayout.openDrawer(Gravity.START);
+            drawerLayout.openDrawer(Gravity.START);
     }
 
 
-    public void toggleDrawer(@Nullable View v){
+    public void toggleDrawer(@Nullable View v) {
         toggleDrawer();
     }
-
-
 
 
     @Override
@@ -364,56 +350,48 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         mPresenter.toggleDrawer();
 
 
-                switch (id) {
+        switch (id) {
 
 
-                    case R.id.sync:
+            case R.id.sync:
 
-                        if (NetworkUtils.isNetworkConnected(MainActivity.this)) {
+                if (NetworkUtils.isNetworkConnected(MainActivity.this)) {
 
-                            //Todo Sync data down
-                            new Handler().postDelayed(() -> mPresenter.downloadData(true), 500);
+                    //Todo Sync data down
+                    new Handler().postDelayed(() -> mPresenter.downloadData(true), 500);
 
-                        }
-
-                        else
-                            showMessage(R.string.no_internet_connection_available);
+                } else
+                    showMessage(R.string.no_internet_connection_available);
 
 
+                break;
 
-                        break;
+            case R.id.logout:
 
-                    case R.id.logout:
+                logOut();
 
-                        logOut();
+                break;
 
-                        break;
+            case R.id.sync_farmer:
+                //Todo Sync all un synced farmer data
+                //Generate the json object here, pass the object as a value
+                if (NetworkUtils.isNetworkConnected(MainActivity.this))
+                    mPresenter.syncData(true);
+                else
+                    showMessage(R.string.no_internet_connection_available);
+                break;
 
-                    case R.id.sync_farmer:
-                        //Todo Sync all un synced farmer data
-                        //Generate the json object here, pass the object as a value
-                        if(NetworkUtils.isNetworkConnected(MainActivity.this))
-                            mPresenter.syncData(true);
-                        else
-                            showMessage(R.string.no_internet_connection_available);
-                        break;
-
-                    case R.id.download_farmer_data:
-
-
-                        //Todo Sync down new data from server
-
-                        break;
+            case R.id.download_farmer_data:
 
 
+                //Todo Sync down new data from server
+
+                break;
 
 
-                }
+        }
         return true;
     }
-
-
-
 
 
     @Override
@@ -425,7 +403,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 null,
                 "",
                 0);
-     }
+    }
 
 
    /* @Override

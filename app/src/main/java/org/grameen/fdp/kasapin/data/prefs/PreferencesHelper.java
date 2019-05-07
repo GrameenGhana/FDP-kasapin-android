@@ -96,6 +96,6 @@ public interface PreferencesHelper {
     boolean getBooleanValue(String key);
 
     void setBooleanValue(String key, boolean value);
- 
+
 
 }

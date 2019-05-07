@@ -2,7 +2,6 @@ package org.grameen.fdp.kasapin.data.db.entity;
 
 
 import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Relation;
 
 import java.util.List;
@@ -14,24 +13,24 @@ import java.util.List;
  */
 
 public class FormAndQuestions {
-    @Embedded Form form;
-
     @Relation(parentColumn = "id", entityColumn = "formTranslationId", entity = Question.class)
     public List<Question> questions;
-
-    public void setForm(Form form) {
-        this.form = form;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
+    @Embedded
+    Form form;
 
     public Form getForm() {
         return form;
     }
 
+    public void setForm(Form form) {
+        this.form = form;
+    }
+
     public List<Question> getQuestions() {
         return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 }

@@ -7,7 +7,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import org.grameen.fdp.kasapin.data.db.entity.Calculation;
 import org.grameen.fdp.kasapin.data.db.entity.ComplexCalculation;
 
 import java.util.List;
@@ -39,7 +38,6 @@ public interface ComplexCalculationDao {
 
     @Update
     int updateComplexComplexCalculation(ComplexCalculation complexCalculation);
-
 
 
     @Query("DELETE FROM complex_calculations")

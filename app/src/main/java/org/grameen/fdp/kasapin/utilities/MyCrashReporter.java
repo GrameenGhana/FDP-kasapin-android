@@ -3,8 +3,6 @@ package org.grameen.fdp.kasapin.utilities;
 
 import com.balsikandar.crashreporter.CrashReporter;
 
-import timber.log.Timber;
-
 /**
  * Created by AangJnr on 15, November, 2018 @ 1:11 PM
  * Work Mail cibrahim@grameenfoundation.org

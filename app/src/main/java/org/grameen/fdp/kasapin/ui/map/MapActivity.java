@@ -3,7 +3,6 @@ package org.grameen.fdp.kasapin.ui.map;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -15,11 +14,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -28,7 +24,6 @@ import com.google.maps.android.SphericalUtil;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
-import org.grameen.fdp.kasapin.ui.map.PointsListAdapter.OnItemClickListener;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
@@ -48,13 +43,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by aangjnr on 09/11/2017.
  */
 
-public class MapActivity extends BaseActivity implements MapContract.View{
-
-    @Inject
-    MapPresenter mPresenter;
-
+public class MapActivity extends BaseActivity implements MapContract.View {
 
     public static Float DEFAULT_ZOOM = 17.0f;
+    @Inject
+    MapPresenter mPresenter;
     ProgressDialog progressDialog;
     String TAG = getClass().getSimpleName();
     Button addPoint;
@@ -80,9 +73,7 @@ public class MapActivity extends BaseActivity implements MapContract.View{
         mPresenter.takeView(this);
 
 
-
         progressDialog = new ProgressDialog(this, R.style.DialogTheme);
-
 
 
         recyclerView = findViewById(R.id.recycler_view);
@@ -91,12 +82,11 @@ public class MapActivity extends BaseActivity implements MapContract.View{
         plot = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
 
 
-
         if (plot != null) {
-            setToolbar(plot.getName() +" " + getStringResources(R.string.title_area_calc));
+            setToolbar(plot.getName() + " " + getStringResources(R.string.title_area_calc));
 
         } else {
-           setToolbar("Plot GPS Area Calculation");
+            setToolbar("Plot GPS Area Calculation");
         }
 
         AppLogger.i(TAG, "PLOT POINTS " + plot.getGpsPoints());
@@ -124,12 +114,6 @@ public class MapActivity extends BaseActivity implements MapContract.View{
             findViewById(R.id.placeHolder).setVisibility(View.GONE);
 
 
-
-
-
-
-
-
         mAdapter = new PointsListAdapter(this, latLngs);
         mAdapter.setHasStableIds(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -140,21 +124,20 @@ public class MapActivity extends BaseActivity implements MapContract.View{
             mAdapter.removePoint(position);
             //latLngs.remove(position);
 
-            if(latLngs.size() > 2)
+            if (latLngs.size() > 2)
                 calculateArea.setEnabled(true);
-                else
-                    calculateArea.setEnabled(false);
+            else
+                calculateArea.setEnabled(false);
 
 
-            if(latLngs.size() > 0) {
-                if(findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
+            if (latLngs.size() > 0) {
+                if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
                     findViewById(R.id.placeHolder).setVisibility(View.GONE);
 
 
+            } else {
 
-            }else{
-
-                if(findViewById(R.id.placeHolder).getVisibility() == View.GONE)
+                if (findViewById(R.id.placeHolder).getVisibility() == View.GONE)
                     findViewById(R.id.placeHolder).setVisibility(View.VISIBLE);
 
             }
@@ -169,63 +152,61 @@ public class MapActivity extends BaseActivity implements MapContract.View{
 
             if (latLngs != null && latLngs.size() > 2) {
 
-            if (!hasCalculated) {
-                computeAreaInSquareMeters();
+                if (!hasCalculated) {
+                    computeAreaInSquareMeters();
 
-            }else{
+                } else {
 
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
 
-                Double inHectares = convertToHectres(AREA_OF_PLOT);
-                Double inAcres = convertToAcres(AREA_OF_PLOT);
+                    Double inHectares = convertToHectres(AREA_OF_PLOT);
+                    Double inAcres = convertToAcres(AREA_OF_PLOT);
 
 
-                String message = "Area in Hectares is " + new DecimalFormat("0.00").format(inHectares) +
-                        "\nArea in Acres is " + new DecimalFormat("0.00").format(inAcres) +
-                        "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
+                    String message = "Area in Hectares is " + new DecimalFormat("0.00").format(inHectares) +
+                            "\nArea in Acres is " + new DecimalFormat("0.00").format(inAcres) +
+                            "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
 
-                showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok), (dialog, which) -> {
+                    showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok), (dialog, which) -> {
 
-                    StringBuilder builder = new StringBuilder();
+                        StringBuilder builder = new StringBuilder();
 
-                    //Todo save latLngs
-                    for (LatLng latLng : latLngs) {
+                        //Todo save latLngs
+                        for (LatLng latLng : latLngs) {
 
-                        if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
-                            builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
-                        else
-                            builder.append(latLng.latitude).append(",").append(latLng.longitude);
-                    }
+                            if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
+                                builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
+                            else
+                                builder.append(latLng.latitude).append(",").append(latLng.longitude);
+                        }
 
-                    plot.setGpsPoints(builder.toString());
-                    dialog.dismiss();
-                    saveData();
+                        plot.setGpsPoints(builder.toString());
+                        dialog.dismiss();
+                        saveData();
 
-                }, getStringResources(R.string.save), 0);
+                    }, getStringResources(R.string.save), 0);
 
 
                     hasCalculated = true;
 
-            }
+                }
 
             } else
                 showMessage("Please add 3 or more points to calculate the area of " + plot.getName());
 
 
-
-
         });
 
-        addPoint =  findViewById(R.id.addPoint);
+        addPoint = findViewById(R.id.addPoint);
         addPoint.setOnClickListener(v -> {
 
-           // progressDialog = new ProgressDialog(this);
+            // progressDialog = new ProgressDialog(this);
             //progressDialog.setTitle("Please wait");
             //progressDialog.setIndeterminate(true);
 
 
-           progressDialog = CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
+            progressDialog = CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
 
 
             getCurrentLocation();
@@ -281,8 +262,6 @@ public class MapActivity extends BaseActivity implements MapContract.View{
                 }, "YES, CONTINUE", (dialog, which) -> dialog.dismiss(), "NO, CANCEL", 0);
 
 
-
-
             }
 
             @Override
@@ -305,9 +284,7 @@ public class MapActivity extends BaseActivity implements MapContract.View{
         };
 
 
-
     }
-
 
 
     void computeAreaInSquareMeters() {
@@ -316,8 +293,8 @@ public class MapActivity extends BaseActivity implements MapContract.View{
             progressDialog.dismiss();
 
 
-            AREA_OF_PLOT = SphericalUtil.computeArea(latLngs);
-            AppLogger.d(TAG, "computeAreaInSquareMeters " + AREA_OF_PLOT);
+        AREA_OF_PLOT = SphericalUtil.computeArea(latLngs);
+        AppLogger.d(TAG, "computeAreaInSquareMeters " + AREA_OF_PLOT);
 
         Double inHectares = convertToHectres(AREA_OF_PLOT);
         Double inAcres = convertToAcres(AREA_OF_PLOT);
@@ -329,29 +306,29 @@ public class MapActivity extends BaseActivity implements MapContract.View{
 
 
         showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(),
-                getStringResources(R.string.ok),(dialog, which) -> {
+                getStringResources(R.string.ok), (dialog, which) -> {
 
-            StringBuilder builder = new StringBuilder();
+                    StringBuilder builder = new StringBuilder();
 
-            //Todo save latLngs
-            for (LatLng latLng : latLngs) {
-                if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
-                    builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
-                else
-                    builder.append(latLng.latitude).append(",").append(latLng.longitude);
-            }
+                    //Todo save latLngs
+                    for (LatLng latLng : latLngs) {
+                        if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
+                            builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
+                        else
+                            builder.append(latLng.latitude).append(",").append(latLng.longitude);
+                    }
 
-            plot.setGpsPoints(builder.toString());
+                    plot.setGpsPoints(builder.toString());
 
-            AppLogger.i(TAG, "STRING ARRAY OF LatLngs = " + builder);
+                    AppLogger.i(TAG, "STRING ARRAY OF LatLngs = " + builder);
 
-            dialog.dismiss();
+                    dialog.dismiss();
 
-            saveData();
-        }, getStringResources(R.string.save), 0);
+                    saveData();
+                }, getStringResources(R.string.save), 0);
 
 
-            hasCalculated = true;
+        hasCalculated = true;
 
 
     }
@@ -368,7 +345,6 @@ public class MapActivity extends BaseActivity implements MapContract.View{
         return valueInSquareMetres / 4040.856;
 
     }
-
 
 
     private void getCurrentLocation() {
@@ -443,17 +419,17 @@ public class MapActivity extends BaseActivity implements MapContract.View{
     }
 
 
-    void saveData(){
+    void saveData() {
 
-        getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() ->  getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
+        getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
                 .subscribeOn(Schedulers.io())
                 .subscribe(aLong -> {
 
-                    if(aLong > 0)
-                    showMessage(R.string.new_data_updated);
+                    if (aLong > 0)
+                        showMessage(R.string.new_data_updated);
 
                     else
-                    showMessage(R.string.data_not_saved);
+                        showMessage(R.string.data_not_saved);
 
                 }, throwable -> {
                     showMessage("An error occurred saving plot data. Please try again.");

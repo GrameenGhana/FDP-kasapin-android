@@ -115,15 +115,14 @@ public class PlotsListAdapter extends RecyclerView.Adapter<PlotsListAdapter.View
 
                 if (mItemClickListener != null) {
                     mItemClickListener.onItemClick(itemView, getAdapterPosition());
-                    }
+                }
             });
 
 
-
-                mainLayout.setOnLongClickListener(view -> {
-                    longClickListener.onLongClick(view, getAdapterPosition());
-                    return true;
-                });
+            mainLayout.setOnLongClickListener(view -> {
+                longClickListener.onLongClick(view, getAdapterPosition());
+                return true;
+            });
 
 
         }

@@ -1,23 +1,12 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
-
-import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -27,10 +16,9 @@ import io.reactivex.schedulers.Schedulers;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class FarmerListFragmentPresenter extends BasePresenter<MainContract.FragmentView> implements MainContract.FragmentPresenter{
+public class FarmerListFragmentPresenter extends BasePresenter<MainContract.FragmentView> implements MainContract.FragmentPresenter {
 
     AppDataManager mAppDataManager;
-
 
 
     @Inject
@@ -43,10 +31,10 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
     @Override
     public void getFarmerData() {
 
-       getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().realFarmersDao().getAll()
-               .subscribeOn(Schedulers.io())
-               .observeOn(AndroidSchedulers.mainThread())
-               .subscribe(realFarmers -> getView().setListAdapter(realFarmers), throwable -> getView().showMessage("An error occurred obtaining farmer data!")));
+        getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().realFarmersDao().getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(realFarmers -> getView().setListAdapter(realFarmers), throwable -> getView().showMessage("An error occurred obtaining farmer data!")));
 
     }
 

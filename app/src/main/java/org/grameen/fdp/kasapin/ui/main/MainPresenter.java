@@ -157,15 +157,14 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
          * First check if there are un synced data
          **/
 
-        if(getAppDataManager().getDatabaseManager().realFarmersDao().checkIfUnsyncedAvailable().blockingGet() <= 0){
-           getView().showMessage(R.string.no_new_data);
-           return;
+        if (getAppDataManager().getDatabaseManager().realFarmersDao().checkIfUnsyncedAvailable().blockingGet() <= 0) {
+            getView().showMessage(R.string.no_new_data);
+            return;
         }
 
 
-        if(showProgress)
+        if (showProgress)
             getView().showLoading("Uploading data", "Please wait...", false, 0, false);
-
 
 
         JSONObject payloadData = new JSONObject();
@@ -216,7 +215,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                             JSONObject jsonObject = new JSONObject();
 
                                             try {
-                                               jsonObject.put("external_id",  farmer.getCode());
+                                                jsonObject.put("external_id", farmer.getCode());
 
                                                 for (int i = 0; i < groupedMappings.size(); i++) {
 
@@ -228,10 +227,10 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                         JSONArray arrayOfValues = new JSONArray();
 
-                                                        if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)){
+                                                        if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)) {
 
 
-                                                            for(Plot plot :farmersPlots) {
+                                                            for (Plot plot : farmersPlots) {
                                                                 JSONArray plotsArray = new JSONArray();
 
                                                                 formatPlotsData(plot, plotsArray);
@@ -241,9 +240,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                             }
 
 
-
-                                                        }else if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)){
-                                                            for(Plot plot :farmersPlots) {
+                                                        } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)) {
+                                                            for (Plot plot : farmersPlots) {
                                                                 JSONArray plotsArray = new JSONArray();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
@@ -261,9 +259,9 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                 }
                                                                 arrayOfValues.put(plotsArray);
                                                             }
-                                                        }else if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.OBSERVATION_TABLE)){
+                                                        } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.OBSERVATION_TABLE)) {
 
-                                                            for(Plot plot :farmersPlots) {
+                                                            for (Plot plot : farmersPlots) {
                                                                 JSONArray plotsArray = new JSONArray();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
@@ -281,7 +279,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                 }
                                                                 arrayOfValues.put(plotsArray);
                                                             }
-                                                        }else {
+                                                        } else {
 
 
                                                             if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
@@ -332,7 +330,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                             try {
                                                 payloadData.put("data", farmerData);
 
-                                                AppLogger.e(TAG, "Payload data is "  + payloadData.toString());
+                                                AppLogger.e(TAG, "Payload data is " + payloadData.toString());
                                                 getView().hideLoading();
 
                                                 UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
@@ -365,41 +363,41 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         JSONObject farmerDataJson;
 
         try {
-        farmerDataJson= new JSONObject();
+            farmerDataJson = new JSONObject();
 
-        farmerDataJson.put("answer", farmer.getFarmerName());
-        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_NAME_FIELD);
-        arrayOfValues.put(farmerDataJson);
+            farmerDataJson.put("answer", farmer.getFarmerName());
+            farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_NAME_FIELD);
+            arrayOfValues.put(farmerDataJson);
 
-        farmerDataJson= new JSONObject();
-        farmerDataJson.put("answer", farmer.getCode());
-        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_EXTERNAL_ID_FIELD);
-        arrayOfValues.put(farmerDataJson);
+            farmerDataJson = new JSONObject();
+            farmerDataJson.put("answer", farmer.getCode());
+            farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_EXTERNAL_ID_FIELD);
+            arrayOfValues.put(farmerDataJson);
 
-        farmerDataJson= new JSONObject();
-        farmerDataJson.put("answer", farmer.getCode());
-        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_CODE_FIELD);
-        arrayOfValues.put(farmerDataJson);
+            farmerDataJson = new JSONObject();
+            farmerDataJson.put("answer", farmer.getCode());
+            farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_CODE_FIELD);
+            arrayOfValues.put(farmerDataJson);
 
-        farmerDataJson= new JSONObject();
-        farmerDataJson.put("answer", farmer.getEducationLevel());
-        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_EDUCATION_LEVEL_FIELD);
-        arrayOfValues.put(farmerDataJson);
+            farmerDataJson = new JSONObject();
+            farmerDataJson.put("answer", farmer.getEducationLevel());
+            farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_EDUCATION_LEVEL_FIELD);
+            arrayOfValues.put(farmerDataJson);
 
-        farmerDataJson= new JSONObject();
-        farmerDataJson.put("answer", farmer.getImageUrl());
-        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_PHOTO_FIELD);
-        arrayOfValues.put(farmerDataJson);
+            farmerDataJson = new JSONObject();
+            farmerDataJson.put("answer", farmer.getImageUrl());
+            farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_PHOTO_FIELD);
+            arrayOfValues.put(farmerDataJson);
 
-        farmerDataJson= new JSONObject();
-        farmerDataJson.put("answer", farmer.getGender());
-        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_GENDER_FIELD);
-        arrayOfValues.put(farmerDataJson);
+            farmerDataJson = new JSONObject();
+            farmerDataJson.put("answer", farmer.getGender());
+            farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_GENDER_FIELD);
+            arrayOfValues.put(farmerDataJson);
 
-        farmerDataJson= new JSONObject();
-        farmerDataJson.put("answer", farmer.getBirthYear());
-        farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_BIRTHDAY_FIELD);
-        arrayOfValues.put(farmerDataJson);
+            farmerDataJson = new JSONObject();
+            farmerDataJson.put("answer", farmer.getBirthYear());
+            farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_BIRTHDAY_FIELD);
+            arrayOfValues.put(farmerDataJson);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -412,36 +410,38 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         JSONObject plotsJsonData;
 
         try {
-            plotsJsonData= new JSONObject();
-
+            plotsJsonData = new JSONObject();
             plotsJsonData.put("answer", plot.getExternalId());
             plotsJsonData.put("field_name", AppConstants.PLOT_EXTERNAL_ID_FIELD);
             arrayOfValues.put(plotsJsonData);
 
+
+            plotsJsonData = new JSONObject();
             plotsJsonData.put("answer", plot.getName());
             plotsJsonData.put("field_name", AppConstants.PLOT_NAME_FIELD);
             arrayOfValues.put(plotsJsonData);
 
-            plotsJsonData= new JSONObject();
+            plotsJsonData = new JSONObject();
             plotsJsonData.put("answer", plot.getArea());
             plotsJsonData.put("field_name", AppConstants.PLOT_AREA_FIELD);
             arrayOfValues.put(plotsJsonData);
 
-            plotsJsonData= new JSONObject();
-            plotsJsonData.put("answer", plot.getPlotAge());
-            plotsJsonData.put("field_name", AppConstants.PLOT_AGE_FIELD);
-            arrayOfValues.put(plotsJsonData);
 
-            plotsJsonData= new JSONObject();
+            plotsJsonData = new JSONObject();
             plotsJsonData.put("answer", plot.getEstimatedProductionSize());
             plotsJsonData.put("field_name", AppConstants.PLOT_EST_PROD_FIELD);
+            arrayOfValues.put(plotsJsonData);
+
+
+            plotsJsonData = new JSONObject();
+            plotsJsonData.put("answer", plot.getPlotAge());
+            plotsJsonData.put("field_name", AppConstants.PLOT_AGE_FIELD);
             arrayOfValues.put(plotsJsonData);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
 
 
     private JSONObject buildAllAnswersJsonDataPerFarmer(String code) {

@@ -3,12 +3,10 @@ package org.grameen.fdp.kasapin.ui.form.controller.view;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,10 +19,9 @@ import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Date;
 import java.util.Set;
 
@@ -38,24 +35,23 @@ public class PhotoButtonController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     Location location;
     boolean GpsStatus = false;
-    View.OnClickListener onClickListener;
+    OnClickListener onClickListener;
     Context context;
-    private DatePickerDialog datePickerDialog = null;
     ImageView IMAGE_VIEW;
     boolean isEnabled = true;
-
+    private DatePickerDialog datePickerDialog = null;
 
 
     /**
      * Constructs a new instance of a date picker field.
      *
-     * @param ctx           the Android context
-     * @param name          the name of the field
-     * @param labelText     the label to display beside the field. Set to {@code null} to not show a label.
-     * @param validators    contains the validations to process on the field
+     * @param ctx             the Android context
+     * @param name            the name of the field
+     * @param labelText       the label to display beside the field. Set to {@code null} to not show a label.
+     * @param validators      contains the validations to process on the field
      * @param onClickListener the format of the date to show in the text box when a date is set
      */
-    public PhotoButtonController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, View.OnClickListener onClickListener) {
+    public PhotoButtonController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, OnClickListener onClickListener) {
         super(ctx, name, content_desc, labelText, validators);
         this.onClickListener = onClickListener;
         this.context = ctx;
@@ -110,26 +106,26 @@ public class PhotoButtonController extends MyLabeledFieldController {
 
 
         final ImageView imageView = new ImageView(context);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
 
         this.IMAGE_VIEW = imageView;
 
         getModel().addPropertyChangeListener(getName(), evt -> {
-            Log.i("PHOTO BUTTON", evt.getNewValue().toString() );
+            AppLogger.i("PHOTO BUTTON", evt.getNewValue().toString());
 
-            if(evt.getNewValue() != null && !evt.getNewValue().toString().equalsIgnoreCase(""))
-            try {
+            if (evt.getNewValue() != null && !evt.getNewValue().toString().equalsIgnoreCase(""))
+                try {
 
-                imageView.setAdjustViewBounds(true);
-                imageView.setMaxHeight(200);
-                imageView.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
-                linearLayout.removeAllViews();
-                linearLayout.addView(imageView);
-                linearLayout.requestLayout();
+                    imageView.setAdjustViewBounds(true);
+                    imageView.setMaxHeight(300);
+                    imageView.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
+                    linearLayout.addView(imageView);
+                    linearLayout.requestLayout();
 
-            }catch (Exception ignored){}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
         });
 
@@ -138,23 +134,23 @@ public class PhotoButtonController extends MyLabeledFieldController {
             final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppDialog);
             builder.setMessage(R.string.image_options);
             builder.setCancelable(true);
-                builder.setPositiveButton(R.string.view, (dialog, which) -> {
+            builder.setPositiveButton(R.string.view, (dialog, which) -> {
 
-                    Intent intent = new Intent(context, ImageViewActivity.class);
-                    intent.putExtra("image_string", getModel().getValue(getName()).toString());
-                    context.startActivity(intent);
+                Intent intent = new Intent(context, ImageViewActivity.class);
+                intent.putExtra("image_string", getModel().getValue(getName()).toString());
+                context.startActivity(intent);
 
 
-                });
-                 builder.setNegativeButton(R.string.delete, (dialog, which) -> {
+            });
+            builder.setNegativeButton(R.string.delete, (dialog, which) -> {
 
-                     imageView.setImageBitmap(null);
+                imageView.setImageBitmap(null);
 
-                     getModel().setValue(getName(), "");
-                     dialog.dismiss();
-                     linearLayout.removeView(imageView);
-                     linearLayout.requestLayout();
-                 });
+                getModel().setValue(getName(), "");
+                dialog.dismiss();
+                linearLayout.removeView(imageView);
+                linearLayout.requestLayout();
+            });
             builder.show();
         });
 
@@ -179,26 +175,24 @@ public class PhotoButtonController extends MyLabeledFieldController {
     }
 
 
-
-
     private Button getButton() {
         return (Button) getView().findViewById(editTextId);
     }
 
 
-    private ImageView getImageView(){
+    private ImageView getImageView() {
         return IMAGE_VIEW;
 
     }
 
     private void refresh(ImageView imageView) {
         Object value = getModel().getValue(getName());
-       if(value != null){
-
-           imageView.setImageBitmap(ImageUtil.base64ToBitmap(value.toString()));
-       }
-
-
+        if (value != null && !value.toString().contains("http://")) {
+            try {
+                imageView.setImageBitmap(ImageUtil.base64ToBitmap(value.toString()));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
     }
 
     public void refresh() {
@@ -206,15 +200,4 @@ public class PhotoButtonController extends MyLabeledFieldController {
     }
 
 
-
-
-
-
 }
-
-
-
-
-
-
-

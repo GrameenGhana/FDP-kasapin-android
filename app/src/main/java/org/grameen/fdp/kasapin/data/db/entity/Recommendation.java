@@ -3,10 +3,7 @@ package org.grameen.fdp.kasapin.data.db.entity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -16,7 +13,7 @@ import java.util.List;
  */
 
 @Entity(tableName = "recommendations", indices = {@Index(value = "id", unique = true), @Index(value = "country"), @Index(value = "cropId")})
-public class Recommendation extends BaseModel{
+public class Recommendation extends BaseModel {
 
     @SerializedName("crop_id")
     int cropId;
@@ -44,8 +41,8 @@ public class Recommendation extends BaseModel{
     List<RecommendationActivity> recommendationActivities;
 
 
-
-    public Recommendation(){}
+    public Recommendation() {
+    }
 
 
     public int getCropId() {

@@ -7,7 +7,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-
 import org.grameen.fdp.kasapin.data.db.entity.FarmResult;
 
 import java.util.List;
@@ -39,7 +38,6 @@ public interface FarmResultsDao {
 
     @Update
     int updateFarmResult(FarmResult farmResult);
-
 
 
     @Query("DELETE FROM farm_results")

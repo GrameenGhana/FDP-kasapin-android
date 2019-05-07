@@ -1,83 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:clipToPadding="false"
-                android:clipChildren="false"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical">
 
 
     <LinearLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/content"
-        android:orientation="vertical"
-        android:clipToPadding="false"
         android:clipChildren="false"
-        >
+        android:clipToPadding="false"
+        android:orientation="vertical">
 
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
 
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/spacing_half"
-            >
+            android:paddingTop="@dimen/spacing_half">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_normal"
-                    android:layout_marginRight="@dimen/spacing_normal"
-                     >
-
+                    android:layout_marginRight="@dimen/spacing_normal">
 
 
                     <LinearLayout
                         android:id="@+id/ll1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_widthPercent="30%"
-                        android:gravity="center_vertical"
                         android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
                         android:orientation="vertical"
-                        >
+                        app:layout_widthPercent="30%">
 
                         <TextView
                             android:id="@+id/plotName"
-                             android:layout_width="wrap_content"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Plot Name"
-                            android:textSize="@dimen/text_size_normal"
                             android:textColor="@android:color/primary_text_light"
+                            android:textSize="@dimen/text_size_normal"
                             android:textStyle="bold"
 
 
                             />
 
 
-
                     </LinearLayout>
-
 
 
                     <LinearLayout
                         android:id="@+id/ll2"
-                        android:layout_toRightOf="@+id/ll1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_widthPercent="80%"
-                        android:orientation="vertical"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/spacing_normal"
+                        android:layout_toRightOf="@+id/ll1"
+                        android:orientation="vertical"
+                        app:layout_widthPercent="80%"
 
                         >
 
@@ -95,27 +87,25 @@
                                 android:id="@+id/gapsButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/spacing_normal"
+                                android:text="GAPs"
                                 android:theme="@style/PrimaryButtonAccent"
                                 app:layout_widthPercent="40%"
-                                android:text="GAPs"
-                                android:layout_marginRight="@dimen/spacing_normal"
 
                                 />
-
 
 
                             <Button
-                                android:layout_toRightOf="@id/gapsButton"
                                 android:id="@+id/replantButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/gapsButton"
+                                android:text="Replant"
                                 android:theme="@style/PrimaryButtonAccent"
                                 app:layout_widthPercent="50%"
-                                android:text="Replant"
 
 
                                 />
-
 
 
                         </android.support.percent.PercentRelativeLayout>
@@ -124,28 +114,24 @@
                     </LinearLayout>
 
 
-
                 </android.support.percent.PercentRelativeLayout>
 
                 <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_normal"
-                    android:layout_marginRight="@dimen/spacing_normal"
                     android:layout_marginTop="@dimen/spacing_normal"
-                    >
-
+                    android:layout_marginRight="@dimen/spacing_normal">
 
 
                     <LinearLayout
                         android:id="@+id/ll3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_widthPercent="30%"
-                        android:gravity="center_vertical"
                         android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
                         android:orientation="vertical"
-                        >
+                        app:layout_widthPercent="30%">
 
                         <TextView
                             android:id="@+id/landSize"
@@ -158,20 +144,18 @@
                             />
 
 
-
                     </LinearLayout>
-
 
 
                     <LinearLayout
                         android:id="@+id/ll4"
-                        android:layout_toRightOf="@+id/ll3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_widthPercent="80%"
-                        android:orientation="vertical"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/spacing_normal"
+                        android:layout_toRightOf="@+id/ll3"
+                        android:orientation="vertical"
+                        app:layout_widthPercent="80%"
 
                         >
 
@@ -185,21 +169,18 @@
                             >
 
 
-
-
                             <TextView
                                 android:id="@+id/ph"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="ph5"
-                                android:textAllCaps="true"
                                 android:background="@color/orange_indicator"
                                 android:padding="@dimen/spacing_normal"
+                                android:text="ph5"
+                                android:textAllCaps="true"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"
 
                                 />
-
 
 
                         </android.support.percent.PercentRelativeLayout>
@@ -208,15 +189,13 @@
                     </LinearLayout>
 
 
-
                 </android.support.percent.PercentRelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_normal"
                     android:layout_marginTop="@dimen/spacing_normal"
-                      >
+                    android:padding="@dimen/spacing_normal">
 
 
                     <TextView
@@ -233,9 +212,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="10000kg"
-                        android:textSize="@dimen/text_size_normal"
-                        />
-
+                        android:textSize="@dimen/text_size_normal" />
 
 
                 </LinearLayout>
@@ -249,30 +226,25 @@
     </LinearLayout>
 
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white"
-        android:layout_below="@id/content"
         android:layout_above="@+id/conditionsLayout"
+        android:layout_below="@id/content"
         android:layout_marginTop="@dimen/spacing_normal"
-         >
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/aos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Adoption Observations (AO)"
             android:padding="@dimen/spacing_normal"
+            android:text="Adoption Observations (AO)"
             android:textAllCaps="true"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/text_size_tiny"
-            android:textStyle="bold"
-            />
-
+            android:textStyle="bold" />
 
 
         <ScrollView
@@ -282,49 +254,42 @@
             >
 
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                android:padding="@dimen/spacing_normal"
                 android:background="@drawable/border_background_white"
-                >
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_normal">
 
                 <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_centerVertical="true"
-                    android:orientation="horizontal"
-                    android:layout_marginRight="@dimen/spacing_normal"
                     android:layout_marginLeft="@dimen/spacing_normal"
-                    >
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/plantMaterial"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Planting Material"
-                        app:layout_widthPercent="50%"
-                        android:layout_marginRight="@dimen/spacing_normal"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:text="Planting Material"
                         android:textColor="@android:color/primary_text_light"
-                        />
-
-
+                        app:layout_widthPercent="50%" />
 
 
                     <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:layout_toRightOf="@id/plantMaterial"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="@dimen/spacing_half"
+                        android:layout_toRightOf="@id/plantMaterial"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        app:ms_arrow_tint="@color/colorPrimary"
-                        android:layout_marginRight="@dimen/spacing_half"
-                        android:layout_centerInParent="true"
-                        />
+                        app:ms_arrow_tint="@color/colorPrimary" />
 
 
                 </android.support.percent.PercentRelativeLayout>
@@ -332,37 +297,32 @@
                 <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_centerVertical="true"
-                    android:orientation="horizontal"
-                    android:layout_marginRight="@dimen/spacing_normal"
                     android:layout_marginLeft="@dimen/spacing_normal"
-                    >
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/treeDensity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tree Density"
-                        app:layout_widthPercent="50%"
-                        android:layout_marginRight="@dimen/spacing_normal"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:text="Tree Density"
                         android:textColor="@android:color/primary_text_light"
-                        />
-
-
+                        app:layout_widthPercent="50%" />
 
 
                     <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:layout_toRightOf="@id/treeDensity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/spacing_half"
+                        android:layout_toRightOf="@id/treeDensity"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        app:ms_arrow_tint="@color/colorPrimary"
-                        android:layout_marginRight="@dimen/spacing_half"
-                        android:layout_centerVertical="true"
-                        />
+                        app:ms_arrow_tint="@color/colorPrimary" />
 
 
                 </android.support.percent.PercentRelativeLayout>
@@ -370,37 +330,32 @@
                 <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_centerVertical="true"
-                    android:orientation="horizontal"
-                    android:layout_marginRight="@dimen/spacing_normal"
                     android:layout_marginLeft="@dimen/spacing_normal"
-                    >
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/fertilizerApplication"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Fertilizer Application"
-                        app:layout_widthPercent="50%"
-                        android:layout_marginRight="@dimen/spacing_normal"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:text="Fertilizer Application"
                         android:textColor="@android:color/primary_text_light"
-                        />
-
-
+                        app:layout_widthPercent="50%" />
 
 
                     <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:layout_toRightOf="@id/fertilizerApplication"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/spacing_half"
+                        android:layout_toRightOf="@id/fertilizerApplication"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        app:ms_arrow_tint="@color/colorPrimary"
-                        android:layout_marginRight="@dimen/spacing_half"
-                        android:layout_centerVertical="true"
-                        />
+                        app:ms_arrow_tint="@color/colorPrimary" />
 
 
                 </android.support.percent.PercentRelativeLayout>
@@ -409,37 +364,32 @@
                 <android.support.percent.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:layout_centerVertical="true"
-                    android:orientation="horizontal"
-                    android:layout_marginRight="@dimen/spacing_normal"
                     android:layout_marginLeft="@dimen/spacing_normal"
-                    >
+                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/drainageText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Drainage Needed?"
-                        app:layout_widthPercent="50%"
-                        android:layout_marginRight="@dimen/spacing_normal"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:text="Drainage Needed?"
                         android:textColor="@android:color/primary_text_light"
-                        />
-
-
+                        app:layout_widthPercent="50%" />
 
 
                     <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:layout_toRightOf="@id/drainageText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/spacing_half"
+                        android:layout_toRightOf="@id/drainageText"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        app:ms_arrow_tint="@color/colorPrimary"
-                        android:layout_marginRight="@dimen/spacing_half"
-                        android:layout_centerVertical="true"
-                        />
+                        app:ms_arrow_tint="@color/colorPrimary" />
 
 
                 </android.support.percent.PercentRelativeLayout>
@@ -447,12 +397,7 @@
             </LinearLayout>
 
 
-
-
-
-
         </ScrollView>
-
 
 
     </LinearLayout>
@@ -460,20 +405,18 @@
 
     <LinearLayout
 
+        android:id="@+id/conditionsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-         android:layout_above="@+id/buttonsLayout"
-        android:id="@+id/conditionsLayout"
-        >
+        android:layout_above="@+id/buttonsLayout"
+        android:orientation="vertical">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_normal"
             android:layout_marginTop="@dimen/spacing_normal"
-            >
+            android:padding="@dimen/spacing_normal">
 
 
             <TextView
@@ -491,20 +434,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Genetics of plant Material, GAP's ESM"
-                 android:textColor="@android:color/primary_text_light"
-                />
-
+                android:textColor="@android:color/primary_text_light" />
 
 
         </LinearLayout>
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_normal"
-             >
+            android:padding="@dimen/spacing_normal">
 
 
             <TextView
@@ -522,8 +461,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Farm Condition"
-                 android:textColor="@android:color/primary_text_light"
-                />
+                android:textColor="@android:color/primary_text_light" />
 
 
         </LinearLayout>
@@ -531,45 +469,38 @@
     </LinearLayout>
 
 
-
-
-
     <android.support.percent.PercentRelativeLayout
+        android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:id="@+id/buttonsLayout"
-         android:padding="@dimen/spacing_normal"
-         >
-
+        android:padding="@dimen/spacing_normal">
 
 
         <Button
             android:id="@+id/editButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/PrimaryButtonGrey"
-            android:text="Edit"
             android:padding="@dimen/spacing_normal"
-            app:layout_widthPercent="40%"
-            />
+            android:text="Edit"
+            android:theme="@style/PrimaryButtonGrey"
+            app:layout_widthPercent="40%" />
 
 
         <Button
             android:id="@+id/monitoringButton"
-            android:layout_toRightOf="@id/editButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_toRightOf="@id/editButton"
+            android:padding="@dimen/spacing_normal"
+            android:text="Monitoring"
             android:theme="@style/PrimaryButtonAccent"
             app:layout_widthPercent="60%"
-            android:text="Monitoring"
-            android:padding="@dimen/spacing_normal"
-            android:layout_marginLeft="@dimen/spacing_normal"
 
             />
 
     </android.support.percent.PercentRelativeLayout>
-
 
 
 </RelativeLayout>

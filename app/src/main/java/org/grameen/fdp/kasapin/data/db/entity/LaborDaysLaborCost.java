@@ -1,7 +1,5 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-
 /**
  * Created by aangjnr on 22/01/2018.
  */

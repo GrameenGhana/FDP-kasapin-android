@@ -1,12 +1,10 @@
 package org.grameen.fdp.kasapin.ui.farmerProfile;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,10 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -39,7 +34,6 @@ import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,11 +112,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
     RealFarmer FARMER;
-    private PlotsListAdapter plotsListAdapter;
-
     int plotsSize = 0;
-
-
+    private PlotsListAdapter plotsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,11 +224,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         FILTERED_FORMS = new ArrayList<>();
 
-        if(FORM_AND_QUESTIONS != null)
-        for(FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS){
-            if(formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
-                FILTERED_FORMS.add(formAndQuestions);
-        }
+        if (FORM_AND_QUESTIONS != null)
+            for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
+                if (formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
+                    FILTERED_FORMS.add(formAndQuestions);
+            }
 
 
         mPresenter.loadDynamicButtons(FILTERED_FORMS);
@@ -258,8 +249,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         */
 
 
-
-
     }
 
     @Override
@@ -267,43 +256,43 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         plotsSize = plots.size();
 
-        AppLogger.i(TAG, "PLOT SIZE IS " +plotsSize);
+        AppLogger.i(TAG, "PLOT SIZE IS " + plotsSize);
 
         int plotsSize = plots.size();
 
-        if(plotsSize > 0){
+        if (plotsSize > 0) {
 
-        noOfPlots.setText((plotsSize > 1) ? getStringResources(R.string.plot_aos) + "(" + plotsSize + ")" : getStringResources(R.string.plot_ao) + "(" + plotsSize + ")");
+            noOfPlots.setText((plotsSize > 1) ? getStringResources(R.string.plot_aos) + "(" + plotsSize + ")" : getStringResources(R.string.plot_ao) + "(" + plotsSize + ")");
 
 
-        LinearLayoutManager horizontalLayoutManagaer
-                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            LinearLayoutManager horizontalLayoutManagaer
+                    = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        plotsRecyclerView.setLayoutManager(horizontalLayoutManagaer);
+            plotsRecyclerView.setLayoutManager(horizontalLayoutManagaer);
                /* SpacesGridItemDecoration decoration = new SpacesGridItemDecoration(4);
             plotsRecyclerView.removeItemDecoration(decoration);
             plotsRecyclerView.addItemDecoration(decoration);*/
 
 
-        plotsListAdapter = new PlotsListAdapter(this, plots);
-        plotsListAdapter.setHasStableIds(true);
+            plotsListAdapter = new PlotsListAdapter(this, plots);
+            plotsListAdapter.setHasStableIds(true);
 
-        plotsRecyclerView.setAdapter(plotsListAdapter);
+            plotsRecyclerView.setAdapter(plotsListAdapter);
 
-        plotsListAdapter.setOnItemClickListener((view, position) -> {
+            plotsListAdapter.setOnItemClickListener((view, position) -> {
 
-            //Todo go to plot details
+                //Todo go to plot details
 
-            if (!getAppDataManager().isMonitoring()) {
-                Intent intent = new Intent(FarmerProfileActivity.this, PlotDetailsActivity.class);
-                intent.putExtra("plot", getGson().toJson(plots.get(position)));
-                intent.putExtra("plotSize", plotsSize);
-                intent.putExtra("hasSubmitted", FARMER.getHasSubmitted());
-                intent.putExtra("syncStatus", FARMER.getSyncStatus());
+                if (!getAppDataManager().isMonitoring()) {
+                    Intent intent = new Intent(FarmerProfileActivity.this, PlotDetailsActivity.class);
+                    intent.putExtra("plot", getGson().toJson(plots.get(position)));
+                    intent.putExtra("plotSize", plotsSize);
+                    intent.putExtra("hasSubmitted", FARMER.getHasSubmitted());
+                    intent.putExtra("syncStatus", FARMER.getSyncStatus());
 
-                startActivity(intent);
+                    startActivity(intent);
 
-            } else {
+                } else {
 
                /* Intent intent = new Intent(FarmerProfileActivity.this, MonitoringYearSelectionActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
@@ -312,34 +301,30 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 intent.putExtra("plot", getGson().toJson(plots.get(position)));
                 startActivity(intent);*/
 
-            }
+                }
 
-        });
-
-
-        if (!getAppDataManager().isMonitoring())
-            plotsListAdapter.OnLongClickListener((view, position) -> {
-
-                final Plot plot = plots.get(position);
-
-                showDialog(true, "Delete Plot Info", "Do you want to delete data for " + plot.getName() + "?", (dialogInterface, i) -> {
-
-                    dialogInterface.dismiss();
-                    mPresenter.deletePlot(plot);
-
-                    //TODO DELETE monitoring for a plot
-                    plots.remove(position);
-                    plotsListAdapter.notifyItemRemoved(position);
-                }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0);
             });
-    } else noOfPlots.setText("Plot Adoption Observations");
 
 
+            if (!getAppDataManager().isMonitoring())
+                plotsListAdapter.OnLongClickListener((view, position) -> {
+
+                    final Plot plot = plots.get(position);
+
+                    showDialog(true, "Delete Plot Info", "Do you want to delete data for " + plot.getName() + "?", (dialogInterface, i) -> {
+
+                        dialogInterface.dismiss();
+                        mPresenter.deletePlot(plot);
+
+                        //TODO DELETE monitoring for a plot
+                        plots.remove(position);
+                        plotsListAdapter.notifyItemRemoved(position);
+                    }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0);
+                });
+        } else noOfPlots.setText("Plot Adoption Observations");
 
 
-
-}
-
+    }
 
 
     @Override
@@ -349,7 +334,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        for (Button b:buttons) {
+        for (Button b : buttons) {
             runOnUiThread(() -> dynamicButtons.addView(b, params));
 
             b.setOnClickListener(v -> {
@@ -377,19 +362,16 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        if(getAppDataManager().getBooleanValue("reload")){
+        if (getAppDataManager().getBooleanValue("reload")) {
 
             mPresenter.getFarmersPlots(FARMER.getCode());
 
             getAppDataManager().setBooleanValue("reload", false);
         }
     }
-
-
 
 
     @Override
@@ -402,15 +384,15 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         switch (view.getId()) {
             case R.id.photo:
 
-                    Intent intent = new Intent(FarmerProfileActivity.this, ImageViewActivity.class);
-                    intent.putExtra("image_string", FARMER.getImageUrl());
-                    startActivity(intent);
+                Intent intent = new Intent(FarmerProfileActivity.this, ImageViewActivity.class);
+                intent.putExtra("image_string", FARMER.getImageUrl());
+                startActivity(intent);
 
                 break;
             case R.id.addPlot:
 
                 //Todo go to add plot activity
-                 intent = new Intent(FarmerProfileActivity.this, AddEditFarmerPlotActivity.class);
+                intent = new Intent(FarmerProfileActivity.this, AddEditFarmerPlotActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
                 intent.putExtra("plotSize", plotsSize);
                 startActivity(intent);
@@ -428,11 +410,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             case R.id.pandl:
 
                 List<Plot> plots = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(FARMER.getCode()).blockingGet();
-                if(plots != null && plots.size() > 0) {
-                    if(!checkIfFarmSizeCorresponds(plots))
+                if (plots != null && plots.size() > 0) {
+                    if (!checkIfFarmSizeCorresponds(plots))
                         return;
 
-                    else if(!checkIfCocoaProdCorresponds(plots))
+                    else if (!checkIfCocoaProdCorresponds(plots))
                         return;
 
                     else {
@@ -467,7 +449,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 break;
 
 
-
             case R.id.historical_view:
 
                 //showSelectFormDialog();
@@ -480,20 +461,13 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
 
-
-
-
-    void openProfitAndLossActivity(){
-
-
+    void openProfitAndLossActivity() {
 
 
     }
 
 
-
-
-    boolean checkIfFarmSizeCorresponds(List<Plot> plots){
+    boolean checkIfFarmSizeCorresponds(List<Plot> plots) {
 
         boolean value = true;
 
@@ -501,40 +475,40 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         Question cocoaAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_area_").blockingGet();
 
-        if(cocoaAreaQuestion != null) {
+        if (cocoaAreaQuestion != null) {
 
             FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaAreaQuestion.getFormTranslationId()).blockingGet();
-            if(answer != null){
+            if (answer != null) {
                 try {
                     farmAcre = round(Double.parseDouble(answer.getJsonData().get(cocoaAreaQuestion.getLabelC()).toString().replace(",", "")), 2);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    farmAcre = 0.0; }
+                    farmAcre = 0.0;
+                }
 
 
                 StringBuilder stringBuilder = new StringBuilder();
                 // StringBuilder stringUnitBuilder = new StringBuilder();
 
 
-
                 Double totalSizes = -1.0;
 
-                if(plots != null)
-                for (Plot plot : plots) {
+                if (plots != null)
+                    for (Plot plot : plots) {
 
-                    try {
-                        AppLogger.i(TAG, "******* PLOT NAME " + plot.getName() + " AND DATA IS " + plot.getAnswersData());
-
-
-                        stringBuilder.append(plot.getArea()).append("+");
+                        try {
+                            AppLogger.i(TAG, "******* PLOT NAME " + plot.getName() + " AND DATA IS " + plot.getAnswersData());
 
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        stringBuilder.append("0").append("+");
+                            stringBuilder.append(plot.getArea()).append("+");
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            stringBuilder.append("0").append("+");
+                        }
+
                     }
-
-                }
                 stringBuilder.append("0");
 
                 totalSizes = round(Double.parseDouble(MathFormulaParser.getInstance().evaluate(stringBuilder.toString())), 2);
@@ -550,11 +524,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                 return value;
 
-            }else{
+            } else {
                 showMessage(R.string.fill_in_plot_size_values);
                 return false;
             }
-        }else{
+        } else {
 
             showMessage(R.string.error_has_occurred);
             return false;
@@ -563,7 +537,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
 
-    boolean checkIfCocoaProdCorresponds(List<Plot> plots){
+    boolean checkIfCocoaProdCorresponds(List<Plot> plots) {
 
         boolean value = true;
 
@@ -571,15 +545,16 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         Question cocoaProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_production_ly").blockingGet();
 
-        if(cocoaProdQuestion != null) {
+        if (cocoaProdQuestion != null) {
 
             FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaProdQuestion.getFormTranslationId()).blockingGet();
-            if(answer != null){
+            if (answer != null) {
                 try {
                     farmAcre = round(Double.parseDouble(answer.getJsonData().get(cocoaProdQuestion.getLabelC()).toString().replace(",", "")), 2);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    farmAcre = 0.0; }
+                    farmAcre = 0.0;
+                }
 
 
                 StringBuilder stringBuilder = new StringBuilder();
@@ -588,7 +563,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                 Double totalSizes = -1.0;
 
-                if(plots != null)
+                if (plots != null)
                     for (Plot plot : plots) {
 
                         try {
@@ -619,11 +594,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                 return value;
 
-            }else{
+            } else {
                 showMessage(R.string.error_missing_estimated_production);
                 return false;
             }
-        }else{
+        } else {
 
             showMessage(R.string.error_has_occurred);
             return false;

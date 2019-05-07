@@ -2,27 +2,20 @@ package org.grameen.fdp.kasapin.di.module;
 
 
 import android.app.Application;
-import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.support.annotation.NonNull;
 
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
 import org.grameen.fdp.kasapin.data.network.FdpApi;
 import org.grameen.fdp.kasapin.data.network.FdpApiService;
-import org.grameen.fdp.kasapin.data.network.RetrofitInterceptor;
 import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
- import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
- import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import javax.inject.Singleton;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -80,7 +73,6 @@ public class ApplicationModule {
     }
 
 
-
     @Singleton
     @Provides
     PreferencesHelper providePreferencesHelper(AppPreferencesHelper appPreferencesHelper) {
@@ -96,7 +88,7 @@ public class ApplicationModule {
 
     @Singleton
     @Provides
-    CompositeDisposable providesCompositeDisposable(){
+    CompositeDisposable providesCompositeDisposable() {
         return new CompositeDisposable();
     }
 
@@ -104,38 +96,32 @@ public class ApplicationModule {
     @Provides
     @Singleton
     OkHttpClient provideOkHttpClient() {
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             return new OkHttpClient.Builder().addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build();
-        }else{
+        } else {
             return new OkHttpClient.Builder().build();
         }
     }
 
 
-
-
     @Singleton
     @Provides
-    Retrofit providesRetrofit(OkHttpClient client){
+    Retrofit providesRetrofit(OkHttpClient client) {
 
-            return new Retrofit.Builder().baseUrl(providesSharedPrefs().getString(AppConstants.SERVER_URL, BuildConfig.END_POINT))
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build();
+        return new Retrofit.Builder().baseUrl(providesSharedPrefs().getString(AppConstants.SERVER_URL, BuildConfig.END_POINT))
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
     }
 
 
-
-
     @Singleton
     @Provides
-    FdpApi providesFdpApi(Retrofit retrofit){
+    FdpApi providesFdpApi(Retrofit retrofit) {
         return retrofit.create(FdpApi.class);
     }
-
-
 
 
     @Singleton
@@ -143,8 +129,6 @@ public class ApplicationModule {
     FdpApiService providesFdpApiService(FdpApi fdpApi) {
         return new FdpApiService(fdpApi);
     }
-
-
 
 
 }

@@ -21,8 +21,7 @@ import io.reactivex.Single;
  */
 
 @Dao
-public interface SkipLogicsDao extends BaseDao<SkipLogic>{
-
+public interface SkipLogicsDao extends BaseDao<SkipLogic> {
 
 
     @Query("SELECT * FROM skip_logics")
@@ -51,9 +50,6 @@ public interface SkipLogicsDao extends BaseDao<SkipLogic>{
 
     @Query("DELETE FROM skip_logics WHERE id = :id")
     int deleteSkipLogicById(int id);
-
-
-
 
 
 }

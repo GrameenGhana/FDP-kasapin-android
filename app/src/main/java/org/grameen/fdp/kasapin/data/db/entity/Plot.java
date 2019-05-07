@@ -1,20 +1,13 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import org.grameen.fdp.kasapin.ui.base.model.Loc;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
-
-import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
  * Created by aangjnr on 08/11/2017.
@@ -34,7 +27,7 @@ public class Plot {
     String farmerName;
     String farmerCode;
     String numberOfShadeTrees;
-    String plotAge;
+    String plotAge = "N/A";
     String area;
     String plotPoints;
     String name;
@@ -47,7 +40,6 @@ public class Plot {
     int gapsId = -1;
 
 
-
     @Ignore
     int startYear = 1;
 
@@ -55,12 +47,12 @@ public class Plot {
 
     }
 
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
-
     public String getExternalId() {
         return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getEstimatedProductionSize() {
@@ -71,70 +63,69 @@ public class Plot {
         this.estimatedProductionSize = estimatedProductionSize;
     }
 
-    public void setFarmerCode(String farmerCode) {
-        this.farmerCode = farmerCode;
-    }
-
-    public void setFarmerName(String farmerName) {
-        this.farmerName = farmerName;
-    }
-
-    public void setDistanceBetweenCocoaTrees(String distanceBetweenCocoaTrees) {
-        this.distanceBetweenCocoaTrees = distanceBetweenCocoaTrees;
-    }
-
-    public void setEstimatedProduction(String estimatedProduction) {
-        EstimatedProduction = estimatedProduction;
-    }
-
-    public void setNumberOfShadeTrees(String numberOfShadeTrees) {
-        this.numberOfShadeTrees = numberOfShadeTrees;
-    }
-
-    public void setPlotAge(String plotAge) {
-        this.plotAge = plotAge;
-    }
-
-    public void setPlotPoints(String plotPoints) {
-        this.plotPoints = plotPoints;
-    }
-
     public String getFarmerCode() {
         return farmerCode;
+    }
+
+    public void setFarmerCode(String farmerCode) {
+        this.farmerCode = farmerCode;
     }
 
     public String getFarmerName() {
         return farmerName;
     }
 
+    public void setFarmerName(String farmerName) {
+        this.farmerName = farmerName;
+    }
+
     public String getDistanceBetweenCocoaTrees() {
         return distanceBetweenCocoaTrees;
+    }
+
+    public void setDistanceBetweenCocoaTrees(String distanceBetweenCocoaTrees) {
+        this.distanceBetweenCocoaTrees = distanceBetweenCocoaTrees;
     }
 
     public String getEstimatedProduction() {
         return EstimatedProduction;
     }
 
+    public void setEstimatedProduction(String estimatedProduction) {
+        EstimatedProduction = estimatedProduction;
+    }
+
     public String getNumberOfShadeTrees() {
         return numberOfShadeTrees;
     }
 
+    public void setNumberOfShadeTrees(String numberOfShadeTrees) {
+        this.numberOfShadeTrees = numberOfShadeTrees;
+    }
+
     public String getPlotAge() {
-        return plotAge;
+        return (plotAge == null) ? "" : plotAge;
+    }
+
+    public void setPlotAge(String plotAge) {
+        this.plotAge = plotAge;
     }
 
     public String getPlotPoints() {
         return plotPoints;
     }
 
-
-    public void setId(@NonNull int id) {
-        this.id = id;
+    public void setPlotPoints(String plotPoints) {
+        this.plotPoints = plotPoints;
     }
 
     @NonNull
     public int getId() {
         return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -169,37 +160,36 @@ public class Plot {
         this.area = area;
     }
 
-    public void setAnswersData(String answersData) {
-        this.answersData = answersData;
-    }
-
     public String getAnswersData() {
         return answersData;
     }
 
-    public void setGpsPoints(String gpsPoints) {
-        this.gpsPoints = gpsPoints;
+    public void setAnswersData(String answersData) {
+        this.answersData = answersData;
     }
 
     public String getGpsPoints() {
         return gpsPoints;
     }
 
-
-    public void setRecommendationId(int recommendationId) {
-        this.recommendationId = recommendationId;
-    }
-
-    public void setGapsId(int gapsId) {
-        this.gapsId = gapsId;
+    public void setGpsPoints(String gpsPoints) {
+        this.gpsPoints = gpsPoints;
     }
 
     public int getGapsId() {
         return gapsId;
     }
 
+    public void setGapsId(int gapsId) {
+        this.gapsId = gapsId;
+    }
+
     public int getRecommendationId() {
         return recommendationId;
+    }
+
+    public void setRecommendationId(int recommendationId) {
+        this.recommendationId = recommendationId;
     }
 
     @Ignore
@@ -207,11 +197,11 @@ public class Plot {
         return new JSONObject(answersData);
     }
 
-    public void setStartYear(int startYear) {
-        this.startYear = startYear;
-    }
-
     public int getStartYear() {
         return startYear;
+    }
+
+    public void setStartYear(int startYear) {
+        this.startYear = startYear;
     }
 }

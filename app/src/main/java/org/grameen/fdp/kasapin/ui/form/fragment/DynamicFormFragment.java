@@ -2,24 +2,13 @@ package org.grameen.fdp.kasapin.ui.form.fragment;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -28,7 +17,6 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
-import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyFormSectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.ButtonController;
@@ -40,22 +28,14 @@ import org.grameen.fdp.kasapin.ui.form.controller.view.SelectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.TimePickerController;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
-import org.grameen.fdp.kasapin.utilities.CustomToast;
+import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Date;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.script.ScriptEngine;
-
-import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -65,7 +45,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 
-public class DynamicFormFragment extends FormFragment{
+public class DynamicFormFragment extends FormFragment {
 
 
     //@Inject
@@ -83,22 +63,10 @@ public class DynamicFormFragment extends FormFragment{
     String TAG = "MYFORMFRAGMENT";
 
 
-
-    public DynamicFormFragment(){
+    public DynamicFormFragment() {
 
 
     }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-      //getBaseActivity().getActivityComponent().inject(this);
-        // mPresenter.takeView(this);
-
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
 
     public static DynamicFormFragment newInstance(FormAndQuestions formAndQuestions, boolean shouldLoadOldValues, @Nullable String farmerId, boolean isMonitoring, @Nullable FormAnswerData answer) {
         DynamicFormFragment formFragment = new DynamicFormFragment();
@@ -116,6 +84,15 @@ public class DynamicFormFragment extends FormFragment{
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        //getBaseActivity().getActivityComponent().inject(this);
+        // mPresenter.takeView(this);
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
     public void onAttach(Context context) {
         AppLogger.i(TAG, "ON ATTACHED");
 
@@ -129,15 +106,15 @@ public class DynamicFormFragment extends FormFragment{
 
             shouldLoadOldValues = getArguments().getBoolean("loadOldValues");
 
-                try {
+            try {
                 ANSWER_DATA = BaseActivity.getGson().fromJson(getArguments().getString("answerData"), FormAnswerData.class);
-                if(ANSWER_DATA != null)
+                if (ANSWER_DATA != null)
                     ANSWERS_JSON = new JSONObject(ANSWER_DATA.getData());
                 else
                     initializeAnswersData();
-                } catch (JSONException ignore) {
-                    initializeAnswersData();
-                }
+            } catch (JSONException ignore) {
+                initializeAnswersData();
+            }
 
             IS_CONTROLLER_ENABLED = !getArguments().getBoolean("isMonitoring");
         }
@@ -161,7 +138,7 @@ public class DynamicFormFragment extends FormFragment{
     }
 
 
-    void initializeAnswersData(){
+    void initializeAnswersData() {
         ANSWERS_JSON = new JSONObject();
 
         AppLogger.e(TAG, "Initializing survey answers...");
@@ -172,8 +149,6 @@ public class DynamicFormFragment extends FormFragment{
         ANSWER_DATA.setCreatedAt(TimeUtils.getCurrentDateTime());
 
     }
-
-
 
 
     @Override
@@ -188,8 +163,8 @@ public class DynamicFormFragment extends FormFragment{
             formSectionController = new MyFormSectionController(getContext(), FORM_AND_QUESTIONS.getForm().getFormNameC());
 
 
-                        loadQuestionsValues(context, QUESTIONS, formSectionController);
-                        controller.addSection(formSectionController);
+            loadQuestionsValues(context, QUESTIONS, formSectionController);
+            controller.addSection(formSectionController);
 
         }
     }
@@ -205,14 +180,13 @@ public class DynamicFormFragment extends FormFragment{
                     .doOnNext(question ->
                             getAppDataManager().getCompositeDisposable().add(getAppDataManager()
                                     .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
-                                    .subscribe(skipLogics ->{
-                                        if(skipLogics != null && skipLogics.size() > 0)
+                                    .subscribe(skipLogics -> {
+                                        if (skipLogics != null && skipLogics.size() > 0)
                                             applySkipLogicsAndHideViews(question, skipLogics);
 
                                     }))
                     ).observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
-
 
 
         Observable.fromIterable(QUESTIONS)
@@ -226,9 +200,7 @@ public class DynamicFormFragment extends FormFragment{
                 .subscribe();
 
 
-
     }
-
 
 
     void loadQuestionsValues(Context context, List<Question> questions, MyFormSectionController formSectionController) {
@@ -239,12 +211,11 @@ public class DynamicFormFragment extends FormFragment{
 
                 String storedValue;
 
-                if(shouldLoadOldValues) {
+                if (shouldLoadOldValues) {
                     storedValue = getComputationUtils().getValue(q, ANSWERS_JSON);
                     if (storedValue.isEmpty() || storedValue.equalsIgnoreCase("null"))
                         storedValue = q.getDefaultValueC();
-                }
-                else
+                } else
                     storedValue = q.getDefaultValueC();
 
                 switch (q.getTypeC().toLowerCase()) {
@@ -254,13 +225,13 @@ public class DynamicFormFragment extends FormFragment{
                         break;
 
                     case AppConstants.TYPE_NUMBER_DECIMAL:
-                     formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));
+                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));
                         //getValue(q);
 
                         break;
 
                     case AppConstants.TYPE_NUMBER:
-                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(),  q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));
+                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));
                         //getValue(q);
 
                         break;
@@ -283,7 +254,7 @@ public class DynamicFormFragment extends FormFragment{
 
                         break;
                     case AppConstants.TYPE_DATEPICKER:
-                        formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC()));
+                        formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), IS_CONTROLLER_ENABLED));
                         //getValue(q);
 
                         break;
@@ -351,16 +322,15 @@ public class DynamicFormFragment extends FormFragment{
         }
 
 
-
     }
 
 
-     public void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogics) {
+    public void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogics) {
         getComputationUtils().setUpPropertyChangeListeners2(q.getLabelC(), skipLogics);
     }
 
 
-     public void applySkipLogicsAndHideViews(Question question, List<SkipLogic> skipLogics) {
+    public void applySkipLogicsAndHideViews(Question question, List<SkipLogic> skipLogics) {
 
         getComputationUtils().initiateSkipLogicsAndHideViews(question.getLabelC(), skipLogics);
 
@@ -372,7 +342,6 @@ public class DynamicFormFragment extends FormFragment{
         getComputationUtils().applyFormulas(question);
 
     }
-
 
 
     @Override
@@ -416,7 +385,7 @@ public class DynamicFormFragment extends FormFragment{
         return jsonObject;
     }
 
-    public FormAnswerData getSurveyAnswer(){
+    public FormAnswerData getSurveyAnswer() {
         ANSWER_DATA.setData(getAnswersData().toString());
         return ANSWER_DATA;
     }

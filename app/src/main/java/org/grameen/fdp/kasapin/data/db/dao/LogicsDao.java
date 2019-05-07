@@ -7,7 +7,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-
 import org.grameen.fdp.kasapin.data.db.entity.Logic;
 
 import java.util.List;
@@ -42,19 +41,12 @@ public interface LogicsDao {
     int updateLogic(Logic logic);
 
 
-
     @Query("DELETE FROM logics")
     void deleteAllLogics();
 
 
     @Query("DELETE FROM logics WHERE id = :id")
     int deleteLogicById(String id);
-
-
-
-
-
-
 
 
 }

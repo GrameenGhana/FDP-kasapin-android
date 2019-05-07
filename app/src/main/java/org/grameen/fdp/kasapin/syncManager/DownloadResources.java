@@ -22,20 +22,14 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DownloadResources {
 
-    private FdpCallbacks.OnDownloadResourcesListener onDownloadResourcesListener;
-
     String TAG = "DownloadResources";
+    boolean showProgress;
+    private FdpCallbacks.OnDownloadResourcesListener onDownloadResourcesListener;
     private BaseContract.View mView;
     private AppDataManager mAppDataManager;
-    boolean showProgress;
 
 
-    public static DownloadResources newInstance(BaseContract.View view, AppDataManager appDataManager,
-                                                FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress){
-        return new DownloadResources(view, appDataManager, listener, showProgress);
-    }
-
-    public DownloadResources(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress){
+    public DownloadResources(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress) {
 
         this.mAppDataManager = appDataManager;
         this.mView = view;
@@ -43,6 +37,10 @@ public class DownloadResources {
         this.onDownloadResourcesListener = listener;
     }
 
+    public static DownloadResources newInstance(BaseContract.View view, AppDataManager appDataManager,
+                                                FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress) {
+        return new DownloadResources(view, appDataManager, listener, showProgress);
+    }
 
     public AppDataManager getAppDataManager() {
         return mAppDataManager;
@@ -53,13 +51,13 @@ public class DownloadResources {
     }
 
 
-    public void getSurveyData(){
+    public void getSurveyData() {
 
-        if(showProgress)
+        if (showProgress)
             getView().setLoadingMessage("Getting survey data...");
 
         List<Village> villageList = new ArrayList<>();
-        for(int i =0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
 
             Village v = new Village();
             v.setId(i);
@@ -75,7 +73,6 @@ public class DownloadResources {
         country.setCurrency("GHS");
         country.setIsoCode("GHA");
         country.setName("Ghana");
-
 
 
         getAppDataManager().getCompositeDisposable().add(mAppDataManager.getFdpApiService()
@@ -103,11 +100,12 @@ public class DownloadResources {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(new DisposableObserver<QuestionsAndSkipLogic>() {
                                     @Override
-                                    public void onNext(QuestionsAndSkipLogic questionsAndSkipLogic) {}
+                                    public void onNext(QuestionsAndSkipLogic questionsAndSkipLogic) {
+                                    }
 
                                     @Override
                                     public void onError(Throwable e) {
-                                     onError(e);
+                                        onError(e);
                                     }
 
                                     @Override
@@ -116,6 +114,7 @@ public class DownloadResources {
                                     }
                                 });
                     }
+
                     @Override
                     public void onError(Throwable e) {
 
@@ -164,6 +163,7 @@ public class DownloadResources {
                                 });
 
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -173,18 +173,15 @@ public class DownloadResources {
     }
 
 
-
-
-
-    void showError(Throwable e){
-        if(onDownloadResourcesListener != null)
+    void showError(Throwable e) {
+        if (onDownloadResourcesListener != null)
             onDownloadResourcesListener.onError(e);
 
         onDownloadResourcesListener = null;
     }
 
-    void showSuccess(String message){
-        if(onDownloadResourcesListener != null)
+    void showSuccess(String message) {
+        if (onDownloadResourcesListener != null)
             onDownloadResourcesListener.onSuccess(message);
         onDownloadResourcesListener = null;
 

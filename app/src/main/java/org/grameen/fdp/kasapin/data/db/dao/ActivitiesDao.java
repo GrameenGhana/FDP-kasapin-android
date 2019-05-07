@@ -7,12 +7,9 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import org.grameen.fdp.kasapin.data.db.entity.ActivitiesPlusInput;
 import org.grameen.fdp.kasapin.data.db.entity.Activity;
 
 import java.util.List;
-
-import io.reactivex.Flowable;
 
 /**
  * Created by AangJnr on 17, September, 2018 @ 7:07 PM
@@ -45,8 +42,6 @@ public interface ActivitiesDao {
 
     @Query("SELECT * FROM activities")
     List<Activity> getAllActivities();
-
-
 
 
 }

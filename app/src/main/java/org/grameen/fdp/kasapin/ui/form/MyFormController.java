@@ -15,7 +15,6 @@ import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
 import org.grameen.fdp.kasapin.ui.form.model.MapFormModel;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;

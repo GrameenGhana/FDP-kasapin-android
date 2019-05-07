@@ -2,7 +2,6 @@ package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.renderscript.ScriptC;
 import android.support.annotation.NonNull;
 
 /**
@@ -20,16 +19,7 @@ public class SuppliesCost {
     String cost;
 
 
-
-    public SuppliesCost(){}
-
-
-    public void setId(@NonNull String id) {
-        this.id = id;
-    }
-
-    public void setCost(String cost) {
-        this.cost = cost;
+    public SuppliesCost() {
     }
 
     @NonNull
@@ -37,7 +27,15 @@ public class SuppliesCost {
         return id;
     }
 
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
+
     public String getCost() {
         return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
     }
 }

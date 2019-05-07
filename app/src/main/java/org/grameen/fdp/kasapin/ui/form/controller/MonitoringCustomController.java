@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
 import org.json.JSONObject;
@@ -28,17 +27,11 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
     private final int spinnerId = MyFormController.generateViewId();
     private final int competenceId = MyFormController.generateViewId();
     private final int reasonForFailureId = MyFormController.generateViewId();
-
-
-    JSONObject jsonObject = new JSONObject();
-
-    boolean IS_ENABLED = true;
-
     private final List<List<String>> itemsLists;
     private final List<String> values;
-
+    JSONObject jsonObject = new JSONObject();
+    boolean IS_ENABLED = true;
     List<String> options = new ArrayList<>();
-
 
 
     /**
@@ -60,10 +53,10 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
     /**
      * Constructs a selection field
      *
-     * @param ctx        the Android context
-     * @param name       the name of the field
-     * @param labelText  the label to display beside the field
-     *                   the same order as the {@code items}.
+     * @param ctx       the Android context
+     * @param name      the name of the field
+     * @param labelText the label to display beside the field
+     *                  the same order as the {@code items}.
      */
 
 
@@ -88,8 +81,6 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
         this.values = values;
 
     }
-
-
 
 
     /**
@@ -208,13 +199,11 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
 //        spinnerView.setEnabled(IS_ENABLED);
 
 
-
-
         Spinner spinnerView2 = new Spinner(getContext());
         spinnerView2.setId(competenceId);
         spinnerView2.setPrompt("Select");
         spinnerView2.setContentDescription(getContentDesc());
-        ArrayAdapter<String> spinnerAdapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, itemsLists.get(1) ) {
+        ArrayAdapter<String> spinnerAdapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, itemsLists.get(1)) {
             @NonNull
             @Override
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -253,9 +242,7 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
                     }
                 }
 
-               // getModel().setValue(getName(), value);
-
-
+                // getModel().setValue(getName(), value);
 
 
             }
@@ -268,8 +255,6 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
         refresh(spinnerView2);
 
 
-
-
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -278,17 +263,11 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
         linearLayout.addView(spinnerView2, params2);
 
 
-
-
-
-
-
-
         Spinner spinnerView3 = new Spinner(getContext());
         spinnerView3.setId(reasonForFailureId);
         spinnerView3.setPrompt("Select");
         spinnerView3.setContentDescription(getContentDesc());
-        ArrayAdapter<String> spinnerAdapter3 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,  itemsLists.get(2)) {
+        ArrayAdapter<String> spinnerAdapter3 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, itemsLists.get(2)) {
             @NonNull
             @Override
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -328,8 +307,6 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
                 }
 
                 // getModel().setValue(getName(), value);
-
-
 
 
             }
@@ -388,10 +365,7 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
     @Override
     public FormModel getModel() {
 
-        Log.i("MONITORING CUSTOM CON",  "GET MODEL" );
-
-
-
+        Log.i("MONITORING CUSTOM CON", "GET MODEL");
 
 
         return super.getModel();

@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
@@ -138,112 +137,104 @@ public class SelectionController extends MyLabeledFieldController {
     @Override
     protected View createFieldView() {
 
-        int id;
-        AtomicInteger nextGeneratedViewId = new AtomicInteger(1);
-        id = nextGeneratedViewId.get();
 
-        RelativeLayout linearLayout = new RelativeLayout(getContext());
-       // linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        if (IS_ENABLED) {
 
+            int id;
+            AtomicInteger nextGeneratedViewId = new AtomicInteger(1);
+            id = nextGeneratedViewId.get();
 
-        Spinner spinnerView = new Spinner(getContext());
-        spinnerView.setContentDescription(getContentDesc());
-        spinnerView.setId(spinnerId);
-        spinnerView.setPrompt(prompt);
-         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, items) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                if (position == getCount()) {
-                    TextView itemView = ((TextView) view.findViewById(android.R.id.text1));
-                    itemView.setText("");
-                    itemView.setHint(getItem(getCount()));
-                }
+            RelativeLayout linearLayout = new RelativeLayout(getContext());
+            // linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 
-
-
-                return view;
-            }
-
-            @Override
-            public int getCount() {
-                return super.getCount() - 1; // don't display last item (it's used for the prompt)
-            }
-        };
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerView.setAdapter(spinnerAdapter);
-
-        spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                Object value;
-                // if no values are specified, set the index on the model
-                if (values == null) {
-                    value = pos;
-                } else {
-                    // last pos indicates nothing is selected
-                    if (pos == items.size() - 1) {
-
-                        if(prompt != null)
-                        value = prompt;
-                        else value = null;
-
-                    } else {    // if something is selected, set the value on the model
-                        value = values.get(pos);
-                    }
-                }
-
-                getModel().setValue(getName(), value);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-                if(prompt != null)
-                getModel().setValue(getName(), prompt);
-
-            }
-        });
-
-        refresh(spinnerView);
-
-        spinnerView.setEnabled(IS_ENABLED);
-
-
-
-           RelativeLayout.LayoutParams spinnerViewLayoutParamsparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-           spinnerViewLayoutParamsparams.addRule(RelativeLayout.LEFT_OF, id);
-
-           spinnerViewLayoutParamsparams.rightMargin = 5;
-
-        spinnerView.setLayoutParams(spinnerViewLayoutParamsparams);
-
-        spinnerView.requestLayout();
-
-        linearLayout.addView(spinnerView);
-
-
-        if(helperText != null && !helperText.equalsIgnoreCase("null") && !helperText.equalsIgnoreCase("")) {
-
-            final ImageView imageView = new ImageView(getContext());
-            imageView.setImageResource(R.drawable.ic_info_grey_400_18dp);
-            imageView.setPadding(4, 4, 4, 4);
-            imageView.setId(id);
-            TypedValue outValue = new TypedValue();
-            getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
-            imageView.setBackgroundResource(outValue.resourceId);
-            imageView.setClickable(true);
-            imageView.setFocusable(true);
-
-
-            imageView.setOnClickListener(new View.OnClickListener() {
+            Spinner spinnerView = new Spinner(getContext());
+            spinnerView.setContentDescription(getContentDesc());
+            spinnerView.setId(spinnerId);
+            spinnerView.setPrompt(prompt);
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, items) {
+                @NonNull
                 @Override
-                public void onClick(View v) {
+                public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                    View view = super.getView(position, convertView, parent);
+                    if (position == getCount()) {
+                        TextView itemView = ((TextView) view.findViewById(android.R.id.text1));
+                        itemView.setText("");
+                        itemView.setHint(getItem(getCount()));
+                    }
+
+
+                    return view;
+                }
+
+                @Override
+                public int getCount() {
+                    return super.getCount() - 1; // don't display last item (it's used for the prompt)
+                }
+            };
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerView.setAdapter(spinnerAdapter);
+
+            spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                    Object value;
+                    // if no values are specified, set the index on the model
+                    if (values == null) {
+                        value = pos;
+                    } else {
+                        // last pos indicates nothing is selected
+                        if (pos == items.size() - 1) {
+
+                            if (prompt != null)
+                                value = prompt;
+                            else value = null;
+
+                        } else {    // if something is selected, set the value on the model
+                            value = values.get(pos);
+                        }
+                    }
+
+                    getModel().setValue(getName(), value);
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                    if (prompt != null)
+                        getModel().setValue(getName(), prompt);
+
+                }
+            });
+
+            refresh(spinnerView);
+
+            spinnerView.setEnabled(IS_ENABLED);
+
+
+            RelativeLayout.LayoutParams spinnerViewLayoutParamsparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            spinnerViewLayoutParamsparams.addRule(RelativeLayout.LEFT_OF, id);
+
+
+            if (helperText != null && !helperText.equalsIgnoreCase("null") && !helperText.equalsIgnoreCase("")) {
+
+                spinnerViewLayoutParamsparams.rightMargin = 5;
+
+                final ImageView imageView = new ImageView(getContext());
+                imageView.setImageResource(R.drawable.ic_info_grey_400_18dp);
+                imageView.setPadding(4, 4, 4, 4);
+                imageView.setId(id);
+                TypedValue outValue = new TypedValue();
+                getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
+                imageView.setBackgroundResource(outValue.resourceId);
+                imageView.setClickable(true);
+                imageView.setFocusable(true);
+
+
+                imageView.setOnClickListener(v -> {
 
 
                     if (popupWindow != null && popupWindow.isShowing())
@@ -267,27 +258,35 @@ public class SelectionController extends MyLabeledFieldController {
                     }
 
 
-                }
-            });
+                });
 
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.addRule(RelativeLayout.CENTER_VERTICAL);
-            params.leftMargin = 10;
-            imageView.setLayoutParams(params);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                params.addRule(RelativeLayout.CENTER_VERTICAL);
+                params.leftMargin = 10;
+                imageView.setLayoutParams(params);
 
-            imageView.requestLayout();
+                imageView.requestLayout();
 
-            linearLayout.addView(imageView);
+                linearLayout.addView(imageView);
 
-          //  linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            //linearLayout.requestLayout();
-
-
-        }
+                //  linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                //linearLayout.requestLayout();
 
 
-        return linearLayout;
+            }
+
+            spinnerView.setLayoutParams(spinnerViewLayoutParamsparams);
+
+            spinnerView.requestLayout();
+
+            linearLayout.addView(spinnerView);
+
+
+            return linearLayout;
+        } else
+            return inflateViewOnlyView();
+
     }
 
     private void refresh(Spinner spinner) {

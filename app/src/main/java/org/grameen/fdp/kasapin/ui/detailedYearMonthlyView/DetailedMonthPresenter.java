@@ -16,11 +16,9 @@ import io.reactivex.schedulers.Schedulers;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class DetailedMonthPresenter extends BasePresenter<DetailedMonthContract.View> implements DetailedMonthContract.Presenter{
+public class DetailedMonthPresenter extends BasePresenter<DetailedMonthContract.View> implements DetailedMonthContract.Presenter {
 
     private AppDataManager mAppDataManager;
-
-
 
 
     @Inject

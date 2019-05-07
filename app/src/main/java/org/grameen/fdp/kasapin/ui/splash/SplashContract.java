@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.splash;
 
 
-import android.content.Intent;
-
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 /**
@@ -14,8 +12,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseContract;
 public class SplashContract {
 
 
-
-    public interface View extends  BaseContract.View {
+    public interface View extends BaseContract.View {
 
         void animateLogoAndWait();
 
@@ -26,14 +23,12 @@ public class SplashContract {
 
     }
 
-     public interface Presenter {
+    public interface Presenter {
 
         void startDelay();
 
 
-
     }
-
 
 
 }

@@ -1,34 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
 
     <LinearLayout
+        android:id="@+id/ll1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/ll1"
         android:layout_above="@+id/bottom_buttons"
+        android:orientation="vertical"
 
         >
-
-
-
-
-
 
 
         <RelativeLayout
             android:id="@+id/currencyLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
             android:clipChildren="false"
+            android:clipToPadding="false"
 
             >
 
@@ -36,60 +29,53 @@
                 android:id="@+id/plotName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Plot 1 Year 1"
-                android:textStyle="bold"
                 android:padding="@dimen/spacing_normal"
+                android:text="Plot 1 Year 1"
                 android:textColor="@color/text_black_87"
-                />
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/nameLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/plotName"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/spacing_normal"
-                android:paddingRight="@dimen/spacing_normal"
-                android:layout_toRightOf="@id/plotName"
-                android:layout_centerVertical="true"
-                  >
+                android:paddingRight="@dimen/spacing_normal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/spacing_normal"
-                     >
+                    android:layout_marginRight="@dimen/spacing_normal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/farmer_name"
                         android:layout_marginRight="@dimen/spacing_half"
-                        android:textColor="@color/text_black_87"
-                        />
+                        android:text="@string/farmer_name"
+                        android:textColor="@color/text_black_87" />
 
                     <TextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Aang Junior"
-                        android:textStyle="bold"
                         android:textColor="@color/text_black_87"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
 
-
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/farmer_code"
                         android:layout_marginRight="@dimen/spacing_half"
+                        android:text="@string/farmer_code"
 
                         />
 
@@ -98,50 +84,42 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="23445"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
 
 
                 </LinearLayout>
 
 
-
-
-
-
             </LinearLayout>
-
-
-
 
 
             <TextView
                 android:id="@+id/title_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/spacing_normal"
                 android:layout_toLeftOf="@+id/edit_monitoring"
-                android:padding="@dimen/spacing_normal"
-                android:gravity="center_horizontal"
-                android:textStyle="bold"
+                android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_marginRight="@dimen/spacing_normal"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/spacing_normal"
                 android:textColor="?attr/colorAccent"
-                android:background="?attr/selectableItemBackground"
+                android:textStyle="bold"
 
                 />
 
 
             <Button
-                android:layout_alignParentRight="true"
                 android:id="@+id/edit_monitoring"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/edit"
+                android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/spacing_normal"
-                android:textStyle="bold"
                 android:clickable="true"
                 android:focusable="true"
+                android:text="@string/edit"
+                android:textStyle="bold"
                 android:theme="@style/PrimaryButton"
 
                 />
@@ -150,137 +128,117 @@
         </RelativeLayout>
 
 
-                <LinearLayout
-                    android:id="@+id/ll5"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="horizontal|vertical"
+        <LinearLayout
+            android:id="@+id/ll5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:scrollbars="horizontal|vertical">
+
+
+            <de.codecrafters.tableview.TableView xmlns:table="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/general_ao_tableView"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:background="@drawable/table_header_background_accent"
+                android:dividerHeight="0.5dip"
+                android:orientation="horizontal"
+                android:scrollbarAlwaysDrawHorizontalTrack="true"
+                android:textColor="?attr/colorAccent"
+                table:tableView_columnCount="2"
+                table:tableView_headerColor="?attr/colorAccent"
+                table:tableView_headerElevation="2"
+
+                />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="60dp"
+
+                >
+
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true" />
+
+
+                <TextView
+                    android:id="@+id/noData"
                     android:layout_width="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="No Data!"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
 
 
-
-
-
-
-
-
-                        <de.codecrafters.tableview.TableView
-                            xmlns:table="http://schemas.android.com/apk/res-auto"
-                            android:id="@+id/general_ao_tableView"
-                            android:orientation="horizontal"
-                            android:scrollbarAlwaysDrawHorizontalTrack="true"
-                            android:layout_width="300dp"
-                            android:layout_marginLeft="@dimen/spacing_normal"
-                            android:layout_height="wrap_content"
-                            table:tableView_headerElevation="2"
-                            table:tableView_columnCount="2"
-                            table:tableView_headerColor="?attr/colorAccent"
-                            android:background="@drawable/table_header_background_accent"
-                            android:dividerHeight="0.5dip"
-                            android:textColor="?attr/colorAccent"
-
-                            />
-
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="60dp"
-
-                        >
-
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/view_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        />
-
-
-                        <TextView
-                            android:id="@+id/noData"
-                            android:visibility="gone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="No Data!"
-                            android:layout_centerInParent="true"
-                            />
-
-                    </RelativeLayout>
-
-
-
-                </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
 
     <LinearLayout
 
+        android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:id="@+id/bottom_buttons"
-        android:paddingLeft="@dimen/spacing_normal"
         android:layout_marginRight="@dimen/spacing_normal"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/spacing_normal"
         android:paddingBottom="@dimen/spacing_half"
 
         >
 
 
-
-
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:clipToPadding="false"
             android:clipChildren="false"
-            >
+            android:clipToPadding="false"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/back"
                 android:layout_width="0dp"
-                android:layout_weight="2"
                 android:layout_height="wrap_content"
-                 android:theme="@style/PrimaryButtonGrey"
-                android:text="@string/back"
+                android:layout_weight="2"
                 android:padding="@dimen/spacing_normal"
-                />
+                android:text="@string/back"
+                android:theme="@style/PrimaryButtonGrey" />
 
 
             <Button
-                 android:id="@+id/sync"
+                android:id="@+id/sync"
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:text="@string/sync_farmer"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_weight="3"
                 android:padding="@dimen/spacing_normal"
-                android:layout_marginLeft="@dimen/spacing_normal"/>
+                android:text="@string/sync_farmer" />
 
 
             <Button
                 android:id="@+id/add_monitoring"
                 android:layout_width="0dp"
-                android:layout_weight="3"
                 android:layout_height="wrap_content"
-                android:text="@string/add_new_monitoring"
-                android:padding="@dimen/spacing_normal"
                 android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_weight="3"
+                android:padding="@dimen/spacing_normal"
+                android:text="@string/add_new_monitoring"
 
                 />
 
 
         </LinearLayout>
     </LinearLayout>
-
 
 
 </RelativeLayout>

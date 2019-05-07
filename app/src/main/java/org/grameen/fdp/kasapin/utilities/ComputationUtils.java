@@ -1,9 +1,7 @@
 package org.grameen.fdp.kasapin.utilities;
 
-import android.animation.Animator;
 import android.view.View;
 
-import org.grameen.fdp.kasapin.data.db.entity.Calculation;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
@@ -25,28 +23,98 @@ import javax.script.ScriptException;
 
 public class ComputationUtils {
 
+    static String TAG = "ComputationUtilities";
     private MyFormController formController;
     private ScriptEngine engine;
 
 
-
-    public static ComputationUtils newInstance(MyFormController myFormController){
-        return new ComputationUtils(myFormController);
-
-    }
-
-
-   private ComputationUtils(@Nullable MyFormController controller){
-
+    private ComputationUtils(@Nullable MyFormController controller) {
         engine = new ScriptEngineManager().getEngineByName("rhino");
         this.formController = controller;
 
     }
 
+    public static ComputationUtils newInstance(MyFormController myFormController) {
+        return new ComputationUtils(myFormController);
+
+    }
+
+    public static String getValue(String label, JSONObject ANSWERS_JSON) {
+        String defVal;
+        try {
+
+            if (ANSWERS_JSON.has(label)) {
+                defVal = ANSWERS_JSON.get(label).toString();
+            } else
+                defVal = "";
 
 
-    FormModel getModel(){return formController.getModel();}
+        } catch (JSONException ignored) {
+            defVal = "";
+        }
 
+        AppLogger.e("Computation Utils", "GETTING VALUE FOR " + label + " --> Value = " + defVal);
+        return defVal;
+    }
+
+    public static boolean parseEquation(String v1, String operator, String v2, ScriptEngine _engine) {
+        String equation = v1 + operator + v2;
+        AppLogger.e(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
+        boolean value = false;
+        try {
+            value = (Boolean) _engine.eval(equation.trim());
+        } catch (ScriptException | NumberFormatException e) {
+            System.out.println("******* Evaluating boolean ****** " + e.getMessage());
+            value = v1.equalsIgnoreCase(v2);
+        } finally {
+            System.out.println(equation + " --> " + value);
+        }
+        return value;
+    }
+
+    public static boolean parseEquation(String equation, ScriptEngine _engine) {
+        AppLogger.i(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
+        boolean value = false;
+        try {
+            value = (Boolean) _engine.eval(equation.trim());
+        } catch (ScriptException | NumberFormatException ignored) {
+
+            if (equation.contains("==")) {
+
+                String[] disposableValues = equation.split("==");
+
+                System.out.println("******* Evaluating boolean ****** ");
+                value = disposableValues[0].equalsIgnoreCase(disposableValues[1]);
+            } else if (equation.contains("!=")) {
+                String[] disposableValues = equation.split("!=");
+
+                System.out.println("******* Evaluating boolean ****** ");
+                value = disposableValues[0].equalsIgnoreCase(disposableValues[1]);
+            }
+        } finally {
+            System.out.println(equation + " --> " + value);
+        }
+        return value;
+    }
+
+    public static boolean parseBooleanEquation(String equation) {
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
+        Boolean answer = null;
+        try {
+            answer = (Boolean) engine.eval(equation.trim());
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
+
+        AppLogger.e(TAG, "FORMULA IS >>>>>  " + equation);
+        AppLogger.e(TAG, "ANSWER == " + answer);
+
+        return answer;
+    }
+
+    FormModel getModel() {
+        return formController.getModel();
+    }
 
     public MyFormController getFormController() {
         return formController;
@@ -105,8 +173,6 @@ public class ComputationUtils {
 
     }
 
-
-
     public String getValue(Question q, JSONObject ANSWERS_JSON) {
         String defVal;
         try {
@@ -126,36 +192,15 @@ public class ComputationUtils {
         return defVal;
     }
 
-
-
-    public static String getValue(String label, JSONObject ANSWERS_JSON) {
-        String defVal;
-        try {
-
-            if (ANSWERS_JSON.has(label)) {
-                defVal = ANSWERS_JSON.get(label).toString();
-            } else
-                defVal = "";
-
-
-        } catch (JSONException ignored) {
-            defVal = "";
-        }
-
-        AppLogger.e("Computation Utils", "GETTING VALUE FOR " + label + " --> Value = " + defVal);
-        return defVal;
-    }
-
-
     public void setUpPropertyChangeListeners(String label, List<SkipLogic> skipLogics) {
 
         if (skipLogics != null && skipLogics.size() > 0) {
-           getModel().addPropertyChangeListener(label, event -> {
+            getModel().addPropertyChangeListener(label, event -> {
 
                 AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + label + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue());
 
                 for (SkipLogic sl : skipLogics) {
-                    String [] values = sl.getFormula().replace("\"", "").split(" ");
+                    String[] values = sl.getFormula().replace("\"", "").split(" ");
                     sl.setComparingQuestion(values[0]);
                     sl.setLogicalOperator(values[1]);
                     sl.setAnswerValue(values[2]);
@@ -184,21 +229,20 @@ public class ComputationUtils {
         }
     }
 
-
     public void setUpPropertyChangeListeners2(String questiontoHide, List<SkipLogic> skipLogics) {
 
         if (skipLogics != null && skipLogics.size() > 0) {
 
             for (SkipLogic sl : skipLogics) {
 
-                String [] values = sl.getFormula().replace("\"", "").split(" ");
+                String[] values = sl.getFormula().replace("\"", "").split(" ");
                 sl.setComparingQuestion(values[0]);
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
 
                 getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
 
-                AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue());
+                    AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue());
 
 
                     try {
@@ -220,67 +264,61 @@ public class ComputationUtils {
                     } catch (Exception ignored) {
                     }
 
-            });
+                });
 
             }
         }
     }
 
-
-
-
     public void initiateSkipLogicsAndHideViews(String label, List<SkipLogic> skipLogics) {
-            if (skipLogics != null && skipLogics.size() > 0) {
+        if (skipLogics != null && skipLogics.size() > 0) {
 
-                for (final SkipLogic sl : skipLogics) {
-                    String [] values = sl.getFormula().replace("\"", "").split(" ");
-                    sl.setComparingQuestion(values[0]);
-                    sl.setLogicalOperator(values[1]);
-                    sl.setAnswerValue(values[2]);
-                    try {
+            for (final SkipLogic sl : skipLogics) {
+                String[] values = sl.getFormula().replace("\"", "").split(" ");
+                sl.setComparingQuestion(values[0]);
+                sl.setLogicalOperator(values[1]);
+                sl.setAnswerValue(values[2]);
+                try {
 
-                        AppLogger.i("SKIP LOGIC view to hide = ", label);
+                    AppLogger.i("SKIP LOGIC view to hide = ", label);
 
-                        if (compareValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString())) {
+                    if (compareValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString())) {
 
-                            AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + true);
+                        AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + true);
 
-                            if (sl.shouldHide())
-                                formController.getElement(label).getView().setVisibility(View.GONE);
-                            else
-                                formController.getElement(label).getView().setVisibility(View.VISIBLE);
+                        if (sl.shouldHide())
+                            formController.getElement(label).getView().setVisibility(View.GONE);
+                        else
+                            formController.getElement(label).getView().setVisibility(View.VISIBLE);
 
-                        } else {
+                    } else {
 
-                            AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + false);
+                        AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + false);
 
-                            if (sl.shouldHide())
-                                formController.getElement(label).getView().setVisibility(View.VISIBLE);
-                            else formController.getElement(label).getView().setVisibility(View.GONE);
+                        if (sl.shouldHide())
+                            formController.getElement(label).getView().setVisibility(View.VISIBLE);
+                        else formController.getElement(label).getView().setVisibility(View.GONE);
 
-                        }
-
-
-                    } catch (Exception ignored) {
                     }
 
 
+                } catch (Exception ignored) {
                 }
-            }
 
+
+            }
+        }
 
 
     }
 
-
-
     public void applyFormulas(Question question) {
-        if(!question.getFormulaC().isEmpty() && !question.getFormulaC().equalsIgnoreCase("null")) {
+        if (!question.getFormulaC().isEmpty() && !question.getFormulaC().equalsIgnoreCase("null")) {
 
             AppLogger.e("Computation Utils", "Question = " + question.getLabelC() + " Formula = " + question.getFormulaC());
 
             List<String> operands = getOperands(question.getFormulaC());
-            for (String questionToListenTo : operands){
+            for (String questionToListenTo : operands) {
                 getModel().addPropertyChangeListener(questionToListenTo, propertyChangeEvent -> {
 
                     String equation = question.getFormulaC();
@@ -291,7 +329,8 @@ public class ComputationUtils {
                         }
                     } catch (Exception i) {
                         i.printStackTrace();
-                        equation = "0";}
+                        equation = "0";
+                    }
 
                     AppLogger.e("Computation Utils", "Applying Formula calc " + equation);
 
@@ -306,9 +345,9 @@ public class ComputationUtils {
                     System.out.println("####### NEW VALUE IS " + newValue);
                 });
 
-        } }
+            }
+        }
     }
-
 
     private String calculate(String equation) throws ScriptException {
         Double value = (Double) engine.eval(equation.trim().replace(",", ""));
@@ -318,12 +357,8 @@ public class ComputationUtils {
         return (formatter.format(value));
     }
 
-
-
-
-
     public Boolean compareValues(SkipLogic sl, String newValue) {
-        String equation = sl.getAnswerValue() + sl.getLogicalOperator() +  newValue;
+        String equation = sl.getAnswerValue() + sl.getLogicalOperator() + newValue;
         AppLogger.e(getClass().getSimpleName(), "Equation is " + equation);
 
         boolean value = false;
@@ -340,12 +375,7 @@ public class ComputationUtils {
         return value;
     }
 
-
-
-
-
-
-    List<String> getOperands(String formula){
+    List<String> getOperands(String formula) {
         List<String> operandList = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(formula, "+-*/", true);
         while (st.hasMoreTokens()) {
@@ -356,46 +386,6 @@ public class ComputationUtils {
         }
         return operandList;
     }
-
-
-
-
-    public static boolean parseEquation(String v1, String operator, String v2, ScriptEngine _engine){
-        String equation = v1 + operator + v2;
-        AppLogger.e(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
-        boolean value = false;
-        try {
-            value = (Boolean) _engine.eval(equation.trim());
-        } catch (ScriptException | NumberFormatException e) {
-            System.out.println("******* Evaluating boolean ****** " + e.getMessage());
-            value = v1.equalsIgnoreCase(v2);
-        } finally {
-            System.out.println(equation + " --> " + value);
-        }
-        return value;
-    }
-
-
-
-    public static boolean parseEquation(String equation, ScriptEngine _engine){
-        AppLogger.i(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
-        boolean value = false;
-        try {
-            value = (Boolean) _engine.eval(equation.trim());
-        } catch (ScriptException | NumberFormatException ignored) {
-
-            String[] disposableValues = equation.split("==");
-
-            System.out.println("******* Evaluating boolean ****** ");
-            value = disposableValues[0].equalsIgnoreCase(disposableValues[1]);
-
-        } finally {
-            System.out.println(equation + " --> " + value);
-        }
-        return value;
-    }
-
-
 
 
 }

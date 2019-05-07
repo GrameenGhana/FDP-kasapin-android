@@ -34,7 +34,7 @@ public final class KeyboardUtils {
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (imm != null)
-        imm.showSoftInput(edit, 0);
+            imm.showSoftInput(edit, 0);
     }
 
     public static void toggleSoftInput(Context context) {
@@ -42,7 +42,7 @@ public final class KeyboardUtils {
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (imm != null)
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
 }

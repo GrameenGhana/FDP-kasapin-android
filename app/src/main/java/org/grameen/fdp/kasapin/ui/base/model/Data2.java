@@ -34,25 +34,25 @@ public class Data2 {
     }
 
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public void setV3(String v3) {
-        this.v3 = v3;
+    public Data2(String label, String s) {
+        this.label = label;
+        this.singleValue = s;
     }
 
     public String getTag() {
         return tag;
     }
 
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     public String getV3() {
         return v3;
     }
 
-    public Data2(String label, String s) {
-        this.label = label;
-        this.singleValue = s;
+    public void setV3(String v3) {
+        this.v3 = v3;
     }
 
     public String getSingleValue() {

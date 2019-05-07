@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -49,7 +48,7 @@ public class FdpApiService {
 
     public Single<User> fetchUserData(String token) {
 
-        return fdpApi.getUser(token) .subscribeOn(Schedulers.io())
+        return fdpApi.getUser(token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -70,8 +69,6 @@ public class FdpApiService {
         return fdpApi.postFarmers(token, gson).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-
-
 
 
 }

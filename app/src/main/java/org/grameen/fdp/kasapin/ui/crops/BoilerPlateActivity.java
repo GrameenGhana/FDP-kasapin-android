@@ -8,8 +8,6 @@ import android.os.Bundle;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
 
 
@@ -20,8 +18,6 @@ public class BoilerPlateActivity extends BaseActivity implements BoilerPlateCont
 
     //@Inject
     BoilerPlatePresenter mPresenter;
-
-
 
 
     public static Intent getStartIntent(Context context) {
@@ -62,8 +58,6 @@ public class BoilerPlateActivity extends BaseActivity implements BoilerPlateCont
     public void openLoginActivityOnTokenExpire() {
 
     }
-
-
 
 
 }

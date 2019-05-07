@@ -3,16 +3,9 @@ package org.grameen.fdp.kasapin.ui.AddEditFarmerPlot;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,9 +19,8 @@ import io.reactivex.schedulers.Schedulers;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotContract.View> implements AddEditFarmerPlotContract.Presenter{
+public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotContract.View> implements AddEditFarmerPlotContract.Presenter {
     AppDataManager mAppDataManager;
-
 
 
     @Inject
@@ -40,11 +32,9 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
     }
 
 
-
-
     @Override
     public void openNextActivity() {
-        }
+    }
 
     @Override
     public void getPlotQuestions() {
@@ -61,7 +51,7 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
 
     @Override
     public void saveData(Plot plot, String flag) {
-        runSingleCall(Single.fromCallable(() ->  getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
+        runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
@@ -73,7 +63,7 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
 
                     getView().hideLoading();
 
-                    if(flag != null && flag.equalsIgnoreCase("map"))
+                    if (flag != null && flag.equalsIgnoreCase("map"))
                         getView().moveToMapActivity(plot);
                     else
                         getView().showPlotDetailsActivity(plot);

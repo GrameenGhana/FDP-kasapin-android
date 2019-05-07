@@ -53,9 +53,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-
 /**
  * A login screen that offers login via email/password.
  */
@@ -130,15 +127,13 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             //CURRENT_FORM_QUESTION = gson.fromJson(getIntent().getStringExtra("formAndQuestions"), FormAndQuestions.class);
 
 
-
             AppLogger.e(TAG, "CURRENT FORM IS >>> " + getGson().toJson(CURRENT_FORM_QUESTION));
 
 
             if (FARMER != null)
                 isNewFarmer = false;
-                setUpViews();
-            }
-
+            setUpViews();
+        }
 
 
     }
@@ -153,19 +148,17 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
          *
          **/
 
-     getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().villagesDao().getAll()
-             .subscribeOn(Schedulers.io())
-             .flatMap(villages -> Observable.fromIterable(villages)
-                .doOnNext(village -> villageList.add(village.getName())).toList())
-             .observeOn(AndroidSchedulers.mainThread())
-     .subscribe(onSuccess -> {
+        getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().villagesDao().getAll()
+                .subscribeOn(Schedulers.io())
+                .flatMap(villages -> Observable.fromIterable(villages)
+                        .doOnNext(village -> villageList.add(village.getName())).toList())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(onSuccess -> {
 
-         villageSpinner.setItems(villageList);
-         if(!villageList.isEmpty())
-         villageSpinner.setSelectedIndex(0);
-     }));
-
-
+                    villageSpinner.setItems(villageList);
+                    if (!villageList.isEmpty())
+                        villageSpinner.setSelectedIndex(0);
+                }));
 
 
         /**
@@ -243,8 +236,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             }
 
 
-
-
             mPresenter.loadFormFragment(FARMER.getCode(), CURRENT_FORM_QUESTION.getForm().getId());
 
 
@@ -266,8 +257,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
              **/
 
 
-            for(FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS){
-                if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FARMER_PROFILE)){
+            for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
+                if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FARMER_PROFILE)) {
                     CURRENT_FORM_QUESTION = formAndQuestions;
                     break;
                 }
@@ -275,17 +266,15 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
             showFormFragment(null);
 
-           // mPresenter.loadFormFragment(CURRENT_FORM_QUESTION, false, "", mAppDataManager.isMonitoring());
+            // mPresenter.loadFormFragment(CURRENT_FORM_QUESTION, false, "", mAppDataManager.isMonitoring());
         }
-
-
 
 
     }
 
 
     @Override
-    public void showFormFragment(FormAnswerData answerData){
+    public void showFormFragment(FormAnswerData answerData) {
 
         dynamicFormFragment = DynamicFormFragment.newInstance(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), getAppDataManager().isMonitoring(), answerData);
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicFormFragment, CURRENT_FORM_QUESTION.getForm().getFormNameC());
@@ -297,42 +286,37 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     void saveAndContinue() {
 
 
-        if(farmerName.getText().toString().trim().isEmpty() || farmerName.getText().toString().trim().equalsIgnoreCase(" ")) {
+        if (farmerName.getText().toString().trim().isEmpty() || farmerName.getText().toString().trim().equalsIgnoreCase(" ")) {
             showMessage(R.string.enter_valid_farmer_name);
             return;
         }
 
-        if(birthYearEdittext.getText().toString().isEmpty()) {
+        if (birthYearEdittext.getText().toString().isEmpty()) {
             showMessage("Please enter birth year of farmer");
             return;
 
         }
 
 
-
-            if (isNewFarmer) {
-                FARMER = new RealFarmer();
-                FARMER.setFirstVisitDate(new Date(System.currentTimeMillis()));
-            }
-            FARMER.setFarmerName(farmerName.getText().toString().trim());
-            FARMER.setBirthYear(birthYearEdittext.getText().toString().trim());
-            FARMER.setCode(farmerCode.getText().toString().trim());
-            FARMER.setGender(genders[genderSpinner.getSelectedIndex()]);
-            FARMER.setEducationLevel(educationLevels[educationLevelSpinner.getSelectedIndex()]);
-            FARMER.setVillageId(villageSpinner.getSelectedIndex());
-            FARMER.setVillageName(villageList.get(villageSpinner.getSelectedIndex()));
-            FARMER.setLastModifiedDate(TimeUtils.getDateTime());
-            FARMER.setImageUrl(BASE64_STRING);
-
+        if (isNewFarmer) {
+            FARMER = new RealFarmer();
+            FARMER.setFirstVisitDate(new Date(System.currentTimeMillis()));
+        }
+        FARMER.setFarmerName(farmerName.getText().toString().trim());
+        FARMER.setBirthYear(birthYearEdittext.getText().toString().trim());
+        FARMER.setCode(farmerCode.getText().toString().trim());
+        FARMER.setGender(genders[genderSpinner.getSelectedIndex()]);
+        FARMER.setEducationLevel(educationLevels[educationLevelSpinner.getSelectedIndex()]);
+        FARMER.setVillageId(villageSpinner.getSelectedIndex());
+        FARMER.setVillageName(villageList.get(villageSpinner.getSelectedIndex()));
+        FARMER.setLastModifiedDate(TimeUtils.getDateTime());
+        FARMER.setImageUrl(BASE64_STRING);
 
 
-            mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
-
+        mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
 
 
     }
-
-
 
 
     @Override
@@ -352,13 +336,12 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             startActivity(intent);
             finish();
             overridePendingTransition(0, 0);
-           //mPresenter.loadFormFragment(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), mAppDataManager.isMonitoring());
+            //mPresenter.loadFormFragment(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), mAppDataManager.isMonitoring());
 
-        }else
+        } else
             showFarmerDetailsActivity(FARMER);
 
     }
-
 
 
     @Override
@@ -379,7 +362,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         finish();
         overridePendingTransition(0, 0);
     }
-
 
 
     @Override
@@ -495,29 +477,33 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     @Override
     public void setBackListener(@Nullable View view) {
 
-        //Todo save data and exit if user clicks on yes
+        if (getAppDataManager().isMonitoring())
+            finish();
+        else
 
-        showDialog(true, getStringResources(R.string.save_data), getStringResources(R.string.save_data_explanation),
-                (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
+            //Todo save data and exit if user clicks on yes
 
-                    isNewFarmer = true;
+            showDialog(true, getStringResources(R.string.save_data), getStringResources(R.string.save_data_explanation),
+                    (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
 
-                    saveAndContinue();
-                }
-                , getStringResources(R.string.yes),
+                        isNewFarmer = true;
 
-                (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
+                        saveAndContinue();
+                    }
+                    , getStringResources(R.string.yes),
 
-                    Intent intent = new Intent(AddEditFarmerActivity.this, FarmerProfileActivity.class);
-                    intent.putExtra("farmer", getGson().toJson(FARMER));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                    overridePendingTransition(0, 0);
+                    (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
 
-                }, getStringResources(R.string.no), 0);
+                        Intent intent = new Intent(AddEditFarmerActivity.this, FarmerProfileActivity.class);
+                        intent.putExtra("farmer", getGson().toJson(FARMER));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        overridePendingTransition(0, 0);
+
+                    }, getStringResources(R.string.no), 0);
 
     }
 

@@ -7,7 +7,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-
 import org.grameen.fdp.kasapin.data.db.entity.Input;
 
 import java.util.List;
@@ -40,7 +39,6 @@ public interface InputsDao {
 
     @Update
     int updateInput(Input input);
-
 
 
     @Query("DELETE FROM inputs")

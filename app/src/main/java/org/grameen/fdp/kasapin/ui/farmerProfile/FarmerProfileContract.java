@@ -18,19 +18,18 @@ import java.util.List;
 public class FarmerProfileContract {
 
 
-
-    public interface View extends  BaseContract.View {
+    public interface View extends BaseContract.View {
 
         void initializeViews(boolean shouldLoadButtons);
 
-       void  setUpFarmersPlotsAdapter(List<Plot> plotList);
+        void setUpFarmersPlotsAdapter(List<Plot> plotList);
 
-       void addButtons(List<Button> buttons);
+        void addButtons(List<Button> buttons);
 
 
     }
 
-     public interface Presenter {
+    public interface Presenter {
 
         void getFarmersPlots(String farmerCode);
 

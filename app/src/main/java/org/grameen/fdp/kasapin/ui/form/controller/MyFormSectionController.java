@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-
 import org.grameen.fdp.kasapin.R;
 
 import java.util.ArrayList;

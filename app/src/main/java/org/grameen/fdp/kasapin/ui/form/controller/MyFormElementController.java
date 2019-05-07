@@ -53,10 +53,6 @@ public abstract class MyFormElementController {
         return contentDesc;
     }
 
-    public void setView(View view) {
-        this.view = view;
-    }
-
     /**
      * Returns the associated model of this form element.
      *
@@ -80,6 +76,10 @@ public abstract class MyFormElementController {
             view = createView();
         }
         return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
     }
 
     /**

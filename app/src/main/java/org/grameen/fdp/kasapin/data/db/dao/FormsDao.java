@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.data.db.dao;
 
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -9,16 +8,12 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
 
-
 import org.grameen.fdp.kasapin.data.db.entity.Form;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 
 /**
  * Created by AangJnr on 17, September, 2018 @ 8:43 PM
@@ -56,7 +51,6 @@ public interface FormsDao {
 
     @Update
     int updateForm(Form form);
-
 
 
     @Query("DELETE FROM forms")

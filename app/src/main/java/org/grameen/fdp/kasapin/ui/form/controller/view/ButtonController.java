@@ -1,29 +1,17 @@
 package org.grameen.fdp.kasapin.ui.form.controller.view;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Looper;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.widget.EditText;
-import android.widget.Toast;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
-import org.grameen.fdp.kasapin.utilities.CustomToast;
 
 import java.util.Date;
 import java.util.Set;
@@ -40,17 +28,17 @@ public class ButtonController extends MyLabeledFieldController {
     Location location;
 
     Context context;
-    private DatePickerDialog datePickerDialog = null;
     boolean isEnabled = true;
+    private DatePickerDialog datePickerDialog = null;
 
     /**
      * Constructs a new instance of a date picker field.
      *
-     * @param ctx           the Android context
-     * @param name          the name of the field
-     * @param labelText     the label to display beside the field. Set to {@code null} to not show a label.
-     * @param validators    contains the validations to process on the field
-     * @param listener the format of the date to show in the text box when a date is set
+     * @param ctx        the Android context
+     * @param name       the name of the field
+     * @param labelText  the label to display beside the field. Set to {@code null} to not show a label.
+     * @param validators contains the validations to process on the field
+     * @param listener   the format of the date to show in the text box when a date is set
      */
     public ButtonController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, OnClickListener listener) {
         super(ctx, name, content_desc, labelText, validators);
@@ -61,11 +49,11 @@ public class ButtonController extends MyLabeledFieldController {
     /**
      * Constructs a new instance of a date picker field.
      *
-     * @param ctx           the Android context
-     * @param name          the name of the field
-     * @param labelText     the label to display beside the field. Set to {@code null} to not show a label.
-     * @param isRequired    indicates if the field is required or not
-     * @param listener the format of the date to show in the text box when a date is set
+     * @param ctx        the Android context
+     * @param name       the name of the field
+     * @param labelText  the label to display beside the field. Set to {@code null} to not show a label.
+     * @param isRequired indicates if the field is required or not
+     * @param listener   the format of the date to show in the text box when a date is set
      */
     public ButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, OnClickListener listener, boolean enabled) {
         super(ctx, name, content_desc, labelText, isRequired);
@@ -89,40 +77,45 @@ public class ButtonController extends MyLabeledFieldController {
 
     @Override
     protected View createFieldView() {
-        final EditText editText = new EditText(getContext());
 
-        editText.setId(editTextId);
+        if (isEnabled) {
+            final MaterialEditText editText = new MaterialEditText(getContext());
+            editText.setId(editTextId);
+            editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_NONE);
+            editText.setTextSize(15f);
+            editText.setPaddings(20, 0, 0, 0);
+            editText.setTextSize(15f);
+            editText.setContentDescription(getContentDesc());
+            editText.setSingleLine(true);
+            editText.setInputType(InputType.TYPE_CLASS_TEXT);
+            editText.setKeyListener(null);
+            editText.setHint("Click to obtain location");
+            refresh(editText);
 
-        editText.setContentDescription(getContentDesc());
-        editText.setSingleLine(true);
-        editText.setInputType(InputType.TYPE_CLASS_TEXT);
-        editText.setKeyListener(null);
-        editText.setHint("Click to obtain location");
-        refresh(editText);
-
-        editText.setOnClickListener(onClickListener);
+            editText.setOnClickListener(onClickListener);
 
 
-        try {
-            editText.setEnabled(isEnabled);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            try {
+                editText.setEnabled(isEnabled);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        return editText;
+            return editText;
+
+        } else
+            return inflateViewOnlyView();
     }
 
 
-
-
-    private EditText getEditText() {
-        return (EditText) getView().findViewById(editTextId);
+    private MaterialEditText getEditText() {
+        return (MaterialEditText) getView().findViewById(editTextId);
     }
 
-    private void refresh(EditText editText) {
+    private void refresh(MaterialEditText editText) {
         Object value = getModel().getValue(getName());
 
-        if(value != null) {
+        if (value != null) {
             String valueStr = value.toString();
             if (!valueStr.equals(editText.getText().toString()))
                 editText.setText(valueStr);
@@ -138,9 +131,6 @@ public class ButtonController extends MyLabeledFieldController {
 
 
 }
-
-
-
 
 
 

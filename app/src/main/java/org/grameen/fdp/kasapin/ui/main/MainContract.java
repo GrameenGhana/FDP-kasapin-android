@@ -3,14 +3,11 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.support.annotation.Nullable;
 
-import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +21,11 @@ import java.util.List;
 public class MainContract {
 
 
-
-    public interface View extends  BaseContract.View {
+    public interface View extends BaseContract.View {
 
 
         void showSearchDialog(@Nullable android.view.View view);
+
         void toggleDrawer();
 
         void instantiateSearchDialog(ArrayList<MySearchItem> myItems);
@@ -45,29 +42,34 @@ public class MainContract {
 
     }
 
-     public interface Presenter {
+    public interface Presenter {
 
         void startDelay(long delayTime);
+
         void openSearchDialog();
+
         void toggleDrawer();
+
         void getVillagesData();
+
         void getFormsAndQuestionsData();
 
         void getFarmerProfileFormAndQuestions();
 
-         void syncData(boolean showProgress);
+        void syncData(boolean showProgress);
 
-         void downloadData(boolean showProgress);
+        void downloadData(boolean showProgress);
 
-         void initializeSearchDialog(List<VillageAndFarmers> villageAndFarmers);
+        void initializeSearchDialog(List<VillageAndFarmers> villageAndFarmers);
 
 
-         void getFarmer(String farmerCode);
-     }
+        void getFarmer(String farmerCode);
+    }
 
 
     public interface FragmentView extends BaseContract.View {
         void setRecyclerAdapter();
+
         void setListAdapter(List<RealFarmer> farmerList);
 
         void showDeleteFarmerDialog(RealFarmer farmer, int position);
@@ -75,9 +77,7 @@ public class MainContract {
         void showFarmerDeletedMessage(String farmerName, int position);
 
 
-
     }
-
 
 
     public interface FragmentPresenter {
@@ -88,8 +88,6 @@ public class MainContract {
         void showDeleteFarmerDialog(RealFarmer farmer, int position);
 
         void deleteFarmer(RealFarmer farmer, int position);
-
-
 
 
     }

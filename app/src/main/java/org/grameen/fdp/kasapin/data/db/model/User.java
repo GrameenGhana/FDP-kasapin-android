@@ -6,6 +6,7 @@ package org.grameen.fdp.kasapin.data.db.model;
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -68,13 +69,11 @@ public class User {
 
     /**
      * No args constructor for use in serialization
-     *
      */
     public User() {
     }
 
     /**
-     *
      * @param lastName
      * @param lastLoginAt
      * @param passwordChangedAt
@@ -128,7 +127,7 @@ public class User {
         this.active = active;
         this.confirmationCode = confirmationCode;
         this.confirmed = confirmed;
-        }
+    }
 
     public int getId() {
         return id;

@@ -5,10 +5,8 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
 
-import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.FormTranslation;
 
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
  */
 
 @Dao
-public interface FormTranslationDao extends BaseDao<FormTranslation>{
+public interface FormTranslationDao extends BaseDao<FormTranslation> {
 
 
     @Query("SELECT * FROM form_translation")
@@ -37,7 +35,6 @@ public interface FormTranslationDao extends BaseDao<FormTranslation>{
 
     @Update
     int updateFormTranslation(FormTranslation formTranslation);
-
 
 
     @Query("DELETE FROM form_translation")

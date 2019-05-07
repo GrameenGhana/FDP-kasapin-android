@@ -12,10 +12,9 @@ import javax.inject.Inject;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class BoilerPlatePresenter extends BasePresenter<BoilerPlateContract.View> implements BoilerPlateContract.Presenter{
+public class BoilerPlatePresenter extends BasePresenter<BoilerPlateContract.View> implements BoilerPlateContract.Presenter {
 
     AppDataManager mAppDataManager;
-
 
 
     @Inject
@@ -25,8 +24,6 @@ public class BoilerPlatePresenter extends BasePresenter<BoilerPlateContract.View
 
 
     }
-
-
 
 
     @Override

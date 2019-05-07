@@ -1,28 +1,14 @@
 package org.grameen.fdp.kasapin.ui.pandl;
 
 
-import android.text.TextUtils;
-
-import com.balsikandar.crashreporter.CrashReporter;
-import com.balsikandar.crashreporter.utils.CrashUtil;
-import com.balsikandar.crashreporter.utils.FileUtils;
-import com.crashlytics.android.Crashlytics;
-
-import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -37,19 +23,15 @@ import io.reactivex.schedulers.Schedulers;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.View> implements ProfitAndLossContract.Presenter{
+public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.View> implements ProfitAndLossContract.Presenter {
 
     private JSONObject ALL_DATA_JSON = new JSONObject();
-
-
 
 
     @Inject
     public ProfitAndLossPresenter(AppDataManager appDataManager) {
         super(appDataManager);
         this.mAppDataManager = appDataManager;
-
-
 
 
     }
@@ -63,7 +45,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(formAnswerDatas -> {
 
-                    if(formAnswerDatas != null) {
+                    if (formAnswerDatas != null) {
                         for (FormAnswerData formAnswerData : formAnswerDatas) {
 
                             JSONObject object = formAnswerData.getJsonData();
@@ -84,14 +66,11 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                         }
 
 
-
                         getView().setAnswerData(ALL_DATA_JSON);
                     }
 
 
-                }, throwable ->  getView().showMessage("Couldn't obtain data!")));
-
-
+                }, throwable -> getView().showMessage("Couldn't obtain data!")));
 
 
     }
@@ -101,7 +80,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
     public void updatePlotData(Plot plot, boolean reloadTable) {
 
 
-        Completable.fromAction(()->
+        Completable.fromAction(() ->
                 getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -119,8 +98,6 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
 
                     }
                 });
-
-
 
 
     }

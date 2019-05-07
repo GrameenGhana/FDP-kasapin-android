@@ -23,7 +23,8 @@ public class ListTypeConverter {
         }.getType());
     }
 
-    @TypeConverter public static String fromListToString(List<Loc> data) {
+    @TypeConverter
+    public static String fromListToString(List<Loc> data) {
         return new Gson().toJson(data);
     }
 }

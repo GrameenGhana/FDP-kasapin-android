@@ -13,15 +13,8 @@ public class PlotMonitoringTableData {
     List<Data2> tableData;
 
 
-
-    public PlotMonitoringTableData(String title, List<Data2> tableData){this.title = title; this.tableData = tableData;}
-
-
-    public void setTitle(String title) {
+    public PlotMonitoringTableData(String title, List<Data2> tableData) {
         this.title = title;
-    }
-
-    public void setTableData(List<Data2> tableData) {
         this.tableData = tableData;
     }
 
@@ -29,15 +22,23 @@ public class PlotMonitoringTableData {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public List<Data2> getTableData() {
         return tableData;
     }
 
-    public void setPosition(Integer position) {
-        this.position = position;
+    public void setTableData(List<Data2> tableData) {
+        this.tableData = tableData;
     }
 
     public Integer getPosition() {
         return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }

@@ -1,133 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_content"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/custom_toolbar" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_buttons"
+        android:layout_below="@+id/toolbar_layout"
+        android:orientation="vertical">
 
 
         <LinearLayout
-            android:id="@+id/toolbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <include layout="@layout/custom_toolbar" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:orientation="vertical"
+            android:id="@+id/place_holder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_buttons"
-            android:layout_below="@+id/toolbar_layout"
-             >
+            android:gravity="center"
+            android:orientation="vertical">
 
 
-                <LinearLayout
-                     android:id="@+id/place_holder"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    >
+            <ImageView
+                android:id="@+id/empty_view_image"
+                android:layout_width="@dimen/image_size_small"
+                android:layout_height="@dimen/image_size_small"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:alpha="0.5"
+                android:src="@drawable/purchase_order"
+
+                />
 
 
-                    <ImageView
-                        android:id="@+id/empty_view_image"
-                        android:layout_width="@dimen/image_size_small"
-                        android:layout_height="@dimen/image_size_small"
-                        android:layout_marginBottom="@dimen/spacing_normal"
-                        android:src="@drawable/purchase_order"
-                        android:alpha="0.5"
-
-                        />
-
-
-
-                    <TextView
-                        android:id="@+id/empty_view_text1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="@string/no_data"
-                        android:textColor="@color/text_black_87"
-                        android:textStyle="bold"
-                        android:textSize="@dimen/text_size_normal"
-                        android:layout_marginBottom="@dimen/spacing_quarter"
-                        />
-
-                    <TextView
-                        android:id="@+id/empty_view_text2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="@string/add_farmer_rational"
-
-
-                        />
-
-
-                </LinearLayout>
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/view_pager"
+            <TextView
+                android:id="@+id/empty_view_text1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/spacing_quarter"
+                android:gravity="center"
+                android:text="@string/no_data"
+                android:textColor="@color/text_black_87"
+                android:textSize="@dimen/text_size_normal"
+                android:textStyle="bold" />
 
-
-        </RelativeLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/bottom_buttons"
-             android:padding="@dimen/spacing_normal"
-            android:clipToPadding="false"
-            android:clipChildren="false"
-            >
-
-
-            <Button
-                android:id="@+id/back"
-                android:layout_width="0dp"
-                android:layout_weight="2"
+            <TextView
+                android:id="@+id/empty_view_text2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/PrimaryButtonGrey"
-                android:text="@string/back"
-                android:padding="@dimen/spacing_normal"
-                android:onClick="setBackListener"
-                android:layout_marginRight="@dimen/spacing_normal"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/add_farmer_rational"
+
 
                 />
 
-
-            <Button
-                android:id="@+id/sync"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="wrap_content"
-                android:text="@string/sync"
-                android:padding="@dimen/spacing_normal"
-                 />
-
-
-            <Button
-                android:id="@+id/add_farmer"
-                android:layout_toRightOf="@id/sync"
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="wrap_content"
-                android:text="@string/add_farmer"
-                android:padding="@dimen/spacing_normal"
-                android:layout_marginLeft="@dimen/spacing_normal"
-
-                />
 
         </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_normal">
+
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/spacing_normal"
+            android:layout_weight="2"
+            android:onClick="setBackListener"
+            android:padding="@dimen/spacing_normal"
+            android:text="@string/back"
+            android:theme="@style/PrimaryButtonGrey"
+
+            />
+
+
+        <Button
+            android:id="@+id/sync"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:padding="@dimen/spacing_normal"
+            android:text="@string/sync" />
+
+
+        <Button
+            android:id="@+id/add_farmer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_toRightOf="@id/sync"
+            android:layout_weight="3"
+            android:padding="@dimen/spacing_normal"
+            android:text="@string/add_farmer"
+
+            />
+
+    </LinearLayout>
 
     <!-- bottom sheet layout -->
 </RelativeLayout>

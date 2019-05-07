@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2018. Evren Coşkun
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,16 +15,14 @@
   ~
   -->
 
-<LinearLayout
-    android:id="@+id/column_header_container"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/column_header_container"
     android:layout_width="wrap_content"
-    android:minWidth="200dp"
-    android:minHeight="@dimen/cell_height"
     android:layout_height="wrap_content"
     android:background="@color/text_white_75"
+    android:minWidth="200dp"
+    android:minHeight="@dimen/cell_height"
     android:orientation="horizontal">
 
     <FrameLayout
@@ -37,10 +34,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:gravity="center"
-            android:layout_marginStart="10dp">
+            android:orientation="vertical">
 
 
             <TextView
@@ -49,19 +46,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textStyle="bold"
                 android:textColor="@color/table_view_default_text_color"
                 android:textSize="@dimen/text_size"
-                tools:text="Header Data"/>
+                android:textStyle="bold"
+                tools:text="Header Data" />
 
             <TextView
                 android:id="@+id/helper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
                 android:gravity="center"
-                android:textSize="11sp"
+                android:maxLines="2"
                 android:text="This is a sample text"
+                android:textSize="11sp"
 
                 />
 

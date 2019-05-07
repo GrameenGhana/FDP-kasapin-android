@@ -8,26 +8,19 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.PopupMenu;
 
-import com.balsikandar.crashreporter.CrashReporter;
-import com.balsikandar.crashreporter.ui.CrashReporterActivity;
-import com.balsikandar.crashreporter.utils.CrashUtil;
-import com.crashlytics.android.Crashlytics;
-
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
 import org.grameen.fdp.kasapin.ui.test.CrashTestingActivity;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FileUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
-import org.json.JSONObject;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -46,7 +39,7 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, LandingActivity.class);
-     }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +66,8 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
         findViewById(R.id.diagnostic).setOnClickListener(v -> {
 
-                mPresenter.getAppDataManager().setIsMonitoringMode(false);
-                mPresenter.openNextActivity();
+            mPresenter.getAppDataManager().setIsMonitoringMode(false);
+            mPresenter.openNextActivity();
 
         });
 
@@ -89,8 +82,30 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
         FileUtils.createNoMediaFile();
 
-     }
 
+
+
+/*
+
+
+        String value = "(false||false||false)&&(false||false)&&(true&&true)";
+
+
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
+        Boolean answer = null;
+        try {
+            answer = (Boolean) engine.eval(value);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
+
+        AppLogger.e(TAG, "FORMULA IS >>>>>  " + value);
+        AppLogger.e(TAG, "ANSWER == " + answer);
+
+*/
+
+
+    }
 
 
     @Override
@@ -98,7 +113,6 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
         mPresenter.dropView();
         super.onDestroy();
     }
-
 
 
     @Override
@@ -113,7 +127,6 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
 
     }
-
 
 
     public void showPopUp(@Nullable final View v) {
@@ -177,12 +190,6 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
         menu.show();
 
     }
-
-
-
-
-
-
 
 
 }

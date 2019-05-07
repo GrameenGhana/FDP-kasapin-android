@@ -1,28 +1,21 @@
 package org.grameen.fdp.kasapin.parser;
 
 
-import org.grameen.fdp.kasapin.exceptions.ParserException;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
-import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.Tokenizer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-
-import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by AangJnr on 12, October, 2018 @ 10:57 AM
@@ -68,14 +61,14 @@ public class MathFormulaParser extends Tokenizer {
     ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
 
 
+    private MathFormulaParser() {
+        // TOKENIZER = initializeTokenizer();
+    }
 
     public static MathFormulaParser getInstance() {
         return new MathFormulaParser();
     }
 
-    private MathFormulaParser() {
-       // TOKENIZER = initializeTokenizer();
-    }
     private static Tokenizer initializeTokenizer() {
 
         Tokenizer tokenizer = new Tokenizer();
@@ -90,7 +83,7 @@ public class MathFormulaParser extends Tokenizer {
         return tokenizer;
     }
 
-     Tokenizer getTokenizer() {
+    Tokenizer getTokenizer() {
 
         tokenize(mathFormula);
 
@@ -117,8 +110,7 @@ public class MathFormulaParser extends Tokenizer {
                 sequenceList.add(tok.sequence);*/
 
 
-
-      AppLogger.e("###  MathFormulaParser >> ", "OLD FORMULA IS  " + mathFormula);
+        AppLogger.e("###  MathFormulaParser >> ", "OLD FORMULA IS  " + mathFormula);
 
         String newFormula = mathFormula;
 
@@ -128,23 +120,23 @@ public class MathFormulaParser extends Tokenizer {
             String tmp_key = (String) iterator.next();
 
             if (mathFormula.contains(tmp_key))
-                if(tmp_key.equals(mathFormula))
+                if (tmp_key.equals(mathFormula))
                     newFormula = getValue(tmp_key);
                 else
                     newFormula = newFormula.replace(tmp_key, getValue(tmp_key));
         }
 
 
-        if(allValuesJson != null) {
+        if (allValuesJson != null) {
             iterator = allValuesJson.keys();
             while (iterator.hasNext()) {
                 String tmp_key = (String) iterator.next();
 
                 if (mathFormula.contains(tmp_key)) {
-                    if(tmp_key.equals(mathFormula))
+                    if (tmp_key.equals(mathFormula))
                         newFormula = getValue(tmp_key);
                     else
-                    newFormula = newFormula.replace(tmp_key, getValue(tmp_key));
+                        newFormula = newFormula.replace(tmp_key, getValue(tmp_key));
 
 
                 }
@@ -153,9 +145,6 @@ public class MathFormulaParser extends Tokenizer {
 
 
         AppLogger.e("###  MathFormulaParser >> ", "NEW FORMULA IS  " + newFormula);
-
-
-
 
 
         try {
@@ -167,21 +156,21 @@ public class MathFormulaParser extends Tokenizer {
     }
 
 
-    public String evaluate(String formula){
+    public String evaluate(String formula) {
         mathFormula = formula;
-             AppLogger.e("###  MathFormulaParser >> ","Equation to evaluate is " + mathFormula);
+        AppLogger.e("###  MathFormulaParser >> ", "Equation to evaluate is " + mathFormula);
 
-            try {
-                return calculate(mathFormula);
-            } catch (ScriptException e) {
-                e.printStackTrace();
-                return "0";
-            }
+        try {
+            return calculate(mathFormula);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+            return "0";
+        }
     }
 
-    public String evaluateWithFormatting(String formula){
+    public String evaluateWithFormatting(String formula) {
         mathFormula = formula;
-        AppLogger.e("###  MathFormulaParser >> ","Equation to evaluate is " + formula);
+        AppLogger.e("###  MathFormulaParser >> ", "Equation to evaluate is " + formula);
 
         try {
             Double value = (Double) engine.eval(mathFormula.trim().replace(",", ""));
@@ -202,7 +191,7 @@ public class MathFormulaParser extends Tokenizer {
             if (jsonObject.has(id))
                 return jsonObject.getString(id);
 
-            else if(allValuesJson.has(id))
+            else if (allValuesJson.has(id))
                 return allValuesJson.getString(id);
 
             else return id;
@@ -227,7 +216,7 @@ public class MathFormulaParser extends Tokenizer {
         this.mathFormula = mathFormula;
     }
 
-     String calculate(String equation) throws ScriptException {
+    String calculate(String equation) throws ScriptException {
         Double value = (Double) engine.eval(equation.trim().replace(",", ""));
         return (String.valueOf(value));
     }

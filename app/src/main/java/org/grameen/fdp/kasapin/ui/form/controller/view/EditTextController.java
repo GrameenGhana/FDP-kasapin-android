@@ -26,9 +26,8 @@ public class EditTextController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     private final String placeholder;
     boolean IS_ENABLED = true;
-    private int inputType;
-
     String helpertext;
+    private int inputType;
 
     /**
      * Constructs a new instance of an edit text field.
@@ -193,89 +192,88 @@ public class EditTextController extends MyLabeledFieldController {
     @Override
     protected View createFieldView() {
 
-        final MaterialEditText editText = new MaterialEditText(getContext());
-        editText.setId(editTextId);
-        editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_NONE);
+        if (IS_ENABLED) {
 
-        editText.setContentDescription(getContentDesc());
-
-        editText.setSingleLine(!isMultiLine());
-        editText.setInputType(inputType);
-
-
-        if(placeholder != null) {
-            if(getModel().getValue(getName()) == null || getModel().getValue(getName()).toString().equalsIgnoreCase(""))
-                getModel().setValue(getName(), placeholder);
-            else
-                getModel().setValue(getName(), getModel().getValue(getName()));
-
-            //editText.setHint(placeholder);
-        }
+            final MaterialEditText editText = new MaterialEditText(getContext());
+            editText.setId(editTextId);
+            editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_NONE);
+            editText.setContentDescription(getContentDesc());
+            editText.setTextSize(15f);
+            editText.setPaddings(20, 0, 0, 0);
+            editText.setSingleLine(!isMultiLine());
+            editText.setInputType(inputType);
 
 
-        try {
+            if (placeholder != null) {
+                if (getModel().getValue(getName()) == null || getModel().getValue(getName()).toString().equalsIgnoreCase(""))
+                    getModel().setValue(getName(), placeholder);
+                else
+                    getModel().setValue(getName(), getModel().getValue(getName()));
 
-            refresh(editText);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-
-        if (helpertext != null) {
-            editText.setHelperText(helpertext);
-            editText.setHelperTextAlwaysShown(true);
-
-        }
-
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //editText.setHint(placeholder);
             }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            try {
+
+                refresh(editText);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
 
-                if (inputType == InputType.TYPE_NUMBER_FLAG_DECIMAL) {
+            if (helpertext != null) {
+                editText.setHelperText(helpertext);
+                editText.setHelperTextAlwaysShown(true);
+
+            }
+
+
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    if (inputType == InputType.TYPE_NUMBER_FLAG_DECIMAL) {
+
+                        double doubleValue = 0;
+                        if (editText.getText() != null) {
+                            try {
+
+                                NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+                                DecimalFormat formatter = (DecimalFormat) nf;
+                                formatter.applyPattern("#,###,###.##");
+
+
+                                doubleValue = Double.parseDouble(editText.getText().toString().replace(",", ""));
+                                getModel().setValue(getName(), formatter.format(doubleValue));
+
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                                getModel().setValue(getName(), editText.getText().toString());
+                            }
+                        }
+                    } else
+                        getModel().setValue(getName(), editText.getText().toString());
+                }
+
+            });
+            editText.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
 
                     double doubleValue = 0;
                     if (editText.getText() != null) {
-                        try {
-
-                            NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
-                            DecimalFormat formatter = (DecimalFormat) nf;
-                            formatter.applyPattern("#,###,###.##");
 
 
-                            doubleValue = Double.parseDouble(editText.getText().toString().replace(",", ""));
-                            getModel().setValue(getName(), formatter.format(doubleValue));
-
-                        } catch (NumberFormatException e) {
-                            e.printStackTrace();
-                            getModel().setValue(getName(), editText.getText().toString());
-                        }
-                    }
-                } else
-                    getModel().setValue(getName(), editText.getText().toString());
-            }
-
-        });
-
-
-        editText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-
-                double doubleValue = 0;
-                if (editText.getText() != null) {
-
-
-                    if(getModel().getValue(getName()) != null)
-                    editText.setText(getModel().getValue(getName()).toString());
+                        if (getModel().getValue(getName()) != null)
+                            editText.setText(getModel().getValue(getName()).toString());
                     /*try {
                         doubleValue = Double.parseDouble(editText.getText().toString().replace(".", ""));
                         editText.setText(new DecimalFormat("#,###,###.##").format(doubleValue));
@@ -283,31 +281,30 @@ public class EditTextController extends MyLabeledFieldController {
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }*/
+                    }
                 }
-            }
-        });
+            });
+            editText.setEnabled(IS_ENABLED);
+            return editText;
+        } else
+            return inflateViewOnlyView();
 
-
-        editText.setEnabled(IS_ENABLED);
-
-
-        return editText;
     }
 
     private void refresh(EditText editText) {
 
-        if(editText != null) {
+        if (editText != null) {
             Object value = getModel().getValue(getName());
 
             String valueStr = value != null ? value.toString() : placeholder;
 
             if (editText.getText() != null)
-            if (!valueStr.equals(editText.getText().toString())) {
-                try {
-                    editText.setHint(valueStr);
-                } catch (Exception ignored) {
+                if (valueStr != null && !valueStr.equals(editText.getText().toString())) {
+                    try {
+                        editText.setHint(valueStr);
+                    } catch (Exception ignored) {
+                    }
                 }
-            }
         }
     }
 

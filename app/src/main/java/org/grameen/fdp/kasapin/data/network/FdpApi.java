@@ -10,9 +10,7 @@ import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.json.JSONObject;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -46,5 +44,5 @@ public interface FdpApi {
 
     @POST(AppConstants.API + "synchupdata")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
-    Single<Response> postFarmers(@Query("token")String token, @Body JsonObject farmersData);
+    Single<Response> postFarmers(@Query("token") String token, @Body JsonObject farmersData);
 }

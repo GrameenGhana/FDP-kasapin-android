@@ -10,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import com.google.gson.Gson;
-
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
-import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
@@ -27,24 +24,18 @@ import org.grameen.fdp.kasapin.ui.form.controller.view.EditTextController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.PhotoButtonController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.SelectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.TimePickerController;
-import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
-import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 
 /**
@@ -52,7 +43,7 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
  */
 
 
-public class DynamicPlotFormFragment extends FormFragment{
+public class DynamicPlotFormFragment extends FormFragment {
 
 
     //@Inject
@@ -68,21 +59,10 @@ public class DynamicPlotFormFragment extends FormFragment{
     List<Question> ALL_QUESTIONS = new ArrayList<>();
 
 
-    public DynamicPlotFormFragment(){
+    public DynamicPlotFormFragment() {
 
 
     }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-      //getBaseActivity().getActivityComponent().inject(this);
-        // mPresenter.takeView(this);
-
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
 
     public static DynamicPlotFormFragment newInstance(boolean shouldLoadOldValues, @Nullable String farmerId, boolean isMonitoring, @Nullable String data) {
         DynamicPlotFormFragment formFragment = new DynamicPlotFormFragment();
@@ -97,6 +77,15 @@ public class DynamicPlotFormFragment extends FormFragment{
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        //getBaseActivity().getActivityComponent().inject(this);
+        // mPresenter.takeView(this);
+
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
     public void onAttach(Context context) {
         AppLogger.i(TAG, "ON ATTACHED");
 
@@ -106,12 +95,12 @@ public class DynamicPlotFormFragment extends FormFragment{
 
             shouldLoadOldValues = getArguments().getBoolean("loadOldValues");
 
-                try {
+            try {
                 ANSWERS_JSON = new JSONObject(getArguments().getString("answerData"));
 
-                } catch (JSONException ignore) {
-                    ANSWERS_JSON = new JSONObject();
-                }
+            } catch (JSONException ignore) {
+                ANSWERS_JSON = new JSONObject();
+            }
 
             IS_CONTROLLER_ENABLED = !getArguments().getBoolean("isMonitoring");
         }
@@ -129,7 +118,7 @@ public class DynamicPlotFormFragment extends FormFragment{
     @Override
     public void initForm(MyFormController controller) {
         int count = 0;
-       AppLogger.e(TAG, "**************   INIT FORM " + BaseActivity.PLOT_FORM_AND_QUESTIONS.size());
+        AppLogger.e(TAG, "**************   INIT FORM " + BaseActivity.PLOT_FORM_AND_QUESTIONS.size());
 
         Context context = getContext();
         computationUtils = ComputationUtils.newInstance(controller);
@@ -137,7 +126,7 @@ public class DynamicPlotFormFragment extends FormFragment{
 
         if (BaseActivity.PLOT_FORM_AND_QUESTIONS != null) {
             //if(getActivity() instanceof AddEditFarmerPlotActivity)
-            for(FormAndQuestions  formAndQuestions: BaseActivity.PLOT_FORM_AND_QUESTIONS){
+            for (FormAndQuestions formAndQuestions : BaseActivity.PLOT_FORM_AND_QUESTIONS) {
 
                 AppLogger.e(TAG, "Adding controller for " + formAndQuestions.getForm().getFormNameC());
 
@@ -148,32 +137,31 @@ public class DynamicPlotFormFragment extends FormFragment{
                 ALL_QUESTIONS.addAll(formAndQuestions.getQuestions());
                 count++;
 
-                if(count > 1 && getActivity() instanceof AddEditFarmerPlotActivity)
+                if (count > 1 && getActivity() instanceof AddEditFarmerPlotActivity)
                     break;
             }
 
 
-         }
+        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (shouldLoadOldValues)
-                Observable.fromIterable(ALL_QUESTIONS)
-                        .subscribeOn(Schedulers.io())
-                        .doOnNext(question ->
-                                getAppDataManager().getCompositeDisposable().add(getAppDataManager()
-                                        .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(skipLogics ->{
-                                            if(skipLogics != null && skipLogics.size() > 0)
+            Observable.fromIterable(ALL_QUESTIONS)
+                    .subscribeOn(Schedulers.io())
+                    .doOnNext(question ->
+                            getAppDataManager().getCompositeDisposable().add(getAppDataManager()
+                                    .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(skipLogics -> {
+                                        if (skipLogics != null && skipLogics.size() > 0)
                                             applySkipLogicsAndHideViews(question, skipLogics);
 
-                                        }))
-                        ).subscribe();
+                                    }))
+                    ).subscribe();
     }
-
 
 
     void loadQuestionsValues(Context context, List<Question> questions, MyFormSectionController formSectionController) {
@@ -184,12 +172,11 @@ public class DynamicPlotFormFragment extends FormFragment{
 
                 String storedValue;
 
-                if(shouldLoadOldValues) {
+                if (shouldLoadOldValues) {
                     storedValue = getComputationUtils().getValue(q, ANSWERS_JSON);
                     if (storedValue.isEmpty() || storedValue.equalsIgnoreCase("null"))
                         storedValue = q.getDefaultValueC();
-                }
-                else
+                } else
                     storedValue = q.getDefaultValueC();
 
                 switch (q.getTypeC().toLowerCase()) {
@@ -199,13 +186,13 @@ public class DynamicPlotFormFragment extends FormFragment{
 
                         break;
                     case AppConstants.TYPE_NUMBER:
-                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(),  q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
+                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
                         //getValue(q);
 
                         break;
 
                     case AppConstants.TYPE_NUMBER_DECIMAL:
-                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
+                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
                         //getValue(q);
 
                         break;
@@ -228,7 +215,7 @@ public class DynamicPlotFormFragment extends FormFragment{
 
                         break;
                     case AppConstants.TYPE_DATEPICKER:
-                        formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC()));
+                        formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), IS_CONTROLLER_ENABLED));
                         //getValue(q);
 
                         break;
@@ -281,30 +268,26 @@ public class DynamicPlotFormFragment extends FormFragment{
             }
 
 
-                getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(Schedulers.newThread())
-                        .subscribe(skipLogics -> applyPropertyChangeListeners(q, skipLogics),
-                                Throwable::printStackTrace)
-                );
-
-
-
+            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .subscribe(skipLogics -> applyPropertyChangeListeners(q, skipLogics),
+                            Throwable::printStackTrace)
+            );
 
 
         }
 
 
-
     }
 
 
-     public void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogics) {
+    public void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogics) {
         getComputationUtils().setUpPropertyChangeListeners2(q.getLabelC(), skipLogics);
     }
 
 
-     public void applySkipLogicsAndHideViews(Question question, List<SkipLogic> skipLogics) {
+    public void applySkipLogicsAndHideViews(Question question, List<SkipLogic> skipLogics) {
         getComputationUtils().initiateSkipLogicsAndHideViews(question.getLabelC(), skipLogics);
     }
 

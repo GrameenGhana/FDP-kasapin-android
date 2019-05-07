@@ -5,13 +5,11 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
 import org.grameen.fdp.kasapin.data.db.entity.RecommendationActivity;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 /**
@@ -21,7 +19,7 @@ import io.reactivex.Single;
  */
 
 @Dao
-public interface RecommendationActivitiesDao extends BaseDao<RecommendationActivity>{
+public interface RecommendationActivitiesDao extends BaseDao<RecommendationActivity> {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -38,6 +36,9 @@ public interface RecommendationActivitiesDao extends BaseDao<RecommendationActiv
     Single<List<RecommendationActivity>> getAllByRecommendation(int recommendationId, String month, String year);
 
 
+    @Query("SELECT * FROM recommendation_activities WHERE recommendationId = :recommendationId  AND year = :year")
+    Single<List<RecommendationActivity>> getAllByRecommendation(int recommendationId, String year);
+
 
     @Query("SELECT * FROM recommendation_activities WHERE activityId = :activityId")
     Single<List<RecommendationActivity>> getAllByActivity(int activityId);
@@ -45,7 +46,6 @@ public interface RecommendationActivitiesDao extends BaseDao<RecommendationActiv
 
     @Query("DELETE FROM recommendation_activities")
     void deleteAll();
-
 
 
 }

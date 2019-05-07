@@ -1,7 +1,5 @@
 package org.grameen.fdp.kasapin.utilities;
 
-import android.util.Log;
-
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -39,7 +37,6 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
-
 
 
 }

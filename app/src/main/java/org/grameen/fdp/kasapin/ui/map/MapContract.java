@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.map;
 
 
-import android.support.annotation.Nullable;
-
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 /**
@@ -14,21 +12,17 @@ import org.grameen.fdp.kasapin.ui.base.BaseContract;
 public class MapContract {
 
 
-
-    public interface View extends  BaseContract.View {
+    public interface View extends BaseContract.View {
 
         void openMainActivity();
 
 
-
     }
 
-     public interface Presenter {
-
+    public interface Presenter {
 
 
     }
-
 
 
 }

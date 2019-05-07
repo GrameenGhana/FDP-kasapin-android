@@ -14,20 +14,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class UploadData {
 
-    private FdpCallbacks.UploadDataListener uploadDataListener;
-
     String TAG = "Upload data";
+    private FdpCallbacks.UploadDataListener uploadDataListener;
     private BaseContract.View mView;
     private AppDataManager mAppDataManager;
     private boolean showProgress;
     private String token;
 
 
-    public static UploadData newInstance(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress){
-        return new UploadData(view, appDataManager, listener, showProgress);
-    }
-
-    private UploadData(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress){
+    private UploadData(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress) {
         this.mAppDataManager = appDataManager;
         this.mView = view;
         this.uploadDataListener = listener;
@@ -35,6 +30,9 @@ public class UploadData {
         token = mAppDataManager.getAccessToken();
     }
 
+    public static UploadData newInstance(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress) {
+        return new UploadData(view, appDataManager, listener, showProgress);
+    }
 
     public AppDataManager getAppDataManager() {
         return mAppDataManager;
@@ -44,9 +42,9 @@ public class UploadData {
         return mView;
     }
 
-   public void uploadFarmersData(JSONObject farmersJsonObject){
+    public void uploadFarmersData(JSONObject farmersJsonObject) {
 
-        if(showProgress)
+        if (showProgress)
             getView().setLoadingMessage("Syncing farmers data...");
 
         getAppDataManager().getFdpApiService()
@@ -60,7 +58,7 @@ public class UploadData {
                         //Do other network calls or complete
 
 
-                        if(uploadDataListener != null)
+                        if (uploadDataListener != null)
                             uploadDataListener.onUploadComplete("Data upload successful.");
                         uploadDataListener = null;
 
@@ -75,11 +73,8 @@ public class UploadData {
     }
 
 
-
-
-
-    void showError(Throwable throwable){
-        if(uploadDataListener != null) {
+    void showError(Throwable throwable) {
+        if (uploadDataListener != null) {
             uploadDataListener.onUploadError(throwable);
             uploadDataListener = null;
         }

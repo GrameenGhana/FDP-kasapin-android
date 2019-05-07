@@ -7,37 +7,24 @@ package org.grameen.fdp.kasapin.data.network;
  * Personal mail aang.jnr@gmail.com
  */
 
-import org.grameen.fdp.kasapin.BuildConfig;
+import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 
 import java.io.IOException;
-import android.util.Base64;
-import android.util.Log;
-
-
-import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 import javax.inject.Inject;
 
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-import timber.log.Timber;
 
 public class RetrofitInterceptor implements Interceptor {
 
-    private String token = null;
-
     @Inject
     AppPreferencesHelper preferencesHelper;
+    private String token = null;
 
-
-    @Override public Response intercept(Chain chain) throws IOException {
+    @Override
+    public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
         token = preferencesHelper.getAccessToken();

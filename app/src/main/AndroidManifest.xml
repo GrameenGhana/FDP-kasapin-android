@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="org.grameen.fdp.kasapin"
     android:installLocation="internalOnly">
 
@@ -14,9 +13,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-<!--
-    <uses-permission android:name="org.grameen.fdp.C2D_MESSAGE" />
--->
+    <!--
+        <uses-permission android:name="org.grameen.fdp.C2D_MESSAGE" />
+    -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -29,9 +28,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 
-
     <application
-        android:usesCleartextTraffic="true"
         android:name=".FDPKasapin"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_round"
@@ -40,7 +37,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.splash.SplashActivity"
             android:label="@string/app_name"
@@ -51,17 +49,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.login.LoginActivity"
-            android:theme="@style/AppTheme"/>
-
         <activity
-            android:name=".ui.landing.LandingActivity"/>
-        <activity android:name=".ui.main.MainActivity"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:name=".ui.login.LoginActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".ui.landing.LandingActivity" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:windowSoftInputMode="adjustNothing" />
 
 
         <activity android:name=".ui.addFarmer.AddEditFarmerActivity" />
-
 
 
         <activity
@@ -74,10 +72,12 @@
         <activity android:name=".ui.AddEditFarmerPlot.AddEditFarmerPlotActivity" />
         <activity android:name=".ui.plotDetails.PlotDetailsActivity" />
         <activity android:name=".ui.map.MapActivity" />
-        <activity android:name=".ui.pandl.ProfitAndLossActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".ui.detailedYearMonthlyView.DetailedMonthActivity"
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".ui.pandl.ProfitAndLossActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.detailedYearMonthlyView.DetailedMonthActivity"
+            android:screenOrientation="landscape" />
 
 
         <service android:name=".services.SyncService" />

@@ -9,8 +9,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -31,7 +29,6 @@ import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,6 +36,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -69,9 +67,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     DynamicPlotFormFragment dynamicPlotFormFragment;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +81,8 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         FARMER = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
 
-        if(FARMER != null)
-        FARMER_CODE = FARMER.getCode();
+        if (FARMER != null)
+            FARMER_CODE = FARMER.getCode();
 
 
         setupViews();
@@ -130,7 +125,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     }
 
 
-    void setupViews(){
+    void setupViews() {
 
         //Edit Plot
         saveButton.setEnabled(false);
@@ -172,7 +167,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             phEdittext.setText(PLOT.getPh());
 
 
-
         } else {
 
             PLOT = new Plot();
@@ -186,7 +180,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             PLOT.setName(name);
 
 
-
             //New Plot
             setToolbar(getStringResources(R.string.add_new_plot));
         }
@@ -195,13 +188,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
         mPresenter.getPlotQuestions();
-        saveButton.setOnClickListener(v-> savePlotData(null));
+        saveButton.setOnClickListener(v -> savePlotData(null));
 
     }
 
 
-
-    void savePlotData(String flag){
+    void savePlotData(String flag) {
 
         showLoading();
 
@@ -214,13 +206,13 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
         try {
-            if(jsonObject.has(soilPhLabel))
+            if (jsonObject.has(soilPhLabel))
                 jsonObject.remove(soilPhLabel);
 
-            if(jsonObject.has(estProductionLabel))
+            if (jsonObject.has(estProductionLabel))
                 jsonObject.remove(estProductionLabel);
 
-            if(jsonObject.has(plotArea))
+            if (jsonObject.has(plotArea))
                 jsonObject.remove(plotArea);
 
             jsonObject.put(soilPhLabel, phEdittext.getText().toString());
@@ -237,33 +229,37 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         logicFormulaParser.setJsonObject(jsonObject);
 
 
-
         //Calculate AOR and AI question values here, put values into the json
-        for(FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS){
+        for (FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS) {
 
-            if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADOPTION_OBSERVATION_RESULTS)
-                    || formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADDITIONAL_INTERVENTION)){
-
-
-                for(Question question : formAndQuestions.getQuestions()){
-                    if(question.getFormulaC() != null && !question.getFormulaC().equalsIgnoreCase("null")){
+            if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADOPTION_OBSERVATION_RESULTS)
+                    || formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADDITIONAL_INTERVENTION)) {
 
 
-                        AppLogger.e(TAG, "---------------------------------------------------------------------------");
-                        AppLogger.e(TAG, "---------------------------------------------------------------------------");
+                for (Question question : formAndQuestions.getQuestions()) {
+                    if (question.getFormulaC() != null && !question.getFormulaC().equalsIgnoreCase("null")) {
 
-                        AppLogger.e(TAG, "Question name is ***** " + question.getLabelC() + " *****");
 
-                    try {
+                        try {
 
-                        String value = logicFormulaParser.evaluate(question.getFormulaC());
+                            AppLogger.e(TAG, "---------------------------------------------------------------------------");
+                            AppLogger.e(TAG, "---------------------------------------------------------------------------");
 
-                        if(jsonObject.has(question.getLabelC()))
-                            jsonObject.remove(question.getLabelC());
-                        jsonObject.put(question.getLabelC(), value);
-                    }catch(Exception e){e.printStackTrace();
+                            AppLogger.e(TAG, "Question name is ***** " + question.getLabelC() + " *****");
+
+                            String value = logicFormulaParser.evaluate(question.getFormulaC());
+
+                            if (jsonObject.has(question.getLabelC()))
+                                jsonObject.remove(question.getLabelC());
+
+                            jsonObject.put(question.getLabelC(), value);
+
+                            AppLogger.e(TAG, "Added " + value + " to json for " + question.getLabelC());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
                 }
                 //AOR_AI_QUESTIONS.addAll(formAndQuestions.getQuestions());
             }
@@ -298,35 +294,31 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         AppLogger.i(TAG, jsonObject.toString());
 
 
-
         //Todo check if farm size corresponds
         //Todo check if checkIfFarmProductionCorresponds
         //Todo checkIfPlotWasRenovatedRecently
 
 
-
-    PLOT.setAnswersData(jsonObject.toString());
-    PLOT.setPh(phEdittext.getText().toString());
-    PLOT.setName(plotNameEdittext.getText().toString());
-    PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
-    PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
-    PLOT.setRecommendationId(-1);
-    PLOT.setArea(plotSizeEdittext.getText().toString());
-    mPresenter.saveData(PLOT, flag);
-  }
+        PLOT.setAnswersData(jsonObject.toString());
+        PLOT.setPh(phEdittext.getText().toString());
+        PLOT.setName(plotNameEdittext.getText().toString());
+        PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
+        PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
+        PLOT.setRecommendationId(-1);
+        PLOT.setArea(plotSizeEdittext.getText().toString());
+        mPresenter.saveData(PLOT, flag);
+    }
 
 
     @OnClick(R.id.plot_area_calculation)
-    void openPlotAreaCalculationActivity(){
+    void openPlotAreaCalculationActivity() {
 
         //Todo go to Map Activity
         if (!plotNameEdittext.getText().toString().isEmpty() || !plotNameEdittext.getText().toString().equals(""))
             savePlotData("MAP");
-         else
+        else
             showMessage(R.string.provide_plot_name);
     }
-
-
 
 
     @Override

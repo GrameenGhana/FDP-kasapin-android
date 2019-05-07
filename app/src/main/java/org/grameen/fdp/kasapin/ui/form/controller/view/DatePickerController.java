@@ -1,17 +1,12 @@
 package org.grameen.fdp.kasapin.ui.form.controller.view;
 
 import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.text.InputType;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
@@ -35,6 +30,7 @@ public class DatePickerController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     private final SimpleDateFormat displayFormat;
     private final TimeZone timeZone;
+    boolean isEnabled = true;
     private DatePickerDialog datePickerDialog = null;
 
     /**
@@ -46,10 +42,11 @@ public class DatePickerController extends MyLabeledFieldController {
      * @param validators    contains the validations to process on the field
      * @param displayFormat the format of the date to show in the text box when a date is set
      */
-    public DatePickerController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, SimpleDateFormat displayFormat) {
+    public DatePickerController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, SimpleDateFormat displayFormat, boolean enable) {
         super(ctx, name, content_desc, labelText, validators);
         this.displayFormat = displayFormat;
         this.timeZone = displayFormat.getTimeZone();
+        this.isEnabled = enable;
     }
 
     /**
@@ -61,10 +58,11 @@ public class DatePickerController extends MyLabeledFieldController {
      * @param isRequired    indicates if the field is required or not
      * @param displayFormat the format of the date to show in the text box when a date is set
      */
-    public DatePickerController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, SimpleDateFormat displayFormat) {
+    public DatePickerController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, SimpleDateFormat displayFormat, boolean enable) {
         super(ctx, name, content_desc, labelText, isRequired);
         this.displayFormat = displayFormat;
         this.timeZone = displayFormat.getTimeZone();
+        this.isEnabled = enable;
     }
 
     /**
@@ -73,36 +71,35 @@ public class DatePickerController extends MyLabeledFieldController {
      * @param name      the name of the field
      * @param labelText the label to display beside the field
      */
-    public DatePickerController(Context context, String name, String content_desc, String labelText) {
-        this(context, name, content_desc, labelText, false, new SimpleDateFormat("MMM d, yyyy", Locale.getDefault()));
+    public DatePickerController(Context context, String name, String content_desc, String labelText, boolean enable) {
+        this(context, name, content_desc, labelText, false, new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()), enable);
     }
 
     @Override
     protected View createFieldView() {
-        final EditText editText = new EditText(getContext());
-        editText.setId(editTextId);
-        editText.setContentDescription(getContentDesc());
-        editText.setSingleLine(true);
-        editText.setInputType(InputType.TYPE_CLASS_DATETIME);
-        editText.setKeyListener(null);
-        refresh(editText);
-        editText.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog(getContext(), editText);
-            }
-        });
 
-        editText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+        if (isEnabled) {
+            final MaterialEditText editText = new MaterialEditText(getContext());
+            editText.setId(editTextId);
+            editText.setContentDescription(getContentDesc());
+            editText.setSingleLine(true);
+            editText.setTextSize(15f);
+            editText.setPaddings(20, 0, 0, 0);
+            editText.setInputType(InputType.TYPE_CLASS_DATETIME);
+            editText.setKeyListener(null);
+            refresh(editText);
+            editText.setOnClickListener(v -> showDatePickerDialog(getContext(), editText));
+
+            editText.setOnFocusChangeListener((v, hasFocus) -> {
                 if (hasFocus) {
                     showDatePickerDialog(getContext(), editText);
                 }
-            }
-        });
+            });
 
-        return editText;
+            editText.setEnabled(isEnabled);
+            return editText;
+        } else
+            return inflateViewOnlyView();
     }
 
     private void showDatePickerDialog(final Context context, final EditText editText) {
@@ -114,27 +111,17 @@ public class DatePickerController extends MyLabeledFieldController {
             calendar.setTimeZone(timeZone);
             calendar.setTime(date);
 
-            datePickerDialog = new DatePickerDialog(context, R.style.DatePickerSpinner, new OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                  /*  Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-                    calendar.setTimeZone(timeZone);
-                    calendar.set(year, monthOfYear, dayOfMonth);*/
+            datePickerDialog = new DatePickerDialog(context, R.style.DatePickerSpinner, (view, year, monthOfYear, dayOfMonth) -> {
+                calendar.set(year, monthOfYear, dayOfMonth);
 
-                    String date = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year;
-                    getModel().setValue(getName(), date);
-                    editText.setText(date);
-                    // editText.setText(displayFormat.format(calendar.getTime()));
 
-                }
+                String date1 = displayFormat.format(calendar.getTime());
+                getModel().setValue(getName(), date1);
+                editText.setText(date1);
+
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
-            datePickerDialog.setOnDismissListener(new OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    datePickerDialog = null;
-                }
-            });
+            datePickerDialog.setOnDismissListener(dialog -> datePickerDialog = null);
 
             datePickerDialog.show();
         }
@@ -147,8 +134,8 @@ public class DatePickerController extends MyLabeledFieldController {
     private void refresh(EditText editText) {
         String value = null;
 
-        if(getModel().getValue(getName()) != null) {
-              value = getModel().getValue(getName()).toString();
+        if (getModel().getValue(getName()) != null) {
+            value = getModel().getValue(getName()).toString();
         }
         editText.setHint(value != null ? value : "Click to add date");
 

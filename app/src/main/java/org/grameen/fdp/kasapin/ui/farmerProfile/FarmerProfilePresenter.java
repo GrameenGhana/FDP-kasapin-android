@@ -1,10 +1,8 @@
 package org.grameen.fdp.kasapin.ui.farmerProfile;
 
 
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
@@ -19,7 +17,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -28,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.View> implements FarmerProfileContract.Presenter{
+public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.View> implements FarmerProfileContract.Presenter {
 
     AppDataManager mAppDataManager;
     int count = 0;
@@ -43,8 +40,6 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     }
 
 
-
-
     @Override
     public void openNextActivity() {
 
@@ -55,7 +50,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     public void deletePlot(Plot plot) {
 
         getAppDataManager().getDatabaseManager().plotsDao().deleteOne(plot);
-        getView().showMessage( "Data deleted!");
+        getView().showMessage("Data deleted!");
 
 
     }
@@ -73,10 +68,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     }
 
 
-
-
-
-    public void loadDynamicButtons(List<FormAndQuestions> formAndQuestions){
+    public void loadDynamicButtons(List<FormAndQuestions> formAndQuestions) {
 
         count = 0;
 
@@ -99,7 +91,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
                     btn.setText(formAndQuestions1.getForm().getFormNameC());
                     btn.setContentDescription(formAndQuestions1.getForm().getFormNameC());
 
-                   // AppLogger.i(TAG, "BUTTON " + count);
+                    // AppLogger.i(TAG, "BUTTON " + count);
 
 
                     count++;
@@ -107,12 +99,9 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
                     return btn;
 
                 }).toList().subscribe(buttons -> getView().addButtons(buttons)
-        ));
+                ));
 
     }
-
-
-
 
 
 }

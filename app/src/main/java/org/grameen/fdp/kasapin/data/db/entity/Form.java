@@ -1,14 +1,12 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.squareup.moshi.Json;
 
 import java.util.List;
 
@@ -23,8 +21,8 @@ public class Form {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     int base_id;
-
-
+    @Ignore
+    List<Question> questionList;
     @SerializedName("id")
     private int id;
     @SerializedName("create_time")
@@ -42,19 +40,13 @@ public class Form {
     @SerializedName("custom_c")
     private String customC;
 
-
-    @Ignore
-    List<Question> questionList;
-
     /**
      * No args constructor for use in serialization
-     *
      */
     public Form() {
     }
 
     /**
-     *
      * @param id
      * @param createTime
      * @param customC

@@ -1,17 +1,13 @@
 package org.grameen.fdp.kasapin.ui.detailedYearMonthlyView;
 
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -52,8 +48,6 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
     DetailedMonthPresenter mPresenter;
 
 
-
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.print)
@@ -89,14 +83,11 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
     MathFormulaParser mathFormulaParser;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_monthly_view);
         ButterKnife.bind(this);
-
 
 
         getActivityComponent().inject(this);
@@ -119,10 +110,9 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         }
 
 
-         toolbar = setToolbar(getStringResources(R.string.year) + " " + year);
+        toolbar = setToolbar(getStringResources(R.string.year) + " " + year);
 
         AppLogger.i(TAG, "^^^^^^^^ LABOUR? " + DID_LABOUR + " TYPE = " + LABOUR_TYPE);
-
 
 
         if (farmer != null) {
@@ -133,7 +123,7 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         }
 
 
-        if (BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
 
 
             findViewById(R.id.print).setVisibility(View.VISIBLE);
@@ -145,7 +135,7 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
                 findViewById(R.id.print).setVisibility(View.GONE);
 
 
-                showLoading( "Initializing", "Please wait...", false, 0, false);
+                showLoading("Initializing", "Please wait...", false, 0, false);
 
 
                 new Handler().postDelayed(() -> {
@@ -194,155 +184,130 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         setData();
 
 
-
     }
 
     @Override
-    public void setData(){
+    public void setData() {
 
-            tableView.setColumnCount(12);
-            String[] TABLE_HEADERS = {getStringResources(R.string.jan), getStringResources(R.string.feb),
-                    getStringResources(R.string.mar), getStringResources(R.string.apr), getStringResources(R.string.may), getStringResources(R.string.jun),
-                    getStringResources(R.string.jul),getStringResources(R.string.aug), getStringResources(R.string.sep), getStringResources(R.string.oct),
-                    getStringResources(R.string.nov), getStringResources(R.string.dec)};
-
-
+        tableView.setColumnCount(12);
+        String[] TABLE_HEADERS = {getStringResources(R.string.jan), getStringResources(R.string.feb),
+                getStringResources(R.string.mar), getStringResources(R.string.apr), getStringResources(R.string.may), getStringResources(R.string.jun),
+                getStringResources(R.string.jul), getStringResources(R.string.aug), getStringResources(R.string.sep), getStringResources(R.string.oct),
+                getStringResources(R.string.nov), getStringResources(R.string.dec)};
 
 
-            tableView.setHeaderAdapter(new DetailedYearTableHearderAdapter(this, TABLE_HEADERS));
-            for (Plot plot : plotList) {
+        tableView.setHeaderAdapter(new DetailedYearTableHearderAdapter(this, TABLE_HEADERS));
+        for (Plot plot : plotList) {
 
-                try {
-                    CURRENT_SIZE_IN_HA = PLOT_SIZES_IN_HA.getString(plot.getExternalId());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    CURRENT_SIZE_IN_HA = "1";
+            try {
+                CURRENT_SIZE_IN_HA = PLOT_SIZES_IN_HA.getString(plot.getExternalId());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                CURRENT_SIZE_IN_HA = "1";
+
+            }
+
+
+            int gapsId = plot.getGapsId();
+            int recommendationId = plot.getRecommendationId();
+
+
+            int plotYear = plot.getStartYear();
+            System.out.println();
+            System.out.println("#####################");
+            AppLogger.e(TAG, "PLOT YEAR IS " + plotYear);
+            AppLogger.e(TAG, "GAPS ID IS " + gapsId);
+            AppLogger.e(TAG, "RECOMMENDATION ID IS " + recommendationId);
+            System.out.println("#####################");
+            System.out.println();
+
+
+            if (plotYear >= 1) {
+
+                if (plotYear == 1)
+                    getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), year);
+                else {
+
+
+                    if (year < plotYear)
+                        getActivitiesSuppliesAndCosts(gapsId, plot.getName(), 1);
+                    else
+                        getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), (year - plotYear) + 1);
 
                 }
 
+            } else {
 
+                if (year + Math.abs(plotYear) > 7) {
 
-                int gapsId =  plot.getGapsId();
-                int recommendationId = plot.getRecommendationId();
-
-
-                int plotYear = plot.getStartYear();
-                System.out.println();
-                System.out.println("#####################");
-                AppLogger.e(TAG, "PLOT YEAR IS " + plotYear);
-                AppLogger.e(TAG, "GAPS ID IS " + gapsId);
-                AppLogger.e(TAG, "RECOMMENDATION ID IS " + recommendationId);
-                System.out.println("#####################");
-                System.out.println();
-
-
-                if (plotYear >= 1) {
-
-                    if (plotYear == 1)
-                        getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), year);
-                    else {
-
-
-                        if (year < plotYear)
-                            getActivitiesSuppliesAndCosts(gapsId, plot.getName(), 1);
-                        else
-                            getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), (year - plotYear) + 1);
-
-                    }
+                    getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), 7);
 
                 } else {
 
-                    if (year + Math.abs(plotYear) > 7) {
-
-                        getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), 7);
-
-                    } else {
-
-                        getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), year + Math.abs(plotYear));
-                    }
-
-
+                    getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), year + Math.abs(plotYear));
                 }
+
+
             }
+        }
 
-            myTableViewAdapter = new DetailedYearTableViewAdapter(this, TABLE_DATA_LIST, tableView);
-            tableView.setDataAdapter(myTableViewAdapter);
+        myTableViewAdapter = new DetailedYearTableViewAdapter(this, TABLE_DATA_LIST, tableView);
+        tableView.setDataAdapter(myTableViewAdapter);
 
-}
-
-
+    }
 
 
     HistoricalTableViewData getMonthlyData(int id, String month, int year) {
 
         List<RecommendationActivity> recommendationsPlusActivities;
-        List<RecommendationActivity> recommendationsPlusActivities2;
 
         HistoricalTableViewData data = new HistoricalTableViewData("", "", "");
         try {
-
-           /*
-
-           if(DID_LABOUR)
-                if(LABOUR_TYPE.equalsIgnoreCase("seasonal"))
-                    recommendationsPlusActivities = databaseHelper.getSeasonalRecommendationPlusAcivityByRecommendationIdMonthAndYear(id, month, year + "", "true");
-                else
-                    recommendationsPlusActivities = databaseHelper.getRecommendationPlusAcivityByRecommendationIdMonthAndYear(id, month, year + "");
-                else
-
-           */
-
             recommendationsPlusActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao().getAllByRecommendation(id, month, String.valueOf(year)).blockingGet();
 
-            recommendationsPlusActivities2 = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao().getAllByRecommendation(id, month, String.valueOf(year), "1").blockingGet();
 
-
-            StringBuilder activities = new StringBuilder() ;
-            StringBuilder labourCost = new StringBuilder() ;
+            StringBuilder activities = new StringBuilder();
+            StringBuilder labourCost = new StringBuilder();
             StringBuilder suppliesCost = new StringBuilder();
 
 
-            if(recommendationsPlusActivities != null)
-            for (int i = 0; i < recommendationsPlusActivities.size(); i++) {
+            if (recommendationsPlusActivities != null)
+                for (int i = 0; i < recommendationsPlusActivities.size(); i++) {
 
-                RecommendationActivity ra = recommendationsPlusActivities.get(i);
-
-                try {
-
-                    if(ra.getActivityTranslation() != null && !ra.getActivityTranslation().equals("null"))
-                        if (!activities.toString().toLowerCase().contains(ra.getActivityTranslation().toLowerCase()))
-                            activities.append(CommonUtils.toCamelCase(ra.getActivityTranslation())).append(", ");
-
-                    //suppliesCost.append(ra.getSuppliesCost()).append("+");
-                    suppliesCost.append("0").append("+");
-
+                    RecommendationActivity ra = recommendationsPlusActivities.get(i);
 
                     try {
 
-                        if (DID_LABOUR)
-                            if (LABOUR_TYPE.equalsIgnoreCase("seasonal")) {
-                                //labourCost.append(recommendationsPlusActivities2.get(i).getLaborCost()).append("+");
+                        if (ra.getActivityTranslation() != null && !ra.getActivityTranslation().equals("null"))
+                            if (!activities.toString().toLowerCase().contains(ra.getActivityTranslation().toLowerCase()))
+                                activities.append(CommonUtils.toCamelCase(ra.getActivityTranslation())).append(", ");
+
+                        suppliesCost.append(ra.getSuppliesCost()).append("+");
+
+
+                        try {
+
+                            if (DID_LABOUR) {
+                                if (LABOUR_TYPE.equalsIgnoreCase("seasonal")) {
+                                    if (ra.getSeasonal() == 1)
+                                        labourCost.append(ra.getLaborCost()).append("+");
+                                    else
+                                        labourCost.append("0").append("+");
+
+                                } else {
+                                    labourCost.append(ra.getLaborCost()).append("+");
+                                }
+                            } else
                                 labourCost.append("0").append("+");
 
-                            }
-                            else {
-                                labourCost.append("0").append("+");
-                                //labourCost.append(ra.getLaborCost()).append("+");
-
-
-                            }
-                        else
+                        } catch (Exception ignored) {
                             labourCost.append("0").append("+");
+                        }
 
                     } catch (Exception ignored) {
-                        labourCost.append("0").append("+");
+                        ignored.printStackTrace();
                     }
-
-                } catch (Exception ignored) {
-                    ignored.printStackTrace();
                 }
-            }
-
 
 
             suppliesCost.append("0.0");
@@ -414,7 +379,6 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
 
 
     }
-
 
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-
 import org.grameen.fdp.kasapin.R;
 
 import java.util.List;
@@ -89,6 +88,21 @@ public class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.Vi
         this.longClickListener = mLongClickListener;
     }
 
+    public void removePoint(int position) {
+        plots.remove(position);
+        notifyDataSetChanged();
+
+    }
+
+    public void addPoint(LatLng latLng) {
+        plots.add(latLng);
+        notifyDataSetChanged();
+    }
+
+    public List<LatLng> getPoints() {
+        return plots;
+    }
+
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -102,7 +116,7 @@ public class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-         TextView index;
+        TextView index;
         TextView coords;
         TextView delete;
 
@@ -110,41 +124,20 @@ public class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.Vi
         ViewHolder(final View itemView) {
             super(itemView);
 
-            index =  itemView.findViewById(R.id.index);
-            coords =  itemView.findViewById(R.id.coordinates);
+            index = itemView.findViewById(R.id.index);
+            coords = itemView.findViewById(R.id.coordinates);
 
-            delete =  itemView.findViewById(R.id.delete);
+            delete = itemView.findViewById(R.id.delete);
 
 
             delete.setOnClickListener(v -> {
-                if(mItemClickListener != null)
+                if (mItemClickListener != null)
                     mItemClickListener.onItemClick(delete, getAdapterPosition());
             });
         }
 
 
-
-
     }
-
-
-
-    public void removePoint(int position){
-        plots.remove(position);
-        notifyDataSetChanged();
-
-    }
-
-
-
-    public void addPoint(LatLng latLng){
-        plots.add(latLng);
-        notifyDataSetChanged();
-    }
-
-
-
-    public List<LatLng> getPoints(){return plots;}
 
 
 }

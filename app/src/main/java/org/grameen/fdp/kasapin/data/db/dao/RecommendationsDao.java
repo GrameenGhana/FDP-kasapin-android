@@ -2,17 +2,13 @@ package org.grameen.fdp.kasapin.data.db.dao;
 
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 
 import java.util.List;
 
 import io.reactivex.Maybe;
-import io.reactivex.Single;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 12:47 PM
@@ -21,7 +17,7 @@ import io.reactivex.Single;
  */
 
 @Dao
-public interface RecommendationsDao extends BaseDao<Recommendation>{
+public interface RecommendationsDao extends BaseDao<Recommendation> {
 
     @Query("SELECT * FROM recommendations WHERE cropId = :id")
     Recommendation getByCrop(int id);
@@ -43,13 +39,6 @@ public interface RecommendationsDao extends BaseDao<Recommendation>{
 
     @Query("DELETE FROM recommendations")
     void deleteAllRecommendations();
-
-
-
-
-
-
-
 
 
 }

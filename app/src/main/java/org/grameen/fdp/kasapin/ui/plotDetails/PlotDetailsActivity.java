@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -34,9 +31,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -77,13 +72,11 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     Button editButton;
 
     JSONObject PLOT_ANSWERS_JSON;
-    //String limeNeededValue = "--";
-    private DynamicPlotFormFragment dynamicPlotFormFragment;
-
     Recommendation PLOT_RECOMMENDATION = null;
     Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
     String recNames;
-
+    //String limeNeededValue = "--";
+    private DynamicPlotFormFragment dynamicPlotFormFragment;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, PlotDetailsActivity.class);
@@ -106,12 +99,10 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         if (PLOT != null) {
 
             setupViews();
-        }
-        else {
+        } else {
             showMessage(R.string.error_has_occurred);
             finish();
         }
-
 
 
     }
@@ -130,14 +121,13 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         mPresenter.getAreaUnits(PLOT.getFarmerCode());
 
 
-
         checkRecommendation();
         //
 
 
     }
 
-    void setupViews(){
+    void setupViews() {
 
         //Todo get units and apply
         setToolbar(getStringResources(R.string.plot_info));
@@ -145,10 +135,11 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         plotName.setText(PLOT.getName());
         ph.setText(PLOT.getPh());
 
+
         //Get values
 
         try {
-             PLOT_ANSWERS_JSON = PLOT.getAOJsonData();
+            PLOT_ANSWERS_JSON = PLOT.getAOJsonData();
         } catch (JSONException e) {
             e.printStackTrace();
             PLOT_ANSWERS_JSON = new JSONObject();
@@ -156,19 +147,20 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
         Iterator iterator = PLOT_ANSWERS_JSON.keys();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             String tmp_key = (String) iterator.next();
-            if(tmp_key.toLowerCase().contains("lime")){
+            if (tmp_key.toLowerCase().contains("lime")) {
                 try {
                     limeNeeded.setText(PLOT_ANSWERS_JSON.getString(tmp_key));
                     limeNeeded.setTextColor(ContextCompat.getColor(this, R.color.cpb_red));
                     break;
-                } catch (JSONException ignored) {}
+                } catch (JSONException ignored) {
+                }
             }
         }
 
 
-        if(getAppDataManager().isMonitoring())
+        if (getAppDataManager().isMonitoring())
             editButton.setVisibility(View.GONE);
 
         mPresenter.getPlotQuestions();
@@ -180,26 +172,30 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     @Override
     public void setAreaUnits(String unit) {
 
-        estimatedProductionSize.setText(PLOT.getEstimatedProductionSize() + " " + unit);
-
+        landSize.setText(PLOT.getArea() + " " + unit);
     }
 
+    @Override
+    public void setProductionUnit(String unit) {
+        estimatedProductionSize.setText(PLOT.getEstimatedProductionSize() + " " + unit);
+    }
 
-    void checkRecommendation(){
+    void checkRecommendation() {
 
 
-        if(PLOT.getRecommendationId() != -1){
+        if (PLOT.getRecommendationId() != -1) {
 
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getLabel(PLOT.getRecommendationId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(s -> recommendedIntervention.setText(s), throwable -> {}));
+                    .subscribe(s -> recommendedIntervention.setText(s), throwable -> {
+                    }));
 
             recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent));
             return;
         }
 
-        if(PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")){
+        if (PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) {
             recommendedIntervention.setText(R.string.fill_out_ao_data);
             recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red));
             return;
@@ -222,67 +218,64 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON);
 
 
-
-
         AppLogger.i("" + TAG, "############    REAPPLYING LOGIC TO RECOMMENDATION    ##################");
 
-        for(Recommendation recommendation : recommendations){
-            AppLogger.e( TAG, "---------   RECOMMENDATION NAME >>  " + recommendation.getLabel() + "   ---------");
-            AppLogger.e( TAG, "---------   HIERARCHY >>  " + recommendation.getHierarchy() + "   ---------");
+        for (Recommendation recommendation : recommendations) {
+            AppLogger.e(TAG, "---------   RECOMMENDATION NAME >>  " + recommendation.getLabel() + "   ---------");
+            AppLogger.e(TAG, "---------   HIERARCHY >>  " + recommendation.getHierarchy() + "   ---------");
 
 
-                if(recommendation.getHierarchy() != 0 && recommendation.getCondition() != null && !recommendation.getCondition().equalsIgnoreCase("null")){
+            if (recommendation.getHierarchy() != 0 && recommendation.getCondition() != null && !recommendation.getCondition().equalsIgnoreCase("null")) {
 
-                        try {
+                try {
 
-                            String value = logicFormulaParser.evaluate(recommendation.getCondition());
-                            if (value.equalsIgnoreCase("true")) {
-
-
-                                if (recommendation.getLabel().equalsIgnoreCase("replant") || recommendation.getLabel().equalsIgnoreCase("replant + extra soil"))
-                                    GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                            .getLabel("Minimal GAPs").blockingGet();
-
-                                else if (recommendation.getLabel().equalsIgnoreCase("grafting") || recommendation.getLabel().equalsIgnoreCase("grafting + extra soil"))
-                                    GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                            .getLabel("Modest GAPs").blockingGet();
-                                else
-                                    GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                            .getLabel("Maintenance (GAPs)").blockingGet();
-
-                                PLOT_RECOMMENDATION = recommendation;
-
-                                break;
-                            }else
-                                GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                        .getLabel("Maintenance (GAPs)").blockingGet();
+                    String value = logicFormulaParser.evaluate(recommendation.getCondition());
+                    if (value.equalsIgnoreCase("true")) {
 
 
-                        }catch(Exception e){e.printStackTrace();
-                        }
-                    }
+                        if (recommendation.getLabel().equalsIgnoreCase("replant") || recommendation.getLabel().equalsIgnoreCase("replant + extra soil"))
+                            GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                    .getLabel("Minimal GAPs").blockingGet();
+
+                        else if (recommendation.getLabel().equalsIgnoreCase("grafting") || recommendation.getLabel().equalsIgnoreCase("grafting + extra soil"))
+                            GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                    .getLabel("Modest GAPs").blockingGet();
+                        else
+                            GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                    .getLabel("Maintenance (GAPs)").blockingGet();
+
+                        PLOT_RECOMMENDATION = recommendation;
+
+                        break;
+                    } else
+                        GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                .getLabel("Maintenance (GAPs)").blockingGet();
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
 
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
         }
 
-        AppLogger.e( TAG, "---------   RECOMMENDATION >>  " + getGson().toJson(PLOT_RECOMMENDATION));
-        AppLogger.e( TAG, "---------   GAPS RECOMMENDATION >>  " + getGson().toJson(GAPS_RECOMENDATION_FOR_START_YEAR));
+        AppLogger.e(TAG, "---------   RECOMMENDATION >>  " + getGson().toJson(PLOT_RECOMMENDATION));
+        AppLogger.e(TAG, "---------   GAPS RECOMMENDATION >>  " + getGson().toJson(GAPS_RECOMENDATION_FOR_START_YEAR));
 
 
+        if (PLOT_RECOMMENDATION == null)
+            PLOT_RECOMMENDATION = GAPS_RECOMENDATION_FOR_START_YEAR;
 
-
-        if(PLOT_RECOMMENDATION == null)
-        PLOT_RECOMMENDATION = GAPS_RECOMENDATION_FOR_START_YEAR;
-
-        if(PLOT_RECOMMENDATION != null) {
+        if (PLOT_RECOMMENDATION != null) {
 
             recNames = PLOT_RECOMMENDATION.getLabel();
 
             PLOT.setRecommendationId(PLOT_RECOMMENDATION.getId());
-            if(GAPS_RECOMENDATION_FOR_START_YEAR != null)
-            PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
+            if (GAPS_RECOMENDATION_FOR_START_YEAR != null)
+                PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
 
             mPresenter.saveData(PLOT);
         }

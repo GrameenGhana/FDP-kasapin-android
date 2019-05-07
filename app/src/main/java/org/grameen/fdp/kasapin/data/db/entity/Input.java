@@ -38,21 +38,21 @@ public class Input {
     public Input() {
     }
 
-    public void setId(@NonNull String id) {
-        this.id = id;
-    }
-
     @NonNull
     public String getId() {
         return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {
@@ -87,11 +87,11 @@ public class Input {
         this.unit = unit;
     }
 
-    public void setLastModifiedDate(String lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
     public String getLastModifiedDate() {
         return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

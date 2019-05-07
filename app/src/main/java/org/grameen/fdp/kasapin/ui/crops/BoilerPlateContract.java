@@ -12,16 +12,14 @@ import org.grameen.fdp.kasapin.ui.base.BaseContract;
 public class BoilerPlateContract {
 
 
+    public interface View extends BaseContract.View {
 
-    public interface View extends  BaseContract.View {
-
-
-    }
-
-     public interface Presenter {
 
     }
 
+    public interface Presenter {
+
+    }
 
 
 }

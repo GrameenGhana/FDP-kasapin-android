@@ -40,15 +40,12 @@ public interface PlotAssessmentDao {
     int updatePlotAssessment(PlotAssessment plotAssessment);
 
 
-
     @Query("DELETE FROM plot_assessments")
     void deleteAllPlotAssessments();
 
 
     @Query("DELETE FROM plot_assessments WHERE id = :id")
     int deletePlotAssessmentById(String id);
-
-
 
 
 }

@@ -15,17 +15,10 @@
 
 package org.grameen.fdp.kasapin.data.prefs;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
-
 import org.grameen.fdp.kasapin.data.DataManager;
-import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
-import org.grameen.fdp.kasapin.di.Scope.PreferenceInfo;
-import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.CommonUtils;
-import org.grameen.fdp.kasapin.utilities.SecurePreferences;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,6 +30,7 @@ import javax.inject.Singleton;
 @Singleton
 public class AppPreferencesHelper implements PreferencesHelper {
 
+    public static final String PREF_KEY_IS_MONITORING_MODE = "PREF_KEY_MONITORING_MODE";
     private static final String PREF_KEY_USER_LOGGED_IN_MODE = "PREF_KEY_USER_LOGGED_IN_MODE";
     private static final String PREF_KEY_USER_ID = "PREF_KEY_USER_ID";
     private static final String PREF_KEY_USER_UUID = "PREF_KEY_USER_UUID";
@@ -49,12 +43,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PREF_KEY_USER_PROFILE_PIC_URL = "PREF_KEY_USER_PROFILE_PIC_URL";
     private static final String PREF_KEY_IS_TRANSLATION = "IS_TRANSLATION_TOGGLED";
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
-    public static final String PREF_KEY_IS_MONITORING_MODE = "PREF_KEY_MONITORING_MODE";
-
-
     private final SharedPreferences mPrefs;
 
-   // private SecurePreferences securedPreferences;
+    // private SecurePreferences securedPreferences;
 
     @Inject
     public AppPreferencesHelper(SharedPreferences preferences) {

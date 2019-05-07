@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ContextThemeWrapper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -71,10 +70,10 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
 
 
         //if (i1 == 0) {
-            //Todo set questions here
+        //Todo set questions here
 
-            //renderedView = renderColumn0Values(myTableData);
-            renderedView = renderCalculatedValuesForYear(myTableData, i1);
+        //renderedView = renderColumn0Values(myTableData);
+        renderedView = renderCalculatedValuesForYear(myTableData, i1);
 
 
         return renderedView;

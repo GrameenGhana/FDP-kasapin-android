@@ -72,30 +72,55 @@ import javax.inject.Singleton;
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract CountryDao countryDao();
+
     public abstract VillagesDao villagesDao();
+
     public abstract FormsDao formsDao();
+
     public abstract FormTranslationDao formTranslationDao();
+
     public abstract QuestionDao questionDao();
+
     public abstract SkipLogicsDao skipLogicsDao();
+
     public abstract MappingsDao mappingDao();
+
     public abstract LogicsDao logicsDao();
+
     public abstract RecommendationsDao recommendationsDao();
+
     public abstract RecommendationActivitiesDao recommendationPlusActivitiesDao();
+
     public abstract ActivitiesPlusInputsDao activitiesPlusInputsDao();
+
     public abstract ActivitiesDao activitiesDao();
+
     public abstract InputsDao inputsDao();
+
     public abstract CalculationsDao calculationsDao();
+
     public abstract ComplexCalculationDao complexCalculationDao();
+
     public abstract RealFarmersDao realFarmersDao();
+
     public abstract FormAnswersDao formAnswerDao();
+
     public abstract PlotsDao plotsDao();
+
     public abstract MonitoringsDao monitoringsDao();
+
     public abstract PlotAssessmentDao plotAssessmentDao();
+
     public abstract FarmResultsDao farmResultsDao();
+
     public abstract SubmissionsDao submissionsDao();
+
     public abstract SuppliesCostsDao suppliesCostsDao();
+
     public abstract PlotAndAssessmentsDao plotAndAssessmentsDao();
+
     public abstract VillageAndFarmersDao villageAndFarmersDao();
+
     public abstract FormAndQuestionsDao formAndQuestionsDao();
 
 

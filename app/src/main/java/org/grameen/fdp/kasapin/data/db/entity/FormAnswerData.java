@@ -8,25 +8,17 @@ package org.grameen.fdp.kasapin.data.db.entity;
  */
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-import java.util.List;
-
-import static android.arch.persistence.room.ForeignKey.CASCADE;
-
 @Entity(tableName = "form_answers", indices = @Index("farmerCode"))
-public class FormAnswerData extends BaseModel{
+public class FormAnswerData extends BaseModel {
 
     @SerializedName("data")
     String data;
@@ -39,17 +31,10 @@ public class FormAnswerData extends BaseModel{
     String farmerCode;
 
 
-
-
     /**
      * No args constructor for use in serialization
      */
     public FormAnswerData() {
-    }
-
-
-    public void setId(@NonNull int id) {
-        this.id = id;
     }
 
     @NonNull
@@ -57,28 +42,28 @@ public class FormAnswerData extends BaseModel{
         return id;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
-
-
-    public void setFarmerCode(String farmerCode) {
-        this.farmerCode = farmerCode;
-    }
-
 
     public String getFarmerCode() {
         return farmerCode;
+    }
+
+    public void setFarmerCode(String farmerCode) {
+        this.farmerCode = farmerCode;
     }
 
     public String getData() {
         return data;
     }
 
-
+    public void setData(String data) {
+        this.data = data;
+    }
 
     @Ignore
-    public JSONObject getJsonData(){
+    public JSONObject getJsonData() {
         try {
             return new JSONObject(data);
         } catch (JSONException ignored) {
@@ -86,13 +71,12 @@ public class FormAnswerData extends BaseModel{
         }
     }
 
+    public int getFormId() {
+        return formId;
+    }
 
     public void setFormId(int formId) {
         this.formId = formId;
-    }
-
-    public int getFormId() {
-        return formId;
     }
 
 }

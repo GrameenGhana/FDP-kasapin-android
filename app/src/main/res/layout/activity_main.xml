@@ -5,11 +5,11 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true">
 
 
-    <include layout="@layout/app_bar_main"/>
+    <include layout="@layout/app_bar_main" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
@@ -18,9 +18,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer" >
-
-
+        app:menu="@menu/activity_main_drawer">
 
 
         <RelativeLayout
@@ -28,26 +26,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:padding="@dimen/spacing_normal"
             android:layout_marginBottom="?attr/actionBarSize"
             android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/spacing_normal"
 
             >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/toggle_translation"
-                android:textSize="@dimen/text_size_normal"
                 android:layout_centerVertical="true"
-                />
+                android:text="@string/toggle_translation"
+                android:textSize="@dimen/text_size_normal" />
+
             <Switch
                 android:id="@+id/translation_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:clickable="false"
-                />
+                android:clickable="false" />
 
 
         </RelativeLayout>
@@ -55,16 +52,15 @@
 
         <TextView
             android:id="@+id/version_number"
+            style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="v.3.0"
-            android:padding="@dimen/spacing_normal"
             android:layout_gravity="bottom"
             android:gravity="end"
-            style="@style/TextAppearance.AppCompat.Small" />
+            android:padding="@dimen/spacing_normal"
+            tools:text="v.3.0" />
 
     </android.support.design.widget.NavigationView>
-
 
 
 </android.support.v4.widget.DrawerLayout>

@@ -2,13 +2,8 @@ package org.grameen.fdp.kasapin;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
 import android.os.StrictMode;
-import android.security.NetworkSecurityPolicy;
-import android.util.Log;
 
-
-import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.di.component.ApplicationComponent;
 import org.grameen.fdp.kasapin.di.component.DaggerApplicationComponent;
 import org.grameen.fdp.kasapin.di.module.ApplicationModule;
@@ -18,12 +13,9 @@ import org.grameen.fdp.kasapin.utilities.AppLogger;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import javax.inject.Inject;
-
 import timber.log.Timber;
 
 public class FDPKasapin extends Application {
-
 
 
     private ApplicationComponent mApplicationComponent;
@@ -93,8 +85,6 @@ public class FDPKasapin extends Application {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-
-
 
 
     }
