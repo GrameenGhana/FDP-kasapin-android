@@ -310,6 +310,12 @@ public abstract class BaseActivity extends AppCompatActivity
                 (dialogInterface, i) -> {
                     mAppDataManager.setUserAsLoggedOut();
                     dialogInterface.dismiss();
+
+                    Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    finish();
                 }, getString(R.string.yes), (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                 }, getString(R.string.no), 0);

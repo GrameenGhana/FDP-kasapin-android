@@ -225,24 +225,26 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                         List<Plot> farmersPlots = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmer.getCode()).blockingGet();
 
 
+
                                                         JSONArray arrayOfValues = new JSONArray();
+
+
 
                                                         if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)) {
 
-
                                                             for (Plot plot : farmersPlots) {
-                                                                JSONArray plotsArray = new JSONArray();
+                                                                JSONArray plotArray = new JSONArray();
 
-                                                                formatPlotsData(plot, plotsArray);
-
-                                                                arrayOfValues.put(plotsArray);
+                                                                formatPlotsData(plot, plotArray);
+                                                                arrayOfValues.put(plotArray);
 
                                                             }
-
 
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)) {
+
+
                                                             for (Plot plot : farmersPlots) {
-                                                                JSONArray plotsArray = new JSONArray();
+                                                                JSONArray diagnosticMonitoringArray = new JSONArray();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
@@ -254,15 +256,19 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                         answerJson.put("answer", plot.getAOJsonData().get(questionLabel));
                                                                         answerJson.put("field_name", mapping.getFieldName());
 
-                                                                        arrayOfValues.put(answerJson);
+                                                                        diagnosticMonitoringArray.put(answerJson);
                                                                     }
                                                                 }
-                                                                arrayOfValues.put(plotsArray);
+
+                                                                arrayOfValues.put(diagnosticMonitoringArray);
                                                             }
+
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.OBSERVATION_TABLE)) {
 
+
+
                                                             for (Plot plot : farmersPlots) {
-                                                                JSONArray plotsArray = new JSONArray();
+                                                                JSONArray observationArray = new JSONArray();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
@@ -274,11 +280,13 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                         answerJson.put("answer", plot.getAOJsonData().get(questionLabel));
                                                                         answerJson.put("field_name", mapping.getFieldName());
 
-                                                                        arrayOfValues.put(answerJson);
+                                                                        observationArray.put(answerJson);
                                                                     }
                                                                 }
-                                                                arrayOfValues.put(plotsArray);
+
+                                                                arrayOfValues.put(observationArray);
                                                             }
+
                                                         } else {
 
 

@@ -142,6 +142,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     String plotSizeInHaValue = "0.0";
     private JSONObject PLOT_ANSWERS_JSON_OBJECT = new JSONObject();
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -379,12 +382,18 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         final Question labourTypeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour_type").blockingGet();
 
 
+        AppLogger.i(TAG, "*********   GETTING VALUE FOR DID LABOR   ***********");
         try {
-            String val = VALUES_JSON_OBJECT.getString(labourQuestion.getCaptionC());
-            if (val.equalsIgnoreCase("Yes"))
-                DID_LABOUR = true;
-            LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getCaptionC());
-            // CustomToast.makeToast(this, "Labour? " + val + " LABOUR TYPE = " + LABOUR_TYPE, Toast.LENGTH_LONG).show();
+            String val = VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC());
+
+                DID_LABOUR = val.equalsIgnoreCase("Yes");
+
+            AppLogger.e(TAG, "*********   DID LABOUR  == " + DID_LABOUR);
+
+
+            LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
+
+            AppLogger.e(TAG, "*********  LABOUR TYPE  == " + LABOUR_TYPE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1341,30 +1350,23 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
     void showOrHideStartYear(int year) {
-
-        AppLogger.i(TAG, "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n");
+        AppLogger.i(TAG, "\n\n$$$$$$$$$$$$$$$$$$$$$$$ CSSV  $$$$$$$$$$$$$$$$$$$$$$$$$$\n\n");
         Boolean value = false;
-
 
         CSSV_VALUE = "--";
 
         if (PLOT_ANSWERS_JSON_OBJECT != null) {
-
             CSSV_VALUE = ComputationUtils.getValue(CSSV_QUESTION.getLabelC(), PLOT_ANSWERS_JSON_OBJECT);
-
         }
-
 
         List<SkipLogic> skipLogics = getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(CSSV_QUESTION.getId()).blockingGet();
 
         if (skipLogics != null && skipLogics.size() > 0) {
 
             for (SkipLogic sl : skipLogics) {
-
                 try {
 
                     ComputationUtils computationUtils = ComputationUtils.newInstance(null);
-
 
                     if (computationUtils.compareValues(sl, CSSV_VALUE)) {
                         TABLE_DATA_LIST.add(new Data(COUNTER + "_" + year, null, TAG_VIEW));
@@ -1377,6 +1379,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             }
         }
     }
+
+
+
 
 
     void computePlotResults() {

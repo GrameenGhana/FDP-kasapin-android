@@ -58,6 +58,7 @@ public class Question {
     @SerializedName("label_c")
     @Expose
     private String labelC;
+
     @SerializedName("default_value_c")
     @Expose
     private String defaultValueC;
