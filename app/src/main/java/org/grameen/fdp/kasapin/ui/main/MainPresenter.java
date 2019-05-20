@@ -350,8 +350,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                 AppLogger.e(TAG, "Payload data is " + payloadData.toString());
                                                 getView().hideLoading();
 
-                                                UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
-                                                        .uploadFarmersData(payloadData);
+                                             UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
+                                                       .uploadFarmersData(payloadData);
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();

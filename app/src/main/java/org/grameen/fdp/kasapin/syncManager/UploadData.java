@@ -46,7 +46,6 @@ public class UploadData {
 
         if (showProgress)
             getView().setLoadingMessage("Syncing farmers data...");
-
         getAppDataManager().getFdpApiService()
                 .pushFarmersData(token, farmersJsonObject)
                 .subscribeOn(Schedulers.io())
