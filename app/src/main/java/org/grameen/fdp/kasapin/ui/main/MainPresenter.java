@@ -6,6 +6,7 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
@@ -245,6 +246,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                             for (Plot plot : farmersPlots) {
                                                                 JSONArray diagnosticMonitoringArray = new JSONArray();
+                                                                JSONObject recommendationJson = new JSONObject();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
@@ -256,9 +258,14 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                         answerJson.put("answer", plot.getAOJsonData().get(questionLabel));
                                                                         answerJson.put("field_name", mapping.getFieldName());
 
+
                                                                         diagnosticMonitoringArray.put(answerJson);
                                                                     }
                                                                 }
+
+                                                                recommendationJson.put("answer",plot.getRecommendationId());
+                                                                recommendationJson.put("field_name","recommendation_id");
+                                                                diagnosticMonitoringArray.put(recommendationJson);
 
                                                                 arrayOfValues.put(diagnosticMonitoringArray);
                                                             }
@@ -272,13 +279,15 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
-                                                                    String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+                                                                   // String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+                                                                    Question aoQuestion = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(mapping.getQuestionId());
 
-                                                                    if (plot.getAOJsonData().has(questionLabel)) {
+                                                                    if (plot.getAOJsonData().has(aoQuestion.getLabelC())) {
                                                                         JSONObject answerJson = new JSONObject();
 
-                                                                        answerJson.put("answer", plot.getAOJsonData().get(questionLabel));
+                                                                        answerJson.put("answer", plot.getAOJsonData().get(aoQuestion.getLabelC()));
                                                                         answerJson.put("field_name", mapping.getFieldName());
+                                                                        answerJson.put("variable_c",aoQuestion.getCaptionC());
 
                                                                         observationArray.put(answerJson);
                                                                     }
@@ -341,8 +350,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                 AppLogger.e(TAG, "Payload data is " + payloadData.toString());
                                                 getView().hideLoading();
 
-                                                UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
-                                                        .uploadFarmersData(payloadData);
+                                             UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
+                                                       .uploadFarmersData(payloadData);
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
