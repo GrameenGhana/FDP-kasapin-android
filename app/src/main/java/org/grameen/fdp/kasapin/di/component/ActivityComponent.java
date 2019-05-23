@@ -16,6 +16,7 @@ import org.grameen.fdp.kasapin.ui.main.MainActivity;
 import org.grameen.fdp.kasapin.ui.map.MapActivity;
 import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
+import org.grameen.fdp.kasapin.ui.plotReview.PlotReviewActivity;
 import org.grameen.fdp.kasapin.ui.splash.SplashActivity;
 
 import dagger.Component;
@@ -51,12 +52,11 @@ public interface ActivityComponent {
     void inject(PlotDetailsActivity view);
 
     void inject(MapActivity view);
-
     void inject(ProfitAndLossActivity view);
-
     void inject(FDPStatusActivity view);
-
     void inject(DetailedMonthActivity view);
+    void inject(PlotReviewActivity view);
+
 
 
 }

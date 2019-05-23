@@ -118,8 +118,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     List<String> labourCostList = new ArrayList<>();
     List<String> labourDaysList = new ArrayList<>();
     List<String> pandlist = new ArrayList<>();
-    String startYearId = "nil";
+    //String startYearId = "nil";
     Question CSSV_QUESTION;
+    Question START_YEAR;
     Question PLOT_SIZE_QUESTION;
     Question PLOT_PROD_QUESTION;
     String FARM_AREA_UNITS_LABEL;
@@ -159,7 +160,11 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         farmer = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
 
-        startYearId = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet();
+        START_YEAR = getAppDataManager().getDatabaseManager().questionDao().get("start_year_").blockingGet();
+
+        START_YEAR_LABEL = START_YEAR.getLabelC();
+
+
         CSSV_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("ao_disease_").blockingGet();
 
         currency.setText(getAppDataManager().getStringValue("currency"));
@@ -479,8 +484,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             COUNTER = 0;
 
             for (Plot PLOT : realPlotList) {
-
-
                 try {
                     PLOT_ANSWERS_JSON_OBJECT = PLOT.getAOJsonData();
                 } catch (Exception e) {
@@ -502,7 +505,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
                 shouldHideStartYear = false;
 
-                AppLogger.d("P & L ACTIVITY", "START YEAR IS " + PLOT.getStartYear());
+                AppLogger.e("P & L ACTIVITY", "START YEAR IS " + PLOT.getStartYear());
 
 
                 logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON_OBJECT);
@@ -953,7 +956,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         Question plotIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_income_").blockingGet();
 
-        TABLE_DATA_LIST.add(new Data(plotIncomeQuestion.getLabelC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new Data(plotIncomeQuestion.getCaptionC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
 
         //Todo maintenance cost, labor cost and labor days * plot size in ha
 
@@ -1359,12 +1362,17 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             CSSV_VALUE = ComputationUtils.getValue(CSSV_QUESTION.getLabelC(), PLOT_ANSWERS_JSON_OBJECT);
         }
 
-        List<SkipLogic> skipLogics = getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(CSSV_QUESTION.getId()).blockingGet();
+        List<SkipLogic> skipLogics = getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(START_YEAR.getId()).blockingGet();
 
         if (skipLogics != null && skipLogics.size() > 0) {
 
             for (SkipLogic sl : skipLogics) {
                 try {
+
+                    String[] values = sl.getFormula().replace("\"", "").split(" ");
+                    sl.setComparingQuestion(values[0]);
+                    sl.setLogicalOperator(values[1]);
+                    sl.setAnswerValue(values[2]);
 
                     ComputationUtils computationUtils = ComputationUtils.newInstance(null);
 
@@ -1373,7 +1381,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
                         break;
                     }
-
                 } catch (Exception ignored) {
                 }
             }
@@ -1386,12 +1393,10 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
     void computePlotResults() {
 
-
         for (int i = 0; i < MAX_YEARS + 1; i++) {
 
             pandlist.add(mathFormulaParser.evaluate(plotIncomes.get(i) + "-" + "(" + maintenanceCostList.get(i) + "+" + labourCostList.get(i) + ")"));
         }
-
 
         Question plotCostQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_cost_").blockingGet();
         TABLE_DATA_LIST.add(new Data(plotCostQuestion.getCaptionC(), maintenanceCostList, TAG_OTHER_TEXT_VIEW));
@@ -1404,8 +1409,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         Question labourCostQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_labor_cost_").blockingGet();
         TABLE_DATA_LIST.add(new Data(labourCostQuestion.getCaptionC(), labourCostList, TAG_OTHER_TEXT_VIEW));
 
-        Question profitLossQuestion = getAppDataManager().getDatabaseManager().questionDao().get("p&l_").blockingGet();
-        TABLE_DATA_LIST.add(new Data(profitLossQuestion.getCaptionC(), pandlist, TAG_OTHER_TEXT_VIEW));
+        Question plotProfitLossQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_p&l_").blockingGet();
+        TABLE_DATA_LIST.add(new Data(plotProfitLossQuestion.getCaptionC(), pandlist, TAG_OTHER_TEXT_VIEW));
 
 
         Integer plotResultsFormId = getAppDataManager().getDatabaseManager().formsDao().getId("Plot results").blockingGet();
@@ -1432,6 +1437,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             }
         }
     }
+
+
 
 
     String computeCost(List<RecommendationActivity> recommendationActivities, String which, boolean seasonal) {

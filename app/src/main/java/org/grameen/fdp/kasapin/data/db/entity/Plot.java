@@ -20,14 +20,13 @@ public class Plot {
     @NonNull
     int id;
 
-
     String externalId;
     String distanceBetweenCocoaTrees;
     String EstimatedProduction;
     String farmerName;
     String farmerCode;
     String numberOfShadeTrees;
-    String plotAge = "N/A";
+    String plotAge = "0";
     String area;
     String plotPoints;
     String name;
@@ -38,9 +37,6 @@ public class Plot {
     String gpsPoints;
     int recommendationId = -1;
     int gapsId = -1;
-
-
-    @Ignore
     int startYear = 1;
 
     public Plot() {

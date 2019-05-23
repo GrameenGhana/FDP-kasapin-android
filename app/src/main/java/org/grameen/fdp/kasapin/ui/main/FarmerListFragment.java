@@ -89,6 +89,8 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
 
     @Override
     protected void setUp(View view) {
+
+
         if (getArguments() != null) {
             mFarmers = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<RealFarmer>>() {
             }.getType());

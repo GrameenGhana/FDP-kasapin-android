@@ -29,6 +29,7 @@ import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
+import org.grameen.fdp.kasapin.ui.plotReview.PlotReviewActivity;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -399,12 +400,9 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 break;
             case R.id.review_page:
 
-              /*
-
-                        intent = new Intent(FarmerDetailsActivity.this, PlotsReviewActivity.class);
-                        intent.putExtra("farmerCode", FARMER.getId());
-                        startActivity(intent);
-              */
+                intent = new Intent(FarmerProfileActivity.this, PlotReviewActivity.class);
+                intent.putExtra("farmer", getGson().toJson(FARMER));
+                startActivity(intent);
 
                 break;
             case R.id.pandl:
@@ -461,10 +459,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
 
-    void openProfitAndLossActivity() {
-
-
-    }
 
 
     boolean checkIfFarmSizeCorresponds(List<Plot> plots) {

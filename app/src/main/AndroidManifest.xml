@@ -78,6 +78,7 @@
         <activity
             android:name=".ui.detailedYearMonthlyView.DetailedMonthActivity"
             android:screenOrientation="landscape" />
+        <activity android:name=".ui.plotReview.PlotReviewActivity" />
 
 
         <service android:name=".services.SyncService" />

@@ -6,6 +6,7 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
@@ -243,7 +244,12 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)) {
 
 
+
+
+
                                                             for (Plot plot : farmersPlots) {
+
+
                                                                 JSONArray diagnosticMonitoringArray = new JSONArray();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
@@ -260,6 +266,15 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                     }
                                                                 }
 
+
+
+                                                                JSONObject recommendationAnswerJson = new JSONObject();
+                                                                recommendationAnswerJson.put("answer", plot.getRecommendationId());
+                                                                recommendationAnswerJson.put("field_name", "recommendation_id");
+                                                                diagnosticMonitoringArray.put(recommendationAnswerJson);
+
+
+
                                                                 arrayOfValues.put(diagnosticMonitoringArray);
                                                             }
 
@@ -272,13 +287,18 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
-                                                                    String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
 
-                                                                    if (plot.getAOJsonData().has(questionLabel)) {
+                                                                    Question ao_question = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(mapping.getQuestionId());
+
+                                                                   // String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+
+                                                                    if (plot.getAOJsonData().has(ao_question.getLabelC())) {
                                                                         JSONObject answerJson = new JSONObject();
 
-                                                                        answerJson.put("answer", plot.getAOJsonData().get(questionLabel));
+                                                                        answerJson.put("answer", plot.getAOJsonData().get(ao_question.getLabelC()));
                                                                         answerJson.put("field_name", mapping.getFieldName());
+                                                                        answerJson.put("variable_c", ao_question.getCaptionC());
+
 
                                                                         observationArray.put(answerJson);
                                                                     }

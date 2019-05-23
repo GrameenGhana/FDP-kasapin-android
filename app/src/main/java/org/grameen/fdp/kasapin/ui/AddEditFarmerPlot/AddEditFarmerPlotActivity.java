@@ -17,6 +17,7 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
@@ -25,6 +26,7 @@ import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
+import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -113,7 +115,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     @Override
     public void showForm(List<FormAndQuestions> formAndQuestionsList) {
 
-        AppLogger.e(TAG, "Plot Questions size is " + formAndQuestionsList.size());
+        AppLogger.e(TAG, "Plot Questions list size is " + formAndQuestionsList.size());
 
         PLOT_FORM_AND_QUESTIONS = formAndQuestionsList;
 
@@ -298,13 +300,66 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         //Todo check if checkIfFarmProductionCorresponds
         //Todo checkIfPlotWasRenovatedRecently
 
+        int year = 1;
+        Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_").blockingGet();
+        Question PLOT_RENOVATION_MADE = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_").blockingGet();
+        Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_").blockingGet();
+        Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
 
+
+        PLOT.setRecommendationId(-1);
+
+
+
+        if(PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE != null) {
+
+            if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
+                try {
+                    if (ComputationUtils.getValue(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC(), jsonObject).equalsIgnoreCase("yes")) {
+
+                        AppLogger.e(TAG, "PLOT RENOVATED CORRECTLY? >>>> YES");
+                        year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE.getLabelC()));
+
+
+                        AppLogger.e(TAG, "START YEAR >>>> " + year);
+
+
+                        String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
+
+                        if (recommendationName.equalsIgnoreCase("replanting"))
+                            GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                    .getLabel("Replant").blockingGet();
+
+
+                        else if (recommendationName.equalsIgnoreCase("grafting"))
+                            GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                    .getLabel("Grafting").blockingGet();
+
+                        if (GAPS_RECOMENDATION_FOR_START_YEAR != null) {
+
+                            AppLogger.e(TAG, "RECOMMENDATION MADE  >>>> " + GAPS_RECOMENDATION_FOR_START_YEAR.getLabel());
+
+
+                            PLOT.setRecommendationId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
+                            PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+        }
+
+
+
+
+        PLOT.setStartYear(year);
         PLOT.setAnswersData(jsonObject.toString());
         PLOT.setPh(phEdittext.getText().toString());
         PLOT.setName(plotNameEdittext.getText().toString());
         PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
         PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
-        PLOT.setRecommendationId(-1);
         PLOT.setArea(plotSizeEdittext.getText().toString());
         mPresenter.saveData(PLOT, flag);
     }

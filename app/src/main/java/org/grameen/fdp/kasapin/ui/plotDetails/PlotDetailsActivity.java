@@ -98,6 +98,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         PLOT = getGson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
         if (PLOT != null) {
 
+            AppLogger.i(TAG, "PLOT >>> " + getGson().toJson(PLOT));
+
             setupViews();
         } else {
             showMessage(R.string.error_has_occurred);

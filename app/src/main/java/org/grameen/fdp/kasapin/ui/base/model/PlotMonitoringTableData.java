@@ -1,5 +1,7 @@
 package org.grameen.fdp.kasapin.ui.base.model;
 
+import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
+
 import java.util.List;
 
 /**
@@ -10,10 +12,10 @@ public class PlotMonitoringTableData {
 
     Integer position;
     String title;
-    List<Data2> tableData;
+    List<HistoricalTableViewData> tableData;
 
 
-    public PlotMonitoringTableData(String title, List<Data2> tableData) {
+    public PlotMonitoringTableData(String title, List<HistoricalTableViewData> tableData) {
         this.title = title;
         this.tableData = tableData;
     }
@@ -26,11 +28,11 @@ public class PlotMonitoringTableData {
         this.title = title;
     }
 
-    public List<Data2> getTableData() {
+    public List<HistoricalTableViewData> getTableData() {
         return tableData;
     }
 
-    public void setTableData(List<Data2> tableData) {
+    public void setTableData(List<HistoricalTableViewData> tableData) {
         this.tableData = tableData;
     }
 

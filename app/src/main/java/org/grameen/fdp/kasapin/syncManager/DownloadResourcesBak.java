@@ -27,6 +27,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
+
 
 public class DownloadResourcesBak {
 
@@ -90,7 +92,7 @@ public class DownloadResourcesBak {
 
 
         getAppDataManager().getCompositeDisposable().add(mAppDataManager.getFdpApiService()
-                .fetchSurveyData(1, mAppDataManager.getAccessToken())
+                .fetchSurveyData(country.getId(), mAppDataManager.getAccessToken())
                 .subscribeWith(new DisposableSingleObserver<FormsDataWrapper>() {
                     @Override
                     public void onSuccess(FormsDataWrapper dataWrapper) {
@@ -176,9 +178,11 @@ public class DownloadResourcesBak {
         if (showProgress)
             getView().setLoadingMessage("Getting recommendations, calculations and recommendations plus activities data...");
 
+        Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
+
 
         getAppDataManager().getFdpApiService()
-                .fetchRecommendations(1, 1, mAppDataManager.getAccessToken())
+                .fetchRecommendations(1, country.getId(), mAppDataManager.getAccessToken())
                 .subscribe(new DisposableSingleObserver<RecommendationsDataWrapper>() {
                     @Override
                     public void onSuccess(RecommendationsDataWrapper recommendationsDataWrapper) {

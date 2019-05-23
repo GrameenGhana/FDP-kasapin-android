@@ -83,13 +83,13 @@ public class AppLogger {
         largeLog(tag, message);
     }
 
-    static void largeLog(String tag, String content) {
+    public static void largeLog(String tag, String content) {
         if (content.length() > 4000) {
-            Timber.e("%s%s  -> %s", " ******** ", tag, content.substring(0, 4000));
+            System.out.println(String.format("%s%s  -> %s", " ********", tag, content.substring(0, 4000)));
             largeLog(tag, content.substring(4000));
-        } else {
-            Timber.e("%s%s  -> %s", " ******** ", tag, content);
-        }
+        } else
+            System.out.println(String.format("%s%s  -> %s", " ********", tag, content));
+
     }
 
     private static final class CrashReportingTree extends Timber.Tree {

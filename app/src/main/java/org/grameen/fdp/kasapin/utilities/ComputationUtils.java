@@ -57,6 +57,58 @@ public class ComputationUtils {
         return defVal;
     }
 
+
+
+    public static String getDataValue(Question q, JSONObject ANSWERS_JSON) {
+        String defVal;
+        try {
+
+            if (ANSWERS_JSON.has(q.getLabelC())) {
+                defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
+
+
+            } else
+                defVal = q.getDefaultValueC();
+
+
+        } catch (JSONException ignored) {
+            defVal = q.getDefaultValueC();
+        }
+
+        AppLogger.e("Computation Utils", "GETTING VALUE FOR " + q.getLabelC() + " --> Value = " + defVal);
+        return defVal;
+    }
+
+
+
+
+
+
+    public String getValue(Question q, JSONObject ANSWERS_JSON) {
+        String defVal;
+        try {
+
+            if (ANSWERS_JSON.has(q.getLabelC())) {
+                defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
+
+                if(getModel() != null)
+                    getModel().setValue(q.getLabelC(), defVal);
+
+
+            } else
+                defVal = q.getDefaultValueC();
+
+
+        } catch (JSONException ignored) {
+            defVal = q.getDefaultValueC();
+        }
+
+        AppLogger.i(getClass().getSimpleName(), "GETTING VALUE FOR " + q.getLabelC() + " --> Value = " + defVal);
+        return defVal;
+    }
+
+
+
     public static boolean parseEquation(String v1, String operator, String v2, ScriptEngine _engine) {
         String equation = v1 + operator + v2;
         AppLogger.e(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
@@ -173,24 +225,7 @@ public class ComputationUtils {
 
     }
 
-    public String getValue(Question q, JSONObject ANSWERS_JSON) {
-        String defVal;
-        try {
 
-            if (ANSWERS_JSON.has(q.getLabelC())) {
-                defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
-                getModel().setValue(q.getLabelC(), defVal);
-            } else
-                defVal = "";
-
-
-        } catch (JSONException ignored) {
-            defVal = "";
-        }
-
-        AppLogger.i(getClass().getSimpleName(), "GETTING VALUE FOR " + q.getLabelC() + " --> Value = " + defVal);
-        return defVal;
-    }
 
     public void setUpPropertyChangeListeners(String label, List<SkipLogic> skipLogics) {
 

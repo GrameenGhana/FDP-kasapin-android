@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.login;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.DataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.model.User;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.syncManager.DownloadResources;
@@ -13,6 +14,8 @@ import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 import javax.inject.Inject;
 
 import io.reactivex.observers.DisposableSingleObserver;
+
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:06 PM
@@ -45,6 +48,9 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                             public void onSuccess(LoginResponse responseBody) {
 
 
+
+
+
                                 String token = responseBody.getToken();
                                 mAppDataManager.setAccessToken(token);
                                 fetchUserData(token);
@@ -69,8 +75,20 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                 .subscribeWith(new DisposableSingleObserver<User>() {
                     @Override
                     public void onSuccess(User user) {
+
+
+                        Country country = new Country();
+                        country.setId(1);
+                        country.setCurrency("GHS");
+                        country.setIsoCode("GHA");
+                        country.setName("Ghana");
+
+                        getAppDataManager().setStringValue("country", getGson().toJson(country));
+
+
                         mAppDataManager.updateUserInfo(user);
                         fetchData();
+
                     }
 
                     @Override
