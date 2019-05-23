@@ -251,6 +251,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
 
                                                                 JSONArray diagnosticMonitoringArray = new JSONArray();
+                                                                JSONObject recommendationJson = new JSONObject();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
@@ -262,10 +263,12 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                         answerJson.put("answer", plot.getAOJsonData().get(questionLabel));
                                                                         answerJson.put("field_name", mapping.getFieldName());
 
+
                                                                         diagnosticMonitoringArray.put(answerJson);
                                                                     }
                                                                 }
 
+<<<<<<< HEAD
 
 
                                                                 JSONObject recommendationAnswerJson = new JSONObject();
@@ -274,6 +277,11 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                 diagnosticMonitoringArray.put(recommendationAnswerJson);
 
 
+=======
+                                                                recommendationJson.put("answer",plot.getRecommendationId());
+                                                                recommendationJson.put("field_name","recommendation_id");
+                                                                diagnosticMonitoringArray.put(recommendationJson);
+>>>>>>> 23e6f44cbd4a489cb7a2a3679c1df746d21ae7a2
 
                                                                 arrayOfValues.put(diagnosticMonitoringArray);
                                                             }
@@ -287,6 +295,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
+<<<<<<< HEAD
 
                                                                     Question ao_question = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(mapping.getQuestionId());
 
@@ -299,6 +308,17 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                         answerJson.put("field_name", mapping.getFieldName());
                                                                         answerJson.put("variable_c", ao_question.getCaptionC());
 
+=======
+                                                                   // String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+                                                                    Question aoQuestion = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(mapping.getQuestionId());
+
+                                                                    if (plot.getAOJsonData().has(aoQuestion.getLabelC())) {
+                                                                        JSONObject answerJson = new JSONObject();
+
+                                                                        answerJson.put("answer", plot.getAOJsonData().get(aoQuestion.getLabelC()));
+                                                                        answerJson.put("field_name", mapping.getFieldName());
+                                                                        answerJson.put("variable_c",aoQuestion.getCaptionC());
+>>>>>>> 23e6f44cbd4a489cb7a2a3679c1df746d21ae7a2
 
                                                                         observationArray.put(answerJson);
                                                                     }
@@ -361,8 +381,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                 AppLogger.e(TAG, "Payload data is " + payloadData.toString());
                                                 getView().hideLoading();
 
-                                                UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
-                                                        .uploadFarmersData(payloadData);
+                                             UploadData.newInstance(getView(), getAppDataManager(), MainPresenter.this, true)
+                                                       .uploadFarmersData(payloadData);
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();

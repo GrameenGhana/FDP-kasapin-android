@@ -1,6 +1,7 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
@@ -46,7 +47,7 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
 
     @Override
     public void deleteFarmer(RealFarmer farmer, int position) {
-     /*   runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().deleteFarmerById(farmer.getId())
+        /*runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().deleteFarmerById(farmer.getId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(i -> {
@@ -55,7 +56,7 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
                             else
                                 getView().showMessage(R.string.could_not_delete_data);
                         }
-                ));*/
+                )); */
 
     }
 }
