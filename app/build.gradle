@@ -16,7 +16,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
-        buildConfigField "String", "END_POINT", "\"http://104.236.220.225/\""
+        buildConfigField "String", "END_POINT", "\"http://52.15.172.252/\""
 
     }
 
@@ -50,7 +50,7 @@ android {
             useProguard false
             //buildConfigField("String", "API_KEY", "testkey")
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
-            buildConfigField "String", "END_POINT", "\"http://104.236.220.225/\""
+            buildConfigField "String", "END_POINT", "\"http://52.15.172.252/\""
 
 
         }

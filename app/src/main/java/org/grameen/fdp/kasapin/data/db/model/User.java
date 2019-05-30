@@ -67,6 +67,9 @@ public class User {
     @Expose
     private String fullName;
 
+    @SerializedName("country_id")
+    int countryId;
+
     /**
      * No args constructor for use in serialization
      */
@@ -363,4 +366,11 @@ public class User {
         return this;
     }
 
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
+    }
+
+    public int getCountryId() {
+        return countryId;
+    }
 }

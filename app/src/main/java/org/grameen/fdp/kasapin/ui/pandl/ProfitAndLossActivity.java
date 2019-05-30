@@ -975,49 +975,24 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         System.out.println("################################ \n CALCULATING LABOUR DAYS AND COST FOR YEAR 0 to SELECTED START YEAR (1 = DEFAULT) \n ###################################");
 
-        recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
-                .getAllByRecommendation(GAPS_RECOMENDATION_FOR_START_YEAR.getId(), "1").blockingGet();
 
         for (int i = 0; i < CONTROLLING_YEAR; i++) {
 
-
             AppLogger.i(TAG, "\nYEAR " + i);
 
-            if (i == 0) {
+            if (i == 0)
+                recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
+                        .getAllByRecommendation(GAPS_RECOMENDATION_FOR_START_YEAR.getId(), "0").blockingGet();
+            else
+                recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
+                        .getAllByRecommendation(GAPS_RECOMENDATION_FOR_START_YEAR.getId(), "1").blockingGet();
 
-                maintenanceCostList.add("0.0");
-            } else {
 
-                maintenanceCostList.add(mathFormulaParser.evaluate(computeCost(recommendationActivities, AppConstants.SUPPLIES_COSTS, false) + "*" + plotSizeInHaValue));
-
-            }
-
+            maintenanceCostList.add(mathFormulaParser.evaluate(computeCost(recommendationActivities, AppConstants.SUPPLIES_COSTS, false) + "*" + plotSizeInHaValue));
             MAINTENANCE_COST_STRING_BUILDERS.get(i).append(maintenanceCostList.get(i)).append("+");
 
 
-            if (DID_LABOUR) {
-
-                String laborCostValue;
-                String laborDaysValue;
-
-                if (LABOUR_TYPE.equalsIgnoreCase("full")) {
-                    laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, false);
-                    laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, false);
-
-                } else {
-                    laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, true);
-                    laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, true);
-                }
-
-
-                labourCostList.add(mathFormulaParser.evaluate(laborCostValue + "*" + plotSizeInHaValue));
-                labourDaysList.add(mathFormulaParser.evaluate(laborDaysValue + "*" + plotSizeInHaValue));
-
-
-            } else {
-                labourCostList.add("0.0");
-                labourDaysList.add("0.0");
-            }
+            getSuppliesLaborCostLabourDaysValues(recommendationActivities);
 
             LABOR_COST_STRING_BUILDERS.get(i).append(labourCostList.get(i)).append("+");
             LABOR_DAYS_STRING_BUILDERS.get(i).append(labourDaysList.get(i)).append("+");
@@ -1035,34 +1010,11 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
             maintenanceCostList.add(mathFormulaParser.evaluate(computeCost(recommendationActivities, AppConstants.SUPPLIES_COSTS, false) + "*" + plotSizeInHaValue));
-
-
-            if (DID_LABOUR) {
-                String laborCostValue;
-                String laborDaysValue;
-
-                if (LABOUR_TYPE.equalsIgnoreCase("full")) {
-                    laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, false);
-                    laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, false);
-
-                } else {
-                    laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, true);
-                    laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, true);
-                }
-
-
-                labourCostList.add(mathFormulaParser.evaluate(laborCostValue + "*" + plotSizeInHaValue));
-                labourDaysList.add(mathFormulaParser.evaluate(laborDaysValue + "*" + plotSizeInHaValue));
-
-
-            } else {
-                labourCostList.add("0.0");
-                labourDaysList.add("0.0");
-
-            }
-
-
             MAINTENANCE_COST_STRING_BUILDERS.get(TEMP2).append(maintenanceCostList.get(TEMP2)).append("+");
+
+
+            getSuppliesLaborCostLabourDaysValues(recommendationActivities);
+
             LABOR_COST_STRING_BUILDERS.get(TEMP2).append(labourCostList.get(TEMP2)).append("+");
             LABOR_DAYS_STRING_BUILDERS.get(TEMP2).append(labourDaysList.get(TEMP2)).append("+");
 
@@ -1248,7 +1200,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         ////////
 
-        //This is also known as Supplies cost. The selected year is always with   the (GAPS) recommendation obtained in conjunction with the plot recommendation attained
+        //This is also known as Supplies cost. The selected year is always with   the (GAPS) recommendation obtained in conjunction with the plot recommendation
         maintenanceCostList = new ArrayList<>();
         labourCostList = new ArrayList<>();
         labourDaysList = new ArrayList<>();
@@ -1271,19 +1223,16 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         AppLogger.i(TAG, "\nYEAR " + 0);
 
 
-        maintenanceCostList.add("0.0");
+
+
+        recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
+                .getAllByRecommendation(PLOT_RECOMMENDATION.getId(), "0").blockingGet();
+
+
+        maintenanceCostList.add(mathFormulaParser.evaluate(computeCost(recommendationActivities, AppConstants.SUPPLIES_COSTS, false) + "*" + plotSizeInHaValue));
         MAINTENANCE_COST_STRING_BUILDERS.get(0).append(maintenanceCostList.get(0)).append("+");
 
-
-        if (DID_LABOUR) {
-            labourCostList.add("0.0");
-            labourDaysList.add("0.0");
-        } else {
-            labourCostList.add("0.0");
-            labourDaysList.add("0.0");
-
-        }
-
+        getSuppliesLaborCostLabourDaysValues(recommendationActivities);
         LABOR_COST_STRING_BUILDERS.get(0).append(labourCostList.get(0)).append("+");
         LABOR_DAYS_STRING_BUILDERS.get(0).append(labourDaysList.get(0)).append("+");
 
@@ -1296,48 +1245,23 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
             TEMP = TEMP2 + i;
 
-            if (TEMP <= MAX_YEARS) {
+            if (TEMP <= MAX_YEARS)
 
                 recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
                         .getAllByRecommendation(PLOT_RECOMMENDATION.getId(), String.valueOf(TEMP)).blockingGet();
-
-            } else {
+                else
 
                 recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
                         .getAllByRecommendation(PLOT_RECOMMENDATION.getId(), "7").blockingGet();
 
-            }
-
 
             maintenanceCostList.add(mathFormulaParser.evaluate(computeCost(recommendationActivities, AppConstants.SUPPLIES_COSTS, false) + "*" + plotSizeInHaValue));
-
-            if (DID_LABOUR) {
-
-
-                String laborCostValue;
-                String laborDaysValue;
-
-                if (LABOUR_TYPE.equalsIgnoreCase("full")) {
-                    laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, false);
-                    laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, false);
-
-                } else {
-                    laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, true);
-                    laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, true);
-                }
-
-
-                labourCostList.add(mathFormulaParser.evaluate(laborCostValue + "*" + plotSizeInHaValue));
-                labourDaysList.add(mathFormulaParser.evaluate(laborDaysValue + "*" + plotSizeInHaValue));
-
-
-            } else {
-                labourCostList.add("0.0");
-                labourDaysList.add("0.0");
-            }
-
-
             MAINTENANCE_COST_STRING_BUILDERS.get(i).append(maintenanceCostList.get(i)).append("+");
+
+
+
+            getSuppliesLaborCostLabourDaysValues(recommendationActivities);
+
             LABOR_COST_STRING_BUILDERS.get(i).append(labourCostList.get(i)).append("+");
             LABOR_DAYS_STRING_BUILDERS.get(i).append(labourDaysList.get(i)).append("+");
 
@@ -1350,6 +1274,39 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
 
     }
+
+
+
+    void getSuppliesLaborCostLabourDaysValues(List<RecommendationActivity> recommendationActivities){
+        if (DID_LABOUR) {
+            String laborCostValue;
+            String laborDaysValue;
+
+            if (LABOUR_TYPE.equalsIgnoreCase("full")) {
+                laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, false);
+                laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, false);
+
+            } else {
+                laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, true);
+                laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, true);
+            }
+
+
+            labourCostList.add(mathFormulaParser.evaluate(laborCostValue + "*" + plotSizeInHaValue));
+            labourDaysList.add(mathFormulaParser.evaluate(laborDaysValue + "*" + plotSizeInHaValue));
+
+
+        } else {
+            labourCostList.add("0.0");
+            labourDaysList.add("0.0");
+        }
+
+
+    }
+
+
+
+
 
 
     void showOrHideStartYear(int year) {

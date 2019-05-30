@@ -73,8 +73,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 return true;
             }
             return false;
-
-
         });
 
 

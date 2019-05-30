@@ -78,7 +78,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
 
 
                         Country country = new Country();
-                        country.setId(1);
+                        country.setId(user.getCountryId());
                         country.setCurrency("GHS");
                         country.setIsoCode("GHA");
                         country.setName("Ghana");
