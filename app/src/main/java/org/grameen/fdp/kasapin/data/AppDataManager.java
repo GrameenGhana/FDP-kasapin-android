@@ -35,6 +35,8 @@ import java.nio.channels.FileChannel;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.CompositeDisposable;
 
 
@@ -258,7 +260,6 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void setUserAsLoggedOut() {
-
         updateUserInfo(new User(-1,
                 "",
                 "",
@@ -272,11 +273,16 @@ public class AppDataManager implements DataManager {
         clearPreferences();
         clearSecurePreferences();
         clearAllTablesFromDb();
+
     }
 
     @Override
     public void clearAllTablesFromDb() {
+
+
         getDatabaseManager().clearAllTables();
+
+
     }
 
 

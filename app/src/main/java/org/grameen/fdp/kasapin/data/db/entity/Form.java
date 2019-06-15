@@ -15,7 +15,7 @@ import java.util.List;
  * Created by aangjnr on 29/11/2017.
  */
 
-@Entity(tableName = "forms", indices = {@Index(value = "id", unique = true), @Index(value = "formNameC", unique = true)})
+@Entity(tableName = "forms", indices = {@Index(value = "id", unique = true)})
 public class Form {
 
     @PrimaryKey(autoGenerate = true)
@@ -40,6 +40,12 @@ public class Form {
     @SerializedName("custom_c")
     private String customC;
 
+    private String translation;
+    @SerializedName("translation_id")
+    public int translationId;
+
+
+
     /**
      * No args constructor for use in serialization
      */
@@ -56,8 +62,6 @@ public class Form {
      * @param displayTypeC
      * @param typeC
      */
-
-
     @Ignore
     public Form(int id, String createTime, String updateTime, String formNameC, int displayOrderC, String typeC, String displayTypeC, String customC) {
         super();
@@ -69,6 +73,23 @@ public class Form {
         this.typeC = typeC;
         this.displayTypeC = displayTypeC;
         this.customC = customC;
+    }
+
+
+    public void setTranslation(String translation) {
+        this.translation = translation;
+    }
+
+    public String getTranslation() {
+        return translation;
+    }
+
+    public void setTranslationId(int formTranslationId) {
+        this.translationId = formTranslationId;
+    }
+
+    public int getFormTranslationId() {
+        return translationId;
     }
 
     @NonNull

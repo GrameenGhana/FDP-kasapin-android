@@ -19,8 +19,11 @@ public interface CalculationsDao extends BaseDao<Calculation> {
 
 
     @Query("SELECT * FROM calculations WHERE recommendationId = :id AND year = :year")
-    Single<Calculation> getByRecommendationYear(int id, int year);
+    Single<Calculation> getByRecommendationYearSingle(int id, int year);
 
+
+    @Query("SELECT * FROM calculations WHERE recommendationId = :id AND year = :year")
+   Calculation getByRecommendationYear(int id, int year);
 
     @Query("DELETE FROM calculations")
     void deleteAllCalculations();

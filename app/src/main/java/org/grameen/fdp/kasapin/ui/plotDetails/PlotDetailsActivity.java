@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -31,7 +32,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -56,10 +60,13 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     ProgressBar recommendationProgress;
     @BindView(R.id.recommended_intervention)
     TextView recommendedIntervention;
+    @BindView(R.id.recommended_intervention_text)
+    TextView recommendedInterventionText;
     @BindView(R.id.plot_ph_text)
     TextView plotPhText;
     @BindView(R.id.ph)
     TextView ph;
+
     @BindView(R.id.lime_needed)
     TextView limeNeeded;
     @BindView(R.id.aos)
@@ -71,10 +78,16 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     @BindView(R.id.editButton)
     Button editButton;
 
+    @BindView(R.id.lime_needed_text)
+    TextView limeNeededText;
+
+
+
     JSONObject PLOT_ANSWERS_JSON;
     Recommendation PLOT_RECOMMENDATION = null;
     Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
     String recNames;
+
     //String limeNeededValue = "--";
     private DynamicPlotFormFragment dynamicPlotFormFragment;
 
@@ -166,6 +179,37 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             editButton.setVisibility(View.GONE);
 
         mPresenter.getPlotQuestions();
+
+
+        //SetCaptionLabels
+        Completable.fromAction(() -> {
+
+            String estimatedProductionSizeCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_estimate_production_");
+            if(!TextUtils.isEmpty(estimatedProductionSizeCaption))
+                plotEstProdText.setText(estimatedProductionSizeCaption);
+
+            String recommendedInterventionCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_estimate_production_");
+            if(!TextUtils.isEmpty(recommendedInterventionCaption))
+                recommendedInterventionText.setText(recommendedInterventionCaption);
+
+
+            String soilPhCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_ph_");
+            if(!TextUtils.isEmpty(soilPhCaption))
+                plotPhText.setText(soilPhCaption);
+
+
+            String limeNeededCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("lime_");
+            if(!TextUtils.isEmpty(limeNeededCaption))
+                limeNeededText.setText(limeNeededCaption);
+
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableCompletableObserver() {
+                    @Override
+                    public void onComplete() {}
+                    @Override
+                    public void onError(Throwable ignored) {}
+                });
 
 
     }

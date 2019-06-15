@@ -411,5 +411,6 @@
         completions."</string>
     <string name="could_not_delete_data">The data was not deleted!</string>
     <string name="enter_valid_farmer_name">Please enter a valid farmer name.</string>
+    <string name="tag_line">Building a better Family Business!</string>
 
 </resources>

@@ -5,9 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".ui.splash.SplashActivity"
-
-    >
+    tools:context=".ui.splash.SplashActivity">
 
 
     <LinearLayout
@@ -17,16 +15,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/spacing_2"
-        android:gravity="center"
-
-        >
+        android:gravity="center">
 
 
         <TextView
             android:id="@+id/text_1"
-            style="@style/TextAppearance.AppCompat.Medium"
+            style="@style/TextAppearance.AppCompat.Display1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
             android:text="@string/fdp" />
 
     </LinearLayout>
@@ -34,12 +31,12 @@
 
     <ImageView
         android:id="@+id/image_view1"
-        android:layout_width="@dimen/imageview_one_width"
-        android:layout_height="@dimen/imageview_one_width"
+        android:layout_width="@dimen/imageview_two_height"
+        android:layout_height="@dimen/imageview_two_height"
         android:layout_centerInParent="true"
-        android:scaleType="centerInside"
-        android:src="@drawable/fdp"
-
+        android:scaleType="fitCenter"
+        android:padding="@dimen/spacing_normal"
+        android:src="@drawable/organic_food1"
         />
 
 </RelativeLayout>

@@ -78,14 +78,11 @@
                         android:layout_marginLeft="@dimen/spacing_normal"
                         android:layout_toRightOf="@+id/ll1"
                         android:orientation="vertical"
-                        app:layout_widthPercent="50%"
-
-                        >
+                        app:layout_widthPercent="50%">
 
 
                         <TextView
                             android:id="@+id/plot_size_text"
-
                             style="@style/TextAppearance.AppCompat.Small"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

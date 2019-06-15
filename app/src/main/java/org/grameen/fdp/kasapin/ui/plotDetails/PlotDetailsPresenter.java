@@ -78,10 +78,10 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
     @Override
     public void getAreaUnits(String farmerCode) {
 
-        Question areaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_area_units").blockingGet();
-        Question estProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_weight_units").blockingGet();
+        Question areaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_area_units");
+        Question estProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_weight_units");
 
-        runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(farmerCode, areaQuestion.getFormTranslationId())
+        runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataSingle(farmerCode, areaQuestion.getFormTranslationId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(answerData -> {

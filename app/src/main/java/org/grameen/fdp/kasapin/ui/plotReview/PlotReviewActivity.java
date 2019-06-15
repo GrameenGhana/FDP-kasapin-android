@@ -229,22 +229,22 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                 }
 
 
-                Question plotSizeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_").blockingGet();
+                Question plotSizeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_");
                 if (plotSizeQuestion != null)
                     historicalTableViewDataList.add(new HistoricalTableViewData(plotSizeQuestion.getCaptionC(), ComputationUtils.getDataValue(plotSizeQuestion, jsonObject), "", "", null));
 
 
-                Question estProd = getAppDataManager().getDatabaseManager().questionDao().get("plot_estimate_production").blockingGet();
+                Question estProd = getAppDataManager().getDatabaseManager().questionDao().get("plot_estimate_production");
                 if (estProd != null)
                     historicalTableViewDataList.add(new HistoricalTableViewData(estProd.getCaptionC(), ComputationUtils.getDataValue(estProd, jsonObject), "", "", null));
 
 
-                Question limeNeeded = getAppDataManager().getDatabaseManager().questionDao().get("lime_").blockingGet();
+                Question limeNeeded = getAppDataManager().getDatabaseManager().questionDao().get("lime_");
                 if (limeNeeded != null)
                     historicalTableViewDataList.add(new HistoricalTableViewData(limeNeeded.getCaptionC(), ComputationUtils.getDataValue(limeNeeded, jsonObject), "", "", null));
 
 
-                Question plotRec = getAppDataManager().getDatabaseManager().questionDao().get("plot_recommendation").blockingGet();
+                Question plotRec = getAppDataManager().getDatabaseManager().questionDao().get("plot_recommendation");
                 if (plotRec != null) {
                     String recName;
                     try {
@@ -282,7 +282,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
 
         if(farmingEcoProfileFormId != null) {
-             farmingEcoProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmingEcoProfileFormId).blockingGet();
+             farmingEcoProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmingEcoProfileFormId);
 
             if (farmingEcoProfileFormAnswerData != null) {
 
@@ -295,8 +295,8 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                 labourType.setSelectedIndex(0);
 
 
-                final Question labourQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour").blockingGet();
-                final Question labourTypeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour_type").blockingGet();
+                final Question labourQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour");
+                final Question labourTypeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour_type");
 
 
                 if (labourQuestion != null) {
@@ -307,17 +307,14 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                             e.printStackTrace();
                         }
 
-                    labourSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                    labourSpinner.setOnItemSelectedListener((view, position, id, item) -> {
 
-                            if (FARMING_ECO_PROFILE_ANSWERS_JSON.has(labourQuestion.getLabelC()))
-                                FARMING_ECO_PROFILE_ANSWERS_JSON.remove(labourQuestion.getLabelC());
-                            try {
-                                FARMING_ECO_PROFILE_ANSWERS_JSON.put(labourQuestion.getLabelC(), item.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        if (FARMING_ECO_PROFILE_ANSWERS_JSON.has(labourQuestion.getLabelC()))
+                            FARMING_ECO_PROFILE_ANSWERS_JSON.remove(labourQuestion.getLabelC());
+                        try {
+                            FARMING_ECO_PROFILE_ANSWERS_JSON.put(labourQuestion.getLabelC(), item.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     });
 

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">FDP</string>
-    <string name="farm_development_plan">Farm Development Plan</string>
+    <string name="farm_development_plan">FarmGrow</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -360,7 +360,7 @@
     <string name="monitoring">Monitoring</string>
     <string name="diagnostic">Diagnostics</string>
 
-    <string name="fdp">Farm Development Plan</string>
+    <string name="fdp">FarmGrow</string>
     <string name="download_resources">Download Resources</string>
     <string name="upload_farmer_data">Upload farmer data</string>
     <string name="share">Share</string>
@@ -425,5 +425,6 @@
     <string name="error_has_occurred_loading_data" tools:ignore="MissingTranslation">An error occurred loading data!</string>
 
     <string name="enter_valid_farmer_name">Please enter a valid farmer name.</string>
+    <string name="tag_line">Building a better Family Business!</string>
 
 </resources>

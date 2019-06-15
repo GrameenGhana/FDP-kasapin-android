@@ -206,8 +206,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             } catch (Exception e) {
 
                 initials.setText(FARMER.getFarmerName().substring(0, 1));
-
-
             }
 
             int[] mColors = getResources().getIntArray(R.array.recommendations_colors);
@@ -467,11 +465,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         Double farmAcre;
 
-        Question cocoaAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_area_").blockingGet();
+        Question cocoaAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_area_");
 
         if (cocoaAreaQuestion != null) {
 
-            FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaAreaQuestion.getFormTranslationId()).blockingGet();
+            FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaAreaQuestion.getFormTranslationId());
             if (answer != null) {
                 try {
                     farmAcre = round(Double.parseDouble(answer.getJsonData().get(cocoaAreaQuestion.getLabelC()).toString().replace(",", "")), 2);
@@ -537,11 +535,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         Double farmAcre;
 
-        Question cocoaProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_production_ly").blockingGet();
+        Question cocoaProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_production_ly");
 
         if (cocoaProdQuestion != null) {
 
-            FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaProdQuestion.getFormTranslationId()).blockingGet();
+            FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaProdQuestion.getFormTranslationId());
             if (answer != null) {
                 try {
                     farmAcre = round(Double.parseDouble(answer.getJsonData().get(cocoaProdQuestion.getLabelC()).toString().replace(",", "")), 2);

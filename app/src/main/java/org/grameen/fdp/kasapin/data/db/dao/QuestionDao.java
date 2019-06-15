@@ -38,11 +38,17 @@ public interface QuestionDao extends BaseDao<Question> {
 
 
     @Query("SELECT * FROM questions WHERE labelC  LIKE :label || '%'")
-    Single<Question> get(String label);
+    Single<Question> getSingle(String label);
+
+    @Query("SELECT * FROM questions WHERE labelC  LIKE :label || '%'")
+    Question get(String label);
 
 
     @Query("SELECT labelC FROM questions WHERE labelC  LIKE :label || '%'")
     Maybe<String> getLabel(String label);
+
+    @Query("SELECT captionC FROM questions WHERE labelC  LIKE :label || '%'")
+    String getCaption(String label);
 
     @Query("SELECT labelC FROM questions WHERE id = :id")
     Maybe<String> getLabel(int id);

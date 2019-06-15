@@ -88,8 +88,8 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
 
 
                     btn.setTag(count);
-                    btn.setText(formAndQuestions1.getForm().getFormNameC());
-                    btn.setContentDescription(formAndQuestions1.getForm().getFormNameC());
+                    btn.setText(formAndQuestions1.getForm().getTranslation());
+                    btn.setContentDescription(formAndQuestions1.getForm().getTranslation());
 
                     // AppLogger.i(TAG, "BUTTON " + count);
 

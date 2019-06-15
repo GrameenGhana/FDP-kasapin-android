@@ -45,7 +45,6 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
                     getView().showMessage(R.string.error_has_occurred);
                     throwable.printStackTrace();
                 }));
-
     }
 
 

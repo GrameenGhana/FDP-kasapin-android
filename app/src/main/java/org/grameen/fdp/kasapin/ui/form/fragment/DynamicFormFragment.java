@@ -47,7 +47,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DynamicFormFragment extends FormFragment {
 
-
     //@Inject
     //DynamicFormFragmentPresenter mPresenter;
     ComputationUtils computationUtils;
@@ -144,7 +143,7 @@ public class DynamicFormFragment extends FormFragment {
         AppLogger.e(TAG, "Initializing survey answers...");
 
         ANSWER_DATA = new FormAnswerData();
-        ANSWER_DATA.setFormId(FORM_AND_QUESTIONS.getForm().getId());
+        ANSWER_DATA.setFormId(FORM_AND_QUESTIONS.getForm().getFormTranslationId());
         ANSWER_DATA.setFarmerCode(FARMER_ID);
         ANSWER_DATA.setCreatedAt(TimeUtils.getCurrentDateTime());
 
@@ -160,7 +159,7 @@ public class DynamicFormFragment extends FormFragment {
 
 
         if (QUESTIONS != null) {
-            formSectionController = new MyFormSectionController(getContext(), FORM_AND_QUESTIONS.getForm().getFormNameC());
+            formSectionController = new MyFormSectionController(getContext(), FORM_AND_QUESTIONS.getForm().getTranslation());
 
 
             loadQuestionsValues(context, QUESTIONS, formSectionController);

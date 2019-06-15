@@ -211,7 +211,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                 case TAG_VIEW:
 
 
-                    Question startYearQuestion = mAppDatabase.questionDao().get("start_year_").blockingGet();
+                    Question startYearQuestion = mAppDatabase.questionDao().get("start_year_");
                     if (startYearQuestion != null) {
 
                         String[] values = data.getLabel().split("_");

@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -38,6 +40,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * A login screen that offers login via email/password.
@@ -62,11 +68,20 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     Button saveButton;
     boolean isEditMode = false;
 
+
     Plot PLOT;
     String FARMER_CODE;
     RealFarmer FARMER;
 
     DynamicPlotFormFragment dynamicPlotFormFragment;
+    @BindView(R.id.plot_name_text)
+    TextView plotNameText;
+    @BindView(R.id.plot_size_text)
+    TextView plotSizeText;
+    @BindView(R.id.plot_est_prod_text)
+    TextView plotEstProdText;
+    @BindView(R.id.plot_ph_text)
+    TextView plotPhText;
 
 
     @Override
@@ -128,6 +143,43 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
     void setupViews() {
+
+        //SetCaptionLabels
+        Completable.fromAction(() -> {
+
+            String estimatedProductionSizeCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_estimate_production_");
+            if (!TextUtils.isEmpty(estimatedProductionSizeCaption))
+                plotEstProdText.setText(estimatedProductionSizeCaption);
+
+
+            String soilPhCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_ph_");
+            if (!TextUtils.isEmpty(soilPhCaption))
+                plotPhText.setText(soilPhCaption);
+
+
+
+            String plotNameCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_name_");
+            if (!TextUtils.isEmpty(plotNameCaption))
+                plotNameText.setText(plotNameCaption);
+
+
+            String plotSizeCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_area_");
+            if (!TextUtils.isEmpty(plotSizeCaption))
+                plotNameText.setText(plotSizeCaption);
+
+
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                    }
+
+                    @Override
+                    public void onError(Throwable ignored) {
+                    }
+                });
+
 
         //Edit Plot
         saveButton.setEnabled(false);
@@ -301,17 +353,16 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         //Todo checkIfPlotWasRenovatedRecently
 
         int year = 1;
-        Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_").blockingGet();
-        Question PLOT_RENOVATION_MADE = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_").blockingGet();
-        Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_").blockingGet();
+        Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_");
+        Question PLOT_RENOVATION_MADE = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_");
+        Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
         Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
 
 
         PLOT.setRecommendationId(-1);
 
 
-
-        if(PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE != null) {
+        if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE != null) {
 
             if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
                 try {
@@ -350,8 +401,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 }
             }
         }
-
-
 
 
         PLOT.setStartYear(year);

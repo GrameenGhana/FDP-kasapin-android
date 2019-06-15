@@ -45,7 +45,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DynamicPlotFormFragment extends FormFragment {
 
-
     //@Inject
     //DynamicFormFragmentPresenter mPresenter;
     ComputationUtils computationUtils;
@@ -87,6 +86,7 @@ public class DynamicPlotFormFragment extends FormFragment {
 
     @Override
     public void onAttach(Context context) {
+
         AppLogger.i(TAG, "ON ATTACHED");
 
         if (getArguments() != null) {
@@ -104,8 +104,6 @@ public class DynamicPlotFormFragment extends FormFragment {
 
             IS_CONTROLLER_ENABLED = !getArguments().getBoolean("isMonitoring");
         }
-
-
         super.onAttach(context);
 
     }
@@ -128,10 +126,10 @@ public class DynamicPlotFormFragment extends FormFragment {
             //if(getActivity() instanceof AddEditFarmerPlotActivity)
             for (FormAndQuestions formAndQuestions : BaseActivity.PLOT_FORM_AND_QUESTIONS) {
 
-                AppLogger.e(TAG, "Adding controller for " + formAndQuestions.getForm().getFormNameC());
+                AppLogger.e(TAG, "Adding controller for " + formAndQuestions.getForm().getTranslation());
 
 
-                formSectionController = new MyFormSectionController(getContext(), formAndQuestions.getForm().getFormNameC());
+                formSectionController = new MyFormSectionController(getContext(), formAndQuestions.getForm().getTranslation());
                 loadQuestionsValues(context, formAndQuestions.getQuestions(), formSectionController);
                 controller.addSection(formSectionController);
                 ALL_QUESTIONS.addAll(formAndQuestions.getQuestions());
@@ -140,8 +138,6 @@ public class DynamicPlotFormFragment extends FormFragment {
                 if (count > 1 && getActivity() instanceof AddEditFarmerPlotActivity)
                     break;
             }
-
-
         }
     }
 
@@ -264,7 +260,6 @@ public class DynamicPlotFormFragment extends FormFragment {
                         break;
 
                 }
-
             }
 
 

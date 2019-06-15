@@ -29,6 +29,9 @@ public class PlotDetailsContract {
 
         void showRecommendation();
 
+
+
+
     }
 
     public interface Presenter {
@@ -39,6 +42,8 @@ public class PlotDetailsContract {
         void getRecommendations(int cropId);
 
         void saveData(Plot plot);
+
+
     }
 
 

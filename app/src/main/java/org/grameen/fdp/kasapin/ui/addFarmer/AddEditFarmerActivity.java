@@ -126,7 +126,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
             //CURRENT_FORM_QUESTION = gson.fromJson(getIntent().getStringExtra("formAndQuestions"), FormAndQuestions.class);
 
-
             AppLogger.e(TAG, "CURRENT FORM IS >>> " + getGson().toJson(CURRENT_FORM_QUESTION));
 
 
@@ -177,9 +176,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
          *
          *
          */
-
-//        CURRENT_FORM_QUESTION = FORM_AND_QUESTIONS.get(CURRENT_FORM);
-
 
         //Fix Spinners
 
@@ -235,8 +231,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 circleImageView.setBackground(drawable);
             }
 
-
-            mPresenter.loadFormFragment(FARMER.getCode(), CURRENT_FORM_QUESTION.getForm().getId());
+            mPresenter.loadFormFragment(FARMER.getCode(), CURRENT_FORM_QUESTION.getForm().getFormTranslationId());
 
 
         } else {
@@ -245,8 +240,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setExternalId(UUID.randomUUID().toString());
             FARMER.setCode(FARMER.getExternalId());
             farmerCode.setText(FARMER.getCode());
-
-
             setToolbar("Add a new Farmer");
             save.setText("Save");
 
@@ -255,15 +248,15 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
              * As a new farmer, get the farmer profile form and questions and display to the farmer
              *
              **/
-
-
             for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
+
+                AppLogger.e("FORM NAME IS " + formAndQuestions.getForm().getFormNameC());
+
                 if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FARMER_PROFILE)) {
                     CURRENT_FORM_QUESTION = formAndQuestions;
                     break;
                 }
             }
-
             showFormFragment(null);
 
             // mPresenter.loadFormFragment(CURRENT_FORM_QUESTION, false, "", mAppDataManager.isMonitoring());
@@ -480,9 +473,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         if (getAppDataManager().isMonitoring())
             finish();
         else
-
             //Todo save data and exit if user clicks on yes
-
             showDialog(true, getStringResources(R.string.save_data), getStringResources(R.string.save_data_explanation),
                     (dialogInterface, i) -> {
                         dialogInterface.dismiss();
@@ -496,15 +487,16 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     (dialogInterface, i) -> {
                         dialogInterface.dismiss();
 
-                        Intent intent = new Intent(AddEditFarmerActivity.this, FarmerProfileActivity.class);
+                        finish();
+
+                       /* Intent intent = new Intent(AddEditFarmerActivity.this, FarmerProfileActivity.class);
                         intent.putExtra("farmer", getGson().toJson(FARMER));
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
-                        overridePendingTransition(0, 0);
+                        overridePendingTransition(0, 0);*/
 
                     }, getStringResources(R.string.no), 0);
-
     }
 
 

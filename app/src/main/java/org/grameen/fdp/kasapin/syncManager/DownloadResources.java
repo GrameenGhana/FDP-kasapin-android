@@ -2,6 +2,7 @@ package org.grameen.fdp.kasapin.syncManager;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
+import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
@@ -82,12 +83,17 @@ public class DownloadResources {
                         Observable.fromIterable(dataWrapper.getData())
                                 .subscribeOn(Schedulers.io())
                                 .doOnNext(formTranslation -> {
+
+                                    Form form = formTranslation.getForm();
+                                    form.setTranslation(formTranslation.getName());
+                                    form.setTranslationId(formTranslation.getId());
+
                                     getAppDataManager().getDatabaseManager().formsDao().insertForm(formTranslation.getForm());
                                 })
                                 .flatMap(formTranslation -> Observable.fromIterable(formTranslation.getQuestionsAndSkipLogics()))
                                 .doOnNext(questionsAndSkipLogic -> {
 
-                                    getAppDataManager().getDatabaseManager().villagesDao().insertAll(villageList);
+
                                     getAppDataManager().getDatabaseManager().questionDao().insertQuestion(questionsAndSkipLogic.getQuestion());
                                     getAppDataManager().getDatabaseManager().skipLogicsDao().insertAll(questionsAndSkipLogic.getSkiplogic());
 
@@ -107,7 +113,8 @@ public class DownloadResources {
                                     }
 
                                     @Override
-                                    public void onComplete() {
+                                    public void onComplete(){
+                                        getAppDataManager().getDatabaseManager().villagesDao().insertAll(villageList);
                                         getRecommendationsData();
                                     }
                                 });

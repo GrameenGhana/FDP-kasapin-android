@@ -59,6 +59,12 @@ import javax.inject.Inject;
 import javax.script.ScriptEngine;
 
 import butterknife.Unbinder;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
@@ -279,23 +285,20 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public void openLoginActivityOnTokenExpire() {
 
-        showDialog(true, "Re-authenticate", "Please login again to download updated data", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                mAppDataManager.setUserLoggedInMode(DataManager.LoggedInMode.LOGGED_OUT);
+        showDialog(true, "Re-authenticate", "Please login again to download updated data", (dialog, which) -> {
+            dialog.dismiss();
+            mAppDataManager.setUserLoggedInMode(DataManager.LoggedInMode.LOGGED_OUT);
 
-                Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    startActivity(intent);
-                    finish();
-                }, 1000);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                startActivity(intent);
+                finish();
+            }, 1000);
 
-            }
         }, "OK", (dialog, which) -> dialog.cancel(), "CANCEL", 0);
 
     }
@@ -308,17 +311,56 @@ public abstract class BaseActivity extends AppCompatActivity
         //Todo show dialog to confirm logout
         CommonUtils.showAlertDialog(mAlertDialogBuilder, true, getString(R.string.log_out), getString(R.string.log_out_rational),
                 (dialogInterface, i) -> {
-                    mAppDataManager.setUserAsLoggedOut();
-                    dialogInterface.dismiss();
 
-                    Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    finish();
-                }, getString(R.string.yes), (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                }, getString(R.string.no), 0);
+
+
+                    getAppDataManager().getCompositeDisposable().add(Completable.fromAction(() -> mAppDataManager.setUserAsLoggedOut())
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(() -> {
+                                dialogInterface.dismiss();
+
+                                Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+
+                            }, throwable -> {
+                                throwable.printStackTrace();
+                                showMessage(R.string.error_has_occurred);
+                            }));
+
+
+
+
+
+
+/*
+
+                    Completable.fromAction(() -> mAppDataManager.setUserAsLoggedOut()).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new DisposableCompletableObserver() {
+                            @Override
+                            public void onComplete() {
+                                dialogInterface.dismiss();
+
+                                Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                                showMessage(R.string.error_has_occurred);
+                            }
+                        });*/
+
+
+
+
+
+                }, getString(R.string.yes), (dialogInterface, i) -> dialogInterface.dismiss(), getString(R.string.no), 0);
     }
 
     @Override

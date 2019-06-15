@@ -359,7 +359,7 @@
 
     <string name="monitoring">Surveillance</string>
 
-    <string name="fdp">Plan de développement agricole</string>
+    <string name="fdp">Ferme Grandir</string>
     <string name="download_resources">Télécharger les ressources</string>
     <string name="upload_farmer_data">télécharger des données sur les agriculteurs</string>
     <string name="share">Partager</string>
@@ -415,4 +415,5 @@
         completions."</string>
     <string name="could_not_delete_data">The data was not deleted!</string>
     <string name="enter_valid_farmer_name">Please enter a valid farmer name.</string>
+    <string name="tag_line">Building a better Family Business!</string>
 </resources>
