@@ -18,19 +18,21 @@ public class Recommendation extends BaseModel {
     @SerializedName("crop_id")
     int cropId;
 
+    @SerializedName("label_c")
     String label;
+
+    @SerializedName("reco_name_c")
+    String recommendationName;
 
     int hierarchy;
 
-    @SerializedName("condition")
+    @SerializedName("condition_c")
     String condition;
 
-    @SerializedName("change_condition")
+    @SerializedName("change_condition_c")
     String changeCondition;
-
-    @SerializedName("change_option")
+    @SerializedName("change_option_c")
     String changeOption;
-
     int country;
 
     @Ignore
@@ -44,6 +46,14 @@ public class Recommendation extends BaseModel {
     public Recommendation() {
     }
 
+
+    public void setRecommendationName(String recommendationName) {
+        this.recommendationName = recommendationName;
+    }
+
+    public String getRecommendationName() {
+        return recommendationName;
+    }
 
     public int getCropId() {
         return cropId;

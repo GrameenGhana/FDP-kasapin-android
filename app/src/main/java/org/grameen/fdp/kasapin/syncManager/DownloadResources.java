@@ -8,6 +8,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
+import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
@@ -113,7 +114,7 @@ public class DownloadResources {
                                     }
 
                                     @Override
-                                    public void onComplete(){
+                                    public void onComplete() {
                                         getAppDataManager().getDatabaseManager().villagesDao().insertAll(villageList);
                                         getRecommendationsData();
                                     }
@@ -133,7 +134,6 @@ public class DownloadResources {
     private void getRecommendationsData() {
         if (showProgress)
             getView().setLoadingMessage("Getting recommendations, calculations and recommendations plus activities data...");
-
 
 
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
@@ -178,6 +178,39 @@ public class DownloadResources {
                     }
                 });
     }
+
+
+
+    private void geFarmerAndAnswersData() {
+        if (showProgress)
+            getView().setLoadingMessage("Getting farmer and answers data...");
+
+
+         getAppDataManager().getFdpApiService()
+                .fetchFarmerAndAnswersData(mAppDataManager.getAccessToken(), 0, 0)
+                .subscribe(new DisposableSingleObserver<List<FarmerAndAnswers>>() {
+                    @Override
+                    public void onSuccess(List<FarmerAndAnswers> farmerAndAnswers) {
+
+
+                        for(FarmerAndAnswers farmerAndAnswers1 : farmerAndAnswers) {
+                            getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
+                            getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showError(e);
+
+                    }
+                });
+    }
+
+
+
+
 
 
     void showError(Throwable e) {

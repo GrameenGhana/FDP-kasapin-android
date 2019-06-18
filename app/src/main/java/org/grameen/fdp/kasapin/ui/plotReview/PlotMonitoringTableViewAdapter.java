@@ -34,12 +34,11 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_VIEW;
 
 public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapter<HistoricalTableViewData> {
 
-    String TAG = PlotMonitoringTableViewAdapter.class.getSimpleName();
     private static final int TEXT_SIZE = 10;
     private static final int TITLE_TEXT_SIZE = 11;
     static MaterialSpinner.OnItemSelectedListener itemSelectedListener;
     static View.OnClickListener mOnClickListener;
-
+    String TAG = PlotMonitoringTableViewAdapter.class.getSimpleName();
     Context context;
     String[] YEARS = {"YEAR 1", "YEAR 2", "YEAR 3", "YEAR 4", "YEAR 5"};
 
@@ -69,10 +68,9 @@ public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapt
         View renderedView = new View(context);
 
 
+        if (getColumnModel().getColumnCount() < 3) {
 
-        if(getColumnModel().getColumnCount() < 3) {
-
-           //// Log.i(TAG, "COLUMN COUNT LESS THAN 3 " +  getColumnModel().getColumnCount());
+            //// Log.i(TAG, "COLUMN COUNT LESS THAN 3 " +  getColumnModel().getColumnCount());
 
 
             if (i1 == 0) {
@@ -87,8 +85,8 @@ public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapt
             }
 
 
-        }else {
-           // Log.i(TAG, "COLUMN COUNT LESS >= 3 " +  getColumnModel().getColumnCount());
+        } else {
+            // Log.i(TAG, "COLUMN COUNT LESS >= 3 " +  getColumnModel().getColumnCount());
 
 
             if (i1 == 0) {
@@ -100,14 +98,13 @@ public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapt
                 //Todo set Answer Values here
                 renderedView = renderColumn1Values(myTableData);
 
-            }else if (i1 == 2) {
+            } else if (i1 == 2) {
                 //Todo set Answer Values here
                 renderedView = renderColumn2Values(myTableData);
             }
 
 
         }
-
 
 
         return renderedView;
@@ -570,33 +567,6 @@ public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapt
 
         return view;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

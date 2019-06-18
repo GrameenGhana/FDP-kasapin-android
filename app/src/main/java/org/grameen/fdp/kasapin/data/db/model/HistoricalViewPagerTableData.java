@@ -18,9 +18,16 @@ public class HistoricalViewPagerTableData {
         this.tableData = tableData;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<List<String>> getTableData() {
+        return tableData;
     }
 
     public void setTableData(List<List<String>> tableData) {
@@ -28,19 +35,11 @@ public class HistoricalViewPagerTableData {
 
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public List<List<String>> getTableData() {
-        return tableData;
+    public Integer getPosition() {
+        return position;
     }
 
     public void setPosition(Integer position) {
         this.position = position;
-    }
-
-    public Integer getPosition() {
-        return position;
     }
 }

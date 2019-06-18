@@ -1,24 +1,9 @@
 package org.grameen.fdp.kasapin.ui.plotReview;
 
 
-import android.text.TextUtils;
-
-import com.balsikandar.crashreporter.CrashReporter;
-import com.balsikandar.crashreporter.utils.CrashUtil;
-import com.balsikandar.crashreporter.utils.FileUtils;
-import com.crashlytics.android.Crashlytics;
-
-import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -51,8 +36,6 @@ public class PlotReviewPresenter extends BasePresenter<PlotReviewContract.View> 
 
     @Override
     public void saveAnswerData(FormAnswerData answerData) {
-
-
 
 
     }

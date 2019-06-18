@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -80,7 +79,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     @BindView(R.id.lime_needed_text)
     TextView limeNeededText;
-
 
 
     JSONObject PLOT_ANSWERS_JSON;
@@ -185,30 +183,33 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         Completable.fromAction(() -> {
 
             String estimatedProductionSizeCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_estimate_production_");
-            if(!TextUtils.isEmpty(estimatedProductionSizeCaption))
+            if (!TextUtils.isEmpty(estimatedProductionSizeCaption))
                 plotEstProdText.setText(estimatedProductionSizeCaption);
 
             String recommendedInterventionCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_estimate_production_");
-            if(!TextUtils.isEmpty(recommendedInterventionCaption))
+            if (!TextUtils.isEmpty(recommendedInterventionCaption))
                 recommendedInterventionText.setText(recommendedInterventionCaption);
 
 
             String soilPhCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_ph_");
-            if(!TextUtils.isEmpty(soilPhCaption))
+            if (!TextUtils.isEmpty(soilPhCaption))
                 plotPhText.setText(soilPhCaption);
 
 
             String limeNeededCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("lime_");
-            if(!TextUtils.isEmpty(limeNeededCaption))
+            if (!TextUtils.isEmpty(limeNeededCaption))
                 limeNeededText.setText(limeNeededCaption);
 
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
-                    public void onComplete() {}
+                    public void onComplete() {
+                    }
+
                     @Override
-                    public void onError(Throwable ignored) {}
+                    public void onError(Throwable ignored) {
+                    }
                 });
 
 
@@ -231,7 +232,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         if (PLOT.getRecommendationId() != -1) {
 
-            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getLabel(PLOT.getRecommendationId())
+            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationName(PLOT.getRecommendationId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(s -> recommendedIntervention.setText(s), throwable -> {
@@ -259,7 +260,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     @Override
     public void loadRecommendation(List<Recommendation> recommendations) {
-
         LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
         logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON);
 
@@ -278,24 +278,23 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                     String value = logicFormulaParser.evaluate(recommendation.getCondition());
                     if (value.equalsIgnoreCase("true")) {
 
-
-                        if (recommendation.getLabel().equalsIgnoreCase("replant") || recommendation.getLabel().equalsIgnoreCase("replant + extra soil"))
+                        if (recommendation.getRecommendationName().equalsIgnoreCase("replant") || recommendation.getRecommendationName().equalsIgnoreCase("replant + extra soil"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getLabel("Minimal GAPs").blockingGet();
+                                    .getByRecommendationName("Minimal GAPs").blockingGet();
 
-                        else if (recommendation.getLabel().equalsIgnoreCase("grafting") || recommendation.getLabel().equalsIgnoreCase("grafting + extra soil"))
+                        else if (recommendation.getRecommendationName().equalsIgnoreCase("grafting") || recommendation.getRecommendationName().equalsIgnoreCase("grafting + extra soil"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getLabel("Modest GAPs").blockingGet();
+                                    .getByRecommendationName("Modest GAPs").blockingGet();
                         else
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getLabel("Maintenance (GAPs)").blockingGet();
+                                    .getByRecommendationName("Maintenance (GAPs)").blockingGet();
 
                         PLOT_RECOMMENDATION = recommendation;
 
                         break;
                     } else
                         GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                .getLabel("Maintenance (GAPs)").blockingGet();
+                                .getByRecommendationName("Maintenance (GAPs)").blockingGet();
 
 
                 } catch (Exception e) {

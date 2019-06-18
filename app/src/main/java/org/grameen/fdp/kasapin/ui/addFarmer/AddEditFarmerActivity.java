@@ -18,9 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.jaredrummler.materialspinner.MaterialSpinner;
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -35,16 +33,13 @@ import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
-
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -140,8 +135,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @Override
     public void setUpViews() {
-
-
         /**
          * Temporarily load dummy data
          *
@@ -249,7 +242,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
              *
              **/
             for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
-
                 AppLogger.e("FORM NAME IS " + formAndQuestions.getForm().getFormNameC());
 
                 if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FARMER_PROFILE)) {
@@ -257,6 +249,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     break;
                 }
             }
+
             showFormFragment(null);
 
             // mPresenter.loadFormFragment(CURRENT_FORM_QUESTION, false, "", mAppDataManager.isMonitoring());
@@ -268,6 +261,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @Override
     public void showFormFragment(FormAnswerData answerData) {
+
+
+        AppLogger.e(TAG, "ANSWER DATA >>>> " + getGson().toJson(answerData));
 
         dynamicFormFragment = DynamicFormFragment.newInstance(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), getAppDataManager().isMonitoring(), answerData);
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicFormFragment, CURRENT_FORM_QUESTION.getForm().getFormNameC());
@@ -429,8 +425,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
                 Bitmap bitmap = null;
                 try {
-
-
                     bitmap = ImageUtil.handleSamplingAndRotationBitmap(AddEditFarmerActivity.this, URI);
                     BASE64_STRING = ImageUtil.bitmapToBase64(bitmap);
 
@@ -443,11 +437,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     AppLogger.d(TAG, "Failed to load", e);
                 }
             }
-
-
         } else CustomToast.makeToast(this, "Something went wrong", Toast.LENGTH_LONG).show();
         shouldSaveData = true;
-
     }
 
 

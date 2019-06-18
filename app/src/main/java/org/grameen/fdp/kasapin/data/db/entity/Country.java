@@ -11,44 +11,29 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @Entity(tableName = "countries")
-public class Country {
+public class Country extends BaseModel{
+    String name;
 
-
-    @PrimaryKey
-    @NonNull
-    int id;
-
-
-    String Name;
-
-    @SerializedName("currencySign__c")
+    @SerializedName("currency")
     String currency;
 
-    @SerializedName("ISO_code__c")
+    @SerializedName("iso_code")
     String isoCode;
 
-    @SerializedName("Avg_Price_Kg__c")
+    @SerializedName("avg_gate_price")
     String averageGatePrice;
 
 
     public Country() {
     }
 
-    @NonNull
-    public int getId() {
-        return id;
-    }
-
-    public void setId(@NonNull int id) {
-        this.id = id;
-    }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        this.Name = name;
+        this.name = name;
     }
 
     public String getAverageGatePrice() {

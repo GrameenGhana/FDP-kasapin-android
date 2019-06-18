@@ -15,7 +15,6 @@ import org.json.JSONObject;
 //, foreignKeys = @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE)
 @Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
 public class Plot {
-
     @PrimaryKey(autoGenerate = true)
     @NonNull
     int id;

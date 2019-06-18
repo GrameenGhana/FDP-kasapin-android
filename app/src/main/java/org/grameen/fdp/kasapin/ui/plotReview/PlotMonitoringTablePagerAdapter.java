@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.base.model.PlotMonitoringTableData;
@@ -24,8 +23,8 @@ import de.codecrafters.tableview.model.TableColumnWeightModel;
 
 public class PlotMonitoringTablePagerAdapter extends PagerAdapter {
 
-    private Context mContext;
     List<PlotMonitoringTableData> plotMonitoringTableDataList;
+    private Context mContext;
 
     public PlotMonitoringTablePagerAdapter(Context context, List<PlotMonitoringTableData> _plotMonitoringTableDataList) {
         mContext = context;
@@ -35,9 +34,6 @@ public class PlotMonitoringTablePagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup collection, int position) {
-
-
-
 
 
         PlotMonitoringTableData dataList = plotMonitoringTableDataList.get(position);
@@ -50,7 +46,6 @@ public class PlotMonitoringTablePagerAdapter extends PagerAdapter {
         layout.setTag(dataList.getTitle());
         setAdapter(tableView, dataList);
         collection.addView(layout);
-
 
 
         return layout;
@@ -86,7 +81,6 @@ public class PlotMonitoringTablePagerAdapter extends PagerAdapter {
         return POSITION_NONE;
 
 
-
     }
 
     @Override
@@ -101,8 +95,7 @@ public class PlotMonitoringTablePagerAdapter extends PagerAdapter {
     }
 
 
-    void setAdapter(TableView tableView, PlotMonitoringTableData data){
-
+    void setAdapter(TableView tableView, PlotMonitoringTableData data) {
 
 
         tableView.setColumnCount(3);
@@ -137,19 +130,15 @@ public class PlotMonitoringTablePagerAdapter extends PagerAdapter {
         tableView.setDataAdapter(plotMonitoringTableViewAdapter);
 
 
-
-    }
-
-
-
-    public void setData(List<PlotMonitoringTableData> _plotMonitoringTableData) {
-        this.plotMonitoringTableDataList = _plotMonitoringTableData;
     }
 
     public List<PlotMonitoringTableData> getData() {
         return plotMonitoringTableDataList;
     }
 
+    public void setData(List<PlotMonitoringTableData> _plotMonitoringTableData) {
+        this.plotMonitoringTableDataList = _plotMonitoringTableData;
+    }
 
 
 }

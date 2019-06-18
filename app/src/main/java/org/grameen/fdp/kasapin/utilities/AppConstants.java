@@ -129,6 +129,9 @@ public class AppConstants {
     public static int SYNC_OK = 1;
     public static int SYNC_NOT_OK = 0;
 
+    public static String RECOMMENDATION_CALCULATION_TYPE_COST = "Cost";
+
+
 
     //Token Constants
     public static int TOKEN_IF = 1;

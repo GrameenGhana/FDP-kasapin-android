@@ -12,6 +12,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class User {
 
+    @SerializedName("country_id")
+    int countryId;
     @SerializedName("id")
     @Expose
     private int id;
@@ -66,9 +68,6 @@ public class User {
     @SerializedName("full_name")
     @Expose
     private String fullName;
-
-    @SerializedName("country_id")
-    int countryId;
 
     /**
      * No args constructor for use in serialization
@@ -366,11 +365,11 @@ public class User {
         return this;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
-    }
-
     public int getCountryId() {
         return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
 }

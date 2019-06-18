@@ -18,6 +18,8 @@ import java.util.List;
 @Entity(tableName = "forms", indices = {@Index(value = "id", unique = true)})
 public class Form {
 
+    @SerializedName("translation_id")
+    public int translationId;
     @PrimaryKey(autoGenerate = true)
     @NonNull
     int base_id;
@@ -25,6 +27,8 @@ public class Form {
     List<Question> questionList;
     @SerializedName("id")
     private int id;
+    @SerializedName("hide_c")
+    private int hide = 0;
     @SerializedName("create_time")
     private String createTime;
     @SerializedName("update_time")
@@ -39,11 +43,7 @@ public class Form {
     private String displayTypeC;
     @SerializedName("custom_c")
     private String customC;
-
     private String translation;
-    @SerializedName("translation_id")
-    public int translationId;
-
 
 
     /**
@@ -75,13 +75,12 @@ public class Form {
         this.customC = customC;
     }
 
+    public String getTranslation() {
+        return translation;
+    }
 
     public void setTranslation(String translation) {
         this.translation = translation;
-    }
-
-    public String getTranslation() {
-        return translation;
     }
 
     public void setTranslationId(int formTranslationId) {
@@ -212,5 +211,19 @@ public class Form {
 
     public void setQuestionList(List<Question> questionList) {
         this.questionList = questionList;
+    }
+
+    public void setHide(int hide) {
+        this.hide = hide;
+    }
+
+    public int getHide() {
+        return hide;
+    }
+
+
+    @Ignore
+    public boolean shouldHide(){
+        return hide > 0;
     }
 }

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 import org.grameen.fdp.kasapin.R;
 
 import de.codecrafters.tableview.TableHeaderAdapter;
@@ -97,10 +96,10 @@ public class HistoricalTableHeaderAdapter extends TableHeaderAdapter {
         textView.setTypeface(textView.getTypeface(), this.typeface);
         textView.setTextSize((float) this.textSize);
 
-        if(headers.length == 3)
-        textView.setTextColor(this.textColor);
-        else if(headers.length == 1)
-        textView.setTextColor(this.textColor);
+        if (headers.length == 3)
+            textView.setTextColor(this.textColor);
+        else if (headers.length == 1)
+            textView.setTextColor(this.textColor);
 
         else
             textView.setTextColor(getResources().getColor(R.color.white));

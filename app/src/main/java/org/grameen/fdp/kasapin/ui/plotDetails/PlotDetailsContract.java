@@ -30,8 +30,6 @@ public class PlotDetailsContract {
         void showRecommendation();
 
 
-
-
     }
 
     public interface Presenter {

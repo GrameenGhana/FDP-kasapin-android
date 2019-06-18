@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
-import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;

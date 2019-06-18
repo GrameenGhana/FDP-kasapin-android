@@ -157,7 +157,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 plotPhText.setText(soilPhCaption);
 
 
-
             String plotNameCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_name_");
             if (!TextUtils.isEmpty(plotNameCaption))
                 plotNameText.setText(plotNameCaption);
@@ -379,12 +378,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
                         if (recommendationName.equalsIgnoreCase("replanting"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getLabel("Replant").blockingGet();
+                                    .getByRecommendationName("Replant").blockingGet();
 
 
                         else if (recommendationName.equalsIgnoreCase("grafting"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getLabel("Grafting").blockingGet();
+                                    .getByRecommendationName("Grafting").blockingGet();
 
                         if (GAPS_RECOMENDATION_FOR_START_YEAR != null) {
 

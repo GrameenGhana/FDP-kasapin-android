@@ -6,10 +6,13 @@ import com.google.gson.JsonObject;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
+import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+
+import java.util.List;
 
 import io.reactivex.Single;
 import retrofit2.http.Body;
@@ -33,6 +36,11 @@ public interface FdpApi {
     @GET(AppConstants.API_VERSION + "auth/user/details")
     Single<User> getUser(@Query("token") String token);
 
+
+    @POST(AppConstants.API_VERSION + "synchdowndata")
+    Single<List<FarmerAndAnswers>> getFarmerAndAnswersData(@Query("token") String token, int pageUp, int pageDown);
+
+
     @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
     Single<FormsDataWrapper> getSurveyData(@Path("id") int countryId, @Query("token") String token);
 
@@ -45,4 +53,11 @@ public interface FdpApi {
     @POST(AppConstants.API + "synchupdata")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     Single<Response> postFarmers(@Query("token") String token, @Body JsonObject farmersData);
+
+
+
+
+
+
+
 }

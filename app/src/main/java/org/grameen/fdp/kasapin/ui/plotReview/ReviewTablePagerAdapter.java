@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.base.model.PlotMonitoringTableData;
@@ -24,8 +23,8 @@ import de.codecrafters.tableview.model.TableColumnWeightModel;
 
 public class ReviewTablePagerAdapter extends PagerAdapter {
 
-    private Context mContext;
     List<PlotMonitoringTableData> plotMonitoringTableDataList;
+    private Context mContext;
 
     public ReviewTablePagerAdapter(Context context, List<PlotMonitoringTableData> _plotMonitoringTableDataList) {
         mContext = context;
@@ -132,13 +131,12 @@ public class ReviewTablePagerAdapter extends PagerAdapter {
 
     }
 
+    public List<PlotMonitoringTableData> getData() {
+        return plotMonitoringTableDataList;
+    }
 
     public void setData(List<PlotMonitoringTableData> _plotMonitoringTableData) {
         this.plotMonitoringTableDataList = _plotMonitoringTableData;
-    }
-
-    public List<PlotMonitoringTableData> getData() {
-        return plotMonitoringTableDataList;
     }
 
 

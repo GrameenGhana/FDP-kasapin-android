@@ -48,9 +48,6 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                             public void onSuccess(LoginResponse responseBody) {
 
 
-
-
-
                                 String token = responseBody.getToken();
                                 mAppDataManager.setAccessToken(token);
                                 fetchUserData(token);

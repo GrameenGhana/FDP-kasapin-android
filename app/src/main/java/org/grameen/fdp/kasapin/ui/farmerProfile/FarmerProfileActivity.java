@@ -457,8 +457,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
 
-
-
     boolean checkIfFarmSizeCorresponds(List<Plot> plots) {
 
         boolean value = true;

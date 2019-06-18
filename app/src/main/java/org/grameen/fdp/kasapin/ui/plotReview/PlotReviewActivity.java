@@ -4,21 +4,17 @@ package org.grameen.fdp.kasapin.ui.plotReview;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
-import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
@@ -28,13 +24,9 @@ import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.PlotMonitoringTableData;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
-import org.grameen.fdp.kasapin.ui.test.CrashTestingActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
-import org.grameen.fdp.kasapin.utilities.FileUtils;
-import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -122,18 +114,17 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
         getAppDataManager().setBooleanValue("refreshViewPager", false);
 
 
-        if(FARMER != null){
+        if (FARMER != null) {
             if (FORM_AND_QUESTIONS != null)
                 for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
                     if (formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_PLOT_FORM))
                         ALL_PLOT_DATA_QUESTIONS.addAll(formAndQuestions.getQuestions());
 
 
-                    AppLogger.largeLog(TAG, getGson().toJson(ALL_PLOT_DATA_QUESTIONS));
+                   // AppLogger.largeLog(TAG, getGson().toJson(ALL_PLOT_DATA_QUESTIONS));
                 }
-                setPlotQuestions(ALL_PLOT_DATA_QUESTIONS);
+            setPlotQuestions(ALL_PLOT_DATA_QUESTIONS);
         }
-
 
 
     }
@@ -143,7 +134,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
     public void setPlotQuestions(List<Question> questions) {
 
         PLOTS_LIST = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(FARMER.getCode()).blockingGet();
-        if(ALL_PLOT_DATA_QUESTIONS != null && PLOTS_LIST != null && PLOTS_LIST.size() > 0)
+        if (ALL_PLOT_DATA_QUESTIONS != null && PLOTS_LIST != null && PLOTS_LIST.size() > 0)
             setUpViewPager();
 
     }
@@ -201,13 +192,11 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
         } else findViewById(R.id.noData).setVisibility(View.VISIBLE);
 
 
-
-
         setupLaborTypeAndSpinner();
 
-    onBackClicked();
+        onBackClicked();
 
-}
+    }
 
 
     void updateTableData() {
@@ -222,7 +211,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
                 JSONObject jsonObject;
                 try {
-                    jsonObject =  plot.getAOJsonData();
+                    jsonObject = plot.getAOJsonData();
                 } catch (JSONException e) {
                     e.printStackTrace();
                     jsonObject = new JSONObject();
@@ -248,7 +237,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                 if (plotRec != null) {
                     String recName;
                     try {
-                        recName = getAppDataManager().getDatabaseManager().recommendationsDao().getLabel(plot.getRecommendationId()).blockingGet();
+                        recName = getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationName(plot.getRecommendationId()).blockingGet();
                     } catch (Exception e) {
                         e.printStackTrace();
                         recName = "--";
@@ -275,14 +264,12 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
     }
 
 
-
-
-    void setupLaborTypeAndSpinner(){
+    void setupLaborTypeAndSpinner() {
         Integer farmingEcoProfileFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.FARMING_ECONOMIC_PROFILE).blockingGet();
 
 
-        if(farmingEcoProfileFormId != null) {
-             farmingEcoProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmingEcoProfileFormId);
+        if (farmingEcoProfileFormId != null) {
+            farmingEcoProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmingEcoProfileFormId);
 
             if (farmingEcoProfileFormAnswerData != null) {
 
@@ -330,20 +317,18 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                             e.printStackTrace();
                         }
 
-                    labourType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                    labourType.setOnItemSelectedListener((view, position, id, item) -> {
 
-                            if (FARMING_ECO_PROFILE_ANSWERS_JSON.has(labourTypeQuestion.getLabelC()))
-                                FARMING_ECO_PROFILE_ANSWERS_JSON.remove(labourTypeQuestion.getLabelC());
-                            try {
-                                FARMING_ECO_PROFILE_ANSWERS_JSON.put(labourTypeQuestion.getLabelC(), item.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            };
-
-
+                        if (FARMING_ECO_PROFILE_ANSWERS_JSON.has(labourTypeQuestion.getLabelC()))
+                            FARMING_ECO_PROFILE_ANSWERS_JSON.remove(labourTypeQuestion.getLabelC());
+                        try {
+                            FARMING_ECO_PROFILE_ANSWERS_JSON.put(labourTypeQuestion.getLabelC(), item.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+                        ;
+
+
                     });
 
                 } else
@@ -360,25 +345,24 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
             }
         }
 
-    save.setOnClickListener(v -> {
+        save.setOnClickListener(v -> {
 
-        if(farmingEcoProfileFormAnswerData != null) {
-            farmingEcoProfileFormAnswerData.setData(FARMING_ECO_PROFILE_ANSWERS_JSON.toString());
+            if (farmingEcoProfileFormAnswerData != null) {
+                farmingEcoProfileFormAnswerData.setData(FARMING_ECO_PROFILE_ANSWERS_JSON.toString());
 
-            //mPresenter.saveAnswerData(farmingEcoProfileFormAnswerData);
+                //mPresenter.saveAnswerData(farmingEcoProfileFormAnswerData);
 
-            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(farmingEcoProfileFormAnswerData);
+                getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(farmingEcoProfileFormAnswerData);
 
-            finish();
+                finish();
 
-        }else
-        finish();
+            } else
+                finish();
 
-    });
+        });
 
 
-
-}
+    }
 
     @Override
     protected void onDestroy() {
@@ -399,9 +383,6 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
 
     }
-
-
-
 
 
 }

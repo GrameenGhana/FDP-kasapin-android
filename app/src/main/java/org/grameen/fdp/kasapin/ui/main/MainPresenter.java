@@ -226,9 +226,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                         List<Plot> farmersPlots = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmer.getCode()).blockingGet();
 
 
-
                                                         JSONArray arrayOfValues = new JSONArray();
-
 
 
                                                         if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)) {
@@ -263,8 +261,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                     }
                                                                 }
 
-                                                                recommendationJson.put("answer",plot.getRecommendationId());
-                                                                recommendationJson.put("field_name","recommendation_id");
+                                                                recommendationJson.put("answer", plot.getRecommendationId());
+                                                                recommendationJson.put("field_name", "recommendation_id");
                                                                 diagnosticMonitoringArray.put(recommendationJson);
 
                                                                 arrayOfValues.put(diagnosticMonitoringArray);
@@ -273,13 +271,12 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.OBSERVATION_TABLE)) {
 
 
-
                                                             for (Plot plot : farmersPlots) {
                                                                 JSONArray observationArray = new JSONArray();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
-                                                                    // String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+                                                                    // String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getByRecommendationName(mapping.getQuestionId()).blockingGet();
                                                                     Question aoQuestion = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(mapping.getQuestionId());
 
                                                                     if (plot.getAOJsonData().has(aoQuestion.getLabelC())) {
@@ -287,7 +284,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                                         answerJson.put("answer", plot.getAOJsonData().get(aoQuestion.getLabelC()));
                                                                         answerJson.put("field_name", mapping.getFieldName());
-                                                                        answerJson.put("variable_c",aoQuestion.getCaptionC());
+                                                                        answerJson.put("variable_c", aoQuestion.getCaptionC());
 
                                                                         observationArray.put(answerJson);
                                                                     }

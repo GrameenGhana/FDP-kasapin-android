@@ -264,8 +264,6 @@ public class LogicFormulaParser extends Tokenizer {
     }
 
 
-
-
     private String getValue(String id) {
         if (jsonObject == null)
             throw new ParserException("Json Object is null or was not provided");

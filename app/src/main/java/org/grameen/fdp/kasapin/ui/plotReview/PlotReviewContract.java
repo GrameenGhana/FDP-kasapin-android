@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.plotReview;
 
 
-import android.support.annotation.Nullable;
-
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
@@ -23,6 +21,7 @@ public class PlotReviewContract {
         void openMainActivity();
 
         void setPlotQuestions(List<Question> questions);
+
         void setUpViewPager();
 
     }

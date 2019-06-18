@@ -61,9 +61,6 @@ import javax.script.ScriptEngine;
 import butterknife.Unbinder;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
@@ -313,7 +310,6 @@ public abstract class BaseActivity extends AppCompatActivity
                 (dialogInterface, i) -> {
 
 
-
                     getAppDataManager().getCompositeDisposable().add(Completable.fromAction(() -> mAppDataManager.setUserAsLoggedOut())
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -321,7 +317,7 @@ public abstract class BaseActivity extends AppCompatActivity
                                 dialogInterface.dismiss();
 
                                 Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
 
@@ -355,9 +351,6 @@ public abstract class BaseActivity extends AppCompatActivity
                                 showMessage(R.string.error_has_occurred);
                             }
                         });*/
-
-
-
 
 
                 }, getString(R.string.yes), (dialogInterface, i) -> dialogInterface.dismiss(), getString(R.string.no), 0);

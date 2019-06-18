@@ -52,11 +52,14 @@ public interface ActivityComponent {
     void inject(PlotDetailsActivity view);
 
     void inject(MapActivity view);
-    void inject(ProfitAndLossActivity view);
-    void inject(FDPStatusActivity view);
-    void inject(DetailedMonthActivity view);
-    void inject(PlotReviewActivity view);
 
+    void inject(ProfitAndLossActivity view);
+
+    void inject(FDPStatusActivity view);
+
+    void inject(DetailedMonthActivity view);
+
+    void inject(PlotReviewActivity view);
 
 
 }

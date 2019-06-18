@@ -75,6 +75,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
         runSingleCall(Observable.fromIterable(formAndQuestions)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.newThread())
+                .filter(formAndQuestions1 -> !formAndQuestions1.getForm().shouldHide())
                 .map(formAndQuestions1 -> {
 
                     //AppLogger.i(TAG, "LOADING DYNAMIC BUTTONS .....");
