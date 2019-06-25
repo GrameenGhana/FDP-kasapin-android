@@ -83,6 +83,11 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     @BindView(R.id.plot_ph_text)
     TextView plotPhText;
 
+    Question soilPhQuestion;
+    Question estProductionQuestion;
+    Question plotAreaQuestion;
+    Question plotNameQuestion;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,15 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         if (FARMER != null)
             FARMER_CODE = FARMER.getCode();
+
+
+
+         plotNameQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_name_");
+         soilPhQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_ph_");
+         estProductionQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_estimate_production_");
+         plotAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_");
+
+
 
 
         setupViews();
@@ -146,25 +160,20 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         //SetCaptionLabels
         Completable.fromAction(() -> {
-
-            String estimatedProductionSizeCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_estimate_production_");
-            if (!TextUtils.isEmpty(estimatedProductionSizeCaption))
-                plotEstProdText.setText(estimatedProductionSizeCaption);
+            if (estProductionQuestion != null)
+                plotEstProdText.setText(estProductionQuestion.getCaptionC());
 
 
-            String soilPhCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_ph_");
-            if (!TextUtils.isEmpty(soilPhCaption))
-                plotPhText.setText(soilPhCaption);
+             if (soilPhQuestion != null)
+                plotPhText.setText(soilPhQuestion.getCaptionC());
 
 
-            String plotNameCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_name_");
-            if (!TextUtils.isEmpty(plotNameCaption))
-                plotNameText.setText(plotNameCaption);
+             if (plotNameQuestion != null)
+                plotNameText.setText(plotNameQuestion.getCaptionC());
 
 
-            String plotSizeCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_area_");
-            if (!TextUtils.isEmpty(plotSizeCaption))
-                plotNameText.setText(plotSizeCaption);
+             if (plotAreaQuestion != null)
+                plotSizeText.setText(plotAreaQuestion.getCaptionC());
 
 
         }).subscribeOn(Schedulers.io())
@@ -237,7 +246,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             setToolbar(getStringResources(R.string.add_new_plot));
         }
 
-        AppLogger.e(TAG, "Farmer Code is " + FARMER_CODE);
 
 
         mPresenter.getPlotQuestions();
@@ -252,30 +260,37 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         JSONObject jsonObject = dynamicPlotFormFragment.getAnswersData();
 
+        try {
+            if (jsonObject.has(soilPhQuestion.getLabelC()))
+                jsonObject.remove(soilPhQuestion.getLabelC());
 
-        String soilPhLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_ph_").blockingGet();
-        String estProductionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_estimate_production_").blockingGet();
-        String plotArea = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_area_").blockingGet();
+            jsonObject.put(soilPhQuestion.getLabelC(), phEdittext.getText().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
 
         try {
-            if (jsonObject.has(soilPhLabel))
-                jsonObject.remove(soilPhLabel);
+            if (jsonObject.has(estProductionQuestion.getLabelC()))
+                jsonObject.remove(estProductionQuestion.getLabelC());
 
-            if (jsonObject.has(estProductionLabel))
-                jsonObject.remove(estProductionLabel);
+             jsonObject.put(estProductionQuestion.getLabelC(), estimatedProductionEdittext.getText().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            if (jsonObject.has(plotArea))
-                jsonObject.remove(plotArea);
-
-            jsonObject.put(soilPhLabel, phEdittext.getText().toString());
-            jsonObject.put(estProductionLabel, estimatedProductionEdittext.getText().toString());
-            jsonObject.put(plotArea, plotSizeEdittext.getText().toString());
-
+        try {
+            if (jsonObject.has(plotAreaQuestion.getLabelC()))
+                jsonObject.remove(plotAreaQuestion.getLabelC());
+            jsonObject.put(plotAreaQuestion.getLabelC(), plotSizeEdittext.getText().toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+        AppLogger.e(TAG, jsonObject);
 
 
         LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
@@ -284,6 +299,14 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         //Calculate AOR and AI question values here, put values into the json
         for (FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS) {
+
+
+            AppLogger.e(TAG, "---------------------------------------------------------------------------");
+
+            AppLogger.e(TAG, "FORM NAME ===>>> " + formAndQuestions.getForm().getFormNameC() + " *****");
+
+
+
 
             if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADOPTION_OBSERVATION_RESULTS)
                     || formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADDITIONAL_INTERVENTION)) {
@@ -295,9 +318,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
                         try {
 
-                            AppLogger.e(TAG, "---------------------------------------------------------------------------");
-                            AppLogger.e(TAG, "---------------------------------------------------------------------------");
-
+                           AppLogger.e(TAG, "---------------------------------------------------------------------------");
                             AppLogger.e(TAG, "Question name is ***** " + question.getLabelC() + " *****");
 
                             String value = logicFormulaParser.evaluate(question.getFormulaC());
@@ -307,7 +328,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
                             jsonObject.put(question.getLabelC(), value);
 
-                            AppLogger.e(TAG, "Added " + value + " to json for " + question.getLabelC());
+                            //AppLogger.e(TAG, "Added " + value + " to json for " + question.getLabelC());
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -316,6 +337,8 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 }
                 //AOR_AI_QUESTIONS.addAll(formAndQuestions.getQuestions());
             }
+
+
 
 
             /*else if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.PLOT_INFORMATION)){
@@ -343,8 +366,9 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             }*/
         }
 
-        AppLogger.i(TAG, "-----------------------  FINAL JSON VALUE   ------------------------");
-        AppLogger.i(TAG, jsonObject.toString());
+        AppLogger.e(TAG, "FINAL JSON DATA IS >>>>>> " + jsonObject);
+
+
 
 
         //Todo check if farm size corresponds
@@ -409,6 +433,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
         PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
         PLOT.setArea(plotSizeEdittext.getText().toString());
+
+
+
+        AppLogger.e(TAG, "----------------------- PLOT INFO ------------------------");
+        AppLogger.e(TAG, getGson().toJson(PLOT));
+
         mPresenter.saveData(PLOT, flag);
     }
 

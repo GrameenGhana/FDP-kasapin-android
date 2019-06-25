@@ -90,8 +90,8 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
     List<Question> ALL_PLOT_DATA_QUESTIONS = new ArrayList<>();
     List<Plot> PLOTS_LIST;
 
-    FormAnswerData farmingEcoProfileFormAnswerData = null;
-    JSONObject FARMING_ECO_PROFILE_ANSWERS_JSON;
+    FormAnswerData laborFormAnswerData = null;
+    JSONObject LABOUR_FORM_ANSWER_JSON = new JSONObject();
 
 
     public static Intent getStartIntent(Context context) {
@@ -265,15 +265,21 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
 
     void setupLaborTypeAndSpinner() {
-        Integer farmingEcoProfileFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.FARMING_ECONOMIC_PROFILE).blockingGet();
+        Integer labourFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.LABOUR_FORM).blockingGet();
 
 
-        if (farmingEcoProfileFormId != null) {
-            farmingEcoProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmingEcoProfileFormId);
+        if (labourFormId != null) {
+            laborFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), labourFormId);
 
-            if (farmingEcoProfileFormAnswerData != null) {
+            if (laborFormAnswerData != null)
+                LABOUR_FORM_ANSWER_JSON = laborFormAnswerData.getJsonData();
 
-                FARMING_ECO_PROFILE_ANSWERS_JSON = farmingEcoProfileFormAnswerData.getJsonData();
+            else {
+                laborFormAnswerData = new FormAnswerData();
+                laborFormAnswerData.setFormId(labourFormId);
+                laborFormAnswerData.setFarmerCode(FARMER.getCode());
+
+            }
 
                 labourSpinner.setItems("-select-", "Yes", "No");
                 labourSpinner.setSelectedIndex(0);
@@ -287,19 +293,19 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
 
                 if (labourQuestion != null) {
-                    if (FARMING_ECO_PROFILE_ANSWERS_JSON.has(labourQuestion.getLabelC()))
+                    if (LABOUR_FORM_ANSWER_JSON.has(labourQuestion.getLabelC()))
                         try {
-                            labourSpinner.setText(FARMING_ECO_PROFILE_ANSWERS_JSON.getString(labourQuestion.getLabelC()));
+                            labourSpinner.setText(LABOUR_FORM_ANSWER_JSON.getString(labourQuestion.getLabelC()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
                     labourSpinner.setOnItemSelectedListener((view, position, id, item) -> {
 
-                        if (FARMING_ECO_PROFILE_ANSWERS_JSON.has(labourQuestion.getLabelC()))
-                            FARMING_ECO_PROFILE_ANSWERS_JSON.remove(labourQuestion.getLabelC());
+                        if (LABOUR_FORM_ANSWER_JSON.has(labourQuestion.getLabelC()))
+                            LABOUR_FORM_ANSWER_JSON.remove(labourQuestion.getLabelC());
                         try {
-                            FARMING_ECO_PROFILE_ANSWERS_JSON.put(labourQuestion.getLabelC(), item.toString());
+                            LABOUR_FORM_ANSWER_JSON.put(labourQuestion.getLabelC(), item.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -310,19 +316,19 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
 
                 if (labourTypeQuestion != null) {
-                    if (FARMING_ECO_PROFILE_ANSWERS_JSON.has(labourTypeQuestion.getLabelC()))
+                    if (LABOUR_FORM_ANSWER_JSON.has(labourTypeQuestion.getLabelC()))
                         try {
-                            labourType.setText(FARMING_ECO_PROFILE_ANSWERS_JSON.getString(labourTypeQuestion.getLabelC()));
+                            labourType.setText(LABOUR_FORM_ANSWER_JSON.getString(labourTypeQuestion.getLabelC()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
                     labourType.setOnItemSelectedListener((view, position, id, item) -> {
 
-                        if (FARMING_ECO_PROFILE_ANSWERS_JSON.has(labourTypeQuestion.getLabelC()))
-                            FARMING_ECO_PROFILE_ANSWERS_JSON.remove(labourTypeQuestion.getLabelC());
+                        if (LABOUR_FORM_ANSWER_JSON.has(labourTypeQuestion.getLabelC()))
+                            LABOUR_FORM_ANSWER_JSON.remove(labourTypeQuestion.getLabelC());
                         try {
-                            FARMING_ECO_PROFILE_ANSWERS_JSON.put(labourTypeQuestion.getLabelC(), item.toString());
+                            LABOUR_FORM_ANSWER_JSON.put(labourTypeQuestion.getLabelC(), item.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -342,22 +348,17 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                 }
 
 
-            }
+
         }
 
         save.setOnClickListener(v -> {
 
-            if (farmingEcoProfileFormAnswerData != null) {
-                farmingEcoProfileFormAnswerData.setData(FARMING_ECO_PROFILE_ANSWERS_JSON.toString());
+                laborFormAnswerData.setData(LABOUR_FORM_ANSWER_JSON.toString());
 
-                //mPresenter.saveAnswerData(farmingEcoProfileFormAnswerData);
-
-                getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(farmingEcoProfileFormAnswerData);
+                getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(laborFormAnswerData);
 
                 finish();
 
-            } else
-                finish();
 
         });
 

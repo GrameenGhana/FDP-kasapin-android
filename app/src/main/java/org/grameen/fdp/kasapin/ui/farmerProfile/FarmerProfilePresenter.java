@@ -9,6 +9,7 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.util.List;
@@ -18,6 +19,9 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.FILTERED_FORMS;
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:06 PM
@@ -72,35 +76,66 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
 
         count = 0;
 
-        runSingleCall(Observable.fromIterable(formAndQuestions)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .filter(formAndQuestions1 -> !formAndQuestions1.getForm().shouldHide())
-                .map(formAndQuestions1 -> {
+        if (getAppDataManager().isMonitoring()){
 
-                    //AppLogger.i(TAG, "LOADING DYNAMIC BUTTONS .....");
+            runSingleCall(Observable.fromIterable(formAndQuestions)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .filter(formAndQuestions1 -> formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
+                    .filter(formAndQuestions1 -> (!formAndQuestions1.getForm().shouldHide()))
+                    .map(formAndQuestions1 -> {
 
+                        FILTERED_FORMS.add(formAndQuestions1);
 
-                    final Button btn;
-                    if (getAppDataManager().isMonitoring())
-                        btn = new Button(new ContextThemeWrapper(getContext(), R.style.PrimaryButton_Monitoring));
-                    else
-                        btn = new Button(new ContextThemeWrapper(getContext(), R.style.PrimaryButton));
+                        AppLogger.e(TAG, getGson().toJson(formAndQuestions1.getForm()));
 
 
-                    btn.setTag(count);
-                    btn.setText(formAndQuestions1.getForm().getTranslation());
-                    btn.setContentDescription(formAndQuestions1.getForm().getTranslation());
+                        final Button btn = new Button(new ContextThemeWrapper(getContext(), R.style.PrimaryButton_Monitoring));
 
-                    // AppLogger.i(TAG, "BUTTON " + count);
+                        btn.setTag(count);
+                        btn.setText(formAndQuestions1.getForm().getTranslation());
+                        btn.setContentDescription(formAndQuestions1.getForm().getTranslation());
 
 
-                    count++;
+                        count++;
 
-                    return btn;
+                        return btn;
 
-                }).toList().subscribe(buttons -> getView().addButtons(buttons)
-                ));
+                    }).toList().subscribe(buttons -> getView().addButtons(buttons)
+                    ));
+
+
+        }else {
+
+            runSingleCall(Observable.fromIterable(formAndQuestions)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.newThread())
+                    .filter(formAndQuestions1 -> formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
+                    .filter(formAndQuestions1 ->
+                            (!formAndQuestions1.getForm().shouldHide() &&
+                                    (formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC) || formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC_MONITORING))))
+                    .map(formAndQuestions1 -> {
+
+                        FILTERED_FORMS.add(formAndQuestions1);
+
+
+                        final Button btn = new Button(new ContextThemeWrapper(getContext(), R.style.PrimaryButton));
+
+
+                        btn.setTag(count);
+                        btn.setText(formAndQuestions1.getForm().getTranslation());
+                        btn.setContentDescription(formAndQuestions1.getForm().getTranslation());
+
+
+
+                        count++;
+
+                        return btn;
+
+                    }).toList().subscribe(buttons -> getView().addButtons(buttons)
+                    ));
+
+        }
 
     }
 

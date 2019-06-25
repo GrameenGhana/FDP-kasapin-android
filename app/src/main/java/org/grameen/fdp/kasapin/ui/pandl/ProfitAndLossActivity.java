@@ -159,7 +159,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         farmer = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
 
         START_YEAR = getAppDataManager().getDatabaseManager().questionDao().get("start_year_");
-
         START_YEAR_LABEL = START_YEAR.getLabelC();
 
 
@@ -495,6 +494,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
                 if (START_YEAR_LABEL != null) {
+
+                    AppLogger.e("P & L ACTIVITY", "START YEAR LABEL " + START_YEAR_LABEL);
+
 
                     try {
                         PLOT.setStartYear(Integer.valueOf(PLOT_ANSWERS_JSON_OBJECT.getString(START_YEAR_LABEL)));

@@ -109,7 +109,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         PLOT = getGson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
         if (PLOT != null) {
 
-            AppLogger.i(TAG, "PLOT >>> " + getGson().toJson(PLOT));
+            AppLogger.e(TAG, "PLOT >>> " + getGson().toJson(PLOT));
+
 
             setupViews();
         } else {
@@ -267,6 +268,12 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         AppLogger.i("" + TAG, "############    REAPPLYING LOGIC TO RECOMMENDATION    ##################");
 
         for (Recommendation recommendation : recommendations) {
+
+            AppLogger.e(TAG, "---------   RECOMMENDATION  >>  " + getGson().toJson(recommendation) + "   ---------");
+
+
+
+
             AppLogger.e(TAG, "---------   RECOMMENDATION NAME >>  " + recommendation.getLabel() + "   ---------");
             AppLogger.e(TAG, "---------   HIERARCHY >>  " + recommendation.getHierarchy() + "   ---------");
 

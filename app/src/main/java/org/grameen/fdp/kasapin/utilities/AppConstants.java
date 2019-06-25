@@ -85,6 +85,8 @@ public class AppConstants {
     public static final String ADOPTION_OBSERVATIONS = "adoption observations";
     public static final String PRODUCTIVE_PROFILE = "productive profile";
     public static final String FARMING_ECONOMIC_PROFILE = "farming economic profile";
+    public static final String LABOUR_FORM = "Labor Form";
+
     public static final String SOCIO_ECONOMIC_PROFILE = "socioeconomic profile";
     public static final String FAMILY_MEMBERS = "family members";
     public static final String PLOT_RESULTS = "plot results";
@@ -97,6 +99,7 @@ public class AppConstants {
     public static final String FDP_STATUS = "fdp status";
     public static final String DIAGNOSTIC = "diagnostic";
     public static final String MONITORING = "monitoring";
+    public static final String DIAGNOSTIC_MONITORING = "diagnostic monitoring";
     public static final String TAG_TITLE_TEXT_VIEW = "titleTag";
     public static final String BUTTON_VIEW = "buttonTag";
     public static final String TAG_OTHER_TEXT_VIEW = "textTag";

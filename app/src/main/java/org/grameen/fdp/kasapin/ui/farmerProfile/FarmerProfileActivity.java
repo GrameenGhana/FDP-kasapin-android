@@ -222,18 +222,13 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
         FILTERED_FORMS = new ArrayList<>();
+        //AppLogger.e(TAG, getGson().toJson(FILTERED_FORMS));
 
-        if (FORM_AND_QUESTIONS != null)
-            for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
-                if (formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM))
-                    FILTERED_FORMS.add(formAndQuestions);
-            }
+        mPresenter.loadDynamicButtons(FORM_AND_QUESTIONS);
 
 
-        mPresenter.loadDynamicButtons(FILTERED_FORMS);
 
         /*
-
         if (IS_MONITIRING_MODE && BuildConfig.DEBUG) {
             findViewById(R.id.historical_view).setVisibility(View.VISIBLE);
 
@@ -244,7 +239,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 }
             });
         }
-        
         */
 
 
