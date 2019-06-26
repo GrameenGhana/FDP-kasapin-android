@@ -6,6 +6,8 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,23 +20,35 @@ public class Plot {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     int id;
-
+    @SerializedName("external_id_c")
     String externalId;
     String distanceBetweenCocoaTrees;
+    @SerializedName("estimated_production_c")
     String EstimatedProduction;
     String farmerName;
+    @SerializedName("farmer_code")
     String farmerCode;
     String numberOfShadeTrees;
+    @SerializedName("age_c")
     String plotAge = "0";
+    @SerializedName("area_c")
     String area;
     String plotPoints;
+    @SerializedName("name_c")
     String name;
+
+    @SerializedName("ph_c")
     String ph;
+
     String lastVisitDate;
     String estimatedProductionSize;
+
+    @SerializedName("data")
     String answersData;
     String gpsPoints;
+    @SerializedName("recommendation_id")
     int recommendationId = -1;
+
     int gapsId = -1;
     int startYear = 1;
 

@@ -10,6 +10,7 @@ import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
+import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import java.util.List;
@@ -37,8 +38,8 @@ public interface FdpApi {
     Single<User> getUser(@Query("token") String token);
 
 
-    @POST(AppConstants.API_VERSION + "synchdowndata")
-    Single<List<FarmerAndAnswers>> getFarmerAndAnswersData(@Query("token") String token, int pageUp, int pageDown);
+    @POST(AppConstants.API_VERSION + "syncdowndata")
+    Single<SyncDownData> getSyncDownData(@Query("token") String token, int countryId, int surveyorId, int pageStart, int pageEnd);
 
 
     @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")

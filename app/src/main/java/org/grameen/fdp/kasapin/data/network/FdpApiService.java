@@ -12,6 +12,7 @@ import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
+import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -74,8 +75,8 @@ public class FdpApiService {
     }
 
 
-    public Single<List<FarmerAndAnswers>> fetchFarmerAndAnswersData(String token, int pageUp, int pageDown) {
-        return fdpApi.getFarmerAndAnswersData(token, pageUp,  pageDown).subscribeOn(Schedulers.io())
+    public Single<SyncDownData> fetchSyncDownData(String token, int countryId, int surveyorId, int pageUp, int pageDown) {
+        return fdpApi.getSyncDownData(token, pageUp, countryId, surveyorId, pageDown).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

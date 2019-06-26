@@ -9,6 +9,7 @@ import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
+import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
@@ -181,23 +182,34 @@ public class DownloadResources {
 
 
 
-    private void geFarmerAndAnswersData() {
+    private void getSyncDownData() {
         if (showProgress)
             getView().setLoadingMessage("Getting farmer and answers data...");
 
+        Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
 
-         getAppDataManager().getFdpApiService()
-                .fetchFarmerAndAnswersData(mAppDataManager.getAccessToken(), 0, 0)
-                .subscribe(new DisposableSingleObserver<List<FarmerAndAnswers>>() {
+
+        getAppDataManager().getFdpApiService()
+                .fetchSyncDownData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), 0, 0)
+                .subscribe(new DisposableSingleObserver<SyncDownData>() {
                     @Override
-                    public void onSuccess(List<FarmerAndAnswers> farmerAndAnswers) {
+                    public void onSuccess(SyncDownData syncDownData) {
+
+                        if(syncDownData.getSuccess().equalsIgnoreCase("true")) {
+
+                            //check for total count here against pageDown/pageEnd and loop method getSyncDownData
+
+                            if(syncDownData.getData() != null && syncDownData.getData().size() > 0)
+                            for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
+
+                                getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
+                                getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
+
+                                getAppDataManager().getDatabaseManager().plotsDao().insertAll(farmerAndAnswers1.getPlots());
+                            }
 
 
-                        for(FarmerAndAnswers farmerAndAnswers1 : farmerAndAnswers) {
-                            getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
-                            getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
-                        }
-
+                        }else onError(new Throwable("An error occurred!"));
                     }
 
                     @Override

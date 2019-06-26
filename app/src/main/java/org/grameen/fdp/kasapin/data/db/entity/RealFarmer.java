@@ -21,15 +21,28 @@ public class RealFarmer {
     @NonNull
     int id;
 
+    @SerializedName("full_name_c")
     String farmerName;
+    @SerializedName("farmer_code_c")
     String code;
-    int villageId;
+
+    @SerializedName("gender_c")
     String gender;
+
+    @SerializedName("birthday_c")
     String birthYear = "1970";
+
+    @SerializedName("educational_level_c")
     String educationLevel;
+
+    @SerializedName("farmer_photo_c")
     String imageUrl;
+
+    int villageId;
+
     Date firstVisitDate;
     Date lastVisitDate;
+
     @SerializedName("LastModifiedDate")
     Date lastModifiedDate;
 
