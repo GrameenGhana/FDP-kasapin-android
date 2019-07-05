@@ -119,16 +119,13 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
             @Override
             public void onDrawerSlide(View drawer, float slideOffset) {
-
                 findViewById(R.id.main_content).setX(drawer.getWidth() * slideOffset);
-
             }
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu();
                 syncState();
-
 
             }
 
@@ -144,7 +141,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
         if (mPresenter.getAppDataManager().isMonitoring()) {
             addFarmerButton.setVisibility(View.GONE);
-
             toolBarLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.gradient_background_monitoring));
         }
 
@@ -155,22 +151,19 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         View headerLayout = navigationView.getHeaderView(0);
 
 
+        TextView nameTV = headerLayout.findViewById(R.id.name_textView);
+        TextView emailTV = headerLayout.findViewById(R.id.email_textView);
+        TextView versionNumberTV = navigationView.findViewById(R.id.version_number);
+
+
+        nameTV.setText(getAppDataManager().getUserFullName());
+        emailTV.setText(getAppDataManager().getUserEmail());
+
+
         try {
-            TextView nameTV = headerLayout.findViewById(R.id.name_textView);
-            TextView emailTV = headerLayout.findViewById(R.id.email_textView);
-            TextView versionNumberTV = navigationView.findViewById(R.id.version_number);
-
-
-            nameTV.setText(getAppDataManager().getUserFullName());
-            emailTV.setText(getAppDataManager().getUserEmail());
-
-
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             versionNumberTV.setText(pInfo.versionName);
-
-        } catch (PackageManager.NameNotFoundException ignore) {
-            AppLogger.e("TAG", ignore);
-        }
+        } catch (PackageManager.NameNotFoundException ignore) {}
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -187,11 +180,11 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
         for (VillageAndFarmers villageAndFarmers : villageAndFarmersList) {
 
-            AppLogger.i(TAG, "VILLAGE NAME IS " + villageAndFarmers.name + " AND FARMERS SIZE IS " + villageAndFarmers.getFarmerList().size());
+            AppLogger.i(TAG, "VILLAGE ID IS " + villageAndFarmers.getVillage().getId() + " AND FARMERS SIZE IS " + villageAndFarmers.getFarmerList().size());
 
             if (villageAndFarmers.getFarmerList() != null && villageAndFarmers.getFarmerList().size() > 0) {
 
-                fragmentPagerItems.add(FragmentPagerItem.of(villageAndFarmers.getName(), FarmerListFragment.class, new Bundler()
+                fragmentPagerItems.add(FragmentPagerItem.of(villageAndFarmers.getVillage().getName(), FarmerListFragment.class, new Bundler()
                         .putString("villageName", SELECTED_VILLAGE)
                         .putInt("index", index)
                         .putString("farmers", getGson().toJson(villageAndFarmers.getFarmerList())).get()));
@@ -207,26 +200,20 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
-                    public void onPageScrolled(int i, float v, int i1) {
-
-                    }
+                    public void onPageScrolled(int i, float v, int i1) {}
 
                     @Override
                     public void onPageSelected(int i) {
-
                         SELECTED_VILLAGE = fragmentPagerItems.get(i).getTitle().toString();
-
                         CURRENT_PAGE = i;
-
                     }
 
                     @Override
-                    public void onPageScrollStateChanged(int i) {
-
-                    }
+                    public void onPageScrollStateChanged(int i) {}
                 });
 
                 SELECTED_VILLAGE = fragmentPagerItems.get(0).getTitle().toString();
+                CURRENT_PAGE = 0;
             }
         }
 
@@ -278,7 +265,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
         AppLogger.i(TAG, "SEARCH DIALOG ITEMS = " + items.size());
 
-
         searchDialogCompat = new SimpleSearchDialogCompat(MainActivity.this, "Search Farmer",
                 "Who are you looking for?", null, items,
                 (SearchResultListener<MySearchItem>) (dialog, item, position) -> {
@@ -289,7 +275,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                     dialog.dismiss();
                 });
-
     }
 
 
@@ -308,7 +293,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             searchDialogCompat.show();
         else
             showNoFarmersMessage();
-
     }
 
 
@@ -396,7 +380,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
     @Override
     public void showNoFarmersMessage() {
-
         showDialog(true, getString(R.string.no_data), getString(R.string.no_new_data),
                 (dialogInterface, i) -> dialogInterface.dismiss(),
                 getString(R.string.ok),
@@ -406,10 +389,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
 
-   /* @Override
+  @Override
     protected void onResume() {
-        super.onResume();
-
         AppLogger.e(TAG, "On Resume...");
 
         if(getAppDataManager().getBooleanValue("reload")){
@@ -418,6 +399,13 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             mPresenter.getVillagesData();
             getAppDataManager().setBooleanValue("reload", false);
 
+
+
+
+
+
         }
-    }*/
+
+      super.onResume();
+    }
 }

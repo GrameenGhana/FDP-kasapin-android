@@ -4,7 +4,9 @@ package org.grameen.fdp.kasapin.ui.base;
 import android.support.v7.app.AppCompatActivity;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.network.model.BaseModel;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import javax.inject.Inject;
 
@@ -97,6 +99,13 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     protected void runSingleCall(Disposable disposableSingleObserver) {
         getAppDataManager().getCompositeDisposable().add(disposableSingleObserver);
 
+    }
+
+
+    public void setFarmerAsUnsynced(RealFarmer realFarmer){
+
+        realFarmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
+        getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
     }
 
 

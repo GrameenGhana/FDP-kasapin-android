@@ -22,12 +22,18 @@ public class AppConstants {
     public static final String FARMER_TABLE_EXTERNAL_ID_FIELD = "external_id_c";
     public static final String FARMER_TABLE_AGE_FIELD = "age_c";
     public static final String FARMER_TABLE_CODE_FIELD = "farmer_code_c";
-    public static final String FARMER_TABLE_EDUCATION_LEVEL_FIELD = "education_level_c";
+    public static final String FARMER_TABLE_EDUCATION_LEVEL_FIELD = "educational_level_c";
     public static final String FARMER_TABLE_PHOTO_FIELD = "farmer_photo_c";
     public static final String FARMER_TABLE_NAME_FIELD = "full_name_c";
     public static final String FARMER_TABLE_GENDER_FIELD = "gender_c";
     public static final String FARMER_TABLE_BIRTHDAY_FIELD = "birthday_c";
     public static final String PLOT_TABLE = "plot_c";
+    public static final String PLOT_GPS_POINT = "gps_point_c";
+    public static final String PLOT_GPS_POINT_LAT_FIELD = "latitude_c";
+    public static final String PLOT_GPS_POINT_LNG_FIELD = "longitude_c";
+    public static final String PLOT_GPS_POINT_ALTITUDE_FIELD = "altitude_c";
+    public static final String PLOT_GPS_POINT_PRECISION_FIELD = "precision_c";
+
     public static final String PLOT_EXTERNAL_ID_FIELD = "external_id_c";
     public static final String PLOT_NAME_FIELD = "name_c";
     public static final String PLOT_AGE_FIELD = "age_c";

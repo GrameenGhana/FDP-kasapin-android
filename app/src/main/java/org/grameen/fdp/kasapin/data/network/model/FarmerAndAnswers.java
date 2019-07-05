@@ -19,7 +19,7 @@ public class FarmerAndAnswers {
     List<FormAnswerData> answers;
 
     @SerializedName("plot_details")
-    List<Plot> plots;
+    List<List<Plot>> plotDetails;
 
 
     public FarmerAndAnswers(){}
@@ -41,11 +41,12 @@ public class FarmerAndAnswers {
         return farmer;
     }
 
-    public void setPlots(List<Plot> plots) {
-        this.plots = plots;
+
+    public void setPlotDetails(List<List<Plot>> plotDetails) {
+        this.plotDetails = plotDetails;
     }
 
-    public List<Plot> getPlots() {
-        return plots;
+    public List<List<Plot>> getPlotDetails() {
+        return plotDetails;
     }
 }

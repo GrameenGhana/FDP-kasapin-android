@@ -60,7 +60,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public void setUserId(int userId) {
-        mPrefs.edit().putLong(PREF_KEY_USER_ID, userId).apply();
+        mPrefs.edit().putInt(PREF_KEY_USER_ID, userId).apply();
     }
 
     @Override

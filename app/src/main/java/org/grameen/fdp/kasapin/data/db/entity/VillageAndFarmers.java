@@ -1,6 +1,7 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Relation;
 
@@ -13,27 +14,27 @@ import java.util.List;
  */
 
 public class VillageAndFarmers {
+    @Embedded
+    public Village village;
 
-    public String id;
-    public String name;
 
-
-    @Relation(parentColumn = "name", entityColumn = "villageName", entity = RealFarmer.class)
+    @Relation(parentColumn = "id", entityColumn = "villageId", entity = RealFarmer.class)
     public List<RealFarmer> farmerList;
 
 
-    @Ignore
-    public String getId() {
-        return id;
+    public void setFarmerList(List<RealFarmer> farmerList) {
+        this.farmerList = farmerList;
     }
 
-    @Ignore
-    public String getName() {
-        return name;
+    public void setVillage(Village village) {
+        this.village = village;
     }
 
-    @Ignore
     public List<RealFarmer> getFarmerList() {
         return farmerList;
+    }
+
+    public Village getVillage() {
+        return village;
     }
 }

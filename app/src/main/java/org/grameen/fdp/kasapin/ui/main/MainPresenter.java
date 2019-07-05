@@ -6,6 +6,7 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.PlotGpsPoint;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
@@ -115,7 +116,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     public void getVillagesData() {
 
         AppLogger.e(TAG, "Getting villages data!");
-
 
         runSingleCall(getAppDataManager().getDatabaseManager().villageAndFarmersDao().getVillagesAndFarmers()
                 .filter(villageAndFarmers -> villageAndFarmers != null && villageAndFarmers.size() > 0)
@@ -247,6 +247,15 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                             }
 
+                                                        }else if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_GPS_POINT)){
+
+                                                            for (Plot plot : farmersPlots) {
+                                                                JSONArray plotArray = new JSONArray();
+
+                                                                formatPlotsGpsData(plot, plotArray);
+                                                                arrayOfValues.put(plotArray);
+                                                            }
+
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)) {
 
 
@@ -292,7 +301,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                                         answerJson.put("answer", plot.getAOJsonData().get(aoQuestion.getLabelC()));
                                                                         answerJson.put("field_name", mapping.getFieldName());
-                                                                        answerJson.put("variable_c", aoQuestion.getCaptionC());
+                                                                        answerJson.put("variable_c", aoQuestion.getLabelC());
 
                                                                         observationArray.put(answerJson);
                                                                     }
@@ -466,6 +475,56 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     }
 
 
+    private void formatPlotsGpsData(Plot plot, JSONArray arrayOfValues) {
+
+        if(plot.getGpsPoints() != null) {
+            List<PlotGpsPoint> gpsPoints = plot.getGpsPoints();
+            for(PlotGpsPoint point : gpsPoints) {
+
+                JSONArray pointJsonArray = new JSONArray();
+
+                JSONObject plotsGPSData;
+
+                try {
+                    plotsGPSData = new JSONObject();
+                    plotsGPSData.put("answer", plot.getExternalId());
+                    plotsGPSData.put("field_name", AppConstants.PLOT_EXTERNAL_ID_FIELD);
+                    pointJsonArray.put(plotsGPSData);
+
+
+                    plotsGPSData = new JSONObject();
+                    plotsGPSData.put("answer", point.getLatitude_c());
+                    plotsGPSData.put("field_name", AppConstants.PLOT_GPS_POINT_LAT_FIELD);
+                    pointJsonArray.put(plotsGPSData);
+
+                    plotsGPSData = new JSONObject();
+                    plotsGPSData.put("answer", point.getLongitude_c());
+                    plotsGPSData.put("field_name", AppConstants.PLOT_GPS_POINT_LNG_FIELD);
+                    pointJsonArray.put(plotsGPSData);
+
+
+                    plotsGPSData = new JSONObject();
+                    plotsGPSData.put("answer", point.getAltitude_c());
+                    plotsGPSData.put("field_name", AppConstants.PLOT_GPS_POINT_ALTITUDE_FIELD);
+                    pointJsonArray.put(plotsGPSData);
+
+
+                    plotsGPSData = new JSONObject();
+                    plotsGPSData.put("answer", point.getPrecision_c());
+                    plotsGPSData.put("field_name", AppConstants.PLOT_GPS_POINT_PRECISION_FIELD);
+                    pointJsonArray.put(plotsGPSData);
+
+
+                    arrayOfValues.put(pointJsonArray);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
     private JSONObject buildAllAnswersJsonDataPerFarmer(String code) {
         JSONObject jsonObject = new JSONObject();
         for (FormAnswerData answerData : getAppDataManager().getDatabaseManager().formAnswerDao().getAll(code)
@@ -585,6 +644,11 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         AppLogger.i(TAG, "**** ON SUCCESS");
         getView().hideLoading();
         getView().showMessage(message);
+
+        getVillagesData();
+
+
+
     }
 
     //Upload Data Callbacks declared at the global level

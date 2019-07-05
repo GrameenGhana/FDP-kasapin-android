@@ -55,6 +55,7 @@ public class Question {
     @SerializedName("formula_c")
     @Expose
     private String formulaC;
+
     @SerializedName("label_c")
     @Expose
     private String labelC;

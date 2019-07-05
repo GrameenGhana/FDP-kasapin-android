@@ -30,10 +30,11 @@ public class SplashPresenter extends BasePresenter<SplashContract.View> implemen
     @Override
     public void openNextActivity() {
 
-        if (mAppDataManager.getUserLoggedInMode() == DataManager.LoggedInMode.LOGGED_OUT.getType())
-            getView().openLoginActivity();
-        else
+        if (mAppDataManager.getUserLoggedInMode() == DataManager.LoggedInMode.LOGGED_IN.getType())
             getView().openNextActivity();
+        else
+        getView().openLoginActivity();
+
 
     }
 

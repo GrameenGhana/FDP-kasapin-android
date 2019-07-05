@@ -23,6 +23,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
@@ -44,9 +45,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * A login screen that offers login via email/password.
@@ -96,13 +94,18 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     String BASE64_STRING = "";
 
-    List<String> villageList = new ArrayList<>();
+    List<String> villageNames = new ArrayList<>();
+    List<Integer> villageIds = new ArrayList<>();
 
     String[] educationLevels = {"Primary", "Secondary", "Tertiary", "Professional Course", "Other"};
     String[] genders = {"Male", "Female"};
     private boolean newDataSaved = false;
     private FormAndQuestions CURRENT_FORM_QUESTION;
     private DynamicFormFragment dynamicFormFragment;
+
+
+    String gender, educationLevel, villageName;
+    int villageId;
 
 
     @Override
@@ -140,17 +143,14 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
          *
          **/
 
-        getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().villagesDao().getAll()
-                .subscribeOn(Schedulers.io())
-                .flatMap(villages -> Observable.fromIterable(villages)
-                        .doOnNext(village -> villageList.add(village.getName())).toList())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onSuccess -> {
+        List<Village> villages = getAppDataManager().getDatabaseManager().villagesDao().getAll().blockingGet();
+        for(Village v : villages){
+            villageNames.add(v.getName());
+            villageIds.add(v.getId());
+        }
 
-                    villageSpinner.setItems(villageList);
-                    if (!villageList.isEmpty())
-                        villageSpinner.setSelectedIndex(0);
-                }));
+
+
 
 
         /**
@@ -172,12 +172,31 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
         //Fix Spinners
 
+        villageSpinner.setItems(villageNames);
+        villageSpinner.setOnItemSelectedListener((view, position, id, item) -> {
+            villageName = villageNames.get(position);
+            villageId = villageIds.get(position);
+        });
 
         educationLevelSpinner.setItems(educationLevels);
-        educationLevelSpinner.setSelectedIndex(0);
+        educationLevelSpinner.setOnItemSelectedListener((view, position, id, item) -> educationLevel = educationLevels[position]);
+
 
         genderSpinner.setItems(genders);
-        genderSpinner.setSelectedIndex(0);
+        genderSpinner.setOnItemSelectedListener((view, position, id, item) -> gender = genders[position]);
+
+
+
+
+
+
+        AppLogger.e(TAG, "***********  FARMER  ***************");
+        AppLogger.e(TAG, getGson().toJson(FARMER));
+        AppLogger.e(TAG, "***********  FARMER  ***************");
+
+
+
+
 
         if (!isNewFarmer) {
             CURRENT_FORM_QUESTION = FILTERED_FORMS.get(CURRENT_FORM);
@@ -195,8 +214,42 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             birthYearEdittext.setText(FARMER.getBirthYear());
 
 
-            villageSpinner.setText(FARMER.getVillageName().toUpperCase());
-            educationLevelSpinner.setText(FARMER.getEducationLevel());
+            if(FARMER.getVillageId() > 0){
+                Village village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
+
+                if(village != null) {
+                    villageName = village.getName();
+                    villageId = FARMER.getVillageId();
+
+
+                    for(int i  = 0; i < villageNames.size(); i++)
+                        if(villageName.equalsIgnoreCase(villageNames.get(i))) {
+                            villageSpinner.setSelectedIndex(i);
+                            break;
+                        }
+                }
+            }
+
+            if(FARMER.getEducationLevel() != null) {
+                educationLevel = FARMER.getEducationLevel();
+
+                for(int i  = 0; i < educationLevels.length; i++)
+                    if(educationLevel.equalsIgnoreCase(educationLevels[i])) {
+                        educationLevelSpinner.setSelectedIndex(i);
+                        break;
+                    }
+            }
+
+
+            if(FARMER.getGender() != null) {
+                gender = FARMER.getGender();
+
+                for(int i  = 0; i < genders.length; i++)
+                    if(gender.equalsIgnoreCase(genders[i])) {
+                        genderSpinner.setSelectedIndex(i);
+                        break;
+                    }
+            }
 
             if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().isEmpty()) {
                 try {
@@ -237,10 +290,18 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             save.setText("Save");
 
 
+            gender = genders[0];
+            educationLevel = educationLevels[0];
+            villageId = villageIds.get(0);
+            villageName = villageNames.get(0);
+
+
             /**
              * As a new farmer, get the farmer profile form and questions and display to the farmer
              *
              **/
+
+
             for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
                 AppLogger.e("FORM NAME IS " + formAndQuestions.getForm().getFormNameC());
 
@@ -291,15 +352,17 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER = new RealFarmer();
             FARMER.setFirstVisitDate(new Date(System.currentTimeMillis()));
         }
+
         FARMER.setFarmerName(farmerName.getText().toString().trim());
         FARMER.setBirthYear(birthYearEdittext.getText().toString().trim());
         FARMER.setCode(farmerCode.getText().toString().trim());
-        FARMER.setGender(genders[genderSpinner.getSelectedIndex()]);
-        FARMER.setEducationLevel(educationLevels[educationLevelSpinner.getSelectedIndex()]);
-        FARMER.setVillageId(villageSpinner.getSelectedIndex());
-        FARMER.setVillageName(villageList.get(villageSpinner.getSelectedIndex()));
+        FARMER.setGender(gender);
+        FARMER.setEducationLevel(educationLevel);
+        FARMER.setVillageId(villageId);
+        FARMER.setVillageName(villageName);
         FARMER.setLastModifiedDate(TimeUtils.getDateTime());
         FARMER.setImageUrl(BASE64_STRING);
+
 
 
         mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
@@ -335,7 +398,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @Override
     public void showFarmerDetailsActivity(RealFarmer farmer) {
-
         Intent intent = new Intent(this, FarmerProfileActivity.class);
         intent.putExtra("farmer", getGson().toJson(FARMER));
         startActivity(intent);
@@ -478,15 +540,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     (dialogInterface, i) -> {
                         dialogInterface.dismiss();
 
-                        finish();
+                        getAppDataManager().setBooleanValue("reload", true);
 
-                       /* Intent intent = new Intent(AddEditFarmerActivity.this, FarmerProfileActivity.class);
-                        intent.putExtra("farmer", getGson().toJson(FARMER));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
                         finish();
-                        overridePendingTransition(0, 0);*/
-
                     }, getStringResources(R.string.no), 0);
     }
 

@@ -11,6 +11,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Village;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 /**
@@ -24,7 +25,11 @@ public interface VillagesDao extends BaseDao<Village> {
 
 
     @Query("SELECT * FROM villages")
-    Single<List<Village>> getAll();
+    Single<List<Village>> getAllSingle();
+
+
+    @Query("SELECT * FROM villages")
+    Maybe<List<Village>> getAll();
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -32,7 +37,7 @@ public interface VillagesDao extends BaseDao<Village> {
 
 
     @Query("SELECT * FROM villages WHERE id = :id")
-    Village getVillageById(String id);
+    Village getVillageById(int id);
 
 
     @Update

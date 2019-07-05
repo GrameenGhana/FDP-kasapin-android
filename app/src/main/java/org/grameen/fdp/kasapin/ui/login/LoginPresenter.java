@@ -73,7 +73,6 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                     @Override
                     public void onSuccess(User user) {
 
-
                         Country country = new Country();
                         country.setId(user.getCountryId());
                         country.setCurrency("GHS");
@@ -81,7 +80,6 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                         country.setName("Ghana");
 
                         getAppDataManager().setStringValue("country", getGson().toJson(country));
-
 
                         mAppDataManager.updateUserInfo(user);
                         fetchData();
@@ -138,11 +136,8 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
         e.printStackTrace();
 
 
-        getView().showDialog(true, "An error occurred.", e.getMessage(), (dialog, which) -> {
-
-            dialog.dismiss();
-
-        }, "OK", null, "", 0);
+        getView().showDialog(true, "An error occurred.", e.getMessage(),
+                (dialog, which) -> dialog.dismiss(), "OK", null, "", 0);
 
 
     }

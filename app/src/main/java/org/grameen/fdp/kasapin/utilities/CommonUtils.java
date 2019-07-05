@@ -18,6 +18,8 @@ import org.grameen.fdp.kasapin.R;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -167,6 +169,15 @@ public final class CommonUtils {
     public static String getDateStamp() {
         return new SimpleDateFormat(AppConstants.DATE_FORMAT, Locale.US).format(new Date());
     }
+
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
 
 
 }

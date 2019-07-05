@@ -75,13 +75,14 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
                             .subscribeOn(Schedulers.io())
                             .subscribe(aLong -> {
 
+                                setFarmerAsUnsynced(farmer);
+
                                 getView().showMessage("Farmer data saved!");
 
                                 if (!exit)
                                     getView().moveToNextForm();
                                 else {
                                     getAppDataManager().setBooleanValue("reload", true);
-
                                     getView().finishActivity();
                                 }
                             }, throwable -> {

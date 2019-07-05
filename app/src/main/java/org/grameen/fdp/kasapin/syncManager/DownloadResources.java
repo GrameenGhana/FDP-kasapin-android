@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.syncManager;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.Form;
+import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
@@ -11,6 +12,7 @@ import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class DownloadResources {
             getView().setLoadingMessage("Getting survey data...");
 
         List<Village> villageList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
 
             Village v = new Village();
             v.setId(i);
@@ -164,7 +166,10 @@ public class DownloadResources {
 
                                     @Override
                                     public void onComplete() {
-                                        showSuccess("Data download completed!");
+                                        getSyncDownData();
+
+                                       // showSuccess("Data download completed!");
+
 
 
                                     }
@@ -183,11 +188,11 @@ public class DownloadResources {
 
 
     private void getSyncDownData() {
+
         if (showProgress)
             getView().setLoadingMessage("Getting farmer and answers data...");
 
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
-
 
         getAppDataManager().getFdpApiService()
                 .fetchSyncDownData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), 0, 0)
@@ -195,18 +200,33 @@ public class DownloadResources {
                     @Override
                     public void onSuccess(SyncDownData syncDownData) {
 
-                        if(syncDownData.getSuccess().equalsIgnoreCase("true")) {
+                        AppLogger.e(TAG, "******************************************");
+
+                        AppLogger.e(TAG, "OnSuccess " + syncDownData.getSuccess());
+                        AppLogger.e(TAG, "SYNC DOWN DATA SIZE " + syncDownData.getData().size());
+                        AppLogger.e(TAG, "******************************************");
+
+                        if(syncDownData.getSuccess().trim().equalsIgnoreCase("true")) {
 
                             //check for total count here against pageDown/pageEnd and loop method getSyncDownData
 
                             if(syncDownData.getData() != null && syncDownData.getData().size() > 0)
                             for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
 
+
+                                //Todo replace village id with country admin level fromm the server
+                                farmerAndAnswers1.getFarmer().setVillageId(1);
+
                                 getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
                                 getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
 
-                                getAppDataManager().getDatabaseManager().plotsDao().insertAll(farmerAndAnswers1.getPlots());
+                                if(farmerAndAnswers1.getPlotDetails() != null && farmerAndAnswers1.getPlotDetails().size() > 0)
+                                    for(List<Plot> plots : farmerAndAnswers1.getPlotDetails())
+                                getAppDataManager().getDatabaseManager().plotsDao().insertAll(plots);
+
                             }
+
+                            showSuccess("Data download completed!");
 
 
                         }else onError(new Throwable("An error occurred!"));

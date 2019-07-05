@@ -21,7 +21,7 @@ import io.reactivex.Single;
 public interface VillageAndFarmersDao {
 
     @Transaction
-    @Query("SELECT id, name FROM villages")
+    @Query("SELECT * FROM villages")
     Single<List<VillageAndFarmers>> getVillagesAndFarmers();
 
 }

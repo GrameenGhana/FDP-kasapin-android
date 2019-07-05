@@ -26,6 +26,7 @@ import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,6 +107,15 @@ public abstract class BaseActivity extends AppCompatActivity
         recyclerView.setLayoutAnimation(controller);
         recyclerView.scheduleLayoutAnimation();
     }
+
+    public static void runLayoutAnimation(final ListView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fall_down);
+        recyclerView.setLayoutAnimation(controller);
+        //recyclerView.getAdapter().notifyAll();
+        recyclerView.scheduleLayoutAnimation();
+    }
+
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
@@ -362,6 +372,12 @@ public abstract class BaseActivity extends AppCompatActivity
                 negativeText, icon_drawable);
 
     }
+
+
+
+
+
+
 
     protected Toolbar setToolbar(String title) {
         Toolbar toolbar = null;

@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by aangjnr on 30/01/2018.
  */
 
-@Entity(tableName = "villages", indices = @Index(value = "countryId"))
+@Entity(tableName = "villages", indices = {@Index(value = "countryId"), @Index(value = "id", unique = true)})
 public class Village {
 
     @PrimaryKey
@@ -20,12 +20,12 @@ public class Village {
 
     @SerializedName("LastModifiedDate")
     String lastModifiedDate;
-
     @NonNull
     String name;
+
     int countryId;
 
-    @SerializedName("district__c")
+    @SerializedName("district_c")
     String district;
 
 

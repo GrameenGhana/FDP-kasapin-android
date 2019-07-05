@@ -18,9 +18,6 @@ package org.grameen.fdp.kasapin.data.prefs;
 
 import org.grameen.fdp.kasapin.data.DataManager;
 
-/**
- * Created by janisharali on 27/01/17.
- */
 
 public interface PreferencesHelper {
 

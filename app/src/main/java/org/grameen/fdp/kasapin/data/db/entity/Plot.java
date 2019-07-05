@@ -7,9 +7,14 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
+
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by aangjnr on 08/11/2017.
@@ -33,10 +38,11 @@ public class Plot {
     String plotAge = "0";
     @SerializedName("area_c")
     String area;
+
+    @SerializedName("gps_points")
     String plotPoints;
     @SerializedName("name_c")
     String name;
-
     @SerializedName("ph_c")
     String ph;
 
@@ -45,15 +51,20 @@ public class Plot {
 
     @SerializedName("data")
     String answersData;
-    String gpsPoints;
+
     @SerializedName("recommendation_id")
     int recommendationId = -1;
 
     int gapsId = -1;
     int startYear = 1;
 
-    public Plot() {
+    public Plot() {}
 
+
+
+    @Ignore
+    public List<PlotGpsPoint> getGpsPoints(){
+        return getGson().fromJson(plotPoints, new TypeToken<List<PlotGpsPoint>>(){}.getType());
     }
 
     public String getExternalId() {
@@ -177,13 +188,6 @@ public class Plot {
         this.answersData = answersData;
     }
 
-    public String getGpsPoints() {
-        return gpsPoints;
-    }
-
-    public void setGpsPoints(String gpsPoints) {
-        this.gpsPoints = gpsPoints;
-    }
 
     public int getGapsId() {
         return gapsId;
@@ -198,8 +202,7 @@ public class Plot {
     }
 
     public void setRecommendationId(int recommendationId) {
-        this.recommendationId = recommendationId;
-    }
+        this.recommendationId = recommendationId;}
 
     @Ignore
     public JSONObject getAOJsonData() throws JSONException {

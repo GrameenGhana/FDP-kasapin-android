@@ -21,7 +21,7 @@ public class Recommendation extends BaseModel {
     @SerializedName("label")
     String label;
 
-    @SerializedName("reco_name_c")
+    @SerializedName("reco_name")
     String recommendationName;
 
     int hierarchy;
@@ -52,9 +52,6 @@ public class Recommendation extends BaseModel {
     }
 
     public String getRecommendationName() {
-        if(recommendationName == null)
-            return label;
-
         return recommendationName;
     }
 

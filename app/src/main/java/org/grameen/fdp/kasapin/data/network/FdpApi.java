@@ -37,11 +37,6 @@ public interface FdpApi {
     @GET(AppConstants.API_VERSION + "auth/user/details")
     Single<User> getUser(@Query("token") String token);
 
-
-    @POST(AppConstants.API_VERSION + "syncdowndata")
-    Single<SyncDownData> getSyncDownData(@Query("token") String token, int countryId, int surveyorId, int pageStart, int pageEnd);
-
-
     @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
     Single<FormsDataWrapper> getSurveyData(@Path("id") int countryId, @Query("token") String token);
 
@@ -55,6 +50,9 @@ public interface FdpApi {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     Single<Response> postFarmers(@Query("token") String token, @Body JsonObject farmersData);
 
+    @POST(AppConstants.API + "syncdowndata")
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    Single<SyncDownData> getSyncDownData(@Query("token") String token, @Body JsonObject body);
 
 
 

@@ -275,6 +275,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
             AppLogger.e(TAG, "---------   RECOMMENDATION NAME >>  " + recommendation.getLabel() + "   ---------");
+            AppLogger.e(TAG, "---------   RECOMMENDATION NAME IN ENGLISH >>  " + recommendation.getRecommendationName() + "   ---------");
+
             AppLogger.e(TAG, "---------   HIERARCHY >>  " + recommendation.getHierarchy() + "   ---------");
 
 

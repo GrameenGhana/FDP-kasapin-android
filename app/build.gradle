@@ -118,8 +118,11 @@ android {
         implementation "com.android.support:animated-vector-drawable:$rootProject.supportLibraryVersion"
         implementation "com.android.support:preference-v7:$rootProject.supportLibraryVersion"
         implementation "com.android.support:percent:$rootProject.ext.supportLibraryVersion"
+
         implementation "com.google.android.gms:play-services-maps:$rootProject.ext.mapsVersion"
         implementation "com.google.android.gms:play-services-location:$rootProject.ext.mapsVersion"
+
+        implementation 'com.google.maps.android:android-maps-utils:0.5+'
 
         implementation "com.android.support:gridlayout-v7:$rootProject.ext.supportLibraryVersion"
 
@@ -209,7 +212,7 @@ android {
         implementation "com.github.karanchuri:PermissionManager:$rootProject.ext.permissionManager"
         implementation 'com.android.support:exifinterface:28.0.0'
 
-        implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
 
 
     }

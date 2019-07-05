@@ -89,8 +89,6 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
 
     @Override
     protected void setUp(View view) {
-
-
         if (getArguments() != null) {
             mFarmers = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<RealFarmer>>() {
             }.getType());
@@ -179,12 +177,10 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
 
         if (index == 0) {
             listView.setAlpha(0);
-            listView.animate().alpha(1).setDuration(1000).setInterpolator(new LinearInterpolator()).start();
+            listView.animate().alpha(1).setDuration(1500).setInterpolator(new LinearInterpolator()).start();
         }
 
-
         new Handler().post(() -> {
-
 
             if (mFarmers.size() > 0) {
 

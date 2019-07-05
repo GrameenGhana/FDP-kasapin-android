@@ -23,6 +23,7 @@ import com.google.maps.android.SphericalUtil;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.PlotGpsPoint;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -52,8 +53,9 @@ public class MapActivity extends BaseActivity implements MapContract.View {
     String TAG = getClass().getSimpleName();
     Button addPoint;
     Button calculateArea;
-    List<LatLng> latLngs = new ArrayList<>();
     Plot plot;
+    List<PlotGpsPoint> plotGpsPoints = new ArrayList<>();
+    List<LatLng> latLngs = new ArrayList<>();
     RecyclerView recyclerView;
     boolean GpsStatus = false;
     LocationManager locationManager;
@@ -61,6 +63,9 @@ public class MapActivity extends BaseActivity implements MapContract.View {
     PointsListAdapter mAdapter;
     Double AREA_OF_PLOT;
     android.location.LocationListener locationListener;
+
+    double accuracy;
+    double altitude;
 
 
     @Override
@@ -91,22 +96,10 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
         AppLogger.i(TAG, "PLOT POINTS " + plot.getGpsPoints());
 
-        if (plot.getGpsPoints() != null && !plot.getGpsPoints().equalsIgnoreCase("")) {
-
-            try {
-                String llgs[] = plot.getGpsPoints().split("_");
-                for (String llg : llgs) {
-
-                    String values[] = llg.split(",");
-
-                    latLngs.add(new LatLng(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+        if (plot.getGpsPoints() != null) {
+                 for (PlotGpsPoint point : plot.getGpsPoints()) {
+                    latLngs.add(new LatLng(point.getLatitude_c(), point.getLongitude_c()));
                 }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
         }
 
 
@@ -145,7 +138,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         });
 
 
-        calculateArea = (Button) findViewById(R.id.calculate);
+        calculateArea = findViewById(R.id.calculate);
         calculateArea.setEnabled(false);
 
         calculateArea.setOnClickListener(view -> {
@@ -170,26 +163,14 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
                     showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok), (dialog, which) -> {
 
-                        StringBuilder builder = new StringBuilder();
+                    saveGpsPointsData();
 
-                        //Todo save latLngs
-                        for (LatLng latLng : latLngs) {
-
-                            if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
-                                builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
-                            else
-                                builder.append(latLng.latitude).append(",").append(latLng.longitude);
-                        }
-
-                        plot.setGpsPoints(builder.toString());
                         dialog.dismiss();
-                        saveData();
 
                     }, getStringResources(R.string.save), 0);
 
 
                     hasCalculated = true;
-
                 }
 
             } else
@@ -220,25 +201,36 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         locationListener = new android.location.LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
+
+                altitude = location.getAltitude();
+                accuracy = CommonUtils.round(location.getAccuracy(), 2);
+
+
                 AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
 
 
-                String msg = "Updated Location " + "\n" +
-                        "Latitude : " + Double.toString(location.getLatitude()) + "\n" +
-                        "Longitude : " + Double.toString(location.getLongitude()) + "\n" +
-                        "Accuracy : " + location.getAccuracy() + " meters ";
-                //"Altitude : "+mCurrentLocation.getAltitude()+" high ";
+                String msg =
+                                "Do you want to save this? \n\n" +
+                                "Latitude    :   " +  location.getLatitude() + "\n" +
+                                "Longitude  :   " + location.getLongitude() + "\n" +
+                                "Accuracy   :   " + accuracy + " meters\n" +
+                                "Altitude    :   " + altitude + " high";
                 //Toast.makeText(CustomerMapActivity.this, msg, Toast.LENGTH_LONG).show();
+
+
+
 
 
                 if (progressDialog.isShowing())
                     progressDialog.dismiss();
 
-                showDialog(true, "Are you sure?", msg, (dialog, which) -> {
+                showDialog(true, "Location update!", msg, (dialog, which) -> {
 
                     dialog.dismiss();
 
                     LatLng newLL = new LatLng(location.getLatitude(), location.getLongitude());
+
+
                     mAdapter.addPoint(newLL);
                     addPoint.setEnabled(true);
                     progressDialog.dismiss();
@@ -252,7 +244,6 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
                     if (latLngs.size() > 2) {
                         calculateArea.setEnabled(true);
-
                     } else {
                         calculateArea.setEnabled(false);
 
@@ -288,7 +279,6 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
 
     void computeAreaInSquareMeters() {
-
         if (progressDialog.isShowing())
             progressDialog.dismiss();
 
@@ -308,40 +298,24 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(),
                 getStringResources(R.string.ok), (dialog, which) -> {
 
-                    StringBuilder builder = new StringBuilder();
 
                     //Todo save latLngs
-                    for (LatLng latLng : latLngs) {
-                        if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
-                            builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
-                        else
-                            builder.append(latLng.latitude).append(",").append(latLng.longitude);
-                    }
-
-                    plot.setGpsPoints(builder.toString());
-
-                    AppLogger.i(TAG, "STRING ARRAY OF LatLngs = " + builder);
+                   saveGpsPointsData();
 
                     dialog.dismiss();
-
-                    saveData();
                 }, getStringResources(R.string.save), 0);
 
 
         hasCalculated = true;
-
-
     }
 
 
     double convertToHectres(Double valueInSquareMetres) {
-
         return valueInSquareMetres / 10000;
 
     }
 
     double convertToAcres(Double valueInSquareMetres) {
-
         return valueInSquareMetres / 4040.856;
 
     }
@@ -386,26 +360,29 @@ public class MapActivity extends BaseActivity implements MapContract.View {
     }
 
 
-    @Override
-    protected void onStop() {
-
-        StringBuilder builder = new StringBuilder();
+    void saveGpsPointsData(){
+        plotGpsPoints.clear();
 
         //Todo save latLngs
         for (LatLng latLng : latLngs) {
+            PlotGpsPoint points = new PlotGpsPoint();
+            points.setLatitude_c(latLng.latitude);
+            points.setLongitude_c(latLng.longitude);
+            points.setPrecision_c(accuracy);
+            points.setAltitude_c(altitude);
 
-            if (!Objects.equals(latLng, latLngs.get(latLngs.size() - 1)))
-                builder.append(latLng.latitude).append(",").append(latLng.longitude).append("_");
-            else
-                builder.append(latLng.latitude).append(",").append(latLng.longitude);
+            plotGpsPoints.add(points);
         }
 
-        plot.setGpsPoints(builder.toString());
+        plot.setPlotPoints(getGson().toJson(plotGpsPoints));
 
         saveData();
+    }
 
-        plot.setGpsPoints(builder.toString());
 
+    @Override
+    protected void onStop() {
+      saveGpsPointsData();
         super.onStop();
     }
 

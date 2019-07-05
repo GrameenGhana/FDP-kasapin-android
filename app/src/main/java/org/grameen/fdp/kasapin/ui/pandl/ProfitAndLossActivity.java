@@ -1058,17 +1058,17 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             if (!ComputationUtils.getValue(plotRenovatedCorrectlyQuestion.getLabelC(), PLOT_ANSWERS_JSON_OBJECT).equalsIgnoreCase("yes"))
 
 
-                if ((PLOT_RECOMMENDATION.getLabel().equalsIgnoreCase("Grafting")) ||
-                        PLOT_RECOMMENDATION.getLabel().equalsIgnoreCase("Thinning Out") ||
-                        PLOT_RECOMMENDATION.getLabel().equalsIgnoreCase("Filling In")) {
+                if ((PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Grafting")) ||
+                        PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Thinning Out") ||
+                        PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Filling In")) {
 
-                    getAppDataManager().setStringValue(PLOT.getExternalId(), PLOT_RECOMMENDATION.getLabel());
+                    getAppDataManager().setStringValue(PLOT.getExternalId(), PLOT_RECOMMENDATION.getRecommendationName());
 
 
                     TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Replant", null, BUTTON_VIEW));
 
 
-                } else if (PLOT_RECOMMENDATION.getLabel().equalsIgnoreCase("Replant")) {
+                } else if (PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Replant")) {
 
 
                     if (getAppDataManager().getStringValue(PLOT.getExternalId()).equalsIgnoreCase("thinning out"))
@@ -1084,15 +1084,15 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                         TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Grafting", null, BUTTON_VIEW));
 
 
-                } else if (PLOT_RECOMMENDATION.getLabel().equalsIgnoreCase("Filling in + Extra Soil")
-                        || PLOT_RECOMMENDATION.getLabel().equalsIgnoreCase("Thinning out + Extra Soil")
-                        || PLOT_RECOMMENDATION.getLabel().equalsIgnoreCase("Grafting + Extra Soil")) {
+                } else if (PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Filling in + Extra Soil")
+                        || PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Thinning out + Extra Soil")
+                        || PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Grafting + Extra Soil")) {
 
-                    getAppDataManager().setStringValue(PLOT.getExternalId(), PLOT_RECOMMENDATION.getLabel());
+                    getAppDataManager().setStringValue(PLOT.getExternalId(), PLOT_RECOMMENDATION.getRecommendationName());
                     TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Replant + Extra Soil", null, BUTTON_VIEW));
 
 
-                } else if (PLOT_RECOMMENDATION.getLabel().equalsIgnoreCase("Replant + Extra Soil")) {
+                } else if (PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Replant + Extra Soil")) {
 
 
                     if (getAppDataManager().getStringValue(PLOT.getExternalId()).equalsIgnoreCase("Thinning out + Extra Soil"))

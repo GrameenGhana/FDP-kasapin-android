@@ -23,6 +23,7 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
@@ -221,10 +222,15 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         }
 
 
-        FILTERED_FORMS = new ArrayList<>();
+
         //AppLogger.e(TAG, getGson().toJson(FILTERED_FORMS));
 
-        mPresenter.loadDynamicButtons(FORM_AND_QUESTIONS);
+
+
+        if(shouldLoadButtons) {
+            FILTERED_FORMS = new ArrayList<>();
+            mPresenter.loadDynamicButtons(FORM_AND_QUESTIONS);
+        }
 
 
 
@@ -334,7 +340,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                 CURRENT_FORM = (int) b.getTag();
 
-                Log.i(TAG, "BUTTON CLICKED, CURRENT FORM IS " + CURRENT_FORM);
+                AppLogger.i(TAG, "BUTTON CLICKED, CURRENT FORM IS " + CURRENT_FORM);
 
                 Intent intent = new Intent(FarmerProfileActivity.this, AddEditFarmerActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
@@ -357,13 +363,14 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     @Override
     protected void onResume() {
-        super.onResume();
+        AppLogger.e(TAG, "On Resume...");
         if (getAppDataManager().getBooleanValue("reload")) {
 
-            mPresenter.getFarmersPlots(FARMER.getCode());
-
-            getAppDataManager().setBooleanValue("reload", false);
+            FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(FARMER.getCode()).blockingGet();
+            if(FARMER != null)
+                initializeViews(false);
         }
+        super.onResume();
     }
 
 

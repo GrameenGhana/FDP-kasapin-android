@@ -76,7 +76,14 @@ public class FdpApiService {
 
 
     public Single<SyncDownData> fetchSyncDownData(String token, int countryId, int surveyorId, int pageUp, int pageDown) {
-        return fdpApi.getSyncDownData(token, pageUp, countryId, surveyorId, pageDown).subscribeOn(Schedulers.io())
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("country_id", countryId);
+        jsonObject.addProperty("surveyor_id", surveyorId);
+        jsonObject.addProperty("pstart", pageUp);
+        jsonObject.addProperty("pend", pageDown);
+
+        return fdpApi.getSyncDownData(token, jsonObject).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

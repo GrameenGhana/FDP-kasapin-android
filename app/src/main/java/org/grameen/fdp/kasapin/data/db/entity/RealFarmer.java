@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by aangjnr on 13/12/2017.
  */
 
-@Entity(tableName = "farmers", indices = {@Index(value = "id", unique = true), @Index(value = "code", unique = true)})
+@Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true)})
 public class RealFarmer {
 
     @PrimaryKey(autoGenerate = true)
@@ -23,6 +23,7 @@ public class RealFarmer {
 
     @SerializedName("full_name_c")
     String farmerName;
+
     @SerializedName("farmer_code_c")
     String code;
 
@@ -38,6 +39,7 @@ public class RealFarmer {
     @SerializedName("farmer_photo_c")
     String imageUrl;
 
+    @SerializedName("village_id")
     int villageId;
 
     Date firstVisitDate;
@@ -48,7 +50,7 @@ public class RealFarmer {
 
     String landArea;
 
-    int syncStatus = 0;
+    int syncStatus = 1;
     String hasSubmitted = "NO";
 
     String villageName;
