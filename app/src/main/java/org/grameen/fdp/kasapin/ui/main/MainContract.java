@@ -50,7 +50,7 @@ public class MainContract {
 
         void toggleDrawer();
 
-        void getVillagesData();
+        void getVillagesDataFromDbAndUpdateUI();
 
         void getFormsAndQuestionsData();
 
@@ -58,7 +58,9 @@ public class MainContract {
 
         void syncData(boolean showProgress);
 
-        void downloadData(boolean showProgress);
+        void downloadResourcesData(boolean showProgress);
+
+        void downloadFarmersData(boolean showProgress);
 
         void initializeSearchDialog(List<VillageAndFarmers> villageAndFarmers);
 

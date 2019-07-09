@@ -28,6 +28,7 @@ import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
+import org.grameen.fdp.kasapin.ui.main.MainActivity;
 import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.ui.plotReview.PlotReviewActivity;
@@ -35,6 +36,8 @@ import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
+import org.grameen.fdp.kasapin.utilities.NetworkUtils;
+import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -186,8 +189,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         }*/
 
 
-        lastSyncDate.setText((FARMER.getLastVisitDate() != null) ? FARMER.getLastVisitDate().toString() : "--");
-        lastVisitDate.setText((FARMER.getLastModifiedDate() != null) ? FARMER.getLastModifiedDate().toString() : "--");
+        lastSyncDate.setText((FARMER.getLastModifiedDate() != null) ? FARMER.getLastModifiedDate().toString() : "--");
+        lastVisitDate.setText((FARMER.getLastVisitDate() != null) ? FARMER.getLastVisitDate().toString() : "--");
 
 
         if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().equals("")) {
@@ -246,6 +249,24 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             });
         }
         */
+
+
+    }
+
+    @Override
+    public void updateFarmerSyncStatus() {
+
+        FARMER.setSyncStatus(AppConstants.SYNC_OK);
+        FARMER.setLastModifiedDate(TimeUtils.getDateTime());
+        FARMER.setLastVisitDate(TimeUtils.getDateTime());
+        mPresenter.setFarmerAsSynced(FARMER);
+
+        lastSyncDate.setText((FARMER.getLastModifiedDate() != null) ? FARMER.getLastModifiedDate().toString() : "--");
+
+        syncIndicator.setImageResource(R.drawable.ic_check_circle_black_24dp);
+        syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent));
+
+
 
 
     }
@@ -442,7 +463,10 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 break;
             case R.id.sync_farmer:
 
-
+                if (NetworkUtils.isNetworkConnected(this))
+                    mPresenter.syncFarmerData(FARMER, true);
+                else
+                    showMessage(R.string.no_internet_connection_available);
                 break;
 
 

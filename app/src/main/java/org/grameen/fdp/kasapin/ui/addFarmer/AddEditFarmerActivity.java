@@ -364,7 +364,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         FARMER.setImageUrl(BASE64_STRING);
 
 
-
         mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
 
 

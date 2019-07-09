@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             toolBarLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.gradient_background_monitoring));
         }
 
-        mPresenter.getVillagesData();
+        mPresenter.getVillagesDataFromDbAndUpdateUI();
 
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
@@ -337,12 +337,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         switch (id) {
 
 
-            case R.id.sync:
+            case R.id.download_resources:
 
                 if (NetworkUtils.isNetworkConnected(MainActivity.this)) {
 
                     //Todo Sync data down
-                    new Handler().postDelayed(() -> mPresenter.downloadData(true), 500);
+                    new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 500);
 
                 } else
                     showMessage(R.string.no_internet_connection_available);
@@ -366,10 +366,11 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 break;
 
             case R.id.download_farmer_data:
-
-
                 //Todo Sync down new data from server
-
+                if (NetworkUtils.isNetworkConnected(MainActivity.this))
+                mPresenter.downloadFarmersData(true);
+                else
+                    showMessage(R.string.no_internet_connection_available);
                 break;
 
 
@@ -396,7 +397,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         if(getAppDataManager().getBooleanValue("reload")){
             AppLogger.e(TAG, "Reload data!");
 
-            mPresenter.getVillagesData();
+            mPresenter.getVillagesDataFromDbAndUpdateUI();
             getAppDataManager().setBooleanValue("reload", false);
 
 

@@ -47,4 +47,7 @@ public interface RealFarmersDao extends BaseDao<RealFarmer> {
     @Query("SELECT COUNT(syncStatus) FROM farmers")
     Maybe<Integer> checkIfUnsyncedAvailable();
 
+    @Query("SELECT COUNT(id) FROM farmers where code =:code")
+    int checkIfFarmerExists(String code);
+
 }

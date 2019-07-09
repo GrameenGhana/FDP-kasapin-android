@@ -121,7 +121,7 @@
     <string name="all_data_downloaded">All data downloaded successfully!</string>
 
     <string name="download_all_farmer_data">Do you want to download farmer data?</string>
-    <string name="download_farmer_data">Download farmer data</string>
+    <string name="download_farmer_data">Download farmers data</string>
 
 
     <string name="download_complete">Data download Complete</string>
@@ -362,7 +362,7 @@
 
     <string name="fdp">FarmGrow</string>
     <string name="download_resources">Download Resources</string>
-    <string name="upload_farmer_data">Upload farmer data</string>
+    <string name="upload_farmer_data">Upload all farmers data</string>
     <string name="share">Share</string>
     <string name="toggle_translation">Toggle Translation</string>
     <string name="estimated_production_size">Estimated production size:</string>

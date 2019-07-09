@@ -166,7 +166,7 @@ public class DownloadResources {
 
                                     @Override
                                     public void onComplete() {
-                                        getSyncDownData();
+                                        getFarmersData();
 
                                        // showSuccess("Data download completed!");
 
@@ -187,10 +187,10 @@ public class DownloadResources {
 
 
 
-    private void getSyncDownData() {
+    public void getFarmersData() {
 
         if (showProgress)
-            getView().setLoadingMessage("Getting farmer and answers data...");
+            getView().setLoadingMessage("Getting farmer and answers data...\nNB: This will not replace already existing farmer data!");
 
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
 
@@ -208,26 +208,31 @@ public class DownloadResources {
 
                         if(syncDownData.getSuccess().trim().equalsIgnoreCase("true")) {
 
-                            //check for total count here against pageDown/pageEnd and loop method getSyncDownData
+                            //check for total count here against pageDown/pageEnd and loop method getFarmersData
 
                             if(syncDownData.getData() != null && syncDownData.getData().size() > 0)
                             for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
 
+                                /**
+                                 * Check if farmer exists or not
+                                 * if farmer exists, skip else save
+                                **/
 
-                                //Todo replace village id with country admin level fromm the server
-                                farmerAndAnswers1.getFarmer().setVillageId(1);
+                                if(getAppDataManager().getDatabaseManager().realFarmersDao().checkIfFarmerExists(farmerAndAnswers1.getFarmer().getCode()) == 0) {
 
-                                getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
-                                getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
+                                    //Todo replace village id with country admin level fromm the server
+                                    farmerAndAnswers1.getFarmer().setVillageId(1);
 
-                                if(farmerAndAnswers1.getPlotDetails() != null && farmerAndAnswers1.getPlotDetails().size() > 0)
-                                    for(List<Plot> plots : farmerAndAnswers1.getPlotDetails())
-                                getAppDataManager().getDatabaseManager().plotsDao().insertAll(plots);
+                                    getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
+                                    getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
 
+                                    if (farmerAndAnswers1.getPlotDetails() != null && farmerAndAnswers1.getPlotDetails().size() > 0)
+                                        for (List<Plot> plots : farmerAndAnswers1.getPlotDetails())
+                                            getAppDataManager().getDatabaseManager().plotsDao().insertAll(plots);
+                                }
                             }
 
                             showSuccess("Data download completed!");
-
 
                         }else onError(new Throwable("An error occurred!"));
                     }
@@ -239,8 +244,6 @@ public class DownloadResources {
                     }
                 });
     }
-
-
 
 
 
