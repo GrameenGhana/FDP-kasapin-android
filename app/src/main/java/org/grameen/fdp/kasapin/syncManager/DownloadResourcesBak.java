@@ -2,6 +2,7 @@ package org.grameen.fdp.kasapin.syncManager;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Calculation;
+import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
@@ -9,7 +10,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.data.db.entity.RecommendationActivity;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
-import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
@@ -63,7 +63,7 @@ public class DownloadResourcesBak {
 
     public void getSurveyData() {
 
-        List<Village> villages = new ArrayList<>();
+        List<Community> villages = new ArrayList<>();
         List<Form> forms = new ArrayList<>();
         List<Question> questions = new ArrayList<>();
         List<SkipLogic> skipLogics = new ArrayList<>();
@@ -75,10 +75,10 @@ public class DownloadResourcesBak {
 
         for (int i = 0; i < 10; i++) {
 
-            Village v = new Village();
+            Community v = new Community();
             v.setId(i);
             v.setCountryId(1);
-            v.setDistrict("District " + i);
+           // v.setDistrict("District " + i);
             v.setName("Village " + i);
             villages.add(v);
         }

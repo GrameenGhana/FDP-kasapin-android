@@ -39,7 +39,7 @@ public class RealFarmer {
     @SerializedName("farmer_photo_c")
     String imageUrl;
 
-    @SerializedName("village_id")
+    @SerializedName("country_admin_level_id")
     int villageId;
 
     Date firstVisitDate;

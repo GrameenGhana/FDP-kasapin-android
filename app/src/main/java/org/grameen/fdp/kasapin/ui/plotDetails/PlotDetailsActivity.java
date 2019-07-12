@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
@@ -125,7 +126,37 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     @Override
     public void showForm(List<FormAndQuestions> formAndQuestions) {
 
-        BaseActivity.PLOT_FORM_AND_QUESTIONS = formAndQuestions;
+        //Usually, all answers pertaining to Form of type *Plot Form* are bundled as a JSON and saved in a the answerData field on the Plot object
+        //So when obtaining the answers for the plot form questions, they're all obtained from the answerData of Plot object
+        // On sync down from the server, some of the answers to the Plot Form questions are separated as FormAnswerData object and saved in the DB with their corresponding form_translation_ids
+        //So here, we just check those answers of Plot Form questions which are separated as FormAnswerData objects, iterate through them and add them back to the answer field of Plot object
+        //If the Plot hasn't been synced yet, FormAnswerData will be null for all forms of type Plot Form.
+        try {
+            JSONObject plotAnswersDataJson = PLOT.getAOJsonData();
+
+            BaseActivity.PLOT_FORM_AND_QUESTIONS = formAndQuestions;
+
+            for(FormAndQuestions formAndQuestions1 : BaseActivity.PLOT_FORM_AND_QUESTIONS){
+                FormAnswerData formAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(PLOT.getFarmerCode(), formAndQuestions1.getForm().getFormTranslationId());
+
+                if(formAnswerData != null){
+                    Iterator iterator = formAnswerData.getJsonData().keys();
+
+                    while (iterator.hasNext()) {
+                        String key = (String) iterator.next();
+                        try {
+                            if (!plotAnswersDataJson.has(key))
+                            plotAnswersDataJson.put(key, formAnswerData.getJsonData().get(key));
+                        } catch (JSONException ignored) {
+                        }
+                    }
+                }
+            }
+
+            PLOT.setAnswersData(plotAnswersDataJson.toString());
+        } catch (JSONException ignored) {}
+
+
 
         dynamicPlotFormFragment = DynamicPlotFormFragment.newInstance(true, PLOT.getFarmerCode(),
                 true, PLOT.getAnswersData());
@@ -133,8 +164,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, PLOT.getFarmerCode());
 
         mPresenter.getAreaUnits(PLOT.getFarmerCode());
-
-
         checkRecommendation();
         //
 
@@ -187,7 +216,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             if (!TextUtils.isEmpty(estimatedProductionSizeCaption))
                 plotEstProdText.setText(estimatedProductionSizeCaption);
 
-            String recommendedInterventionCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_estimate_production_");
+            String recommendedInterventionCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_recommendation_");
             if (!TextUtils.isEmpty(recommendedInterventionCaption))
                 recommendedInterventionText.setText(recommendedInterventionCaption);
 
@@ -230,19 +259,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     void checkRecommendation() {
 
-
-        if (PLOT.getRecommendationId() != -1) {
-
-            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationName(PLOT.getRecommendationId())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(s -> recommendedIntervention.setText(s), throwable -> {
-                    }));
-
-            recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent));
-            return;
-        }
-
         if (PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) {
             recommendedIntervention.setText(R.string.fill_out_ao_data);
             recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red));
@@ -250,10 +266,21 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         }
 
 
-        recommendedIntervention.setText("");
-        recommendationProgress.setVisibility(View.VISIBLE);
+        if (PLOT.getRecommendationId() > 0) {
 
-        mPresenter.getRecommendations(1);
+            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationId(PLOT.getRecommendationId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(s -> recommendedIntervention.setText(s), throwable -> showMessage("Couldn't load plot's recommendation")));
+
+            recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent));
+
+        }else {
+            recommendedIntervention.setText("");
+            recommendationProgress.setVisibility(View.VISIBLE);
+
+            mPresenter.getRecommendations(1);
+        }
 
 
     }

@@ -23,7 +23,7 @@ public class BaseModel {
     private String updatedAt;
 
 
-    @NonNull
+   @NonNull
     public int getId() {
         return id;
     }

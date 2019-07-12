@@ -29,9 +29,9 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
@@ -147,6 +147,9 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         mPresenter.getVillagesDataFromDbAndUpdateUI();
 
 
+       //AppLogger.e(TAG, "FARMERS >>> " + getGson().toJson(getAppDataManager().getDatabaseManager().realFarmersDao().getAll().blockingGet()));
+
+
         NavigationView navigationView = findViewById(R.id.navigation_view);
         View headerLayout = navigationView.getHeaderView(0);
 
@@ -173,12 +176,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
 
     @Override
-    public void setFragmentAdapter(List<VillageAndFarmers> villageAndFarmersList) {
+    public void setFragmentAdapter(List<CommunitiesAndFarmers> villageAndFarmersList) {
         int index = 0;
 
         FragmentPagerItems fragmentPagerItems = new FragmentPagerItems(this);
 
-        for (VillageAndFarmers villageAndFarmers : villageAndFarmersList) {
+        for (CommunitiesAndFarmers villageAndFarmers : villageAndFarmersList) {
 
             AppLogger.i(TAG, "VILLAGE ID IS " + villageAndFarmers.getVillage().getId() + " AND FARMERS SIZE IS " + villageAndFarmers.getFarmerList().size());
 
@@ -381,6 +384,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
     @Override
     public void showNoFarmersMessage() {
+
         showDialog(true, getString(R.string.no_data), getString(R.string.no_new_data),
                 (dialogInterface, i) -> dialogInterface.dismiss(),
                 getString(R.string.ok),
@@ -392,21 +396,27 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
   @Override
     protected void onResume() {
+
         AppLogger.e(TAG, "On Resume...");
 
         if(getAppDataManager().getBooleanValue("reload")){
             AppLogger.e(TAG, "Reload data!");
 
-            mPresenter.getVillagesDataFromDbAndUpdateUI();
+            restartUI();
             getAppDataManager().setBooleanValue("reload", false);
-
-
-
-
 
 
         }
 
       super.onResume();
+    }
+
+
+    @Override
+    public void restartUI(){
+        startActivity(new Intent(new Intent(this, MainActivity.class)));
+        overridePendingTransition(0, 0);
+        finish();
+
     }
 }

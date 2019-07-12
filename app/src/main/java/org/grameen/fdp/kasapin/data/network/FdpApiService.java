@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
@@ -55,6 +56,14 @@ public class FdpApiService {
         return fdpApi.getUser(token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+
+    public Single<CountryAdminLevelDataWrapper> fetchCommunitiesData(int countryId, String token) {
+        return fdpApi.getCommunitiesData(countryId, token).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
 
     public Single<FormsDataWrapper> fetchSurveyData(int id, String token) {
         return fdpApi.getSurveyData(id, token).subscribeOn(Schedulers.io())

@@ -324,10 +324,13 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
                                                     arrayOfValues.put(observationArray);
                                                 }
 
-                                            }  else if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
-                                                formatFarmerObjectData(farmer, arrayOfValues);
+                                            } else{
 
-                                            else{
+                                                //This formats the static farmer info into the mapping payload since this data is not obtained from the form/answer survey module
+
+                                                if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
+                                                    formatFarmerObjectData(farmer, arrayOfValues);
+
                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
                                                     //AppLogger.i(TAG, "MAPPING OBJECT NAME IS >>> " + mapping.getObjectName());

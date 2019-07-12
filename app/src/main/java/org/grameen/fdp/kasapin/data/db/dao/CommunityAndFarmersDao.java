@@ -5,7 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
-import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
+import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
 
 import java.util.List;
 
@@ -18,10 +18,10 @@ import io.reactivex.Single;
  */
 
 @Dao
-public interface VillageAndFarmersDao {
+public interface CommunityAndFarmersDao {
 
     @Transaction
-    @Query("SELECT * FROM villages")
-    Single<List<VillageAndFarmers>> getVillagesAndFarmers();
+    @Query("SELECT * FROM communities")
+    Single<List<CommunitiesAndFarmers>> getVillagesAndFarmers();
 
 }

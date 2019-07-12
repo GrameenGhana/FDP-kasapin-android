@@ -198,15 +198,17 @@
                                     android:textSize="@dimen/spacing_normal" />
 
 
-                                <com.jaredrummler.materialspinner.MaterialSpinner
-                                    android:id="@+id/villageSpinner"
+                                <TextView
+                                    android:id="@+id/village"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:ellipsize="end"
-                                    android:maxLines="1"
-                                    app:ms_arrow_tint="@color/colorPrimary"
-                                    app:ms_background_color="@color/background" />
+                                    android:background="@drawable/border_background"
+                                    android:hint="@string/click_to_select"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="@dimen/spacing_normal"
+                                    android:paddingRight="@dimen/spacing_normal"
+                                    android:textColor="@android:color/primary_text_light" />
 
 
                             </LinearLayout>

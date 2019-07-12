@@ -1,11 +1,13 @@
 package org.grameen.fdp.kasapin.syncManager;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
+import org.grameen.fdp.kasapin.data.db.entity.District;
 import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
-import org.grameen.fdp.kasapin.data.db.entity.Village;
+import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
@@ -58,21 +60,81 @@ public class DownloadResources {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void getCommunitiesData() {
+
+        if (showProgress)
+            getView().setLoadingMessage("Getting communities data...");
+
+
+        Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
+
+
+        getAppDataManager().getCompositeDisposable().add(mAppDataManager.getFdpApiService()
+                .fetchCommunitiesData(country.getId(), mAppDataManager.getAccessToken())
+                .subscribeWith(new DisposableSingleObserver<CountryAdminLevelDataWrapper>() {
+                    @Override
+                    public void onSuccess(CountryAdminLevelDataWrapper dataWrapper) {
+
+                        if(dataWrapper.getData() != null)
+                        Observable.fromIterable(dataWrapper.getData())
+                                .subscribeOn(Schedulers.io())
+                                .doOnNext(district -> {
+                                    getAppDataManager().getDatabaseManager().districtsDao().insertOne(district);
+
+                                    if(district.getCommunities() != null)
+                                    getAppDataManager().getDatabaseManager().villagesDao().insertAll(district.getCommunities());
+
+                                })
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new DisposableObserver<District>() {
+                                    @Override
+                                    public void onNext(District district) {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        showError(e);
+
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        getSurveyData();
+                                    }
+                                });
+
+                        else
+                            getSurveyData();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showError(e);
+                    }
+                }));
+    }
+
+
+
+
     public void getSurveyData() {
 
         if (showProgress)
             getView().setLoadingMessage("Getting survey data...");
-
-        List<Village> villageList = new ArrayList<>();
-        for (int i = 1; i < 10; i++) {
-
-            Village v = new Village();
-            v.setId(i);
-            v.setCountryId(1);
-            v.setDistrict("District " + i);
-            v.setName("Village " + i);
-            villageList.add(v);
-        }
 
 
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
@@ -118,7 +180,6 @@ public class DownloadResources {
 
                                     @Override
                                     public void onComplete() {
-                                        getAppDataManager().getDatabaseManager().villagesDao().insertAll(villageList);
                                         getRecommendationsData();
                                     }
                                 });
@@ -186,7 +247,6 @@ public class DownloadResources {
     }
 
 
-
     public void getFarmersData() {
 
         if (showProgress)
@@ -221,7 +281,6 @@ public class DownloadResources {
                                 if(getAppDataManager().getDatabaseManager().realFarmersDao().checkIfFarmerExists(farmerAndAnswers1.getFarmer().getCode()) == 0) {
 
                                     //Todo replace village id with country admin level fromm the server
-                                    farmerAndAnswers1.getFarmer().setVillageId(1);
 
                                     getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
                                     getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());

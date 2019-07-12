@@ -23,8 +23,7 @@ public class FormAnswerData extends BaseModel {
     @SerializedName("data")
     String data;
 
-
-    @SerializedName("form_id")
+    @SerializedName("form_translation_id")
     int formId;
 
     @SerializedName("farmer_code")

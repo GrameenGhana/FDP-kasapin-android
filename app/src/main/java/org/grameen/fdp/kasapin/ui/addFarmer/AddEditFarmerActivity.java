@@ -20,11 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.Village;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
+import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
@@ -45,6 +46,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
+import ir.mirrajabi.searchdialog.core.SearchResultListener;
 
 /**
  * A login screen that offers login via email/password.
@@ -69,8 +72,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     @BindView(R.id.takeImage)
     TextView takePhoto;
 
-    @BindView(R.id.villageSpinner)
-    MaterialSpinner villageSpinner;
+    @BindView(R.id.village)
+    TextView villageTextView;
+
 
     @BindView(R.id.educationLevelSpinner)
     MaterialSpinner educationLevelSpinner;
@@ -94,14 +98,17 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     String BASE64_STRING = "";
 
-    List<String> villageNames = new ArrayList<>();
-    List<Integer> villageIds = new ArrayList<>();
+
+    ArrayList<MySearchItem> villageItems = new ArrayList<>();
 
     String[] educationLevels = {"Primary", "Secondary", "Tertiary", "Professional Course", "Other"};
     String[] genders = {"Male", "Female"};
     private boolean newDataSaved = false;
     private FormAndQuestions CURRENT_FORM_QUESTION;
     private DynamicFormFragment dynamicFormFragment;
+
+    private SimpleSearchDialogCompat communitySearchDialog;
+
 
 
     String gender, educationLevel, villageName;
@@ -143,14 +150,10 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
          *
          **/
 
-        List<Village> villages = getAppDataManager().getDatabaseManager().villagesDao().getAll().blockingGet();
-        for(Village v : villages){
-            villageNames.add(v.getName());
-            villageIds.add(v.getId());
+        List<Community> villages = getAppDataManager().getDatabaseManager().villagesDao().getAll().blockingGet();
+        for(Community v : villages){
+            villageItems.add(new MySearchItem(String.valueOf(v.getId()), v.getName()));
         }
-
-
-
 
 
         /**
@@ -171,13 +174,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
          */
 
         //Fix Spinners
-
-        villageSpinner.setItems(villageNames);
-        villageSpinner.setOnItemSelectedListener((view, position, id, item) -> {
-            villageName = villageNames.get(position);
-            villageId = villageIds.get(position);
-        });
-
         educationLevelSpinner.setItems(educationLevels);
         educationLevelSpinner.setOnItemSelectedListener((view, position, id, item) -> educationLevel = educationLevels[position]);
 
@@ -215,18 +211,13 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
 
             if(FARMER.getVillageId() > 0){
-                Village village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
+                Community village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
 
                 if(village != null) {
                     villageName = village.getName();
                     villageId = FARMER.getVillageId();
 
-
-                    for(int i  = 0; i < villageNames.size(); i++)
-                        if(villageName.equalsIgnoreCase(villageNames.get(i))) {
-                            villageSpinner.setSelectedIndex(i);
-                            break;
-                        }
+                    villageTextView.setText(village.getName());
                 }
             }
 
@@ -292,8 +283,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
             gender = genders[0];
             educationLevel = educationLevels[0];
-            villageId = villageIds.get(0);
-            villageName = villageNames.get(0);
+            villageId = 0;
+            villageName = null;
 
 
             /**
@@ -347,6 +338,12 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
         }
 
+        if (villageId == 0 || villageName == null) {
+            showMessage("Please select community of farmer");
+            return;
+
+        }
+
 
         if (isNewFarmer) {
             FARMER = new RealFarmer();
@@ -362,7 +359,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         FARMER.setVillageName(villageName);
         FARMER.setLastModifiedDate(TimeUtils.getDateTime());
         FARMER.setImageUrl(BASE64_STRING);
-
 
         mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
 
@@ -419,7 +415,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         findViewById(R.id.save).setVisibility(View.GONE);
         farmerName.setEnabled(false);
         farmerCode.setEnabled(false);
-        villageSpinner.setEnabled(false);
+        villageTextView.setEnabled(false);
         educationLevelSpinner.setEnabled(false);
         genderSpinner.setEnabled(false);
         birthYearEdittext.setEnabled(false);
@@ -467,6 +463,29 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         }
 
     }
+
+
+    @OnClick(R.id.village)
+    public void chooseVillage(){
+
+        if (communitySearchDialog == null)
+            communitySearchDialog = new SimpleSearchDialogCompat(this, "Search Community",
+                    "Which community are you looking for?", null, villageItems,
+                    (SearchResultListener<MySearchItem>) (dialog, item, position) -> {
+                        dialog.dismiss();
+
+                        villageId = Integer.valueOf(item.getmExtId());
+                        villageName = item.getTitle();
+
+                        villageTextView.setText(villageName);
+
+                    });
+
+        communitySearchDialog.show();
+
+    }
+
+
 
     @Override
     protected void onDestroy() {

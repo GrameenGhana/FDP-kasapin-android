@@ -3,9 +3,9 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.support.annotation.Nullable;
 
+import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 
@@ -32,13 +32,15 @@ public class MainContract {
 
         void showNoFarmersMessage();
 
-        void setFragmentAdapter(List<VillageAndFarmers> villageAndFarmersList);
+        void setFragmentAdapter(List<CommunitiesAndFarmers> villageAndFarmersList);
 
         void cacheFormsAndQuestionsData(List<FormAndQuestions> formAndQuestions);
 
         void openAddNewFarmerActivity(FormAndQuestions formAndQuestions);
 
         void viewFarmerProfile(RealFarmer farmer);
+
+        void restartUI();
 
     }
 
@@ -62,7 +64,7 @@ public class MainContract {
 
         void downloadFarmersData(boolean showProgress);
 
-        void initializeSearchDialog(List<VillageAndFarmers> villageAndFarmers);
+        void initializeSearchDialog(List<CommunitiesAndFarmers> villageAndFarmers);
 
 
         void getFarmer(String farmerCode);

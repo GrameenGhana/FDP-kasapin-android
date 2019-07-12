@@ -28,9 +28,8 @@ public class Plot {
     @SerializedName("external_id_c")
     String externalId;
     String distanceBetweenCocoaTrees;
-    @SerializedName("estimated_production_c")
-    String EstimatedProduction;
-    String farmerName;
+
+     String farmerName;
     @SerializedName("farmer_code")
     String farmerCode;
     String numberOfShadeTrees;
@@ -47,6 +46,7 @@ public class Plot {
     String ph;
 
     String lastVisitDate;
+    @SerializedName("estimated_production_c")
     String estimatedProductionSize;
 
     @SerializedName("data")
@@ -107,13 +107,6 @@ public class Plot {
         this.distanceBetweenCocoaTrees = distanceBetweenCocoaTrees;
     }
 
-    public String getEstimatedProduction() {
-        return EstimatedProduction;
-    }
-
-    public void setEstimatedProduction(String estimatedProduction) {
-        EstimatedProduction = estimatedProduction;
-    }
 
     public String getNumberOfShadeTrees() {
         return numberOfShadeTrees;

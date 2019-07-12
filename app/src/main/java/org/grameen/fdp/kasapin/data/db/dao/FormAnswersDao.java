@@ -26,8 +26,8 @@ public interface FormAnswersDao extends BaseDao<FormAnswerData> {
     @Update
     int updateOne(FormAnswerData answerData);*/
 
-    @Query("DELETE FROM form_answers WHERE id = :id AND farmerCode = :farmerCode")
-    int deleteAnswerData(int id, String farmerCode);
+    @Query("DELETE FROM form_answers WHERE id = :id")
+    int deleteAnswerData(int id);
 
     @Query("SELECT * FROM form_answers WHERE farmerCode = :farmerCode AND formId = :formId")
     Single<FormAnswerData> getFormAnswerDataSingle(String farmerCode, int formId);

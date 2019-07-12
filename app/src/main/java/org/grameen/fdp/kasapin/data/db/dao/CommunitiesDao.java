@@ -7,7 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import org.grameen.fdp.kasapin.data.db.entity.Village;
+import org.grameen.fdp.kasapin.data.db.entity.Community;
 
 import java.util.List;
 
@@ -21,34 +21,32 @@ import io.reactivex.Single;
  */
 
 @Dao
-public interface VillagesDao extends BaseDao<Village> {
+public interface CommunitiesDao extends BaseDao<Community> {
 
 
-    @Query("SELECT * FROM villages")
-    Single<List<Village>> getAllSingle();
+    @Query("SELECT * FROM communities")
+    Single<List<Community>> getAllSingle();
 
 
-    @Query("SELECT * FROM villages")
-    Maybe<List<Village>> getAll();
+    @Query("SELECT * FROM communities")
+    Maybe<List<Community>> getAll();
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertVillage(Village village);
 
 
-    @Query("SELECT * FROM villages WHERE id = :id")
-    Village getVillageById(int id);
+    @Query("SELECT * FROM communities WHERE id = :id")
+    Community getVillageById(int id);
 
 
     @Update
-    int updateVillage(Village village);
+    int updateVillage(Community village);
 
 
-    @Query("DELETE FROM villages")
+    @Query("DELETE FROM communities")
     void deleteAllVillages();
 
 
-    @Query("DELETE FROM villages WHERE id = :id")
+    @Query("DELETE FROM communities WHERE id = :id")
     int deleteVillageById(String id);
 
 }

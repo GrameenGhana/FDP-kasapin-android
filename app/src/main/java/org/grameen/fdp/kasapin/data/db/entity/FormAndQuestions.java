@@ -13,10 +13,13 @@ import java.util.List;
  */
 
 public class FormAndQuestions {
-    @Relation(parentColumn = "translationId", entityColumn = "formTranslationId", entity = Question.class)
-    public List<Question> questions;
     @Embedded
     Form form;
+
+
+    @Relation(parentColumn = "translationId", entityColumn = "formTranslationId", entity = Question.class)
+    public List<Question> questions;
+
 
     public Form getForm() {
         return form;

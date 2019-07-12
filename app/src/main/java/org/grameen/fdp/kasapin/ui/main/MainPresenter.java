@@ -8,7 +8,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
-import org.grameen.fdp.kasapin.data.db.entity.VillageAndFarmers;
+import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
 import org.grameen.fdp.kasapin.syncManager.DownloadResources;
 import org.grameen.fdp.kasapin.syncManager.UploadData;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
@@ -138,7 +138,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         if (showProgress)
             getView().showLoading("Downloading data", "Please wait...", true, 0, false);
 
-        DownloadResources.newInstance(getView(), mAppDataManager, this, showProgress).getSurveyData();
+        DownloadResources.newInstance(getView(), mAppDataManager, this, showProgress).getCommunitiesData();
 
     }
 
@@ -317,10 +317,14 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                                                 arrayOfValues.put(observationArray);
                                                             }
 
-                                                        } else if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
-                                                            formatFarmerObjectData(farmer, arrayOfValues);
+                                                        } else {
 
-                                                        else{
+
+                                                            //This formats the static farmer info into the mapping payload since this data is not obtained from the form/answer survey module
+
+                                                            if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
+                                                                formatFarmerObjectData(farmer, arrayOfValues);
+
 
                                                             for (Mapping mapping : mappingEntry.getValue()) {
 
@@ -397,7 +401,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
 
     @Override
-    public void initializeSearchDialog(List<VillageAndFarmers> villageAndFarmers) {
+    public void initializeSearchDialog(List<CommunitiesAndFarmers> villageAndFarmers) {
         ArrayList<MySearchItem> farmerNames = new ArrayList<>();
         AppLogger.e(TAG, "Initializing search dialog!");
 
@@ -451,14 +455,9 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                         getView().showMessage("Could not load farmer data");
 
                 }, throwable -> {
-
                     throwable.printStackTrace();
                     AppLogger.e(TAG, throwable.getMessage());
-
-
                 }));
-
-
     }
 
 
@@ -469,6 +468,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         AppLogger.i(TAG, "**** ON SUCCESS");
         getView().hideLoading();
         getView().showMessage(message);
+
+        getView().restartUI();
     }
 
     //Download Data Callbacks declared at the global level
@@ -495,7 +496,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         getView().hideLoading();
         getView().showMessage(message);
 
-        getVillagesDataFromDbAndUpdateUI();
+        getView().restartUI();
 
     }
 

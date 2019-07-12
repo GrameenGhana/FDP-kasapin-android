@@ -3,6 +3,8 @@ package org.grameen.fdp.kasapin.data.network;
 
 import com.google.gson.JsonObject;
 
+import org.grameen.fdp.kasapin.data.db.entity.District;
+import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
@@ -37,11 +39,14 @@ public interface FdpApi {
     @GET(AppConstants.API_VERSION + "auth/user/details")
     Single<User> getUser(@Query("token") String token);
 
+    @GET(AppConstants.API_VERSION + "auth/user/countryadmin/{id}")
+    Single<CountryAdminLevelDataWrapper> getCommunitiesData(@Path("id") int countryId, @Query("token") String token);
+
+
     @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
     Single<FormsDataWrapper> getSurveyData(@Path("id") int countryId, @Query("token") String token);
 
-    @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
-    Single<FormsDataWrapper> getSurveyData2(@Path("id") int countryId, @Query("token") String token);
+
 
     @GET(AppConstants.API_VERSION + "auth/user/recommendation/{crop_id}/{country_id}")
     Single<RecommendationsDataWrapper> getRecommendations(@Path("crop_id") int cropId, @Path("country_id") int countryId, @Query("token") String token);

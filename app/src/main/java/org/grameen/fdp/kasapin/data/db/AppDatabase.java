@@ -7,8 +7,10 @@ import android.arch.persistence.room.TypeConverters;
 import org.grameen.fdp.kasapin.data.db.dao.ActivitiesDao;
 import org.grameen.fdp.kasapin.data.db.dao.ActivitiesPlusInputsDao;
 import org.grameen.fdp.kasapin.data.db.dao.CalculationsDao;
+import org.grameen.fdp.kasapin.data.db.dao.CommunityAndFarmersDao;
 import org.grameen.fdp.kasapin.data.db.dao.ComplexCalculationDao;
 import org.grameen.fdp.kasapin.data.db.dao.CountryDao;
+import org.grameen.fdp.kasapin.data.db.dao.DistrictsDao;
 import org.grameen.fdp.kasapin.data.db.dao.FarmResultsDao;
 import org.grameen.fdp.kasapin.data.db.dao.FormAndQuestionsDao;
 import org.grameen.fdp.kasapin.data.db.dao.FormAnswersDao;
@@ -28,13 +30,13 @@ import org.grameen.fdp.kasapin.data.db.dao.RecommendationsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SkipLogicsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SubmissionsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SuppliesCostsDao;
-import org.grameen.fdp.kasapin.data.db.dao.VillageAndFarmersDao;
-import org.grameen.fdp.kasapin.data.db.dao.VillagesDao;
+import org.grameen.fdp.kasapin.data.db.dao.CommunitiesDao;
 import org.grameen.fdp.kasapin.data.db.entity.ActivitiesPlusInput;
 import org.grameen.fdp.kasapin.data.db.entity.Activity;
 import org.grameen.fdp.kasapin.data.db.entity.Calculation;
 import org.grameen.fdp.kasapin.data.db.entity.ComplexCalculation;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
+import org.grameen.fdp.kasapin.data.db.entity.District;
 import org.grameen.fdp.kasapin.data.db.entity.FarmResult;
 import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -52,7 +54,7 @@ import org.grameen.fdp.kasapin.data.db.entity.RecommendationActivity;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.SuppliesCost;
-import org.grameen.fdp.kasapin.data.db.entity.Village;
+import org.grameen.fdp.kasapin.data.db.entity.Community;
 
 import javax.inject.Singleton;
 
@@ -63,7 +65,7 @@ import javax.inject.Singleton;
  * Personal mail aang.jnr@gmail.com
  */
 @Singleton
-@Database(entities = {Country.class, Village.class, Form.class, FormTranslation.class, Question.class, SkipLogic.class, Mapping.class, Logic.class, Recommendation.class,
+@Database(entities = {Country.class, District.class, Community.class, Form.class, FormTranslation.class, Question.class, SkipLogic.class, Mapping.class, Logic.class, Recommendation.class,
         RecommendationActivity.class, ActivitiesPlusInput.class, Activity.class, Input.class, Calculation.class, ComplexCalculation.class,
         RealFarmer.class, FormAnswerData.class, Plot.class, Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class
 }, version = 1, exportSchema = false)
@@ -73,7 +75,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract CountryDao countryDao();
 
-    public abstract VillagesDao villagesDao();
+    public abstract DistrictsDao districtsDao();
+
+    public abstract CommunitiesDao villagesDao();
 
     public abstract FormsDao formsDao();
 
@@ -119,7 +123,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract PlotAndAssessmentsDao plotAndAssessmentsDao();
 
-    public abstract VillageAndFarmersDao villageAndFarmersDao();
+    public abstract CommunityAndFarmersDao villageAndFarmersDao();
 
     public abstract FormAndQuestionsDao formAndQuestionsDao();
 

@@ -99,7 +99,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     @Override
     public void fetchData() {
 
-        DownloadResources.newInstance(getView(), mAppDataManager, this, true).getSurveyData();
+        DownloadResources.newInstance(getView(), mAppDataManager, this, true).getCommunitiesData();
 
     }
 

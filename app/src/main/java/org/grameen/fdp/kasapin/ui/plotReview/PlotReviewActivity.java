@@ -357,9 +357,11 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
                 getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(laborFormAnswerData);
 
+                mPresenter.setFarmerAsUnsynced(FARMER);
+
+                getAppDataManager().setBooleanValue("reload", true);
+
                 finish();
-
-
         });
 
 

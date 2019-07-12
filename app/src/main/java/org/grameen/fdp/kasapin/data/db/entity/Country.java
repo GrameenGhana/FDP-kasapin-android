@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "countries")
 public class Country extends BaseModel{
+
     String name;
 
     @SerializedName("currency")
@@ -59,4 +60,6 @@ public class Country extends BaseModel{
     public void setIsoCode(String isoCode) {
         this.isoCode = isoCode;
     }
+
+
 }

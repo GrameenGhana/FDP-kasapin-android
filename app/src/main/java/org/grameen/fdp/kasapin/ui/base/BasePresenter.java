@@ -111,7 +111,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     }
 
 
-    protected void setFarmerAsUnsynced(RealFarmer realFarmer){
+    public void setFarmerAsUnsynced(RealFarmer realFarmer){
 
         realFarmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
         getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
@@ -134,6 +134,12 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
         try {
             farmerDataJson = new JSONObject();
+
+
+            farmerDataJson.put("answer", farmer.getFarmerName());
+            farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_COUNTRY_ADMIN_LEVEL_FIELD);
+            arrayOfValues.put(farmerDataJson);
+
 
             farmerDataJson.put("answer", farmer.getFarmerName());
             farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_NAME_FIELD);

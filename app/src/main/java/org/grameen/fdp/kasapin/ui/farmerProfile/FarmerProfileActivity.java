@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
@@ -160,7 +161,19 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         name.setText(FARMER.getFarmerName());
         code.setText(FARMER.getCode());
-        villageName.setText(FARMER.getVillageName());
+
+        if(FARMER.getVillageId() > 0){
+            Community village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
+
+            if(village != null) {
+                FARMER.setVillageName(village.getName());
+                villageName.setText(FARMER.getVillageName());
+            }
+        }
+
+
+
+
         landSize.setText(FARMER.getLandArea());
 
         if (FARMER.getSyncStatus() == 0) {
