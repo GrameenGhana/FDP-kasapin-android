@@ -33,7 +33,7 @@ public interface RecommendationsDao extends BaseDao<Recommendation> {
     @Query("SELECT label FROM recommendations WHERE id = :id")
     Maybe<String> getByRecommendationId(int id);
 
-    @Query("SELECT * FROM recommendations WHERE recommendationName  LIKE '%' || :label || '%'")
+    @Query("SELECT * FROM recommendations WHERE recommendationName  =:label")
     Maybe<Recommendation> getByRecommendationName(String label);
 
     @Query("SELECT * FROM recommendations WHERE id  = :id")

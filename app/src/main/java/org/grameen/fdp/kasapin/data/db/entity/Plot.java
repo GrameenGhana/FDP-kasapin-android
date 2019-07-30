@@ -32,13 +32,13 @@ public class Plot {
      String farmerName;
     @SerializedName("farmer_code")
     String farmerCode;
-    String numberOfShadeTrees;
+    String numberOfShadeTrees = null;
     @SerializedName("age_c")
     String plotAge = "0";
     @SerializedName("area_c")
-    String area;
+    String area = null;
 
-    @SerializedName("gps_points")
+    @SerializedName("plot_gps_points")
     String plotPoints;
     @SerializedName("name_c")
     String name;
@@ -47,7 +47,7 @@ public class Plot {
 
     String lastVisitDate;
     @SerializedName("estimated_production_c")
-    String estimatedProductionSize;
+    String estimatedProductionSize = null;
 
     @SerializedName("data")
     String answersData;

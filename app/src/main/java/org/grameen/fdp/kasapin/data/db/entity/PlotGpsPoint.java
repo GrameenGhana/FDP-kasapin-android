@@ -2,8 +2,6 @@ package org.grameen.fdp.kasapin.data.db.entity;
 
 public class PlotGpsPoint {
 
-
-
     double latitude_c;
     double longitude_c;
     double altitude_c;

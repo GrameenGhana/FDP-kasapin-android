@@ -4,6 +4,7 @@ package org.grameen.fdp.kasapin.ui.base;
 import android.support.v7.app.AppCompatActivity;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.PlotGpsPoint;
@@ -24,6 +25,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 8:02 PM
@@ -129,18 +132,17 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
 
     protected void formatFarmerObjectData(RealFarmer farmer, JSONArray arrayOfValues) {
-
         JSONObject farmerDataJson;
-
         try {
             farmerDataJson = new JSONObject();
 
+            Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
 
-            farmerDataJson.put("answer", farmer.getFarmerName());
+            farmerDataJson.put("answer", country.getId());
             farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_COUNTRY_ADMIN_LEVEL_FIELD);
             arrayOfValues.put(farmerDataJson);
 
-
+            farmerDataJson = new JSONObject();
             farmerDataJson.put("answer", farmer.getFarmerName());
             farmerDataJson.put("field_name", AppConstants.FARMER_TABLE_NAME_FIELD);
             arrayOfValues.put(farmerDataJson);
@@ -181,7 +183,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     }
 
     protected void formatPlotsData(Plot plot, JSONArray arrayOfValues) {
-
         JSONObject plotsJsonData;
 
         try {

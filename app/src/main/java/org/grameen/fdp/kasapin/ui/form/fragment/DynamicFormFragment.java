@@ -208,14 +208,8 @@ public class DynamicFormFragment extends FormFragment {
 
             if (!q.shouldHide()) {
 
-                String storedValue;
+                String storedValue = (shouldLoadOldValues) ? getComputationUtils().getValue(q, ANSWERS_JSON) : q.getDefaultValueC();
 
-                if (shouldLoadOldValues) {
-                    storedValue = getComputationUtils().getValue(q, ANSWERS_JSON);
-                    if (storedValue.isEmpty() || storedValue.equalsIgnoreCase("null"))
-                        storedValue = q.getDefaultValueC();
-                } else
-                    storedValue = q.getDefaultValueC();
 
                 switch (q.getTypeC().toLowerCase()) {
                     case AppConstants.TYPE_TEXT:

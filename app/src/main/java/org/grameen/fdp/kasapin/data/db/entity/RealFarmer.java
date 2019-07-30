@@ -37,7 +37,7 @@ public class RealFarmer {
     String educationLevel;
 
     @SerializedName("farmer_photo_c")
-    String imageUrl;
+    String imageUrl = null;
 
     @SerializedName("country_admin_level_id")
     int villageId;

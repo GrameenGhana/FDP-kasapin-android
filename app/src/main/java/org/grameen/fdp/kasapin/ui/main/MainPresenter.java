@@ -319,28 +319,31 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
                                                         } else {
 
-
-                                                            //This formats the static farmer info into the mapping payload since this data is not obtained from the form/answer survey module
+                                                            //This formats the farmer basic info into the mapping payload since this data is not obtained from the form/answer survey module
 
                                                             if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
                                                                 formatFarmerObjectData(farmer, arrayOfValues);
 
-
                                                             for (Mapping mapping : mappingEntry.getValue()) {
-
-                                                                //AppLogger.i(TAG, "MAPPING OBJECT NAME IS >>> " + mapping.getObjectName());
-
 
                                                                 String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
 
+
                                                                 if (allAnswersJsonObject.has(questionLabel)) {
-                                                                    JSONObject answerJson = new JSONObject();
+
+                                                                    String answer = allAnswersJsonObject.get(questionLabel).toString();
+
+                                                                    if(!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
+
+                                                                        JSONObject answerJson = new JSONObject();
+
+                                                                        answerJson.put("answer", answer);
+                                                                        answerJson.put("field_name", mapping.getFieldName());
+
+                                                                        arrayOfValues.put(answerJson);
+                                                                    }
 
 
-                                                                    answerJson.put("answer", allAnswersJsonObject.get(questionLabel));
-                                                                    answerJson.put("field_name", mapping.getFieldName());
-
-                                                                    arrayOfValues.put(answerJson);
                                                                 }
                                                             }
                                                         }
