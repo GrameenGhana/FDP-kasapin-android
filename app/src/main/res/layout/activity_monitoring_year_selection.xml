@@ -232,7 +232,7 @@
             android:paddingTop="@dimen/spacing_normal"
             android:paddingRight="@dimen/spacing_normal"
             android:paddingBottom="@dimen/spacing_normal"
-            android:text="Title"
+            android:text="Select year"
             android:textAllCaps="true"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold" />

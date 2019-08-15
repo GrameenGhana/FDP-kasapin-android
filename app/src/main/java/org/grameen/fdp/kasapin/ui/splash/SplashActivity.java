@@ -12,6 +12,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
+import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 
 import javax.inject.Inject;
 
@@ -44,6 +45,8 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         toggleFullScreen(false, getWindow());
 
         setContentView(R.layout.activity_splash);
+
+
 
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));

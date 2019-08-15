@@ -17,7 +17,7 @@ public class PlotAndAssessments {
     @Embedded
     public Plot plot;
 
-    @Relation(parentColumn = "id", entityColumn = "plotId", entity = PlotAssessment.class)
+    @Relation(parentColumn = "id", entityColumn = "plotExternalId", entity = PlotAssessment.class)
     public List<PlotAssessment> assessmentList;
 
 

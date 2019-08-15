@@ -4,6 +4,7 @@ package org.grameen.fdp.kasapin.ui.AddEditFarmerPlot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -241,7 +242,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             plotNameEdittext.setText(name);
             PLOT.setName(name);
 
-
             //New Plot
             setToolbar(getStringResources(R.string.add_new_plot));
         }
@@ -433,6 +433,17 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
         PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
         PLOT.setArea(plotSizeEdittext.getText().toString());
+
+        //int startYearId = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(AppConstants.START_YEAR);
+
+
+        if (PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) {
+            int defaultRecommendationId = getAppDataManager().getDatabaseManager().recommendationsDao().getRecommendationIdByName(AppConstants.RECOMMENDATION_NO_FDP);
+            PLOT.setRecommendationId(defaultRecommendationId);
+
+            AppLogger.e(TAG, "##### SETTING DEFAULT RECOMMENDATION ID OF " + defaultRecommendationId);
+
+        }
 
 
 

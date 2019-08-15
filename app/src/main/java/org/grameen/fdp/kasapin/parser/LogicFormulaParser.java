@@ -122,13 +122,10 @@ public class LogicFormulaParser extends Tokenizer {
 
 
     private String evaluate() {
-
         int count = 0;
 
         String returnValue = "";
         boolean isNestedIfFormula = false;
-
-
 
        /* if (formula == null)
             throw new ParserException("Equation to evaluate is null or not in the right format");*/
@@ -140,8 +137,6 @@ public class LogicFormulaParser extends Tokenizer {
 
         String[] nestedFormulas = formula.split("else");
 
-        AppLogger.e("NESTED FORMULAS SIZE IS " + nestedFormulas.length);
-
         for (String nestedFormula : nestedFormulas) {
 
 
@@ -149,11 +144,12 @@ public class LogicFormulaParser extends Tokenizer {
 
             if (nestedFormulas.length > 1) {
                 isNestedIfFormula = true;
-                AppLogger.i(TAG, "==============   FORMULA IS A NESTED IF    ================");
+                AppLogger.e(TAG, "==============   FORMULA IS A NESTED IF WITH " + nestedFormulas.length + " PARTS   ================");
             }
 
-            AppLogger.e(TAG, "**** NESTED >>>> " + nestedFormula);
+            System.out.println("NESTED FORMULA PART " + count + " >>>> " + nestedFormula);
 
+           //BREAK DOWN INTO SECTIONS AND EVALUATE
 
             String rawFormula = nestedFormula.replace(" ", "")
                     .replace("I", "")
@@ -212,11 +208,11 @@ public class LogicFormulaParser extends Tokenizer {
                 AppLogger.i(TAG, "### Replacing " + v + " with Answer >>>  " + answerValue);
             }
 
-            AppLogger.e(TAG, "EQUATION BEFORE REPLACEMENT >>> " + formulaToEvaluate);
-            AppLogger.e(TAG, "EQUATION AFTER REPLACEMENT >>> " + evaluatedFormula);
+            System.out.println("EQUATION BEFORE REPLACEMENT >>> " + formulaToEvaluate);
+            System.out.println("EQUATION AFTER REPLACEMENT >>> " + evaluatedFormula);
 
 
-            boolean valueAfterParsing = ComputationUtils.parseBooleanEquation(evaluatedFormula.replace("))", ")"));
+            boolean valueAfterParsing = ComputationUtils.parseLogicalEquation(evaluatedFormula.replace("))", ")"));
 
 
             AppLogger.e(TAG, "TRUE VALUE = " + trueValue);
@@ -284,11 +280,11 @@ public class LogicFormulaParser extends Tokenizer {
     }
 
     public void setJsonObject(JSONObject jsonObject) {
+
         AppLogger.e(TAG, "JSON DATA IS " + jsonObject);
-
         this.jsonObject = jsonObject;
-    }
 
+    }
 
     public void setFormula(String formula) {
         this.formula = formula;

@@ -26,7 +26,7 @@ public class ButtonController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     private final OnClickListener onClickListener;
     Location location;
-
+    private  String placeholder = "0.0,-0.0";
     Context context;
     boolean isEnabled = true;
     private DatePickerDialog datePickerDialog = null;
@@ -55,11 +55,12 @@ public class ButtonController extends MyLabeledFieldController {
      * @param isRequired indicates if the field is required or not
      * @param listener   the format of the date to show in the text box when a date is set
      */
-    public ButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, OnClickListener listener, boolean enabled) {
+    public ButtonController(Context ctx, String name, String content_desc, String labelText,  boolean isRequired,  OnClickListener listener, boolean enabled) {
         super(ctx, name, content_desc, labelText, isRequired);
         this.onClickListener = listener;
         this.context = ctx;
         this.isEnabled = enabled;
+//        this.placeholder = placeholder;
 
     }
 
@@ -89,9 +90,23 @@ public class ButtonController extends MyLabeledFieldController {
             editText.setSingleLine(true);
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
             editText.setKeyListener(null);
-            editText.setHint("Click to obtain location");
-            refresh(editText);
+            editText.setHint("0.0,-0.0");
+            editText.setHelperText("Click to obtain location");
+            editText.setHelperTextAlwaysShown(true);
 
+
+
+            if (placeholder != null) {
+                if (getModel().getValue(getName()) == null || getModel().getValue(getName()).toString().equalsIgnoreCase(""))
+                    getModel().setValue(getName(), "0.0,-0.0");
+                else
+                    getModel().setValue(getName(), getModel().getValue(getName()));
+
+                //editText.setHint(placeholder);
+            }
+
+
+            refresh(editText);
             editText.setOnClickListener(onClickListener);
 
 
@@ -121,8 +136,6 @@ public class ButtonController extends MyLabeledFieldController {
                 editText.setText(valueStr);
 
         }
-
-
     }
 
     public void refresh() {

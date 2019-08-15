@@ -21,6 +21,7 @@ import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,9 +78,9 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     TextView bad;
     @BindView(R.id.editButton)
     Button editButton;
-
     @BindView(R.id.lime_needed_text)
     TextView limeNeededText;
+
 
 
     JSONObject PLOT_ANSWERS_JSON;
@@ -109,17 +110,12 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         PLOT = getGson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
         if (PLOT != null) {
-
             AppLogger.e(TAG, "PLOT >>> " + getGson().toJson(PLOT));
-
-
             setupViews();
         } else {
             showMessage(R.string.error_has_occurred);
             finish();
         }
-
-
     }
 
 
@@ -163,7 +159,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, PLOT.getFarmerCode());
 
-        mPresenter.getAreaUnits(PLOT.getFarmerCode());
+        //mPresenter.getAreaUnits(PLOT.getFarmerCode());
         checkRecommendation();
         //
 
@@ -171,7 +167,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     }
 
     void setupViews() {
-
         //Todo get units and apply
         setToolbar(getStringResources(R.string.plot_info));
 
@@ -235,6 +230,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
+                        mPresenter.getAreaUnits(PLOT.getFarmerCode());
                     }
 
                     @Override
@@ -259,12 +255,14 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     void checkRecommendation() {
 
+
+        AppLogger.e(TAG, "#########   RECOMMENDATION ID IS " + PLOT.getRecommendationId());
+
         if (PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) {
             recommendedIntervention.setText(R.string.fill_out_ao_data);
             recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red));
             return;
         }
-
 
         if (PLOT.getRecommendationId() > 0) {
 
@@ -278,11 +276,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         }else {
             recommendedIntervention.setText("");
             recommendationProgress.setVisibility(View.VISIBLE);
-
             mPresenter.getRecommendations(1);
         }
-
-
     }
 
 

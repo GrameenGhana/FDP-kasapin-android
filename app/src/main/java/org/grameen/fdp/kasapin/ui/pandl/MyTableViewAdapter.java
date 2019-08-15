@@ -74,7 +74,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
 
         if (i1 == 0) {
-            //Todo set questions here
+            //Todo render thew labels in the table ie Column 0
 
             renderedView = renderColumn0Values(myTableData);
 
@@ -141,7 +141,6 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
 
     private View renderColumn0Values(final Data data) {
-
         View view = null;
 
         if (data.getTag() != null) {
@@ -152,7 +151,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     textView.setText(data.getLabel());
                     textView.setPadding(20, 10, 20, 10);
                     textView.setTextSize(TITLE_TEXT_SIZE);
-                    textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+                     textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
 
                     view = textView;
@@ -164,7 +163,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     TextView textView = new TextView(getContext());
                     textView.setText(data.getLabel());
                     textView.setPadding(20, 10, 20, 10);
-                    textView.setTextSize(TEXT_SIZE);
+                     textView.setTextSize(TEXT_SIZE);
                     view = textView;
 
 
@@ -209,15 +208,12 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
                     break;
                 case TAG_VIEW:
-
-
-                    Question startYearQuestion = mAppDatabase.questionDao().get("start_year_");
-                    if (startYearQuestion != null) {
+                    if (ProfitAndLossActivity.START_YEAR_QUESTION != null) {
 
                         String[] values = data.getLabel().split("_");
 
                         final MaterialSpinner spinner = new MaterialSpinner(getContext());
-                        spinner.setItems(startYearQuestion.formatQuestionOptions());
+                        spinner.setItems(ProfitAndLossActivity.START_YEAR_QUESTION.formatQuestionOptions());
                         spinner.setTag(values[0]);
                         spinner.setPadding(20, 10, 20, 10);
                         spinner.setTextSize(TEXT_SIZE);
@@ -247,7 +243,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     textView.setText(data.getLabel());
                     textView.setPadding(20, 10, 20, 10);
                     textView.setTextSize(TITLE_TEXT_SIZE);
-                    textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+                     textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     view = textView;
 

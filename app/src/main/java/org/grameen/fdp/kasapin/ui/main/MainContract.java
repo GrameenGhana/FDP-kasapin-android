@@ -66,7 +66,6 @@ public class MainContract {
 
         void initializeSearchDialog(List<CommunitiesAndFarmers> villageAndFarmers);
 
-
         void getFarmer(String farmerCode);
     }
 

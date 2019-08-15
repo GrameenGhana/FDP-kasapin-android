@@ -54,8 +54,7 @@ public class Plot {
 
     @SerializedName("recommendation_id")
     int recommendationId = -1;
-
-    int gapsId = -1;
+    int gapsId = 1;
     int startYear = 1;
 
     public Plot() {}

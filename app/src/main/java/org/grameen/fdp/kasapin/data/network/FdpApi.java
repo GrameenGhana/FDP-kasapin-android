@@ -33,22 +33,21 @@ import retrofit2.http.Query;
 
 public interface FdpApi {
 
-    @POST(AppConstants.API + "auth/user/login")
+    @POST(AppConstants.API_VERSION + "auth/user/login")
     Single<LoginResponse> makeLoginCall(@Body LoginRequest.ServerLoginRequest loginRequest);
 
-    @GET(AppConstants.API + "auth/user/details")
+    @GET(AppConstants.API_VERSION + "auth/user/details")
     Single<User> getUser(@Query("token") String token);
 
-    @GET(AppConstants.API + "auth/user/countryadmin/{id}")
+    @GET(AppConstants.API_VERSION + "auth/user/countryadmin/{id}")
     Single<CountryAdminLevelDataWrapper> getCommunitiesData(@Path("id") int countryId, @Query("token") String token);
 
 
-    @GET(AppConstants.API + "auth/user/survey/{id}")
+    @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
     Single<FormsDataWrapper> getSurveyData(@Path("id") int countryId, @Query("token") String token);
 
 
-
-    @GET(AppConstants.API + "auth/user/recommendation/{crop_id}/{country_id}")
+    @GET(AppConstants.API_VERSION + "auth/user/recommendation/{crop_id}/{country_id}")
     Single<RecommendationsDataWrapper> getRecommendations(@Path("crop_id") int cropId, @Path("country_id") int countryId, @Query("token") String token);
 
     @POST(AppConstants.API + "synchupdata")

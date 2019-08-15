@@ -46,7 +46,7 @@
     <string name="could_not_add_plot">Could not add plot info. Please try again</string>
     <string name="new_data_updated">New data updated</string>
     <string name="add_plot_monitoring">Add new plot monitoring</string>
-    <string name="edit_plot_monitoring">Edit plot monitoring</string>
+    <string name="edit_plot_monitoring">Edit Plot </string>
     <string name="error_total_plot_estimated_production">Total Plots estimated production is more than total farm production!</string>
     <string name="error_invalid_units">Invalid units provided for plot production sizes!</string>
     <string name="error_missing_estimated_production">Total Farm Production or Plot production was not provided!</string>
@@ -68,6 +68,8 @@
     <string name="labour">Labour Cost</string>
     <string name="family_members">Family Members</string>
     <string name="farmer_details">Farmer Profile</string>
+    <string name="plot_monitoring">Plot Monitoring</string>
+
     <string name="error_getting_farmer_info">There was an error attempting to retrieve farmer info</string>
     <string name="fill_data">Enter data</string>
     <string name="enter_data_rationale">"Please enter number of family members in Farmer Profile form for "</string>
@@ -427,5 +429,6 @@
     <string name="enter_valid_farmer_name">Please enter a valid farmer name.</string>
     <string name="tag_line">Building a better Family Business!</string>
     <string name="click_to_select">Click to select</string>
+    <string name="no_monitoring_data">No monitoring data available yet!</string>
 
 </resources>

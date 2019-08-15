@@ -120,16 +120,18 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     List<String> pandlist = new ArrayList<>();
     //String startYearId = "nil";
     Question CSSV_QUESTION;
-    Question START_YEAR;
+    static Question START_YEAR_QUESTION;
+    String START_YEAR_LABEL;
     Question PLOT_SIZE_QUESTION;
     Question PLOT_PROD_QUESTION;
+    Question PLOT_INTERVENTION_START_YEAR;
     String FARM_AREA_UNITS_LABEL;
     String FARM_WEIGHT_UNITS_LABEL;
     String CSSV_VALUE = "--";
     Boolean DID_LABOUR = false;
     String LABOUR_TYPE;
     Boolean shouldHideStartYear = null;
-    String START_YEAR_LABEL;
+
     int COUNTER = 0;
     MyTableViewAdapter myTableViewAdapter;
     JSONObject PLOT_SIZES_IN_HA_JSON;
@@ -155,20 +157,17 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         setUnBinder(ButterKnife.bind(this));
         engine = new ScriptEngineManager().getEngineByName("rhino");
 
-
         farmer = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
 
-        START_YEAR = getAppDataManager().getDatabaseManager().questionDao().get("start_year_");
-        START_YEAR_LABEL = START_YEAR.getLabelC();
-
-
+        START_YEAR_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("start_year_");
+        START_YEAR_LABEL = START_YEAR_QUESTION.getLabelC();
         CSSV_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("ao_disease_");
+        PLOT_INTERVENTION_START_YEAR = getAppDataManager().getDatabaseManager().questionDao().get("plot_intervention_start_year_");
 
         currency.setText(getAppDataManager().getStringValue("currency"));
 
         mathFormulaParser = MathFormulaParser.getInstance();
         logicFormulaParser = LogicFormulaParser.getInstance();
-
 
         if (farmer != null)
             setUpViews();
@@ -405,13 +404,10 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         AppLogger.d("P & L ACTIVITY", "MAIN JSON OBJECT ITERATION COMPLETE. DATA IS \n" + VALUES_JSON_OBJECT);
 
 
-        START_YEAR_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet();
+
         PLOT_SIZE_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_ha_");
-        FARM_AREA_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_area_units_").blockingGet();
-
-
         PLOT_PROD_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_production_kg_");
-
+        FARM_AREA_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_area_units_").blockingGet();
         FARM_WEIGHT_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_weight_units_").blockingGet();
 
 
@@ -426,7 +422,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         showMessage(R.string.error_has_occurred_loading_data);
-
 
                         hideLoading();
 
@@ -565,10 +560,10 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
                 if (PLOT.getStartYear() > 0) {
-                    loadDataForYear(PLOT, PLOT.getStartYear());
+                    loadYearData(PLOT, PLOT.getStartYear());
 
                 } else if (PLOT.getStartYear() < 0) {
-                    loadDataForInterventionMadeYear(PLOT, PLOT.getStartYear());
+                    loadYearDataForInterventionMade(PLOT, PLOT.getStartYear());
                 }
 
                 COUNTER++;
@@ -781,20 +776,32 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 AppLogger.i(TAG, "Spinner item selected with tag " + view.getTag());
 
 
-                /**Position of plot selected from the list is saved as a tag to the start year view for you to know which plot has its start year changed
-                 ***/
+                //Position of plot selected from the list is saved as a tag to the start year view for you to know which plot has its start year changed
 
-                Plot plot = realPlotList.get(Integer.valueOf(view.getTag().toString()));
 
                 try {
+
+                    int position = Integer.valueOf(view.getTag().toString());
+
 
                     if (PLOT_ANSWERS_JSON_OBJECT.has(START_YEAR_LABEL))
                         PLOT_ANSWERS_JSON_OBJECT.remove(START_YEAR_LABEL);
                     PLOT_ANSWERS_JSON_OBJECT.put(START_YEAR_LABEL, String.valueOf(i + 1));
 
-                    plot.setAnswersData(PLOT_ANSWERS_JSON_OBJECT.toString());
+                    if (PLOT_ANSWERS_JSON_OBJECT.has(PLOT_INTERVENTION_START_YEAR.getLabelC()))
+                        PLOT_ANSWERS_JSON_OBJECT.remove(PLOT_INTERVENTION_START_YEAR.getLabelC());
+                    PLOT_ANSWERS_JSON_OBJECT.put(PLOT_INTERVENTION_START_YEAR.getLabelC(), String.valueOf(i + 1));
 
-                    mPresenter.updatePlotData(plot, true);
+                    realPlotList.get(position).setStartYear(i + 1);
+                    realPlotList.get(position).setAnswersData(PLOT_ANSWERS_JSON_OBJECT.toString());
+
+
+                    System.out.println("-------------------------------------------------------------------------------");
+                    AppLogger.e(TAG, "UPDATED JSON DATA IS " + getGson().toJson(realPlotList.get(position)));
+                    System.out.println("-------------------------------------------------------------------------------");
+
+
+                    mPresenter.updatePlotData(realPlotList.get(position), true);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -886,12 +893,12 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     }
 
 
-    void loadDataForYear(Plot PLOT, int CONTROLLING_YEAR) {
+    void loadYearData(Plot PLOT, int CONTROLLING_YEAR) {
 
         System.out.println("################################ \n CALCULATING INCOME \n ###################################");
 
 
-        AppLogger.i(TAG, "loadDataForYear " + CONTROLLING_YEAR);
+        AppLogger.i(TAG, "loadYearData " + CONTROLLING_YEAR);
         int TEMP = CONTROLLING_YEAR;
         int TEMP2 = CONTROLLING_YEAR;
 
@@ -1133,9 +1140,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     }
 
 
-    void loadDataForInterventionMadeYear(Plot PLOT, int CONTROLLING_YEAR) {
+    void loadYearDataForInterventionMade(Plot PLOT, int CONTROLLING_YEAR) {
 
-        AppLogger.i(TAG, "loadDataForYear " + CONTROLLING_YEAR);
+        AppLogger.i(TAG, "loadYearData " + CONTROLLING_YEAR);
 
 
         int TEMP = CONTROLLING_YEAR * -1;
@@ -1335,7 +1342,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             CSSV_VALUE = ComputationUtils.getValue(CSSV_QUESTION.getLabelC(), PLOT_ANSWERS_JSON_OBJECT);
         }
 
-        List<SkipLogic> skipLogics = getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(START_YEAR.getId()).blockingGet();
+        List<SkipLogic> skipLogics = getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(START_YEAR_QUESTION.getId()).blockingGet();
 
         if (skipLogics != null && skipLogics.size() > 0) {
 

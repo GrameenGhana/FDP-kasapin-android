@@ -11,6 +11,9 @@ import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
+import io.reactivex.Single;
+
 /**
  * Created by AangJnr on 17, September, 2018 @ 9:09 PM
  * Work Mail cibrahim@grameenfoundation.org
@@ -36,6 +39,11 @@ public interface MonitoringsDao {
     @Query("SELECT * FROM monitorings WHERE id = :id")
     Monitoring getMonitoringById(String id);
 
+    @Query("SELECT * FROM monitorings WHERE externalId = :monitoringExternalId")
+    Maybe<Monitoring> getMonitoringForSelectedYear(String monitoringExternalId);
+
+    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year")
+    Single<List<Monitoring>> getAllMonitoringsForSelectedYear(String plotExternalId, int year);
 
     @Update
     int updateMonitoring(Monitoring monitoring);

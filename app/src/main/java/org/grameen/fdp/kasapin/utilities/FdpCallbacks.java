@@ -18,4 +18,26 @@ public class FdpCallbacks {
         void onUploadError(Throwable throwable);
 
     }
+
+
+
+
+        public interface AnItemSelectedListener {
+
+            void onItemSelected(String item);
+
+        }
+
+        public interface UpdateJsonArray {
+
+            void onItemValueChanged(int id, String uid, String value);
+
+        }
+
+        public interface NetworkActivityCompleteListener {
+
+            void taskComplete(int response);
+
+        }
+
 }

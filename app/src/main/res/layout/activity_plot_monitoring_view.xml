@@ -5,7 +5,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:id="@+id/ll1"
         android:layout_width="match_parent"
@@ -136,7 +135,8 @@
             android:scrollbars="horizontal|vertical">
 
 
-            <de.codecrafters.tableview.TableView xmlns:table="http://schemas.android.com/apk/res-auto"
+            <de.codecrafters.tableview.TableView
+                xmlns:table="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/general_ao_tableView"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
@@ -174,6 +174,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="No Data!"
+                    android:textAlignment="center"
                     android:visibility="gone" />
 
             </RelativeLayout>
@@ -183,9 +184,8 @@
 
     </LinearLayout>
 
-
     <LinearLayout
-
+        android:layout_marginTop="@dimen/spacing_normal"
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -239,6 +239,5 @@
 
         </LinearLayout>
     </LinearLayout>
-
 
 </RelativeLayout>

@@ -25,6 +25,9 @@ public interface FormAndQuestionsDao {
     @Query("SELECT * FROM forms WHERE formNameC LIKE '%' || :name|| '%'")
     Single<FormAndQuestions> getFormAndQuestionsByName(String name);
 
+    @Transaction
+    @Query("SELECT * FROM forms WHERE formNameC LIKE '%' || :name|| '%'")
+    Maybe<FormAndQuestions> maybeGetFormAndQuestionsByName(String name);
 
     @Transaction
     @Query("SELECT * FROM forms WHERE typeC LIKE '%' || :formType|| '%' AND displayTypeC LIKE '%' || :displayType|| '%' ORDER BY displayOrderC ASC")

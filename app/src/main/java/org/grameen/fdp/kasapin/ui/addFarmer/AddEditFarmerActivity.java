@@ -108,9 +108,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     private DynamicFormFragment dynamicFormFragment;
 
     private SimpleSearchDialogCompat communitySearchDialog;
-
-
-
     String gender, educationLevel, villageName;
     int villageId;
 
@@ -368,11 +365,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @Override
     public void moveToNextForm() {
-
-
-       /* if(dynamicFormFragment != null)
-            getSupportFragmentManager().beginTransaction().remove(dynamicFormFragment);
-*/
         CURRENT_FORM++;
 
         if (CURRENT_FORM < FILTERED_FORMS.size()) {
@@ -383,8 +375,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             startActivity(intent);
             finish();
             overridePendingTransition(0, 0);
-            //mPresenter.loadFormFragment(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), mAppDataManager.isMonitoring());
-
         } else
             showFarmerDetailsActivity(FARMER);
 

@@ -12,6 +12,7 @@ import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 /**
@@ -39,6 +40,9 @@ public interface SkipLogicsDao extends BaseDao<SkipLogic> {
 
     @Query("SELECT * FROM skip_logics WHERE questionId = :id")
     SkipLogic getSkipLogicByQuestionId(int id);
+
+    @Query("SELECT * FROM skip_logics WHERE questionId = :id")
+    Maybe<List<SkipLogic>> getMaybeSkipLogicByQuestionId(int id);
 
     @Update
     int updateSkipLogic(SkipLogic skipLogic);

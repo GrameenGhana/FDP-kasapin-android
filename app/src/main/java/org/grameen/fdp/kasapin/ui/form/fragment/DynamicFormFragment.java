@@ -207,10 +207,7 @@ public class DynamicFormFragment extends FormFragment {
         for (final Question q : questions) {
 
             if (!q.shouldHide()) {
-
                 String storedValue = (shouldLoadOldValues) ? getComputationUtils().getValue(q, ANSWERS_JSON) : q.getDefaultValueC();
-
-
                 switch (q.getTypeC().toLowerCase()) {
                     case AppConstants.TYPE_TEXT:
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_TEXT, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));
@@ -283,6 +280,8 @@ public class DynamicFormFragment extends FormFragment {
                             }
                         }, IS_CONTROLLER_ENABLED && q.caEdit()));
                         //getValue(q);
+
+
                         break;
 
 
@@ -309,7 +308,7 @@ public class DynamicFormFragment extends FormFragment {
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
-                    .subscribe(skipLogics -> applyPropertyChangeListeners(q, skipLogics))
+                    .subscribe(skipLogics -> applyPropertyChangeListeners(q, skipLogics), Throwable::printStackTrace)
             );
 
         }
@@ -357,6 +356,9 @@ public class DynamicFormFragment extends FormFragment {
 
     }
 
+    public FormAndQuestions getFormAndQuestions() {
+        return FORM_AND_QUESTIONS;
+    }
 
     public ComputationUtils getComputationUtils() {
         return computationUtils;

@@ -83,28 +83,6 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
         FileUtils.createNoMediaFile();
 
 
-
-
-/*
-
-
-        String value = "(false||false||false)&&(false||false)&&(true&&true)";
-
-
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
-        Boolean answer = null;
-        try {
-            answer = (Boolean) engine.eval(value);
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        }
-
-        AppLogger.e(TAG, "FORMULA IS >>>>>  " + value);
-        AppLogger.e(TAG, "ANSWER == " + answer);
-
-*/
-
-
     }
 
 

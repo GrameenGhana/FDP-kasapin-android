@@ -33,6 +33,7 @@ public class PlotDetailsContract {
     }
 
     public interface Presenter {
+
         void getPlotQuestions();
 
         void getAreaUnits(String farmerCode);

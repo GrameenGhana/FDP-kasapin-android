@@ -30,6 +30,7 @@ import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
+import org.grameen.fdp.kasapin.ui.monitoringYearSelection.MonitoringYearSelectionActivity;
 import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.ui.plotReview.PlotReviewActivity;
@@ -130,7 +131,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
-        Toolbar toolbar = setToolbar(getStringResources(R.string.farmer_details));
+       setToolbar(getStringResources(R.string.farmer_details));
 
 
         if (getAppDataManager().isMonitoring()) {
@@ -184,23 +185,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             syncIndicator.setImageResource(R.drawable.ic_check_circle_black_24dp);
             syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent));
         }
-
-
-
-        /*try{
-
-            String farmAcre = ALL_FARMER_ANSWERS_JSON.getString(prefs.getString("totalLandSize", ""));
-            String totalUnit = ALL_FARMER_ANSWERS_JSON.getString(prefs.getString("totalAreaUnit", ""));
-
-            landArea.setText(farmAcre + " " + totalUnit);
-
-        } catch (Exception ignored) {
-            //e.printStackTrace();
-
-            landArea.setVisibility(View.GONE);
-
-        }*/
-
 
         lastSyncDate.setText((FARMER.getLastModifiedDate() != null) ? FARMER.getLastModifiedDate().toString() : "--");
         lastVisitDate.setText((FARMER.getLastVisitDate() != null) ? FARMER.getLastVisitDate().toString() : "--");
@@ -320,22 +304,15 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     Intent intent = new Intent(FarmerProfileActivity.this, PlotDetailsActivity.class);
                     intent.putExtra("plot", getGson().toJson(plots.get(position)));
                     intent.putExtra("plotSize", plotsSize);
-                    intent.putExtra("hasSubmitted", FARMER.getHasSubmitted());
-                    intent.putExtra("syncStatus", FARMER.getSyncStatus());
-
                     startActivity(intent);
 
                 } else {
-
-               /* Intent intent = new Intent(FarmerProfileActivity.this, MonitoringYearSelectionActivity.class);
+                    Intent intent = new Intent(FarmerProfileActivity.this, MonitoringYearSelectionActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
-                intent.putExtra("hasSubmitted", FARMER.getHasSubmitted());
-                intent.putExtra("syncStatus", FARMER.getSyncStatus());
                 intent.putExtra("plot", getGson().toJson(plots.get(position)));
-                startActivity(intent);*/
+                startActivity(intent);
 
                 }
-
             });
 
 
@@ -475,6 +452,13 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                 break;
             case R.id.sync_farmer:
+
+
+                if (FARMER.getSyncStatus() == AppConstants.SYNC_OK) {
+                    showMessage(R.string.no_new_data);
+                    return;
+                }
+
 
                 if (NetworkUtils.isNetworkConnected(this))
                     mPresenter.syncFarmerData(FARMER, true);

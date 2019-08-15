@@ -78,6 +78,10 @@ public class Question {
     @SerializedName("can_edit")
     @Expose
     private int canEdit;
+    @SerializedName("related_questions_c")
+    @Expose
+    private String relatedQuestions;
+
 
 
     /**
@@ -358,6 +362,23 @@ public class Question {
 
 
     }
+
+    public String getRelatedQuestions() {
+        return relatedQuestions;
+    }
+
+    public void setRelatedQuestions(String relatedQuestions) {
+        this.relatedQuestions = relatedQuestions;
+    }
+
+
+    @Ignore
+    public String[] splitRelatedQuestions(){
+        if(relatedQuestions!=null)
+            return relatedQuestions.split(",");
+        else return null;
+    }
+
 
     public List<SkipLogic> getSkipLogics() {
         return skipLogics;

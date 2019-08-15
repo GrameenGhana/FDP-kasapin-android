@@ -88,6 +88,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                     @Override
                     public void onComplete() {
 
+                        getAppDataManager().setBooleanValue("reload", true);
                         getView().reloadTableData();
                     }
 

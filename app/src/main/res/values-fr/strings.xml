@@ -417,4 +417,5 @@
     <string name="enter_valid_farmer_name">Please enter a valid farmer name.</string>
     <string name="tag_line">Building a better Family Business!</string>
     <string name="click_to_select">Click to select</string>
+    <string name="no_monitoring_data">No monitoring data available yet!</string>
 </resources>

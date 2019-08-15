@@ -36,6 +36,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -45,13 +46,14 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MapActivity extends BaseActivity implements MapContract.View {
-
     public static Float DEFAULT_ZOOM = 17.0f;
     @Inject
     MapPresenter mPresenter;
     ProgressDialog progressDialog;
     String TAG = getClass().getSimpleName();
+    @BindView(R.id.addPoint)
     Button addPoint;
+    @BindView(R.id.calculate)
     Button calculateArea;
     Plot plot;
     List<PlotGpsPoint> plotGpsPoints = new ArrayList<>();
@@ -66,7 +68,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
     double accuracy;
     double altitude;
-
+    boolean hasGpsDataBeenSaved = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,10 +119,8 @@ public class MapActivity extends BaseActivity implements MapContract.View {
             mAdapter.removePoint(position);
             //latLngs.remove(position);
 
-            if (latLngs.size() > 2)
-                calculateArea.setEnabled(true);
-            else
-                calculateArea.setEnabled(false);
+            calculateArea.setEnabled((latLngs.size() > 2));
+
 
 
             if (latLngs.size() > 0) {
@@ -138,9 +138,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         });
 
 
-        calculateArea = findViewById(R.id.calculate);
-        calculateArea.setEnabled(false);
-
+        calculateArea.setEnabled((latLngs.size() > 2));
         calculateArea.setOnClickListener(view -> {
 
             if (latLngs != null && latLngs.size() > 2) {
@@ -161,13 +159,12 @@ public class MapActivity extends BaseActivity implements MapContract.View {
                             "\nArea in Acres is " + new DecimalFormat("0.00").format(inAcres) +
                             "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
 
-                    showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok), (dialog, which) -> {
-
-                    saveGpsPointsData();
-
+                    showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        saveGpsPointsData(false);
+                        }, getStringResources(R.string.save), (dialog, which) -> {
                         dialog.dismiss();
-
-                    }, getStringResources(R.string.save), 0);
+                    }, getStringResources(R.string.cancel), 0);
 
 
                     hasCalculated = true;
@@ -179,25 +176,13 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
         });
 
-        addPoint = findViewById(R.id.addPoint);
         addPoint.setOnClickListener(v -> {
-
-            // progressDialog = new ProgressDialog(this);
-            //progressDialog.setTitle("Please wait");
-            //progressDialog.setIndeterminate(true);
-
-
             progressDialog = CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
-
-
             getCurrentLocation();
-
         });
 
 
         onBackClicked();
-
-
         locationListener = new android.location.LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
@@ -249,6 +234,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
                     }
 
+                    hasGpsDataBeenSaved = false;
 
                 }, "YES, CONTINUE", (dialog, which) -> dialog.dismiss(), "NO, CANCEL", 0);
 
@@ -274,8 +260,8 @@ public class MapActivity extends BaseActivity implements MapContract.View {
             }
         };
 
-
     }
+
 
 
     void computeAreaInSquareMeters() {
@@ -295,15 +281,13 @@ public class MapActivity extends BaseActivity implements MapContract.View {
                 "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
 
 
-        showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> dialogInterface.dismiss(),
-                getStringResources(R.string.ok), (dialog, which) -> {
-
-
+        showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> {
+            dialogInterface.dismiss();
                     //Todo save latLngs
-                   saveGpsPointsData();
+                    saveGpsPointsData(false);
 
-                    dialog.dismiss();
-                }, getStringResources(R.string.save), 0);
+                },
+                getStringResources(R.string.save), (dialog, which) -> dialog.dismiss(), getStringResources(R.string.cancel), 0);
 
 
         hasCalculated = true;
@@ -360,7 +344,8 @@ public class MapActivity extends BaseActivity implements MapContract.View {
     }
 
 
-    void saveGpsPointsData(){
+    void saveGpsPointsData(boolean shouldExit){
+
         plotGpsPoints.clear();
 
         //Todo save latLngs
@@ -376,39 +361,58 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
         plot.setPlotPoints(getGson().toJson(plotGpsPoints));
 
-        saveData();
+        saveData(shouldExit);
+
     }
 
 
     @Override
     protected void onStop() {
-      saveGpsPointsData();
+      saveGpsPointsData(false);
         super.onStop();
     }
 
 
+
     @Override
     public void onBackPressed() {
+
+        if(!hasGpsDataBeenSaved)
+        showDialog(true, "Save GPS data", "Do you want to save the GPS points?", (d, w)->{
+            saveGpsPointsData(true);
+        }, "YES", (d, w)-> mobeToPlotDetailsActivity(), "NO", 0);
+        else
+            mobeToPlotDetailsActivity();
+
+    }
+
+    void mobeToPlotDetailsActivity(){
         Intent intent = new Intent(this, PlotDetailsActivity.class);
         intent.putExtra("plot", new Gson().toJson(plot));
         startActivity(intent);
         supportFinishAfterTransition();
+
     }
 
 
-    void saveData() {
+    void saveData(boolean shouldExit) {
 
         getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
                 .subscribeOn(Schedulers.io())
                 .subscribe(aLong -> {
 
-                    if (aLong > 0)
+                    if (aLong > 0) {
+                        hasGpsDataBeenSaved = true;
                         showMessage(R.string.new_data_updated);
+                        if(shouldExit)
+                            mobeToPlotDetailsActivity();
+                    }
 
                     else
                         showMessage(R.string.data_not_saved);
 
                 }, throwable -> {
+                    hasGpsDataBeenSaved = false;
                     showMessage("An error occurred saving plot data. Please try again.");
                     throwable.printStackTrace();
                 }));

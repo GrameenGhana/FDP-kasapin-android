@@ -140,6 +140,8 @@ public class AppConstants {
     public static int SYNC_NOT_OK = 0;
 
     public static String RECOMMENDATION_CALCULATION_TYPE_COST = "Cost";
+    public static String RECOMMENDATION_NO_FDP = "Incomplete AO";
+    public static String QUESTION_START_YEAR = "Incomplete AO";
 
 
 

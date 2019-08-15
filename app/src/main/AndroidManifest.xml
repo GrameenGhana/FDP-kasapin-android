@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.grameen.fdp.kasapin"
     android:installLocation="internalOnly">
 
@@ -38,7 +39,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".ui.splash.SplashActivity"
             android:label="@string/app_name"
@@ -71,6 +73,10 @@
         <activity android:name=".ui.farmerProfile.FarmerProfileActivity" />
         <activity android:name=".ui.AddEditFarmerPlot.AddEditFarmerPlotActivity" />
         <activity android:name=".ui.plotDetails.PlotDetailsActivity" />
+        <activity android:name=".ui.plotMonitoringActivity.PlotMonitoringActivity"
+            android:screenOrientation="landscape"/>
+
+        <activity android:name=".ui.monitoringYearSelection.MonitoringYearSelectionActivity"/>
         <activity android:name=".ui.map.MapActivity" />
         <activity
             android:name=".ui.pandl.ProfitAndLossActivity"
@@ -79,6 +85,8 @@
             android:name=".ui.detailedYearMonthlyView.DetailedMonthActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".ui.plotReview.PlotReviewActivity" />
+        <activity android:name=".ui.addPlotMonitoring.AddPlotMonitoringActivity"
+            android:screenOrientation="portrait"/>
 
 
         <service android:name=".services.SyncService" />
