@@ -248,12 +248,10 @@ public class DownloadResources {
 
 
     public void getFarmersData() {
-
         if (showProgress)
             getView().setLoadingMessage("Getting farmer and answers data...\nNB: This will not replace already existing farmer data!");
 
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
-
         getAppDataManager().getFdpApiService()
                 .fetchSyncDownData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), 0, 0)
                 .subscribe(new DisposableSingleObserver<SyncDownData>() {
@@ -272,7 +270,6 @@ public class DownloadResources {
 
                             if(syncDownData.getData() != null && syncDownData.getData().size() > 0)
                             for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
-
                                 /**
                                  * Check if farmer exists or not
                                  * if farmer exists, skip else save

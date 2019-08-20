@@ -147,12 +147,18 @@ public class MathFormulaParser extends Tokenizer {
         AppLogger.e("###  MathFormulaParser >> ", "NEW FORMULA IS  " + newFormula);
 
 
+        String value;
         try {
-            return calculate(newFormula);
+            value = calculate(newFormula);
         } catch (ScriptException e) {
             e.printStackTrace();
-            return "0";
+            value = "0";
         }
+
+        AppLogger.e("###  MathFormulaParser >> ",  newFormula + " === " + value);
+
+        return value;
+
     }
 
 

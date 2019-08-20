@@ -112,6 +112,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     Iterator i1;
     String tmp_key;
+    String startYearLabel;
 
 
     @Override
@@ -133,6 +134,10 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         scriptEngine = new ScriptEngineManager().getEngineByName("rhino");
 
         IS_NEW_MONITORING = MONITORING == null;
+
+
+        startYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet();
+
 
 
         setUpViews();
@@ -775,8 +780,20 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
     @OnClick(R.id.saveButton)
     void saveData(){
 
+
+
+
         //Merge AO/AOR values generated in diagnostic into one JSON. This is needed to get values from a single JSON to parse the formulas instead of having 2 separate JSONs
         //where we obtain values from
+        //Start year (start_year_COUNTRY) key:value is not added to the merged json because when the Logic formula parser is iterating through the JSONObject and replacing
+        //the question labels with their values, it might conflict with (plot_intervention_start_year_COUNTRY).
+        //start_year_COUNTRY value is not needed here. What we need is plot_intervention_start_year_COUNTRY even though they might be the same value
+        //Eg.When iterating through the JSONObject, start_year_COUNTRY comes before plot_intervention_start_year_COUNTRY. If the value for start_year_COUNTRY = 3
+        // in the formula string, plot_intervention_start_year_COUNTRY becomes plot_intervention_3 because
+        //start_year_COUNTRY in plot_intervention_start_year_COUNTRY was replaced by 3 and that's not what we want.
+
+
+
         i1 = PLOT_AO_ANSWERS_JSON.keys();
 
         while (i1.hasNext()) {
@@ -784,7 +801,10 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             try {
                 if(MONITORING_ANSWERS_JSON.has(tmp_key))
                     MONITORING_ANSWERS_JSON.remove(tmp_key);
+
+                if(!tmp_key.equals(startYearLabel))
                 MONITORING_ANSWERS_JSON.put(tmp_key, PLOT_AO_ANSWERS_JSON.get(tmp_key));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -851,7 +871,12 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     System.out.println("--------------------------------------------------------------------------------------------------------");
                     AppLogger.e(TAG, "Applying parser to evaluate formula of question " + q.getLabelC());
 
-                    String value = logicFormulaParser.evaluate(q.getFormulaC());
+                    String value;
+                    if(q.getTypeC().equalsIgnoreCase(AppConstants.FORMULA_TYPE_COMPLEX_FORMULA))
+                        value = logicFormulaParser.evaluateComplexFormula(q.getFormulaC());
+                    else
+                        value = logicFormulaParser.evaluate(q.getFormulaC());
+
 
                     try {
 
@@ -863,7 +888,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                         e.printStackTrace();
                     }
 
-                    System.out.println("--------------------------------------------------------------------------------------------------------");
+                    System.out.println("--------------------------------------------------------clear------------------------------------------------");
                 }
             }
         System.out.println("##########################################  LOOP END   ###############################################################");
