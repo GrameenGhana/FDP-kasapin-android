@@ -35,13 +35,22 @@ public class AppConstants {
     public static final String PLOT_GPS_POINT_ALTITUDE_FIELD = "altitude_c";
     public static final String PLOT_GPS_POINT_PRECISION_FIELD = "precision_c";
 
-    public static final String PLOT_EXTERNAL_ID_FIELD = "external_id_c";
+    public static final String TYPE_FIELD_NAME = "type_c";
+
+
+
+
+    public static final String PLOT_EXTERNAL_ID_FIELD = "plot_external_id_c";
+
+    public static final String EXTERNAL_ID_FIELD = "external_id_c";
     public static final String PLOT_NAME_FIELD = "name_c";
     public static final String PLOT_AGE_FIELD = "age_c";
     public static final String PLOT_AREA_FIELD = "area_c";
     public static final String PLOT_EST_PROD_FIELD = "estimated_production_kg_c";
     public static final String OBSERVATION_TABLE = "observation_c";
     public static final String DIAGONOSTIC_MONITORING_TABLE = "diagnostic_monitoring_c";
+    public static final String DIAGONOSTIC_MONITORING_EXTERNAL_ID_C = "diagnostic_monitoring_external_id_c";
+
     public static final String LABOR_DAYS = "laborDays";
     public static final String LABOR_COSTS = "laborCosts";
     public static final String SUPPLIES_COSTS = "suppliesCosts";
@@ -142,6 +151,9 @@ public class AppConstants {
     public static String RECOMMENDATION_CALCULATION_TYPE_COST = "Cost";
     public static String RECOMMENDATION_NO_FDP = "Incomplete AO";
     public static String QUESTION_START_YEAR = "Incomplete AO";
+
+    public static String MODULE_TYPE_DIAGNOSTIC = "Diagnostic";
+    public static String MODULE_TYPE_MONITORING = "Monitoring";
 
 
 

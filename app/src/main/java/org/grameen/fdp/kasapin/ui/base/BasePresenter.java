@@ -8,6 +8,7 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
+import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.PlotGpsPoint;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
@@ -15,7 +16,6 @@ import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.network.model.BaseModel;
 import org.grameen.fdp.kasapin.syncManager.UploadData;
-import org.grameen.fdp.kasapin.ui.main.MainPresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
@@ -246,18 +246,31 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)) {
 
+
                                                             for (Plot plot : farmersPlots) {
 
-                                                                JSONArray diagnosticMonitoringArray = new JSONArray();
-                                                                JSONObject recommendationJson = new JSONObject();
+                                                                //Generate JSON payload for Diagnostic Module
+                                                                //The first JSONObject (index 0) in the array should hold the data for the foreign key fields ie. type_c, and any external ids
+                                                                //At the server side, this index is checked to determine which data exists in that array and which table it belongs
+                                                                JSONArray diagnosticArray = new JSONArray();
+
+                                                                JSONObject index0JSONObject = new JSONObject();
+                                                                index0JSONObject.put(AppConstants.TYPE_FIELD_NAME, AppConstants.MODULE_TYPE_DIAGNOSTIC);
+                                                                index0JSONObject.put(AppConstants.DIAGONOSTIC_MONITORING_EXTERNAL_ID_C, plot.getExternalId());
+                                                                index0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
+
+                                                                diagnosticArray.put(index0JSONObject);
+
+
+                                                                JSONObject plotJsonObject = plot.getAOJsonData();
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
                                                                     String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
 
-                                                                    if (plot.getAOJsonData().has(questionLabel)) {
+                                                                    if (plotJsonObject.has(questionLabel)) {
 
-                                                                        String answer = plot.getAOJsonData().get(questionLabel).toString();
+                                                                        String answer = plotJsonObject.get(questionLabel).toString();
 
                                                                         AppLogger.e(TAG, "VALUE >>> " + answer);
 
@@ -267,25 +280,99 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                             answerJson.put("field_name", mapping.getFieldName());
                                                                             answerJson.put("answer", answer);
 
-                                                                            diagnosticMonitoringArray.put(answerJson);
+                                                                            diagnosticArray.put(answerJson);
                                                                         }
                                                                     }
                                                                 }
 
-
+                                                                JSONObject recommendationJson = new JSONObject();
                                                                 recommendationJson.put("answer", plot.getRecommendationId());
                                                                 recommendationJson.put("field_name", "recommendation_id");
 
-                                                                diagnosticMonitoringArray.put(recommendationJson);
+                                                                diagnosticArray.put(recommendationJson);
 
-                                                                arrayOfValues.put(diagnosticMonitoringArray);
+
+                                                                arrayOfValues.put(diagnosticArray);
+
+
+
+                                                                //Generate JSON payload for Monitoring Module for the plot's Monitorings
+                                                                List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringForPlot(plot.getExternalId())
+                                                                        .blockingGet();
+
+                                                                if(plotMonitoringList != null && plotMonitoringList.size() > 0){
+
+
+                                                                    for(Monitoring monitoring : plotMonitoringList) {
+                                                                        JSONArray monitoringArray = new JSONArray();
+
+                                                                        JSONObject monitoringIndex0JSONObject = new JSONObject();
+                                                                        monitoringIndex0JSONObject.put(AppConstants.TYPE_FIELD_NAME, AppConstants.MODULE_TYPE_MONITORING);
+                                                                        monitoringIndex0JSONObject.put(AppConstants.DIAGONOSTIC_MONITORING_EXTERNAL_ID_C, monitoring.getExternalId());
+                                                                        monitoringIndex0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
+
+                                                                        monitoringArray.put(monitoringIndex0JSONObject);
+
+
+
+                                                                        JSONObject monitoringJsonObject = monitoring.getMonitoringAOJsonData();
+
+                                                                        for (Mapping mapping : mappingEntry.getValue()) {
+
+                                                                            String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+
+                                                                            if (monitoringJsonObject.has(questionLabel)) {
+
+                                                                                String answer = monitoringJsonObject.get(questionLabel).toString();
+
+                                                                                if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
+                                                                                    JSONObject answerJson = new JSONObject();
+
+                                                                                    answerJson.put("field_name", mapping.getFieldName());
+                                                                                    answerJson.put("answer", answer);
+
+                                                                                    monitoringArray.put(answerJson);
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        arrayOfValues.put(monitoringArray);
+
+
+
+
+                                                                    }
+                                                                }
+
+
+
+
+
+
                                                             }
+
+
+
+
+
+
+
+
+
+
 
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.OBSERVATION_TABLE)) {
 
+                                                            //Generate Observations JSON payload for Diagnostic Module
 
                                                             for (Plot plot : farmersPlots) {
                                                                 JSONArray observationArray = new JSONArray();
+
+                                                                JSONObject index0JSONObject = new JSONObject();
+                                                                index0JSONObject.put(AppConstants.TYPE_FIELD_NAME, AppConstants.MODULE_TYPE_DIAGNOSTIC);
+                                                                index0JSONObject.put(AppConstants.DIAGONOSTIC_MONITORING_EXTERNAL_ID_C, plot.getExternalId());
+                                                                index0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
+
+                                                                observationArray.put(index0JSONObject);
 
                                                                 for (Mapping mapping : mappingEntry.getValue()) {
 
@@ -304,6 +391,81 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                 }
 
                                                                 arrayOfValues.put(observationArray);
+
+
+                                                                //Generate JSON payload for Monitoring Module for the plot's Monitorings
+                                                                List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringForPlot(plot.getExternalId())
+                                                                        .blockingGet();
+
+                                                                if(plotMonitoringList != null && plotMonitoringList.size() > 0){
+
+                                                                    for(Monitoring monitoring : plotMonitoringList) {
+                                                                        JSONArray monitoringObservationsArray = new JSONArray();
+
+                                                                        JSONObject monitoringIndex0JSONObject = new JSONObject();
+                                                                        monitoringIndex0JSONObject.put(AppConstants.TYPE_FIELD_NAME, AppConstants.MODULE_TYPE_MONITORING);
+                                                                        monitoringIndex0JSONObject.put(AppConstants.DIAGONOSTIC_MONITORING_EXTERNAL_ID_C, monitoring.getExternalId());
+                                                                        monitoringIndex0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
+
+                                                                        monitoringObservationsArray.put(monitoringIndex0JSONObject);
+
+
+
+                                                                        JSONObject monitoringJsonObject = monitoring.getMonitoringAOJsonData();
+
+                                                                        for (Mapping mapping : mappingEntry.getValue()) {
+
+                                                                            Question monitoringAOQuestion = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(mapping.getQuestionId());
+
+
+                                                                            if (monitoringAOQuestion != null && monitoringJsonObject.has(monitoringAOQuestion.getLabelC())) {
+
+                                                                                String[] relatedQuestions = monitoringAOQuestion.splitRelatedQuestions();
+
+                                                                                if(relatedQuestions != null && relatedQuestions.length > 1){
+
+                                                                                String answer = monitoringJsonObject.get(monitoringAOQuestion.getLabelC()).toString();
+                                                                                String competenceValue = (monitoringJsonObject.has(relatedQuestions[0]) ? monitoringJsonObject.get(relatedQuestions[0]).toString(): null);
+                                                                                String failureValue = (monitoringJsonObject.has(relatedQuestions[1]) ? monitoringJsonObject.get(relatedQuestions[1]).toString(): null);
+
+
+                                                                                    if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
+                                                                                    JSONObject answerJson = new JSONObject();
+
+                                                                                    answerJson.put("answer", answer);
+                                                                                    answerJson.put("field_name", mapping.getFieldName());
+                                                                                    answerJson.put("variable_c", monitoringAOQuestion.getLabelC());
+                                                                                    answerJson.put("competence_label", relatedQuestions[0]);
+                                                                                    answerJson.put("competence_c", competenceValue);
+                                                                                    answerJson.put("reason_for_failure_label", relatedQuestions[1]);
+                                                                                    answerJson.put("reason_for_failure", failureValue);
+
+                                                                                        monitoringObservationsArray.put(answerJson);
+                                                                                }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        arrayOfValues.put(monitoringObservationsArray);
+
+                                                                    }
+                                                                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                             }
 
                                                         } else {
@@ -451,7 +613,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         try {
             plotsJsonData = new JSONObject();
             plotsJsonData.put("answer", plot.getExternalId());
-            plotsJsonData.put("field_name", AppConstants.PLOT_EXTERNAL_ID_FIELD);
+            plotsJsonData.put("field_name", AppConstants.EXTERNAL_ID_FIELD);
             arrayOfValues.put(plotsJsonData);
 
 
@@ -496,7 +658,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                 try {
                     plotsGPSData = new JSONObject();
                     plotsGPSData.put("answer", plot.getExternalId());
-                    plotsGPSData.put("field_name", AppConstants.PLOT_EXTERNAL_ID_FIELD);
+                    plotsGPSData.put("field_name", AppConstants.EXTERNAL_ID_FIELD);
                     pointJsonArray.put(plotsGPSData);
 
 

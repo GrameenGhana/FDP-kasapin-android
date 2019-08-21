@@ -42,6 +42,9 @@ public interface MonitoringsDao {
     @Query("SELECT * FROM monitorings WHERE externalId = :monitoringExternalId")
     Maybe<Monitoring> getMonitoringForSelectedYear(String monitoringExternalId);
 
+    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId")
+    Maybe<List<Monitoring>> getAllMonitoringForPlot(String plotExternalId);
+
     @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year")
     Single<List<Monitoring>> getAllMonitoringsForSelectedYear(String plotExternalId, int year);
 
