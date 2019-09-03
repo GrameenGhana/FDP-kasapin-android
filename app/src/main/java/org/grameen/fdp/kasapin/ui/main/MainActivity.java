@@ -258,7 +258,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         AppLogger.i(TAG, "FORMS SIZE IS " + formAndQuestions.size());
 
         FORM_AND_QUESTIONS = formAndQuestions;
-        CURRENT_FORM = 0;
+        CURRENT_FORM_POSITION = 0;
 
     }
 
@@ -404,8 +404,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
             restartUI();
             getAppDataManager().setBooleanValue("reload", false);
-
-
         }
 
       super.onResume();

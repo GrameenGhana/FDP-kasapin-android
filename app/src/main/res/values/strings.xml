@@ -90,7 +90,7 @@
     <string name="incorrect_no_plots_suffix">\'s plots are not equal.\\nPlease make sure all plots have the same number of monitoring!</string>
     <string name="farmer">Farmer </string>
     <string name="no_monitoring_added"> has no monitoring added for Year </string>
-    <string name="please_add_monitoring_suffix">!\\nPlease add at least 1 monitoring for each plot before proceeding.</string>
+    <string name="please_add_monitoring_suffix">.\nPlease add at least 1 monitoring before proceeding.</string>
     <string name="no_plots_added_suffix">has no plots added! Please add at least 1 plot before proceeding</string>
     <string name="incomplete_monitoring_prefix">Some plots have incomplete AO Monitoring results for Year</string>
     <string name="incomplete_monitoring_suffix">.

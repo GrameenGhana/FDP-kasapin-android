@@ -115,15 +115,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
 
         if (FARMER != null) {
-            if (FORM_AND_QUESTIONS != null)
-                for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
-                    if (formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_PLOT_FORM))
-                        ALL_PLOT_DATA_QUESTIONS.addAll(formAndQuestions.getQuestions());
-
-
-                   // AppLogger.largeLog(TAG, getGson().toJson(ALL_PLOT_DATA_QUESTIONS));
-                }
-            setPlotQuestions(ALL_PLOT_DATA_QUESTIONS);
+            mPresenter.getAllPlotQuestions();
         }
 
 
@@ -132,6 +124,8 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
     @Override
     public void setPlotQuestions(List<Question> questions) {
+
+        ALL_PLOT_DATA_QUESTIONS = questions;
 
         PLOTS_LIST = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(FARMER.getCode()).blockingGet();
         if (ALL_PLOT_DATA_QUESTIONS != null && PLOTS_LIST != null && PLOTS_LIST.size() > 0)

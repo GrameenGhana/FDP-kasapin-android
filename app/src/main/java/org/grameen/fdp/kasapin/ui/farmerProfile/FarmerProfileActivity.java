@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,17 +18,20 @@ import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Community;
+import org.grameen.fdp.kasapin.data.db.entity.FarmResult;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
+import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.PlotAssessment;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
+import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
-import org.grameen.fdp.kasapin.ui.main.MainActivity;
+import org.grameen.fdp.kasapin.ui.farmAssessment.FarmAssessmentActivity;
 import org.grameen.fdp.kasapin.ui.monitoringYearSelection.MonitoringYearSelectionActivity;
 import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
@@ -41,10 +43,15 @@ import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -117,9 +124,16 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     @BindView(R.id.sync_farmer)
     Button syncFarmer;
 
+    List<Plot> PLOTS;
+    List<PlotAssessment> PLOT_ASSESSMENTS;
+    List<String> PLOT_ASSESSMENT_VALUES;
+    JSONObject MONITORING_DATA_JSON;
 
     RealFarmer FARMER;
     int plotsSize = 0;
+    public static int familyMembersFormPosition = 0;
+    int currentMonitoringYear = -1;
+
     private PlotsListAdapter plotsListAdapter;
 
     @Override
@@ -151,7 +165,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             showMessage(getStringResources(R.string.error_getting_farmer_info));
 
 
-        CURRENT_FORM = 0;
+        CURRENT_FORM_POSITION = 0;
     }
 
 
@@ -271,6 +285,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     @Override
     public void setUpFarmersPlotsAdapter(List<Plot> plots) {
 
+        PLOTS = plots;
         plotsSize = plots.size();
 
         AppLogger.i(TAG, "PLOT SIZE IS " + plotsSize);
@@ -349,13 +364,16 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
             b.setOnClickListener(v -> {
 
-                CURRENT_FORM = (int) b.getTag();
+                CURRENT_FORM_POSITION = (int) b.getTag();
+                if(CURRENT_FORM_POSITION == familyMembersFormPosition) {
+                    goToFamilyMembersTable(FARMER);
+                    return;
+                }
 
-                AppLogger.i(TAG, "BUTTON CLICKED, CURRENT FORM IS " + CURRENT_FORM);
+                AppLogger.i(TAG, "BUTTON CLICKED, CURRENT FORM IS " + CURRENT_FORM_POSITION);
 
                 Intent intent = new Intent(FarmerProfileActivity.this, AddEditFarmerActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
-                //intent.putExtra("formAndQuestions", getGson().toJson(FILTERED_FORMS.get(CURRENT_FORM)));
                 startActivity(intent);
 
             });
@@ -417,17 +435,17 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 break;
             case R.id.pandl:
 
-                List<Plot> plots = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(FARMER.getCode()).blockingGet();
-                if (plots != null && plots.size() > 0) {
-                    if (!checkIfFarmSizeCorresponds(plots))
+
+            if (PLOTS != null && PLOTS.size() > 0) {
+                    if (!checkIfFarmSizeCorresponds(PLOTS))
                         return;
 
-                    else if (!checkIfCocoaProdCorresponds(plots))
+                    else if (!checkIfCocoaProdCorresponds(PLOTS))
                         return;
 
                     else {
 
-                        for (Plot plot : plots) {
+                        for (Plot plot : PLOTS) {
                             if (plot.getRecommendationId() == -1) {
                                 showMessage(getStringResources(R.string.enter_all_ao_data) + plot.getName());
                                 return;
@@ -449,6 +467,96 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 break;
             case R.id.farm_assessment:
 
+                JSONObject FARM_RESULTS = new JSONObject();
+                PLOT_ASSESSMENTS = new ArrayList<>();
+                PLOT_ASSESSMENT_VALUES = new ArrayList<>();
+
+                LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
+                MathFormulaParser mathFormulaParser = MathFormulaParser.getInstance();
+
+
+                FormAndQuestions farmResultsFormAndQuestions = getAppDataManager().getDatabaseManager()
+                        .formAndQuestionsDao().maybeGetFormAndQuestionsByName("Farm results").blockingGet();
+
+                AppLogger.e(TAG, "Farm Results Questions >>> " + getGson().toJson(farmResultsFormAndQuestions));
+
+
+                if(haveAllPlotsBeenAssessed(PLOTS) && farmResultsFormAndQuestions != null) {
+
+                    JSONObject valuesJsonObject = new JSONObject();
+                    Question farmResultsQuestion = null;
+                    //Get farm results questions
+                    //Loop through the farm results questions
+                    //Loop through each plot
+                    //Get value for question for each plot and store
+
+                    for (Question question : farmResultsFormAndQuestions.getQuestions()) {
+                        if(question.getLabelC().startsWith("farm_result_")) {
+                            farmResultsQuestion = question;
+                            continue;
+                    }
+
+                        AppLogger.e(TAG, "********************************************************");
+                        AppLogger.e(TAG, "EVALUATING QUESTION WITH LABEL " + question.getLabelC() + " AND TYPE " + question.getTypeC());
+                        AppLogger.e(TAG, "FORMULA == " + question.getFormulaC());
+
+
+                        String value = "0";
+
+                        for (Plot plot : PLOTS){
+                            switch(question.getTypeC().toLowerCase()){
+                                case AppConstants.FORMULA_TYPE_COMPLEX_FORMULA:
+
+                                    value = parseCollectionsFormula(question.getFormulaC(), PLOT_ASSESSMENT_VALUES);
+
+
+                                    break;
+
+                                case AppConstants.TYPE_MATH_FORMULA:
+                                    mathFormulaParser.setJsonObject(valuesJsonObject);
+                                    mathFormulaParser.setMathFormula(question.getFormulaC());
+                                    value = mathFormulaParser.evaluate();
+                                    break;
+                            }
+
+                            value += "+";
+                        }
+
+                        try {
+                            valuesJsonObject.put(question.getLabelC(), mathFormulaParser.evaluate(value + "0"));
+                        }catch(JSONException e){
+                            e.printStackTrace();
+                        }
+
+                        mathFormulaParser.setJsonObject(valuesJsonObject);
+                        logicFormulaParser.setJsonObject(valuesJsonObject);
+                    }
+
+
+
+                        try{
+                            String farmResultsValue = logicFormulaParser.evaluate(farmResultsQuestion.getFormulaC());
+
+
+                            FarmResult farmResult = new FarmResult();
+                            farmResult.setCaption(getStringResources(R.string.farm_result));
+
+                            farmResult.setStatus(farmResultsValue);
+                            farmResult.setPlotAssessmentList(PLOT_ASSESSMENTS);
+
+                            intent = new Intent(FarmerProfileActivity.this, FarmAssessmentActivity.class);
+                            intent.putExtra("farmResults", getGson().toJson(farmResult));
+                            intent.putExtra("farmer", new Gson().toJson(FARMER));
+                            startActivity(intent);
+
+
+                        }catch(Exception e){
+                            showMessage("Could not obtain farm results question.");
+                            e.printStackTrace();
+                        }
+
+                }else
+                    showMessage(getStringResources(R.string.error_has_occurred));
 
                 break;
             case R.id.sync_farmer:
@@ -479,6 +587,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
 
+
     boolean checkIfFarmSizeCorresponds(List<Plot> plots) {
 
         boolean value = true;
@@ -488,12 +597,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         Question cocoaAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_area_");
 
         if (cocoaAreaQuestion != null) {
-
             FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaAreaQuestion.getFormTranslationId());
             if (answer != null) {
                 try {
                     farmAcre = round(Double.parseDouble(answer.getJsonData().get(cocoaAreaQuestion.getLabelC()).toString().replace(",", "")), 2);
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     farmAcre = 0.0;
                 }
@@ -547,8 +655,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         }
 
     }
-
-
     boolean checkIfCocoaProdCorresponds(List<Plot> plots) {
 
         boolean value = true;
@@ -614,6 +720,139 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
             showMessage(R.string.error_has_occurred);
             return false;
+        }
+
+    }
+
+    boolean haveAllPlotsBeenAssessed(List<Plot> plots){
+        MONITORING_DATA_JSON = new JSONObject();
+
+
+        checkIfAllPlotsHaveSameNumberOfMonitoring(plots);
+
+
+        //Get the plot assessment question from the DB
+        Question plotAssessmentQuestion = getAppDataManager().getDatabaseManager().questionDao().get("monitoring_plot_assessment_");
+        Question passPlotsQuestion = getAppDataManager().getDatabaseManager().questionDao().get("pass_plots_");
+
+
+        if(plotAssessmentQuestion != null){
+            boolean useLastMonitoring = passPlotsQuestion != null && passPlotsQuestion.getFormulaC().contains("_Last");
+
+            for(Plot p : plots){
+
+                Monitoring monitoring = (useLastMonitoring)
+                        ? getAppDataManager().getDatabaseManager().monitoringsDao().getLastMonitoringForSelectedYear(p.getExternalId(), currentMonitoringYear)
+                        : getAppDataManager().getDatabaseManager().monitoringsDao().getFirstMonitoringForSelectedYear(p.getExternalId(),  currentMonitoringYear);
+
+                AppLogger.e(TAG, "MONITORING >>> " + getGson().toJson(monitoring));
+
+                try {
+                    String assessment = AppConstants.NO_MONITORING_PLACE_HOLDER;
+
+                    if(monitoring != null)
+                        assessment = monitoring.getMonitoringAOJsonData().getString(plotAssessmentQuestion.getLabelC());
+
+                    if(assessment.contains(AppConstants.NO_MONITORING_PLACE_HOLDER)){
+                        showMessage(p.getName() + "\n" + getStringResources(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getStringResources(R.string.incomplete_monitoring_suffix));
+                        break;
+                    }
+
+                    PLOT_ASSESSMENTS.add(new PlotAssessment(p.getName(), assessment));
+                    PLOT_ASSESSMENT_VALUES.add(assessment);
+
+                    //Save the monitoring assessment data per plot for later use in the parsers
+                    MONITORING_DATA_JSON.put(p.getExternalId(), assessment);
+
+
+                } catch (JSONException ignore) {
+                    ignore.printStackTrace();
+                    showMessage(p.getName() + "\n" + getStringResources(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getStringResources(R.string.incomplete_monitoring_suffix));
+                    break;
+                }
+
+
+
+            }
+            return true;
+
+        }else
+            showMessage(getStringResources(R.string.error_has_occurred));
+
+
+
+        return false;
+    }
+
+
+    void checkIfAllPlotsHaveSameNumberOfMonitoring(List<Plot> plots){
+
+        List<Integer> numberOfMonitoringsPerPlot = new ArrayList<>();
+
+
+        int noOfPlots;
+
+        int maxValueOfMonitoring;
+        try {
+            currentMonitoringYear =  Integer.parseInt(getAppDataManager().getStringValue(FARMER.getCode()));
+        }catch(Exception ignore){}
+
+        AppLogger.e(TAG, "CURRENT MONITORING YEAR == " + currentMonitoringYear);
+
+        if(plots != null && plots.size() > 0){
+
+            noOfPlots = plots.size();
+
+            for(Plot plot : plots){
+                //Check number of monitorngs for each plot for the currrent monitoring year
+                numberOfMonitoringsPerPlot.add(getAppDataManager().getDatabaseManager().monitoringsDao()
+                        .countMonitoringsForSelectedYear(plot.getExternalId(), currentMonitoringYear)
+                        .blockingGet(0));
+            }
+
+            maxValueOfMonitoring = Collections.max(numberOfMonitoringsPerPlot);
+
+            //After finding the mam number of monitoring for the list of plots, check to see if the number of times the max value == number of plots
+            int numberOfMaximumMonitoringOccurred = Collections.frequency(numberOfMonitoringsPerPlot, maxValueOfMonitoring);
+
+            if(!Objects.equals(numberOfMaximumMonitoringOccurred, noOfPlots)) {
+                showMessage(getStringResources(R.string.monitoring_for_year) + currentMonitoringYear + getStringResources(R.string.for_) + FARMER.getFarmerName() + getResources() + getStringResources(R.string.incorrect_no_plots_suffix));
+                return;
+            }
+
+            //Check to make sure a plot has at least 1 monitoring for selected year
+            for(int j = 0; j < numberOfMonitoringsPerPlot.size(); j++){
+                if(numberOfMonitoringsPerPlot.get(j) == 0){
+                    showMessage(getStringResources( R.string.farmer) + FARMER.getFarmerName() + getStringResources(R.string.no_monitoring_added) + currentMonitoringYear + "of plot " + plots.get(j).getName() + " " +  getStringResources(R.string.please_add_monitoring_suffix));
+                    return;
+                }
+            }
+
+        }else
+            showMessage(getStringResources(R.string.farmer) + FARMER.getFarmerName() + getStringResources(R.string.no_plots_added_suffix));
+
+    }
+
+
+
+    String parseCollectionsFormula(String formula, List<String> plotAssessmentValues){
+        int value;
+
+        try {
+            String parsedEquation = formula.split(",")[1];
+
+            parsedEquation = parsedEquation.split(Pattern.quote(")"))[0];
+            parsedEquation = parsedEquation.replace("\"", "");
+
+            AppLogger.i(TAG, "AFTER PARSING COLLECTION TYPE CC " + parsedEquation);
+
+            value = Collections.frequency(plotAssessmentValues, parsedEquation);
+
+            AppLogger.i(TAG, formula + " IS " + value);
+
+            return String.valueOf(value);
+        }catch(Exception ignored){
+            return "0";
         }
 
     }

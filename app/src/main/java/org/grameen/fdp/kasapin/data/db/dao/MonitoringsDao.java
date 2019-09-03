@@ -48,6 +48,16 @@ public interface MonitoringsDao {
     @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year")
     Single<List<Monitoring>> getAllMonitoringsForSelectedYear(String plotExternalId, int year);
 
+
+    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY id ASC LIMIT 1")
+    Monitoring getFirstMonitoringForSelectedYear(String plotExternalId, int year);
+
+    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY id DESC LIMIT 1")
+    Monitoring getLastMonitoringForSelectedYear(String plotExternalId, int year);
+
+    @Query("SELECT COUNT(id) FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year")
+    Maybe<Integer> countMonitoringsForSelectedYear(String plotExternalId, int year);
+
     @Update
     int updateMonitoring(Monitoring monitoring);
 

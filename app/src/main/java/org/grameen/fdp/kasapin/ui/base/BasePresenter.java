@@ -128,18 +128,16 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     }
 
 
-    public void setFarmerAsUnsynced(RealFarmer realFarmer){
+    public void setFarmerAsUnsynced(RealFarmer realFarmer) {
 
         realFarmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
         getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
     }
 
-    public void setFarmerAsSynced(RealFarmer realFarmer){
+    public void setFarmerAsSynced(RealFarmer realFarmer) {
         realFarmer.setSyncStatus(AppConstants.SYNC_OK);
         getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
     }
-
-
 
 
     public void syncData(FdpCallbacks.UploadDataListener listener, boolean showProgress, List<RealFarmer> farmers) {
@@ -235,7 +233,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                             }
 
-                                                        }else if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_GPS_POINT)){
+                                                        } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_GPS_POINT)) {
 
                                                             for (Plot plot : farmersPlots) {
                                                                 JSONArray plotArray = new JSONArray();
@@ -247,7 +245,9 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)) {
 
 
+
                                                             for (Plot plot : farmersPlots) {
+                                                                JSONArray diagnosticAndMonitoringObjectsArray = new JSONArray();
 
                                                                 //Generate JSON payload for Diagnostic Module
                                                                 //The first JSONObject (index 0) in the array should hold the data for the foreign key fields ie. type_c, and any external ids
@@ -292,18 +292,17 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                 diagnosticArray.put(recommendationJson);
 
 
-                                                                arrayOfValues.put(diagnosticArray);
-
+                                                                diagnosticAndMonitoringObjectsArray.put(diagnosticArray);
 
 
                                                                 //Generate JSON payload for Monitoring Module for the plot's Monitorings
                                                                 List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringForPlot(plot.getExternalId())
                                                                         .blockingGet();
 
-                                                                if(plotMonitoringList != null && plotMonitoringList.size() > 0){
+                                                                if (plotMonitoringList != null && plotMonitoringList.size() > 0) {
 
 
-                                                                    for(Monitoring monitoring : plotMonitoringList) {
+                                                                    for (Monitoring monitoring : plotMonitoringList) {
                                                                         JSONArray monitoringArray = new JSONArray();
 
                                                                         JSONObject monitoringIndex0JSONObject = new JSONObject();
@@ -312,7 +311,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                         monitoringIndex0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
 
                                                                         monitoringArray.put(monitoringIndex0JSONObject);
-
 
 
                                                                         JSONObject monitoringJsonObject = monitoring.getMonitoringAOJsonData();
@@ -335,36 +333,25 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                                 }
                                                                             }
                                                                         }
-                                                                        arrayOfValues.put(monitoringArray);
-
-
+                                                                        diagnosticAndMonitoringObjectsArray.put(monitoringArray);
 
 
                                                                     }
                                                                 }
 
-
-
-
-
+                                                                arrayOfValues.put(diagnosticAndMonitoringObjectsArray);
 
                                                             }
-
-
-
-
-
-
-
-
-
-
-
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.OBSERVATION_TABLE)) {
 
                                                             //Generate Observations JSON payload for Diagnostic Module
 
+
+
+
                                                             for (Plot plot : farmersPlots) {
+
+                                                                JSONArray diagnosticAndMonitoringObservationsArray = new JSONArray();
                                                                 JSONArray observationArray = new JSONArray();
 
                                                                 JSONObject index0JSONObject = new JSONObject();
@@ -390,16 +377,16 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                     }
                                                                 }
 
-                                                                arrayOfValues.put(observationArray);
+                                                                diagnosticAndMonitoringObservationsArray.put(observationArray);
 
 
                                                                 //Generate JSON payload for Monitoring Module for the plot's Monitorings
                                                                 List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringForPlot(plot.getExternalId())
                                                                         .blockingGet();
 
-                                                                if(plotMonitoringList != null && plotMonitoringList.size() > 0){
+                                                                if (plotMonitoringList != null && plotMonitoringList.size() > 0) {
 
-                                                                    for(Monitoring monitoring : plotMonitoringList) {
+                                                                    for (Monitoring monitoring : plotMonitoringList) {
                                                                         JSONArray monitoringObservationsArray = new JSONArray();
 
                                                                         JSONObject monitoringIndex0JSONObject = new JSONObject();
@@ -408,7 +395,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                         monitoringIndex0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
 
                                                                         monitoringObservationsArray.put(monitoringIndex0JSONObject);
-
 
 
                                                                         JSONObject monitoringJsonObject = monitoring.getMonitoringAOJsonData();
@@ -422,57 +408,42 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                                 String[] relatedQuestions = monitoringAOQuestion.splitRelatedQuestions();
 
-                                                                                if(relatedQuestions != null && relatedQuestions.length > 1){
+                                                                                if (relatedQuestions != null && relatedQuestions.length > 1) {
 
-                                                                                String answer = monitoringJsonObject.get(monitoringAOQuestion.getLabelC()).toString();
-                                                                                String competenceValue = (monitoringJsonObject.has(relatedQuestions[0]) ? monitoringJsonObject.get(relatedQuestions[0]).toString(): null);
-                                                                                String failureValue = (monitoringJsonObject.has(relatedQuestions[1]) ? monitoringJsonObject.get(relatedQuestions[1]).toString(): null);
+                                                                                    String answer = monitoringJsonObject.get(monitoringAOQuestion.getLabelC()).toString();
+                                                                                    String competenceValue = (monitoringJsonObject.has(relatedQuestions[0]) ? monitoringJsonObject.get(relatedQuestions[0]).toString() : null);
+                                                                                    String failureValue = (monitoringJsonObject.has(relatedQuestions[1]) ? monitoringJsonObject.get(relatedQuestions[1]).toString() : null);
 
 
                                                                                     if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
-                                                                                    JSONObject answerJson = new JSONObject();
+                                                                                        JSONObject answerJson = new JSONObject();
 
-                                                                                    answerJson.put("answer", answer);
-                                                                                    answerJson.put("field_name", mapping.getFieldName());
-                                                                                    answerJson.put("variable_c", monitoringAOQuestion.getLabelC());
-                                                                                    answerJson.put("competence_label", relatedQuestions[0]);
-                                                                                    answerJson.put("competence_c", competenceValue);
-                                                                                    answerJson.put("reason_for_failure_label", relatedQuestions[1]);
-                                                                                    answerJson.put("reason_for_failure", failureValue);
+                                                                                        answerJson.put("answer", answer);
+                                                                                        answerJson.put("field_name", mapping.getFieldName());
+                                                                                        answerJson.put("variable_c", monitoringAOQuestion.getLabelC());
+                                                                                        answerJson.put("competence_label", relatedQuestions[0]);
+                                                                                        answerJson.put("competence_c", competenceValue);
+                                                                                        answerJson.put("reason_for_failure_label", relatedQuestions[1]);
+                                                                                        answerJson.put("reason_for_failure", failureValue);
 
                                                                                         monitoringObservationsArray.put(answerJson);
-                                                                                }
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         }
-                                                                        arrayOfValues.put(monitoringObservationsArray);
+                                                                        diagnosticAndMonitoringObservationsArray.put(monitoringObservationsArray);
 
                                                                     }
                                                                 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                arrayOfValues.put(diagnosticAndMonitoringObservationsArray);
                                                             }
 
                                                         } else {
 
                                                             //This formats the farmer basic info into the mapping payload since this data is not obtained from the form/answer survey module
 
-                                                            if(mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
+                                                            if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
                                                                 formatFarmerObjectData(farmer, arrayOfValues);
 
                                                             for (Mapping mapping : mappingEntry.getValue()) {
@@ -484,7 +455,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                     String answer = allAnswersJsonObject.get(questionLabel).toString();
 
-                                                                    if(!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
+                                                                    if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
 
                                                                         JSONObject answerJson = new JSONObject();
 
@@ -551,9 +522,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                 }));
     }
-
-
-
 
 
     protected void formatFarmerObjectData(RealFarmer farmer, JSONArray arrayOfValues) {
@@ -647,9 +615,9 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     protected void formatPlotsGpsData(Plot plot, JSONArray arrayOfValues) {
 
-        if(plot.getGpsPoints() != null) {
+        if (plot.getGpsPoints() != null) {
             List<PlotGpsPoint> gpsPoints = plot.getGpsPoints();
-            for(PlotGpsPoint point : gpsPoints) {
+            for (PlotGpsPoint point : gpsPoints) {
 
                 JSONArray pointJsonArray = new JSONArray();
 
@@ -715,14 +683,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         }
         return jsonObject;
     }
-
-
-
-
-
-
-
-
 
 
 }

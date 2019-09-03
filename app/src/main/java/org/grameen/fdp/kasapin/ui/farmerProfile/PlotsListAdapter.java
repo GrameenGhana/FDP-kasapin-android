@@ -120,6 +120,7 @@ public class PlotsListAdapter extends RecyclerView.Adapter<PlotsListAdapter.View
 
 
             mainLayout.setOnLongClickListener(view -> {
+                if(longClickListener != null)
                 longClickListener.onLongClick(view, getAdapterPosition());
                 return true;
             });

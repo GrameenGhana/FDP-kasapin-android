@@ -108,7 +108,7 @@
         android:padding="@dimen/spacing_normal">
 
         <de.codecrafters.tableview.TableView xmlns:table="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/tableView"
+            android:id="@+id/table_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/table_view_border_background"
@@ -229,7 +229,7 @@
 
 
             <Button
-                android:id="@+id/submitAgreement"
+                android:id="@+id/submit_agreement"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_normal"

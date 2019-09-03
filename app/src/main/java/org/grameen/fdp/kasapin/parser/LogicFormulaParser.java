@@ -127,7 +127,7 @@ public class LogicFormulaParser extends Tokenizer {
                 String returnValue = "";
                 boolean isNestedIfFormula = false;
 
-                FORMULA = FORMULA.replace(" ", "");
+                //FORMULA = FORMULA.replace(" ", "");
 
                 System.out.println();
 
@@ -146,7 +146,7 @@ public class LogicFormulaParser extends Tokenizer {
 
                     //BREAK DOWN INTO SECTIONS AND EVALUATE
 
-                    String rawFormula = nestedFormula.replace(" ", "")
+                    String rawFormula = nestedFormula
                             .replace("I", "")
                             .replace("F(", "");
 
@@ -207,14 +207,14 @@ public class LogicFormulaParser extends Tokenizer {
                     System.out.println("EQUATION AFTER REPLACEMENT >>> " + evaluatedFormula);
 
 
-                    boolean valueAfterParsing = ComputationUtils.parseLogicalEquation(evaluatedFormula.replace("))", ")"));
+                    Boolean valueAfterParsing = ComputationUtils.parseLogicalEquation(evaluatedFormula.replace("))", ")"));
 
 
                     AppLogger.e(TAG, "TRUE VALUE = " + trueValue);
                     AppLogger.e(TAG, "FALSE VALUE = " + falseValue);
 
 
-                    if (valueAfterParsing) {
+                    if (valueAfterParsing != null && valueAfterParsing) {
                         returnValue = trueValue.replace("\"", "");
                         break;
                     } else {
@@ -244,8 +244,7 @@ public class LogicFormulaParser extends Tokenizer {
                     } else if (jsonObject.has(returnValue))
                         try {
                             returnValue = jsonObject.getString(returnValue);
-                        } catch (JSONException ignored) {
-                        }
+                        } catch (JSONException ignored) {}
 
                     return returnValue;
 

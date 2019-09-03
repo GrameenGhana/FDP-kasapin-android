@@ -1,8 +1,11 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import java.util.List;
 
 /**
  * Created by aangjnr on 15/02/2018.
@@ -17,6 +20,9 @@ public class FarmResult {
     String status;
     String plotAssessmentId;
 
+    @Ignore
+    List<PlotAssessment> plotAssessmentList;
+
 
     public FarmResult() {
     }
@@ -27,6 +33,14 @@ public class FarmResult {
 
     public void setPlotAssessmentId(String plotAssessmentId) {
         this.plotAssessmentId = plotAssessmentId;
+    }
+
+    public void setPlotAssessmentList(List<PlotAssessment> plotAssessmentList) {
+        this.plotAssessmentList = plotAssessmentList;
+    }
+
+    public List<PlotAssessment> getPlotAssessmentList() {
+        return plotAssessmentList;
     }
 
     public String getStatus() {

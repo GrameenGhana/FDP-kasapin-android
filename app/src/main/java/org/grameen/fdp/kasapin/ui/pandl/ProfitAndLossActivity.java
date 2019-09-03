@@ -1054,14 +1054,11 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         computePlotResults();
 
-
         showOrHideStartYear(PLOT.getStartYear() - 1);
-
 
         Question plotRenovatedCorrectlyQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_correctly_");
 
         if (plotRenovatedCorrectlyQuestion != null) {
-
             if (!ComputationUtils.getValue(plotRenovatedCorrectlyQuestion.getLabelC(), PLOT_ANSWERS_JSON_OBJECT).equalsIgnoreCase("yes"))
 
 

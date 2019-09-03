@@ -7,25 +7,28 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
  * Created by aangjnr on 08/02/2018.
  */
 
-@Entity(tableName = "monitorings", indices = {@Index("plotExternalId"), @Index("year")}, foreignKeys = @ForeignKey(entity = Plot.class, parentColumns = "externalId", childColumns = "plotExternalId", onDelete = CASCADE))
+@Entity(tableName = "monitorings", indices = {@Index("plotExternalId"), @Index("year")}, foreignKeys = @ForeignKey(entity = Plot.class, parentColumns = "externalId", childColumns = "plotExternalId"))
 public class Monitoring {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     int id;
-
+    @SerializedName("external_id")
     String externalId;
     String year;
     String name;
+    @SerializedName("data")
     String json;
+    @SerializedName("plot_external_id")
     String plotExternalId;
 
 

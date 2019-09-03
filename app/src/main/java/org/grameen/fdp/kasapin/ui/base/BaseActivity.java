@@ -37,10 +37,16 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.DataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
+import org.grameen.fdp.kasapin.data.db.entity.Question;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.di.component.ActivityComponent;
 import org.grameen.fdp.kasapin.di.component.DaggerActivityComponent;
 import org.grameen.fdp.kasapin.di.module.ViewModule;
+import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
+import org.grameen.fdp.kasapin.ui.familyMembers.FamilyMembersActivity;
+import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -49,6 +55,7 @@ import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,6 +71,7 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity.familyMembersFormPosition;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
 /**
@@ -81,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public static List<FormAndQuestions> FORM_AND_QUESTIONS;
     public static List<FormAndQuestions> PLOT_FORM_AND_QUESTIONS;
     public static List<FormAndQuestions> FILTERED_FORMS;
-    public static int CURRENT_FORM;
+    public static int CURRENT_FORM_POSITION;
     public static int CURRENT_PAGE;
     public static boolean IS_TABLET;
     public String TAG;
@@ -510,5 +518,65 @@ public abstract class BaseActivity extends AppCompatActivity
         return fileLocation;
     }
 
+    public void goToFamilyMembersTable(RealFarmer FARMER){
+        //Family members button clicked. Check to see if user provided the value for "farmer_familycount_COUNTRY" under Farmer Profile form
+
+        Question numberFamilyMembersQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farmer_familycount_");
+        FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), FILTERED_FORMS.get(CURRENT_FORM_POSITION).getForm().getId());
+
+        if(numberFamilyMembersQuestion != null) {
+            if(answerData != null){
+
+                int numberFamilyMembers;
+                try {
+                    numberFamilyMembers = (int) answerData.getJsonData().get(numberFamilyMembersQuestion.getLabelC());
+                } catch (JSONException ignored) {
+                    numberFamilyMembers = 1;
+                }
+
+
+                Intent intent = new Intent(this, FamilyMembersActivity.class);
+                intent.putExtra("noFamilyMembers", numberFamilyMembers);
+                intent.putExtra("farmer", getGson().toJson(FARMER));
+
+                startActivity(intent);
+                finish();
+
+            }else
+                showDialog(false, getStringResources(R.string.fill_data),
+                        getStringResources(R.string.enter_data_rationale) + FARMER.getFarmerName() + getStringResources(R.string.before_proceed_suffux),
+                        (dialog, which) -> dialog.dismiss(), getStringResources(R.string.ok), null, "", 0);
+        }else
+            showMessage(getStringResources(R.string.error_has_occurred));
+    }
+
+    public void moveToNextForm(RealFarmer FARMER) {
+        CURRENT_FORM_POSITION++;
+
+        if(CURRENT_FORM_POSITION == familyMembersFormPosition) {
+            goToFamilyMembersTable(FARMER);
+            return;
+        }
+
+        if (CURRENT_FORM_POSITION < FILTERED_FORMS.size()) {
+            //CURRENT_FORM_QUESTION = FORM_AND_QUESTIONS.get(CURRENT_FORM_POSITION);
+
+            Intent intent = new Intent(this, AddEditFarmerActivity.class);
+            intent.putExtra("farmer", getGson().toJson(FARMER));
+            startActivity(intent);
+            finish();
+            overridePendingTransition(0, 0);
+        } else
+            showFarmerDetailsActivity(FARMER);
+
+    }
+
+    public void showFarmerDetailsActivity(RealFarmer farmer) {
+        Intent intent = new Intent(this, FarmerProfileActivity.class);
+        intent.putExtra("farmer", getGson().toJson(farmer));
+        startActivity(intent);
+        finish();
+
+    }
 
 }

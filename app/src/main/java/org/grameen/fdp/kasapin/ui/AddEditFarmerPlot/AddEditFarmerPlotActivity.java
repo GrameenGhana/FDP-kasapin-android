@@ -284,27 +284,25 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             if (jsonObject.has(plotAreaQuestion.getLabelC()))
                 jsonObject.remove(plotAreaQuestion.getLabelC());
             jsonObject.put(plotAreaQuestion.getLabelC(), plotSizeEdittext.getText().toString());
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        AppLogger.e(TAG, jsonObject);
 
+        AppLogger.e(TAG, jsonObject);
 
         LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
         logicFormulaParser.setJsonObject(jsonObject);
 
 
-        //Calculate AOR and AI question values here, put values into the json
+        //Compute AOR and AI question values here, put values into the json
         for (FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS) {
 
 
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
 
             AppLogger.e(TAG, "FORM NAME ===>>> " + formAndQuestions.getForm().getFormNameC() + " *****");
-
 
 
 
@@ -377,26 +375,22 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         int year = 1;
         Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_");
-        Question PLOT_RENOVATION_MADE = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_");
+        Question PLOT_RENOVATION_MADE_YEARS = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_");
         Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
         Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
 
 
-        PLOT.setRecommendationId(-1);
 
-
-        if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE != null) {
+        if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE_YEARS != null) {
 
             if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
                 try {
                     if (ComputationUtils.getValue(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC(), jsonObject).equalsIgnoreCase("yes")) {
 
                         AppLogger.e(TAG, "PLOT RENOVATED CORRECTLY? >>>> YES");
-                        year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE.getLabelC()));
-
+                        year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE_YEARS.getLabelC()));
 
                         AppLogger.e(TAG, "START YEAR >>>> " + year);
-
 
                         String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
 
@@ -413,16 +407,32 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
                             AppLogger.e(TAG, "RECOMMENDATION MADE  >>>> " + GAPS_RECOMENDATION_FOR_START_YEAR.getLabel());
 
-
                             PLOT.setRecommendationId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
                             PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-
+                    year = 1;
                 }
             }
+        }
+
+
+
+        try {
+            String plotInterventionStartYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_intervention_start_year_").blockingGet("null");
+            if (jsonObject.has(plotInterventionStartYearLabel))
+                jsonObject.remove(plotInterventionStartYearLabel);
+            jsonObject.put(plotInterventionStartYearLabel, year);
+
+
+            String startYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet("null");
+            if (jsonObject.has(startYearLabel))
+                jsonObject.remove(startYearLabel);
+            jsonObject.put(startYearLabel, year);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
 
@@ -434,10 +444,14 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
         PLOT.setArea(plotSizeEdittext.getText().toString());
 
-        //int startYearId = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(AppConstants.START_YEAR);
 
 
-        if (PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) {
+
+
+
+
+
+        if ((PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) || PLOT.getRecommendationId() < 0 ) {
             int defaultRecommendationId = getAppDataManager().getDatabaseManager().recommendationsDao().getRecommendationIdByName(AppConstants.RECOMMENDATION_NO_FDP);
             PLOT.setRecommendationId(defaultRecommendationId);
 

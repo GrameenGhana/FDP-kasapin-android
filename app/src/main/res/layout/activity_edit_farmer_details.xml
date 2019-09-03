@@ -68,7 +68,6 @@
                                     android:layout_height="@dimen/mini_image_height"
                                     android:src="@drawable/icon_farmer_color" />
 
-
                                 <TextView
                                     android:id="@+id/initials"
                                     style="@style/TextAppearance.AppCompat.Display1"
@@ -78,7 +77,6 @@
                                     android:fontFamily="sans-serif-light"
                                     android:textAllCaps="true"
                                     android:textColor="@color/white" />
-
 
                             </RelativeLayout>
 

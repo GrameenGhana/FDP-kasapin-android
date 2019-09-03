@@ -36,6 +36,7 @@ import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
+import org.grameen.fdp.kasapin.ui.plotMonitoringActivity.PlotMonitoringActivity;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -134,6 +135,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         scriptEngine = new ScriptEngineManager().getEngineByName("rhino");
 
         IS_NEW_MONITORING = MONITORING == null;
+
 
 
         startYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet();
@@ -423,7 +425,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         final View view;
 
         if(q.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER)){
-
             EditText editText = new EditText(this);
             editText.setHint(ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON));
             editText.setTextSize(12);
@@ -462,7 +463,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         }else {
 
             final List<String>items = q.formatQuestionOptions();
-
             final Spinner spinner = new Spinner(this);
             spinner.setPrompt(q.getDefaultValueC());
             spinner.setTag(q.getLabelC());
@@ -474,7 +474,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     View view = super.getView(position, convertView, parent);
 
                     if (position == getCount()) {
-                        TextView itemView = ((TextView) view.findViewById(android.R.id.text1));
+                        TextView itemView = (view.findViewById(android.R.id.text1));
                         itemView.setText("");
                         itemView.setHint(getItem(getCount()));
                     }
@@ -492,26 +492,19 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                    try {
 
+                        if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
+                            MONITORING_ANSWERS_JSON.remove(q.getLabelC());
+                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
 
-                    if (pos != items.size() - 1) {
-                        try {
+                        } else
+                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
+                        setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
 
-                            if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
-                                MONITORING_ANSWERS_JSON.remove(q.getLabelC());
-                                MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-
-                            } else
-                                MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-                            setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-
                 }
 
                 @Override
@@ -521,9 +514,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 }
             });
 
-            //spinner.setSelection(items.size() - 1);
-            refresh(spinner, ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON), items);
-
+            refresh(spinner, ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON), items);
             view = spinner;
         }
 
@@ -556,20 +547,17 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             }
             @Override
             public int getCount() {
-                return super.getCount(); // don't display last item (it's used for the prompt)
+                return super.getCount();
             }
         };
+
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
-
-                if (pos != items.size() - 1) {
                     try {
-
                         if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
                             MONITORING_ANSWERS_JSON.remove(q.getLabelC());
                             MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
@@ -579,24 +567,17 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
                         setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
 
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
-
             }
         });
 
-        //spinner.setSelection(items.size() - 1);
-        refresh(spinner, ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON), items);
+        refresh(spinner, ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON), items);
 
         view = spinner;
 
@@ -628,18 +609,16 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
             @Override
             public int getCount() {
-                return super.getCount(); // don't display last item (it's used for the prompt)
+                return super.getCount();
             }
         };
+
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
-
-                if (pos != items.size() - 1) {
                     try {
 
                         if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
@@ -654,19 +633,15 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-        //spinner.setSelection(items.size() - 1);
-        refresh(spinner, ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON), items);
+        refresh(spinner, ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON), items);
 
         view = spinner;
-
         return view;
     }
 
@@ -681,19 +656,18 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
     @Override
     public void openNextActivity() {
         int year = Integer.parseInt(SELECTED_YEAR);
-        int oldYear;
+        int oldYear = 1;
         try {
              oldYear = Integer.parseInt(getAppDataManager().getStringValue(PLOT.getFarmerCode()));
         }catch(Exception ignored){
-            oldYear = 1;
         }
 
-        if (!Objects.equals(oldYear, year)) {
-            if (year > oldYear)
+             if (year >= oldYear)
                 getAppDataManager().setStringValue(PLOT.getFarmerCode(), String.valueOf(year));
-        }
 
-        //Todo go to plot activity, reload vp
+
+        //Todo go to plot activity, reload viewpager
+        PlotMonitoringActivity.newMonitoringAdded = IS_NEW_MONITORING;
 
         getAppDataManager().setBooleanValue("refreshViewPager", true);
         finish();
@@ -813,15 +787,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
 
 
-
-
-
-
-
-
-
-
-
         for (Question q : dynamicFormFragment.getFormAndQuestions().getQuestions())
             try {
                 if (MONITORING_ANSWERS_JSON.has(q.getLabelC()))
@@ -856,7 +821,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         System.out.println("--------------------------------------------------------------------------------------------------------");
 
 
-
         //Get monitoring results question and apply logic
         FormAndQuestions aoMonitoringResultsFormAndQuestions = getAppDataManager().getDatabaseManager().formAndQuestionsDao().maybeGetFormAndQuestionsByName(AppConstants.AO_MONITORING_RESULT)
                 .blockingGet();
@@ -868,8 +832,11 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 System.out.println();
 
                 for(Question q : aoMonitoringResultsFormAndQuestions.getQuestions()) {
-                    System.out.println("--------------------------------------------------------------------------------------------------------");
+
+                    AppLogger.e(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                     AppLogger.e(TAG, "Applying parser to evaluate formula of question " + q.getLabelC());
+                    AppLogger.e(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
 
                     String value;
                     if(q.getTypeC().equalsIgnoreCase(AppConstants.FORMULA_TYPE_COMPLEX_FORMULA))
@@ -877,18 +844,21 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     else
                         value = logicFormulaParser.evaluate(q.getFormulaC());
 
-
                     try {
 
                         if (MONITORING_ANSWERS_JSON.has(q.getLabelC()))
                             MONITORING_ANSWERS_JSON.remove(q.getLabelC());
 
                         MONITORING_ANSWERS_JSON.put(q.getLabelC(), value);
+
+                        logicFormulaParser.setJsonObject(MONITORING_ANSWERS_JSON);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    System.out.println("--------------------------------------------------------clear------------------------------------------------");
+                    System.out.println("--------------------------------------------------------clear------------------------------------------------\n\n");
+
                 }
             }
         System.out.println("##########################################  LOOP END   ###############################################################");
@@ -905,8 +875,13 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             }
 
 
-            MONITORING.setJson(MONITORING_ANSWERS_JSON.toString());
-        mPresenter.saveMonitoringData(MONITORING);
+         MONITORING.setJson(MONITORING_ANSWERS_JSON.toString());
+        mPresenter.saveMonitoringData(MONITORING, FARMER);
+
+
+
+
+
     }
 
 

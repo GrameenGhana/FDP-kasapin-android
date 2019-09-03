@@ -72,12 +72,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
     @Override
     public void getFormsAndQuestionsData() {
-
-
-
-
-
-        runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDispayTypeOnly(AppConstants.DISPLAY_TYPE_FORM)
+        runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayTypeOnly(
+                new String[]{AppConstants.DISPLAY_TYPE_FORM.toLowerCase(), AppConstants.DISPLAY_TYPE_TABLE.toLowerCase(), AppConstants.DISPLAY_TYPE_HISTORICAL.toLowerCase()})
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(formAndQuestions -> getView().cacheFormsAndQuestionsData(formAndQuestions), throwable -> {

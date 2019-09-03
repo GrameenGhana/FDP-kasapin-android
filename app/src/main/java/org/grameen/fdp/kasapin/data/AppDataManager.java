@@ -350,6 +350,7 @@ public class AppDataManager implements DataManager {
         mPreferencesHelper.setStringValue(key, value);
     }
 
+
     @Override
     public boolean getBooleanValue(String key) {
         return mPreferencesHelper.getBooleanValue(key);

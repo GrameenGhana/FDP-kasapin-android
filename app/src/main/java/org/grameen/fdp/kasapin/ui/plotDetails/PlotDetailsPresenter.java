@@ -46,7 +46,7 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
     @Override
     public void getPlotQuestions() {
 
-        List<FormAndQuestions> formAndQuestionsList = new ArrayList<>();
+       /* List<FormAndQuestions> formAndQuestionsList = new ArrayList<>();
 
         AppLogger.e(TAG, "All Forms size is " + BaseActivity.FORM_AND_QUESTIONS.size());
 
@@ -56,21 +56,16 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                     formAndQuestionsList.add(formAndQuestions);
             }
 
-        AppLogger.e(TAG, "Plot  Forms size is " + formAndQuestionsList.size());
+        AppLogger.e(TAG, "Plot Forms size is " + formAndQuestionsList.size());
+ */
 
-
-        getView().showForm(formAndQuestionsList);
-
-/*
-
-
-        runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType("Plot form")
+        runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType(AppConstants.DISPLAY_TYPE_PLOT_FORM)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(formAndQuestions -> , throwable -> {
+                .subscribe(formAndQuestions -> getView().showForm(formAndQuestions), throwable -> {
                     getView().showMessage(R.string.error_has_occurred);
                     throwable.printStackTrace();
-                }));*/
+                }));
 
     }
 

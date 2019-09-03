@@ -49,6 +49,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
 import ir.mirrajabi.searchdialog.core.SearchResultListener;
 
+import static org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity.familyMembersFormPosition;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -192,7 +194,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
 
         if (!isNewFarmer) {
-            CURRENT_FORM_QUESTION = FILTERED_FORMS.get(CURRENT_FORM);
+            CURRENT_FORM_QUESTION = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
 
 
             if (getAppDataManager().isMonitoring() || (FARMER.hasAgreed() && FARMER.getSyncStatus() == 1)) {
@@ -365,30 +367,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @Override
     public void moveToNextForm() {
-        CURRENT_FORM++;
-
-        if (CURRENT_FORM < FILTERED_FORMS.size()) {
-            //CURRENT_FORM_QUESTION = FORM_AND_QUESTIONS.get(CURRENT_FORM);
-
-            Intent intent = new Intent(this, this.getClass());
-            intent.putExtra("farmer", getGson().toJson(FARMER));
-            startActivity(intent);
-            finish();
-            overridePendingTransition(0, 0);
-        } else
-            showFarmerDetailsActivity(FARMER);
-
+        moveToNextForm(FARMER);
     }
 
-
-    @Override
-    public void showFarmerDetailsActivity(RealFarmer farmer) {
-        Intent intent = new Intent(this, FarmerProfileActivity.class);
-        intent.putExtra("farmer", getGson().toJson(FARMER));
-        startActivity(intent);
-        finish();
-
-    }
 
     @Override
     public void finishActivity() {

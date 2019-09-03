@@ -15,6 +15,7 @@ public class AppConstants {
     public static final int PERMISSION_CALL = 1003;
     public static final String DATABASE_NAME = "fdp_database";
     public static final String DISPLAY_TYPE_FORM = "Form";
+    public static final String DISPLAY_TYPE_TABLE = "Table";
     public static final String DISPLAY_TYPE_PLOT_FORM = "Plot form";
     public static final String DISPLAY_TYPE_HISTORICAL = "Historical";
     public static final String DISPLAY_TYPE_P_AND_L = "P&L";
@@ -68,7 +69,7 @@ public class AppConstants {
     public static final String TYPE_NUMBER = "number";
     public static final String TYPE_NUMBER_DECIMAL = "decimal";
     public static final String TYPE_COMPLEX_CALCULATION = "complex calculation";
-    public static final String FORMULA_TYPE_COMPLEX_FORMULA = "Complex formula";
+    public static final String FORMULA_TYPE_COMPLEX_FORMULA = "complex formula";
     public static final String ANSWERS = "fpd_Answer__c";
     public static final String EMPTY_STRING = "";
     public static final String RESPONSE_SUCCESS = "0";
@@ -149,9 +150,7 @@ public class AppConstants {
     public static int SYNC_NOT_OK = 0;
 
     public static String RECOMMENDATION_CALCULATION_TYPE_COST = "Cost";
-    public static String RECOMMENDATION_NO_FDP = "Incomplete AO";
-    public static String QUESTION_START_YEAR = "Incomplete AO";
-
+    public static String RECOMMENDATION_NO_FDP = "incomplete ao";
     public static String MODULE_TYPE_DIAGNOSTIC = "Diagnostic";
     public static String MODULE_TYPE_MONITORING = "Monitoring";
 

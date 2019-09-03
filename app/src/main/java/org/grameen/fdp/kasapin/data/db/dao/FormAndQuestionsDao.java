@@ -34,9 +34,13 @@ public interface FormAndQuestionsDao {
     Single<List<FormAndQuestions>> getFormAndQuestionsByType(String formType, String displayType);
 
 
-    @Transaction
+   /* @Transaction
     @Query("SELECT * FROM forms WHERE displayTypeC LIKE '%' || :displayType|| '%' ORDER BY displayOrderC ASC")
     Single<List<FormAndQuestions>> getFormAndQuestionsByDispayTypeOnly(String displayType);
+*/
+    @Transaction
+    @Query("SELECT * FROM forms WHERE displayTypeC COLLATE NOCASE IN (:displayTypes) ORDER BY displayOrderC ASC")
+    Single<List<FormAndQuestions>> getFormAndQuestionsByDisplayTypeOnly(String[] displayTypes);
 
 
 

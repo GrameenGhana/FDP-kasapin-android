@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.plotMonitoringActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
@@ -89,6 +90,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
     private List<Monitoring> monitoringList;
     int SELECTED_YEAR;
+    public static boolean newMonitoringAdded = false;
 
 
     @Override
@@ -106,6 +108,8 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
         setUpViews();
         onBackClicked();
+
+
 
     }
 
@@ -130,7 +134,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         if (PLOT.getAnswersData() != null && !PLOT.getAnswersData().contains("--") && PLOT.getRecommendationId() > 0)
             mPresenter.getAOQuestions();
         else
-            toggleNoDataPlaceholder(false, "No data!\n\nPlease ensure that all Adoption Observations were completed for " + PLOT.getName());
+            toggleNoDataPlaceholder(true, "No data!\n\nPlease ensure that all Adoption Observations were completed for " + PLOT.getName());
 
 
     }
@@ -187,9 +191,10 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
 
     @Override
-    public void updateTableData(List<Monitoring> monitorings) {
+    public void updateTableData(List<Monitoring> _monitoringList) {
         plotMonitoringTableDataList = new ArrayList<>();
-        monitoringList = monitorings;
+        monitoringList = _monitoringList;
+
 
 
         for(Monitoring monitoring : monitoringList) {
@@ -202,7 +207,6 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
                 e.printStackTrace();
                 jsonObject = new JSONObject();
             }
-
 
             for (Question q : MONITORING_AO_QUESTIONS) {
                 String[] questionIds = q.splitRelatedQuestions();
@@ -284,6 +288,15 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
             toggleNoDataPlaceholder(false, null);
 
+
+            AppLogger.e(TAG, "****************** NEW MONITORING ADDED? >>>> " + newMonitoringAdded);
+
+            if(newMonitoringAdded)
+            new Handler().postDelayed(() -> {
+                viewPager.setCurrentItem(plotMonitoringTablePagerAdapter.getCount() - 1, true);
+                newMonitoringAdded = false;
+            }, 1000);
+
         } else
             toggleNoDataPlaceholder(true, getString(R.string.no_monitoring_data));
 
@@ -300,7 +313,6 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         //addMonitoring.setVisibility((shouldShow) ? View.VISIBLE : View.GONE);
 
         editMonitoring.setVisibility((shouldShow) ? View.GONE : View.VISIBLE);
-
         noDataTextView.setText(noDataText);
 
     }
@@ -324,7 +336,6 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
                     getAppDataManager().setBooleanValue("refreshViewPager", false);
                 }
             };
-
             action.run();
         } catch (Exception e) {
             e.printStackTrace();
@@ -360,6 +371,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
          intent = new Intent(PlotMonitoringActivity.this, AddPlotMonitoringActivity.class);
                 intent.putExtra("plot", new Gson().toJson(PLOT));
+                intent.putExtra("farmer", new Gson().toJson(FARMER));
                 intent.putExtra("year", SELECTED_YEAR);
                 intent.putExtra("monitoringPosition", monitoringList.size() + 1);
                 intent.putExtra("monitoring", getGson().toJson(monitoringList.get(MONITORING_POSITION)));
@@ -372,6 +384,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
                  intent = new Intent(PlotMonitoringActivity.this, AddPlotMonitoringActivity.class);
                 intent.putExtra("plot", new Gson().toJson(PLOT));
                 intent.putExtra("year", SELECTED_YEAR);
+                intent.putExtra("farmer", new Gson().toJson(FARMER));
                 intent.putExtra("monitoringPosition", monitoringList.size() + 1);
                 startActivity(intent);
 

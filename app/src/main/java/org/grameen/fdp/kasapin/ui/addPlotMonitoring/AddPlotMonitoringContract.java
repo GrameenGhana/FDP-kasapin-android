@@ -8,6 +8,7 @@ import android.widget.Spinner;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class AddPlotMonitoringContract {
     public interface Presenter {
         void getAreaUnits(String farmerCode);
         void getMonitoringQuestions();
-        void saveMonitoringData(Monitoring monitoring);
+        void saveMonitoringData(Monitoring monitoring, RealFarmer farmer);
 
 
     }

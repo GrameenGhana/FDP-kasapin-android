@@ -115,20 +115,22 @@ public class MathFormulaParser extends Tokenizer {
         String newFormula = mathFormula;
 
 
-        Iterator iterator = jsonObject.keys();
-        while (iterator.hasNext()) {
-            String tmp_key = (String) iterator.next();
+        if(jsonObject != null) {
+            Iterator iterator = jsonObject.keys();
+            while (iterator.hasNext()) {
+                String tmp_key = (String) iterator.next();
 
-            if (mathFormula.contains(tmp_key))
-                if (tmp_key.equals(mathFormula))
-                    newFormula = getValue(tmp_key);
-                else
-                    newFormula = newFormula.replace(tmp_key, getValue(tmp_key));
+                if (mathFormula.contains(tmp_key))
+                    if (tmp_key.equals(mathFormula))
+                        newFormula = getValue(tmp_key);
+                    else
+                        newFormula = newFormula.replace(tmp_key, getValue(tmp_key));
+            }
         }
 
 
         if (allValuesJson != null) {
-            iterator = allValuesJson.keys();
+            Iterator iterator = allValuesJson.keys();
             while (iterator.hasNext()) {
                 String tmp_key = (String) iterator.next();
 

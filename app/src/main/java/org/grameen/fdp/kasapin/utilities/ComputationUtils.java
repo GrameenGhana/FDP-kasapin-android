@@ -104,7 +104,7 @@ public class ComputationUtils {
         return value;
     }
 
-    public static boolean parseLogicalEquation(String equation) {
+    public static Boolean parseLogicalEquation(String equation) {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
         Boolean answer = null;
         try {
@@ -116,8 +116,6 @@ public class ComputationUtils {
         System.out.println("---------------------------------------------------");
         System.out.println( "FORMULA  >>>>>  " + equation  + " ---> " + answer);
         System.out.println("---------------------------------------------------");
-
-
 
         return answer;
     }
