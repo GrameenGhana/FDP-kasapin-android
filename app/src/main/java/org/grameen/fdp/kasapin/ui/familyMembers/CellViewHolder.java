@@ -79,6 +79,7 @@ public class CellViewHolder extends AbstractViewHolder {
 
 
         editText.setHint(FamilyMembersActivity.getValue(rowPosition, q.getLabelC()));
+
         //editText.setError(q.getHelp_Text__c());
         //editText.setErrorColor(R.color.divider_2);
         //editText.setHelperTextAlwaysShown(true);
@@ -111,15 +112,15 @@ public class CellViewHolder extends AbstractViewHolder {
                     NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
                     DecimalFormat formatter = (DecimalFormat) nf;
                     formatter.applyPattern("#,###,###.##");
-
-
                     Double doubleValue = Double.parseDouble(editText.getText().toString().replace(",", ""));
-
                     editText.setText(formatter.format(doubleValue));
                 }
             });
 
         }
+
+        if (updateJsonArrayListener != null)
+            updateJsonArrayListener.onItemValueChanged(rowPosition, q.getLabelC(), FamilyMembersActivity.getValue(rowPosition, q.getLabelC()));
 
 
         editText.requestLayout();

@@ -243,9 +243,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                             }
 
                                                         } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)) {
-
-
-
                                                             for (Plot plot : farmersPlots) {
                                                                 JSONArray diagnosticAndMonitoringObjectsArray = new JSONArray();
 
@@ -272,7 +269,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                         String answer = plotJsonObject.get(questionLabel).toString();
 
-                                                                        AppLogger.e(TAG, "VALUE >>> " + answer);
 
                                                                         if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
                                                                             JSONObject answerJson = new JSONObject();

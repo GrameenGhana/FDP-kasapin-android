@@ -283,8 +283,14 @@ public class DownloadResources {
                                     getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
 
                                     if (farmerAndAnswers1.getPlotDetails() != null && farmerAndAnswers1.getPlotDetails().size() > 0)
-                                        for (List<Plot> plots : farmerAndAnswers1.getPlotDetails())
-                                            getAppDataManager().getDatabaseManager().plotsDao().insertAll(plots);
+                                        for (List<Plot> plots : farmerAndAnswers1.getPlotDetails()) {
+                                            for(Plot p : plots){
+                                                getAppDataManager().getDatabaseManager().plotsDao().insertOne(p);
+
+                                                if(p.getMonitoringList() != null)
+                                                getAppDataManager().getDatabaseManager().monitoringsDao().insertAll(p.getMonitoringList());
+                                            }
+                                        }
                                 }
                             }
 

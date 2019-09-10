@@ -25,6 +25,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.PlotMonitoringTableData;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.json.JSONException;
@@ -128,6 +129,9 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
         ALL_PLOT_DATA_QUESTIONS = questions;
 
         PLOTS_LIST = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(FARMER.getCode()).blockingGet();
+
+        AppLogger.e(TAG, getGson().toJson(PLOTS_LIST));
+        
         if (ALL_PLOT_DATA_QUESTIONS != null && PLOTS_LIST != null && PLOTS_LIST.size() > 0)
             setUpViewPager();
 

@@ -135,8 +135,6 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                 .subscribe(aLong -> {
 
                     getAppDataManager().setBooleanValue("reload", true);
-                    getAppDataManager().setBooleanValue("reloadRecommendation", true);
-
                     getView().showRecommendation();
 
                 }, throwable -> {

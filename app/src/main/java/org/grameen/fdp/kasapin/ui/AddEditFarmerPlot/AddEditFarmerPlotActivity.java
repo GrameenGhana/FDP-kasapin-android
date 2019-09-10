@@ -298,8 +298,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         //Compute AOR and AI question values here, put values into the json
         for (FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS) {
-
-
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
 
             AppLogger.e(TAG, "FORM NAME ===>>> " + formAndQuestions.getForm().getFormNameC() + " *****");
@@ -436,6 +434,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         }
 
 
+        PLOT.setRecommendationId(-1);
         PLOT.setStartYear(year);
         PLOT.setAnswersData(jsonObject.toString());
         PLOT.setPh(phEdittext.getText().toString());
@@ -443,26 +442,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
         PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
         PLOT.setArea(plotSizeEdittext.getText().toString());
-
-
-
-
-
-
-
-
-        if ((PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) || PLOT.getRecommendationId() < 0 ) {
-            int defaultRecommendationId = getAppDataManager().getDatabaseManager().recommendationsDao().getRecommendationIdByName(AppConstants.RECOMMENDATION_NO_FDP);
-            PLOT.setRecommendationId(defaultRecommendationId);
-
-            AppLogger.e(TAG, "##### SETTING DEFAULT RECOMMENDATION ID OF " + defaultRecommendationId);
-
-        }
-
-
-
-        AppLogger.e(TAG, "----------------------- PLOT INFO ------------------------");
-        AppLogger.e(TAG, getGson().toJson(PLOT));
 
         mPresenter.saveData(PLOT, flag);
     }

@@ -53,9 +53,13 @@ public class Plot {
     String answersData;
 
     @SerializedName("recommendation_id")
-    int recommendationId = -1;
+    int recommendationId;
     int gapsId = 1;
     int startYear = 1;
+
+    @Ignore
+    @SerializedName("monitoring_list")
+    List<Monitoring> monitoringList;
 
     public Plot() {}
 
@@ -207,5 +211,13 @@ public class Plot {
 
     public void setStartYear(int startYear) {
         this.startYear = startYear;
+    }
+
+    public void setMonitoringList(List<Monitoring> monitoringList) {
+        this.monitoringList = monitoringList;
+    }
+
+    public List<Monitoring> getMonitoringList() {
+        return monitoringList;
     }
 }

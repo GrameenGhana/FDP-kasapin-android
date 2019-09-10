@@ -154,7 +154,7 @@ public class LogicFormulaParser extends Tokenizer {
                     String[] sections = rawFormula.split(",");
 
 
-                    String formulaToEvaluate = "(" + sections[0] + ")";
+                    String formulaToEvaluate = "(" + sections[0].replace(" ", "") + ")";
 
                     String trueValue = sections[1].replace("\'", "").replace("(", "").replace(")", "");
 
@@ -191,7 +191,7 @@ public class LogicFormulaParser extends Tokenizer {
                     String evaluatedFormula = formulaToEvaluate;
 
                     for (int i = 0; i < subSections.length; i++) {
-                        String v = subSections[i].replace("(", "").replace(")", "");
+                        String v = subSections[i].replace("(", "").replace(")", "").replace(" ", "");
 
 
                         Boolean answerValue = ComputationUtils.parseEquation(v.replace("\"", ""), _engine);

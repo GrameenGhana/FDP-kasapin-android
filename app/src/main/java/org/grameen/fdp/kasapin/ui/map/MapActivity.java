@@ -380,13 +380,17 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         if(!hasGpsDataBeenSaved)
         showDialog(true, "Save GPS data", "Do you want to save the GPS points?", (d, w)->{
             saveGpsPointsData(true);
-        }, "YES", (d, w)-> mobeToPlotDetailsActivity(), "NO", 0);
+        }, "YES", (d, w)-> moveToPlotDetailsActivity(), "NO", 0);
         else
-            mobeToPlotDetailsActivity();
+           moveToPlotDetailsActivity();
 
     }
 
-    void mobeToPlotDetailsActivity(){
+    void moveToPlotDetailsActivity(){
+
+        AppLogger.i(TAG,"PLOT   >>>>>>>>   " + getGson().toJson(plot));
+
+
         Intent intent = new Intent(this, PlotDetailsActivity.class);
         intent.putExtra("plot", new Gson().toJson(plot));
         startActivity(intent);
@@ -405,7 +409,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
                         hasGpsDataBeenSaved = true;
                         showMessage(R.string.new_data_updated);
                         if(shouldExit)
-                            mobeToPlotDetailsActivity();
+                            moveToPlotDetailsActivity();
                     }
 
                     else

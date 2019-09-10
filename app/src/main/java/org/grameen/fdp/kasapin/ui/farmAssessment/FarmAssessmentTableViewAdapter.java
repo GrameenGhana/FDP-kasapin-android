@@ -123,8 +123,7 @@ public class FarmAssessmentTableViewAdapter extends LongPressAwareTableDataAdapt
 
     int getBackgroundColor(final String result){
 
-
-        switch(result.toLowerCase()){
+        switch(result.toLowerCase().trim()){
 
             case "fail":
 

@@ -55,9 +55,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setStatusBarColor(getWindow(), R.color.colorPrimary, true);
+
         super.onCreate(savedInstanceState);
         setTheme(R.style.AppTheme);
-        toggleFullScreen(false, getWindow());
+       // toggleFullScreen(false, getWindow());
 
         setContentView(R.layout.activity_login);
 

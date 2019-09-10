@@ -43,18 +43,13 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setStatusBarColor(getWindow(), R.color.colorPrimary, true);
+
         super.onCreate(savedInstanceState);
 
-      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            int flags = getWindow().getDecorView().getSystemUiVisibility();
-            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            getWindow().getDecorView().setSystemUiVisibility(flags);
-            getWindow().setStatusBarColor(Color.WHITE);
-        }*/
 
 
-        toggleFullScreen(false, getWindow());
+       // toggleFullScreen(false, getWindow());
 
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_landing_page);

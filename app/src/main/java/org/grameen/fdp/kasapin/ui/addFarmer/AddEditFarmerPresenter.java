@@ -73,6 +73,7 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
 
                     runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData))
                             .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(aLong -> {
 
                                 setFarmerAsUnsynced(farmer);

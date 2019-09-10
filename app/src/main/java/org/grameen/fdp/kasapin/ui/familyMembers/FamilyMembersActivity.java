@@ -183,7 +183,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         try {
             oldValuesArray = new JSONArray(answerData.getData());
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             oldValuesArray = new JSONArray();
         }
@@ -214,11 +214,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             mCellList.get(i).addAll(cellList.get(i));
         }
 
-
         mTableViewAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
-
-
-
 
         SpinnerViewHolder.UpdateJsonArrayListener(this);
         CellViewHolder.UpdateJsonArrayListener(this);
@@ -234,9 +230,10 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         StringBuilder familyMembersIncomeStringBuilder = new StringBuilder();
 
-        /** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
-         *
-         */
+        /*
+        ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
+        *
+        */
 
         int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
         FormAnswerData socioEconomicProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), socioEconomicFormId);
@@ -377,13 +374,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
-
 
     private List<List<Cell>> getCellList() {
         List<List<Cell>> list = new ArrayList<>();

@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.plotDetails;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -203,7 +204,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         mPresenter.getPlotQuestions();
 
-
         //SetCaptionLabels
         Completable.fromAction(() -> {
 
@@ -254,25 +254,26 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     }
 
     void checkRecommendation() {
-
-
         AppLogger.e(TAG, "#########   RECOMMENDATION ID IS " + PLOT.getRecommendationId());
 
-        if (PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) {
+      /*  if (PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) {
             recommendedIntervention.setText(R.string.fill_out_ao_data);
             recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red));
             return;
-        }
+        }*/
 
         if (PLOT.getRecommendationId() > 0) {
-
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationId(PLOT.getRecommendationId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(s -> recommendedIntervention.setText(s), throwable -> showMessage("Couldn't load plot's recommendation")));
+                    .subscribe(s -> {
+                        recommendedIntervention.setText(s);
+                        recommendedIntervention.setTextColor((s.equalsIgnoreCase(AppConstants.RECOMMENDATION_NO_FDP)
+                                ? ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red)
+                                : ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent)));
 
-            recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent));
 
+                    }, throwable -> showMessage("Couldn't load plot's recommendation")));
         }else {
             recommendedIntervention.setText("");
             recommendationProgress.setVisibility(View.VISIBLE);
@@ -290,24 +291,15 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         AppLogger.i("" + TAG, "############    REAPPLYING LOGIC TO RECOMMENDATION    ##################");
 
         for (Recommendation recommendation : recommendations) {
-
-            AppLogger.e(TAG, "---------   RECOMMENDATION  >>  " + getGson().toJson(recommendation) + "   ---------");
-
-
-
-
-            AppLogger.e(TAG, "---------   RECOMMENDATION NAME >>  " + recommendation.getLabel() + "   ---------");
             AppLogger.e(TAG, "---------   RECOMMENDATION NAME IN ENGLISH >>  " + recommendation.getRecommendationName() + "   ---------");
-
             AppLogger.e(TAG, "---------   HIERARCHY >>  " + recommendation.getHierarchy() + "   ---------");
 
 
             if (recommendation.getHierarchy() != 0 && recommendation.getCondition() != null && !recommendation.getCondition().equalsIgnoreCase("null")) {
 
                 try {
-
                     String value = logicFormulaParser.evaluate(recommendation.getCondition());
-                    if (value.equalsIgnoreCase("true")) {
+                    if (value.trim().equalsIgnoreCase("true")) {
 
                         if (recommendation.getRecommendationName().equalsIgnoreCase("replant") || recommendation.getRecommendationName().equalsIgnoreCase("replant + extra soil"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
@@ -333,7 +325,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                 }
             }
 
-
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
         }
@@ -350,6 +341,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             recNames = PLOT_RECOMMENDATION.getLabel();
 
             PLOT.setRecommendationId(PLOT_RECOMMENDATION.getId());
+
             if (GAPS_RECOMENDATION_FOR_START_YEAR != null)
                 PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
 
@@ -362,9 +354,17 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         recommendationProgress.setVisibility(View.GONE);
         recommendedIntervention.setText(recNames);
-        recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent));
 
+        recommendedIntervention.setTextColor((recNames.equalsIgnoreCase(AppConstants.RECOMMENDATION_NO_FDP)
+                ? ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red)
+                : ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent)));
+
+        getAppDataManager().setBooleanValue("reload", true);
+
+        AppLogger.e(TAG, "PLOT DATA >>>> " + getGson().toJson(PLOT));
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -385,6 +385,18 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+       /* if(getAppDataManager().getBooleanValue("reloadRecommendation")){
+            getAppDataManager().setBooleanValue("reloadRecommendation", false);
+
+            PLOT = getAppDataManager().getDatabaseManager().plotsDao().getPlotById(String.valueOf(PLOT.getId()));
+            if(PLOT != null)
+                new Handler().postDelayed(this::checkRecommendation, 800);
+
+        }*/
+    }
 
     @Override
     public void onBackPressed() {

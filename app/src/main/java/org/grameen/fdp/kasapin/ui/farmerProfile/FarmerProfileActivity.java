@@ -174,6 +174,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         mPresenter.getFarmersPlots(FARMER.getCode());
 
+
         name.setText(FARMER.getFarmerName());
         code.setText(FARMER.getCode());
 
@@ -265,6 +266,78 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
     @Override
+    public void setUpFarmersPlotsAdapter(List<Plot> plots) {
+
+        PLOTS = plots;
+        plotsSize = PLOTS.size();
+
+        AppLogger.i(TAG, "PLOT SIZE IS " + plotsSize);
+        AppLogger.i(TAG, "PLOT DATA IS " + getGson().toJson(PLOTS));
+
+        int plotsSize = PLOTS.size();
+
+        if (plotsSize > 0) {
+
+            noOfPlots.setText((plotsSize > 1) ? getStringResources(R.string.plot_aos) + "(" + plotsSize + ")" : getStringResources(R.string.plot_ao) + "(" + plotsSize + ")");
+
+
+            LinearLayoutManager horizontalLayoutManagaer
+                    = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
+            plotsRecyclerView.setLayoutManager(horizontalLayoutManagaer);
+               /* SpacesGridItemDecoration decoration = new SpacesGridItemDecoration(4);
+            plotsRecyclerView.removeItemDecoration(decoration);
+            plotsRecyclerView.addItemDecoration(decoration);*/
+
+
+            plotsListAdapter = new PlotsListAdapter(this, PLOTS);
+            plotsListAdapter.setHasStableIds(true);
+
+            plotsRecyclerView.setAdapter(plotsListAdapter);
+
+            plotsListAdapter.setOnItemClickListener((view, position) -> {
+
+                //Todo go to plot details
+
+                if (!getAppDataManager().isMonitoring()) {
+                    Intent intent = new Intent(FarmerProfileActivity.this, PlotDetailsActivity.class);
+                    intent.putExtra("plot", getGson().toJson(PLOTS.get(position)));
+                    intent.putExtra("plotSize", plotsSize);
+                    startActivity(intent);
+
+                } else {
+                    Intent intent = new Intent(FarmerProfileActivity.this, MonitoringYearSelectionActivity.class);
+                    intent.putExtra("farmer", getGson().toJson(FARMER));
+                    intent.putExtra("plot", getGson().toJson(PLOTS.get(position)));
+                    startActivity(intent);
+
+                }
+            });
+
+
+            if (!getAppDataManager().isMonitoring())
+                plotsListAdapter.OnLongClickListener((view, position) -> {
+
+                    final Plot plot = PLOTS.get(position);
+
+                    showDialog(true, "Delete Plot Info", "Do you want to delete data for " + plot.getName() + "?", (dialogInterface, i) -> {
+
+                        dialogInterface.dismiss();
+                        mPresenter.deletePlot(plot);
+
+                        //TODO DELETE monitoring for a plot
+                        PLOTS.remove(position);
+                        plotsListAdapter.notifyItemRemoved(position);
+                    }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0);
+                });
+        } else noOfPlots.setText("Plot Adoption Observations");
+
+
+    }
+
+
+
+    @Override
     public void updateFarmerSyncStatus() {
 
         FARMER.setSyncStatus(AppConstants.SYNC_OK);
@@ -282,74 +355,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     }
 
-    @Override
-    public void setUpFarmersPlotsAdapter(List<Plot> plots) {
 
-        PLOTS = plots;
-        plotsSize = plots.size();
-
-        AppLogger.i(TAG, "PLOT SIZE IS " + plotsSize);
-
-        int plotsSize = plots.size();
-
-        if (plotsSize > 0) {
-
-            noOfPlots.setText((plotsSize > 1) ? getStringResources(R.string.plot_aos) + "(" + plotsSize + ")" : getStringResources(R.string.plot_ao) + "(" + plotsSize + ")");
-
-
-            LinearLayoutManager horizontalLayoutManagaer
-                    = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-
-            plotsRecyclerView.setLayoutManager(horizontalLayoutManagaer);
-               /* SpacesGridItemDecoration decoration = new SpacesGridItemDecoration(4);
-            plotsRecyclerView.removeItemDecoration(decoration);
-            plotsRecyclerView.addItemDecoration(decoration);*/
-
-
-            plotsListAdapter = new PlotsListAdapter(this, plots);
-            plotsListAdapter.setHasStableIds(true);
-
-            plotsRecyclerView.setAdapter(plotsListAdapter);
-
-            plotsListAdapter.setOnItemClickListener((view, position) -> {
-
-                //Todo go to plot details
-
-                if (!getAppDataManager().isMonitoring()) {
-                    Intent intent = new Intent(FarmerProfileActivity.this, PlotDetailsActivity.class);
-                    intent.putExtra("plot", getGson().toJson(plots.get(position)));
-                    intent.putExtra("plotSize", plotsSize);
-                    startActivity(intent);
-
-                } else {
-                    Intent intent = new Intent(FarmerProfileActivity.this, MonitoringYearSelectionActivity.class);
-                intent.putExtra("farmer", getGson().toJson(FARMER));
-                intent.putExtra("plot", getGson().toJson(plots.get(position)));
-                startActivity(intent);
-
-                }
-            });
-
-
-            if (!getAppDataManager().isMonitoring())
-                plotsListAdapter.OnLongClickListener((view, position) -> {
-
-                    final Plot plot = plots.get(position);
-
-                    showDialog(true, "Delete Plot Info", "Do you want to delete data for " + plot.getName() + "?", (dialogInterface, i) -> {
-
-                        dialogInterface.dismiss();
-                        mPresenter.deletePlot(plot);
-
-                        //TODO DELETE monitoring for a plot
-                        plots.remove(position);
-                        plotsListAdapter.notifyItemRemoved(position);
-                    }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0);
-                });
-        } else noOfPlots.setText("Plot Adoption Observations");
-
-
-    }
 
 
     @Override
@@ -402,7 +408,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         super.onResume();
     }
 
-
     @Override
     public void openLoginActivityOnTokenExpire() {
 
@@ -427,14 +432,12 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 startActivity(intent);
                 break;
             case R.id.review_page:
-
                 intent = new Intent(FarmerProfileActivity.this, PlotReviewActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
                 startActivity(intent);
-
                 break;
-            case R.id.pandl:
 
+            case R.id.pandl:
 
             if (PLOTS != null && PLOTS.size() > 0) {
                     if (!checkIfFarmSizeCorresponds(PLOTS))
@@ -532,8 +535,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                         logicFormulaParser.setJsonObject(valuesJsonObject);
                     }
 
-
-
                         try{
                             String farmResultsValue = logicFormulaParser.evaluate(farmResultsQuestion.getFormulaC());
 
@@ -555,8 +556,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                             e.printStackTrace();
                         }
 
-                }else
-                    showMessage(getStringResources(R.string.error_has_occurred));
+                }
 
                 break;
             case R.id.sync_farmer:
@@ -585,8 +585,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         }
     }
-
-
 
     boolean checkIfFarmSizeCorresponds(List<Plot> plots) {
 
@@ -755,14 +753,14 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                     if(assessment.contains(AppConstants.NO_MONITORING_PLACE_HOLDER)){
                         showMessage(p.getName() + "\n" + getStringResources(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getStringResources(R.string.incomplete_monitoring_suffix));
-                        break;
+                        return false;
                     }
 
                     PLOT_ASSESSMENTS.add(new PlotAssessment(p.getName(), assessment));
-                    PLOT_ASSESSMENT_VALUES.add(assessment);
+                    PLOT_ASSESSMENT_VALUES.add(assessment.trim());
 
                     //Save the monitoring assessment data per plot for later use in the parsers
-                    MONITORING_DATA_JSON.put(p.getExternalId(), assessment);
+                    MONITORING_DATA_JSON.put(p.getExternalId(), assessment.trim());
 
 
                 } catch (JSONException ignore) {
@@ -771,19 +769,13 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     break;
                 }
 
-
-
+                return true;
             }
-            return true;
-
         }else
-            showMessage(getStringResources(R.string.error_has_occurred));
-
-
+            showMessage("Could no obtain Plot Assessment Question");
 
         return false;
     }
-
 
     void checkIfAllPlotsHaveSameNumberOfMonitoring(List<Plot> plots){
 
@@ -833,8 +825,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     }
 
-
-
     String parseCollectionsFormula(String formula, List<String> plotAssessmentValues){
         int value;
 
@@ -844,9 +834,9 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             parsedEquation = parsedEquation.split(Pattern.quote(")"))[0];
             parsedEquation = parsedEquation.replace("\"", "");
 
-            AppLogger.i(TAG, "AFTER PARSING COLLECTION TYPE CC " + parsedEquation);
+            AppLogger.i(TAG, "EQUATION ====>>> " + parsedEquation);
 
-            value = Collections.frequency(plotAssessmentValues, parsedEquation);
+            value = Collections.frequency(plotAssessmentValues, parsedEquation.trim());
 
             AppLogger.i(TAG, formula + " IS " + value);
 

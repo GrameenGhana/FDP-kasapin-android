@@ -83,7 +83,7 @@ public class ComputationUtils {
         AppLogger.i(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
         boolean value = false;
         try {
-            value = (Boolean) _engine.eval(equation.trim());
+            value = (Boolean) _engine.eval(equation);
         } catch (ScriptException | NumberFormatException ignored) {
             System.out.println("************** Evaluating boolean ************* ");
 
@@ -108,7 +108,7 @@ public class ComputationUtils {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
         Boolean answer = null;
         try {
-            answer = (boolean) engine.eval(equation.trim());
+            answer = (boolean) engine.eval(equation);
         } catch (ScriptException e) {
             e.printStackTrace();
         }

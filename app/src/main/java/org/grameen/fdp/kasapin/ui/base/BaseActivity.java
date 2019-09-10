@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.GridView;
@@ -522,17 +523,20 @@ public abstract class BaseActivity extends AppCompatActivity
         //Family members button clicked. Check to see if user provided the value for "farmer_familycount_COUNTRY" under Farmer Profile form
 
         Question numberFamilyMembersQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farmer_familycount_");
-        FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), FILTERED_FORMS.get(CURRENT_FORM_POSITION).getForm().getId());
+        int farmerProfileFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.FARMER_PROFILE).blockingGet(0);
+
+        FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmerProfileFormId);
 
         if(numberFamilyMembersQuestion != null) {
             if(answerData != null){
-
                 int numberFamilyMembers;
                 try {
-                    numberFamilyMembers = (int) answerData.getJsonData().get(numberFamilyMembersQuestion.getLabelC());
+                    numberFamilyMembers = Integer.valueOf(answerData.getJsonData().getString(numberFamilyMembersQuestion.getLabelC()));
                 } catch (JSONException ignored) {
                     numberFamilyMembers = 1;
                 }
+
+
 
 
                 Intent intent = new Intent(this, FamilyMembersActivity.class);
@@ -577,6 +581,19 @@ public abstract class BaseActivity extends AppCompatActivity
         startActivity(intent);
         finish();
 
+    }
+
+    public void setStatusBarColor(Window window, int statusBarColor, boolean isLightStatus) {
+        if(isLightStatus)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int flags = window.getDecorView().getSystemUiVisibility();
+                    flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                    window.getDecorView().setSystemUiVisibility(flags);
+                }
+            }
+        //setStatusBarColor(window, statusBarColor);
     }
 
 }

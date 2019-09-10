@@ -40,9 +40,11 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setStatusBarColor(getWindow(), R.color.colorPrimary, true);
+
         super.onCreate(savedInstanceState);
         setTheme(R.style.AppTheme);
-        toggleFullScreen(false, getWindow());
+
 
         setContentView(R.layout.activity_splash);
 

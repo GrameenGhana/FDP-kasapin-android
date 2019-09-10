@@ -56,7 +56,6 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
 
         else if (TYPE.equalsIgnoreCase(AppConstants.TYPE_CHECKBOX))
             return new CheckBoxViewHolder(getLayoutView(parent, AppConstants.TYPE_CHECKBOX), AppConstants.TYPE_SELECTABLE);
-
         else
             return new CellViewHolder(getLayoutView(parent, AppConstants.TYPE_TEXT), AppConstants.TYPE_TEXT);
 
@@ -157,16 +156,18 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
      * @param viewType : This value comes from "getRowHeaderItemViewType" method to support
      *                 different type of viewHolder as a row Header item.
      * @see #getRowHeaderItemViewType(int);
+     *
      */
+
     @Override
     public RecyclerView.ViewHolder onCreateRowHeaderViewHolder(ViewGroup parent, int viewType) {
 
         // Get Row Header xml Layout
-        View layout = LayoutInflater.from(mContext).inflate(R.layout
-                .table_view_row_header_layout, parent, false);
+        View layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_row_header_layout, parent, false);
 
         // Create a Row Header ViewHolder
         return new RowHeaderViewHolder(layout);
+
     }
 
 
@@ -245,7 +246,7 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
     }
 
 
-    View getLayoutView(ViewGroup parent, String TYPE) {
+    private View getLayoutView(ViewGroup parent, String TYPE) {
 
         View layout = null;
         switch (TYPE) {
