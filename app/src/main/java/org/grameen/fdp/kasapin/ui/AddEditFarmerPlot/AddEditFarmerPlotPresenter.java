@@ -56,14 +56,11 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
 
-
                     RealFarmer farmer = getAppDataManager().getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet();
                     if(farmer != null)
                     setFarmerAsUnsynced(farmer);
 
                     getView().showMessage("Plot data saved!");
-
-                    getAppDataManager().setBooleanValue("reload", true);
                     getAppDataManager().setBooleanValue("reloadRecommendation", true);
 
                     getView().hideLoading();
@@ -73,8 +70,8 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
                     else
                         getView().showPlotDetailsActivity(plot);
 
-
                 }, throwable -> {
+
                     getView().showMessage("An error occurred saving plot data. Please try again.");
                     throwable.printStackTrace();
                 }));

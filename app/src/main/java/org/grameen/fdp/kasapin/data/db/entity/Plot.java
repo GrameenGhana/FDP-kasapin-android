@@ -197,8 +197,8 @@ public class Plot {
         return recommendationId;
     }
 
-    public void setRecommendationId(int recommendationId) {
-        this.recommendationId = recommendationId;}
+    public void setRecommendationId(int recommendation_id) {
+        this.recommendationId = recommendation_id;}
 
     @Ignore
     public JSONObject getAOJsonData() throws JSONException {

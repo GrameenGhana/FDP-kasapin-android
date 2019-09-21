@@ -142,7 +142,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         setContentView(R.layout.activity_farmer_details);
         setUnBinder(ButterKnife.bind(this));
 
-
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
        setToolbar(getStringResources(R.string.farmer_details));
@@ -261,8 +260,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             });
         }
         */
-
-
     }
 
     @Override
@@ -336,7 +333,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
 
-
     @Override
     public void updateFarmerSyncStatus() {
 
@@ -398,14 +394,21 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     @Override
     protected void onResume() {
+        super.onResume();
+
         AppLogger.e(TAG, "On Resume...");
-        if (getAppDataManager().getBooleanValue("reload")) {
+
+         if (getAppDataManager().getBooleanValue("reload")) {
+            // getAppDataManager().setBooleanValue("reloadPlotsData", false);
 
             FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(FARMER.getCode()).blockingGet();
-            if(FARMER != null)
-                initializeViews(false);
+            initializeViews(false);
+
+            /*startActivity(new Intent(this, getClass()).putExtra("farmer", getGson().toJson(FARMER)));
+            supportFinishAfterTransition();*/
         }
-        super.onResume();
+
+
     }
 
     @Override
@@ -429,6 +432,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 intent = new Intent(FarmerProfileActivity.this, AddEditFarmerPlotActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
                 intent.putExtra("plotSize", plotsSize);
+
                 startActivity(intent);
                 break;
             case R.id.review_page:
@@ -470,6 +474,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 break;
             case R.id.farm_assessment:
 
+
+
                 JSONObject FARM_RESULTS = new JSONObject();
                 PLOT_ASSESSMENTS = new ArrayList<>();
                 PLOT_ASSESSMENT_VALUES = new ArrayList<>();
@@ -507,6 +513,12 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                         String value = "0";
 
                         for (Plot plot : PLOTS){
+
+
+
+
+
+
                             switch(question.getTypeC().toLowerCase()){
                                 case AppConstants.FORMULA_TYPE_COMPLEX_FORMULA:
 
@@ -721,7 +733,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         }
 
     }
-
     boolean haveAllPlotsBeenAssessed(List<Plot> plots){
         MONITORING_DATA_JSON = new JSONObject();
 
@@ -768,9 +779,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     showMessage(p.getName() + "\n" + getStringResources(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getStringResources(R.string.incomplete_monitoring_suffix));
                     break;
                 }
-
-                return true;
             }
+            return true;
         }else
             showMessage("Could no obtain Plot Assessment Question");
 
@@ -780,8 +790,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     void checkIfAllPlotsHaveSameNumberOfMonitoring(List<Plot> plots){
 
         List<Integer> numberOfMonitoringsPerPlot = new ArrayList<>();
-
-
         int noOfPlots;
 
         int maxValueOfMonitoring;
@@ -830,15 +838,10 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         try {
             String parsedEquation = formula.split(",")[1];
-
             parsedEquation = parsedEquation.split(Pattern.quote(")"))[0];
             parsedEquation = parsedEquation.replace("\"", "");
 
-            AppLogger.i(TAG, "EQUATION ====>>> " + parsedEquation);
-
             value = Collections.frequency(plotAssessmentValues, parsedEquation.trim());
-
-            AppLogger.i(TAG, formula + " IS " + value);
 
             return String.valueOf(value);
         }catch(Exception ignored){

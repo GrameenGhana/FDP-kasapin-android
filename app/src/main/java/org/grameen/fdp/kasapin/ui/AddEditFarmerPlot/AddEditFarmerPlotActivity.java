@@ -269,8 +269,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             e.printStackTrace();
         }
 
-
-
         try {
             if (jsonObject.has(estProductionQuestion.getLabelC()))
                 jsonObject.remove(estProductionQuestion.getLabelC());
@@ -434,7 +432,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         }
 
 
-        PLOT.setRecommendationId(-1);
+        //PLOT.setRecommendationId(-1);
         PLOT.setStartYear(year);
         PLOT.setAnswersData(jsonObject.toString());
         PLOT.setPh(phEdittext.getText().toString());
@@ -448,10 +446,10 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
     @OnClick(R.id.plot_area_calculation)
-    void openPlotAreaCalculationActivity() {
+    void onPlotAreaCalculationClicked() {
 
         //Todo go to Map Activity
-        if (!plotNameEdittext.getText().toString().isEmpty() || !plotNameEdittext.getText().toString().equals(""))
+        if (!TextUtils.isEmpty(plotNameEdittext.getText().toString()))
             savePlotData("MAP");
         else
             showMessage(R.string.provide_plot_name);
@@ -462,7 +460,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     public void showPlotDetailsActivity(Plot plot) {
 
         final Intent intent = new Intent(this, PlotDetailsActivity.class);
-        intent.putExtra("plot", new Gson().toJson(PLOT));
+        intent.putExtra("plot", new Gson().toJson(plot));
         new Handler().postDelayed(() -> {
             startActivity(intent);
             finish();
@@ -474,13 +472,9 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     public void moveToMapActivity(Plot plot) {
 
         final Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra("plot", new Gson().toJson(PLOT));
-        new Handler().postDelayed(() -> {
+        intent.putExtra("plot", new Gson().toJson(plot));
             startActivity(intent);
             finish();
-        }, 500);
-
-
     }
 
 

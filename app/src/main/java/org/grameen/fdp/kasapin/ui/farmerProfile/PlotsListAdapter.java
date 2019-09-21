@@ -17,6 +17,8 @@ import org.grameen.fdp.kasapin.data.db.entity.Plot;
 
 import java.util.List;
 
+import io.reactivex.annotations.NonNull;
+
 
 /**
  * Created by AangJnr on 6/27/16.
@@ -34,11 +36,11 @@ public class PlotsListAdapter extends RecyclerView.Adapter<PlotsListAdapter.View
     /**
      * Constructor
      *
-     * @param plots
+     * @param _plots
      **/
 
-    public PlotsListAdapter(Context context, List<Plot> plots) {
-        this.plots = plots;
+    public PlotsListAdapter(Context context, List<Plot> _plots) {
+        this.plots = _plots;
         this.context = context;
 
     }
@@ -67,11 +69,8 @@ public class PlotsListAdapter extends RecyclerView.Adapter<PlotsListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-
-
         Plot plot = plots.get(position);
         viewHolder.name.setText(plot.getName());
-
 
     }
 

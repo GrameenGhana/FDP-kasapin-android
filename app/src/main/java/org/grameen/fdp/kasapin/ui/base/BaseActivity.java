@@ -585,15 +585,21 @@ public abstract class BaseActivity extends AppCompatActivity
 
     public void setStatusBarColor(Window window, int statusBarColor, boolean isLightStatus) {
         if(isLightStatus)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     int flags = window.getDecorView().getSystemUiVisibility();
                     flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
                     window.getDecorView().setSystemUiVisibility(flags);
                 }
-            }
         //setStatusBarColor(window, statusBarColor);
+    }
+
+    public void setStatusBarColor(Window window, int statusBarColor) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.setStatusBarColor(ContextCompat.getColor(this, statusBarColor));
+
+
+        }
     }
 
 }

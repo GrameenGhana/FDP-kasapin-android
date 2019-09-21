@@ -85,8 +85,8 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
         recyclerView = findViewById(R.id.recycler_view);
 
-
         plot = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
+
 
 
         if (plot != null) {
@@ -162,10 +162,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
                     showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> {
                         dialogInterface.dismiss();
                         saveGpsPointsData(false);
-                        }, getStringResources(R.string.save), (dialog, which) -> {
-                        dialog.dismiss();
-                    }, getStringResources(R.string.cancel), 0);
-
+                        }, getStringResources(R.string.save), (dialog, which) -> dialog.dismiss(), getStringResources(R.string.cancel), 0);
 
                     hasCalculated = true;
                 }
@@ -182,7 +179,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         });
 
 
-        onBackClicked();
+
         locationListener = new android.location.LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
@@ -260,6 +257,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
             }
         };
 
+        onBackClicked();
     }
 
 
@@ -367,12 +365,11 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
 
     @Override
-    protected void onStop() {
-      saveGpsPointsData(false);
-        super.onStop();
+    protected void onPause() {
+        AppLogger.e(TAG, "********************* ON PAUSE");
+        saveGpsPointsData(false);
+        super.onPause();
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -387,10 +384,6 @@ public class MapActivity extends BaseActivity implements MapContract.View {
     }
 
     void moveToPlotDetailsActivity(){
-
-        AppLogger.i(TAG,"PLOT   >>>>>>>>   " + getGson().toJson(plot));
-
-
         Intent intent = new Intent(this, PlotDetailsActivity.class);
         intent.putExtra("plot", new Gson().toJson(plot));
         startActivity(intent);
@@ -400,26 +393,13 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
 
     void saveData(boolean shouldExit) {
-
-        getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
-                .subscribeOn(Schedulers.io())
-                .subscribe(aLong -> {
-
-                    if (aLong > 0) {
-                        hasGpsDataBeenSaved = true;
-                        showMessage(R.string.new_data_updated);
-                        if(shouldExit)
-                            moveToPlotDetailsActivity();
-                    }
-
-                    else
-                        showMessage(R.string.data_not_saved);
-
-                }, throwable -> {
-                    hasGpsDataBeenSaved = false;
-                    showMessage("An error occurred saving plot data. Please try again.");
-                    throwable.printStackTrace();
-                }));
+        if(getAppDataManager().getDatabaseManager().plotsDao().updateOne(plot) > 0) {
+            hasGpsDataBeenSaved = true;
+            showMessage(R.string.new_data_updated);
+            if (shouldExit)
+                moveToPlotDetailsActivity();
+        } else
+            showMessage(R.string.data_not_saved);
 
 
     }

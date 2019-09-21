@@ -39,8 +39,6 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
     public void loadFormFragment(String farmerCode, int formTranslationId) {
 
         AppLogger.e(TAG, "Farmer code is " + farmerCode + " and Form translation id is " + formTranslationId);
-
-
         runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataSingle(farmerCode, formTranslationId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

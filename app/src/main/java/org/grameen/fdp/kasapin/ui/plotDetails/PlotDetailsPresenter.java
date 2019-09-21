@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -72,7 +73,6 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
 
     @Override
     public void getAreaUnits(String farmerCode) {
-
         Question areaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_area_units");
         Question estProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_weight_units");
 
@@ -80,7 +80,6 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(answerData -> {
-                    AppLogger.e(TAG, "ANSWER DATA >> " + getGson().toJson(answerData));
 
 
                     if (answerData != null) {
@@ -105,7 +104,6 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
 
     @Override
     public void getRecommendations(int cropId) {
-
         runSingleCall(getAppDataManager().getDatabaseManager().recommendationsDao().getRecommendationsByCrop(cropId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -129,20 +127,31 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
 
     @Override
     public void saveData(Plot plot) {
-        runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
+       runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+               .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
+                    if(aLong > 0) {
 
-                    getAppDataManager().setBooleanValue("reload", true);
-                    getView().showRecommendation();
+                        getAppDataManager().setBooleanValue("reload", true);
+                        getAppDataManager().setBooleanValue("reloadPlotsData", true);
+                        getAppDataManager().setBooleanValue("reloadRecommendation", false);
+
+
+                        getView().showRecommendation();
+                        getView().showMessage("Plot data updated!");
+
+
+                        AppLogger.e(TAG, "PRESENTER PLOT DATA FROM DB " + getGson().toJson(getAppDataManager().getDatabaseManager().plotsDao().getPlotById(String.valueOf(plot.getId()))));
+
+
+                    }else
+                        getView().showMessage("Error occurred updating Plot data!");
 
                 }, throwable -> {
                     getView().showMessage("An error occurred loading recommendation. Please try again.");
                     throwable.printStackTrace();
-                }));
-
-    }
+                })); }
 
 
 }

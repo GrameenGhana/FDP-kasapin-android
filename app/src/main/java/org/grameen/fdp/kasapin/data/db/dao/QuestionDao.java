@@ -53,6 +53,9 @@ public interface QuestionDao extends BaseDao<Question> {
     @Query("SELECT labelC FROM questions WHERE id = :id")
     Maybe<String> getLabel(int id);
 
+    @Query("SELECT * FROM questions WHERE id = :id")
+    Maybe<Question> get(int id);
+
     @Update
     int updateQuestion(Question question);
 

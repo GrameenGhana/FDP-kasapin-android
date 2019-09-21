@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
@@ -176,6 +177,9 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
 
         JSONArray farmerData = new JSONArray();
+        FormAndQuestions familyMembersFormAndQuestions = getAppDataManager().getDatabaseManager().formAndQuestionsDao()
+                .getFormAndQuestionsByName(AppConstants.FAMILY_MEMBERS).blockingGet();
+
 
         runSingleCall(getAppDataManager().getDatabaseManager().mappingDao().getAll()
                 .subscribeOn(Schedulers.io())
@@ -223,7 +227,61 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                         JSONArray arrayOfValues = new JSONArray();
 
 
-                                                        if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)) {
+                                                        if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS_TABLE)) {
+
+                                                            if(familyMembersFormAndQuestions != null) {
+
+                                                                FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao()
+                                                                        .getFormAnswerData(farmer.getCode(), familyMembersFormAndQuestions
+                                                                                .getForm().getFormTranslationId());
+
+                                                                if(answerData != null) {
+
+                                                                    JSONArray familyMembersJsonArrayData = new JSONArray(answerData.getData());
+
+                                                                    JSONArray payloadArray = new JSONArray();
+
+                                                                    for(int j = 0; j < familyMembersJsonArrayData.length(); j++) {
+
+                                                                        JSONObject answerJsonData = familyMembersJsonArrayData.getJSONObject(j);
+                                                                        JSONArray jsonArray = new JSONArray();
+
+                                                                        JSONObject answerJson;
+                                                                      /*answerJson = new JSONObject();
+                                                                        answerJson.put("answer", farmer.getCode());
+                                                                        answerJson.put("field_name", "farmer_external_id");
+
+                                                                        jsonArray.put(answerJson);*/
+
+                                                                        for (Mapping mapping : mappingEntry.getValue()) {
+
+                                                                            Question question = getAppDataManager().getDatabaseManager().questionDao().get(mapping.getQuestionId()).blockingGet();
+
+                                                                            if (answerJsonData.has(question.getLabelC())) {
+
+                                                                                String answer = answerJsonData.get(question.getLabelC()).toString();
+
+                                                                                if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
+
+                                                                                    answerJson = new JSONObject();
+
+                                                                                    answerJson.put("field_name", mapping.getFieldName());
+
+                                                                                    //For decimal values, add answer to payload as a decimal instead of as a string
+                                                                                    answerJson.put("answer", question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ? Double.parseDouble(answer.trim().replace(",", "")) :answer);
+
+                                                                                    jsonArray.put(answerJson);
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        arrayOfValues.put(jsonArray);
+                                                                    }
+                                                                    //arrayOfValues.put(payloadArray);
+                                                                }
+                                                            }
+
+
+                                                        }else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)) {
 
                                                             for (Plot plot : farmersPlots) {
                                                                 JSONArray plotArray = new JSONArray();

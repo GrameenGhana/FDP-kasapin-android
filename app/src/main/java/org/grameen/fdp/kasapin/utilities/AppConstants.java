@@ -29,6 +29,7 @@ public class AppConstants {
     public static final String FARMER_TABLE_COUNTRY_ADMIN_LEVEL_FIELD = "country_admin_level_id";
     public static final String FARMER_TABLE_GENDER_FIELD = "gender_c";
     public static final String FARMER_TABLE_BIRTHDAY_FIELD = "birthday_c";
+    public static final String FAMILY_MEMBERS_TABLE = "family_member_c";
     public static final String PLOT_TABLE = "plot_c";
     public static final String PLOT_GPS_POINT = "gps_point_c";
     public static final String PLOT_GPS_POINT_LAT_FIELD = "latitude_c";

@@ -171,12 +171,14 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             }
         }
 
-        answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getId());
+        answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getFormTranslationId());
+
+        AppLogger.e(TAG, getGson().toJson(answerData));
 
 
         if(answerData == null) {
             answerData = new FormAnswerData();
-            answerData.setFormId(familyMembersFormAndQuestions.getForm().getId());
+            answerData.setFormId(familyMembersFormAndQuestions.getForm().getFormTranslationId());
             answerData.setFarmerCode(FARMER.getCode());
 
         }
@@ -285,6 +287,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             answerData.setData(allFamilyMembersArrayData.toString());
             getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
 
+            mPresenter.setFarmerAsUnsynced(FARMER);
+            getAppDataManager().setBooleanValue("reload", true);
 
             moveToNextForm(FARMER);
 

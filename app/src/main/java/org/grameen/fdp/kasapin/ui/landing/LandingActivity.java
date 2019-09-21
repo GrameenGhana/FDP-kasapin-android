@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.landing;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -43,8 +44,7 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setStatusBarColor(getWindow(), R.color.colorPrimary, true);
-
+        setStatusBarColor(getWindow(), R.color.white, true);
         super.onCreate(savedInstanceState);
 
 

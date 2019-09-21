@@ -72,7 +72,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     @Override
     public void deletePlot(Plot plot) {
 
-        getAppDataManager().getDatabaseManager().plotsDao().deleteOne(plot);
+        getAppDataManager().getDatabaseManager().plotsDao().deleteOne(plot.getId());
         getView().showMessage("Data deleted!");
 
 
@@ -80,8 +80,6 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
 
     @Override
     public void getFarmersPlots(String farmerCode) {
-
-        AppLogger.i(TAG, "GETTING PLOTS DATA!. >>> FARMER CODE IS " + farmerCode);
         runSingleCall(getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmerCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

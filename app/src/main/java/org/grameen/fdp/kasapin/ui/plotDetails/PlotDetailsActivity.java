@@ -262,7 +262,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             return;
         }*/
 
-        if (PLOT.getRecommendationId() > 0) {
+        if (!getAppDataManager().getBooleanValue("reloadRecommendation")) {
+
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationId(PLOT.getRecommendationId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -275,6 +276,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
                     }, throwable -> showMessage("Couldn't load plot's recommendation")));
         }else {
+            AppLogger.e(TAG, "********************   RELOAD RECOMMENDATION ******************** ");
+
             recommendedIntervention.setText("");
             recommendationProgress.setVisibility(View.VISIBLE);
             mPresenter.getRecommendations(1);
@@ -327,25 +330,22 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
+
         }
-
-        AppLogger.e(TAG, "---------   RECOMMENDATION >>  " + getGson().toJson(PLOT_RECOMMENDATION));
-        AppLogger.e(TAG, "---------   GAPS RECOMMENDATION >>  " + getGson().toJson(GAPS_RECOMENDATION_FOR_START_YEAR));
-
 
         if (PLOT_RECOMMENDATION == null)
             PLOT_RECOMMENDATION = GAPS_RECOMENDATION_FOR_START_YEAR;
 
         if (PLOT_RECOMMENDATION != null) {
-
             recNames = PLOT_RECOMMENDATION.getLabel();
-
-            PLOT.setRecommendationId(PLOT_RECOMMENDATION.getId());
 
             if (GAPS_RECOMENDATION_FOR_START_YEAR != null)
                 PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
 
+            PLOT.setRecommendationId(PLOT_RECOMMENDATION.getId());
+
             mPresenter.saveData(PLOT);
+
         }
     }
 
@@ -359,9 +359,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                 ? ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red)
                 : ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent)));
 
-        getAppDataManager().setBooleanValue("reload", true);
-
-        AppLogger.e(TAG, "PLOT DATA >>>> " + getGson().toJson(PLOT));
     }
 
 
@@ -384,20 +381,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     public void openLoginActivityOnTokenExpire() {
 
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-       /* if(getAppDataManager().getBooleanValue("reloadRecommendation")){
-            getAppDataManager().setBooleanValue("reloadRecommendation", false);
-
-            PLOT = getAppDataManager().getDatabaseManager().plotsDao().getPlotById(String.valueOf(PLOT.getId()));
-            if(PLOT != null)
-                new Handler().postDelayed(this::checkRecommendation, 800);
-
-        }*/
-    }
-
     @Override
     public void onBackPressed() {
         finish();

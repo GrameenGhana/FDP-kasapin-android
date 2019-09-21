@@ -187,6 +187,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:onClick="showPopUp"
         android:padding="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_2"
         android:src="@drawable/ic_info_outline_black_24dp"
         android:tint="@android:color/tertiary_text_light" />
 </RelativeLayout>
