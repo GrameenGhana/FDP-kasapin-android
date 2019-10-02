@@ -72,7 +72,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     @Override
     public void deletePlot(Plot plot) {
 
-        getAppDataManager().getDatabaseManager().plotsDao().deleteOne(plot.getId());
+        getAppDataManager().getDatabaseManager().plotsDao().deleteOne(plot.getExternalId());
         getView().showMessage("Data deleted!");
 
 

@@ -61,7 +61,8 @@
             android:windowSoftInputMode="adjustNothing" />
 
 
-        <activity android:name=".ui.addFarmer.AddEditFarmerActivity" />
+        <activity android:name=".ui.addFarmer.AddEditFarmerActivity"
+            android:configChanges="orientation|screenSize"/>
 
 
         <activity

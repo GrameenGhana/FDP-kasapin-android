@@ -12,11 +12,13 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
-        buildConfigField "String", "END_POINT", "\"http://52.15.172.252/\""
+        buildConfigField "String", "END_POINT", "\"http://52.15.172.252/fdp_test/\""
+
+        //http://52.15.172.252/fdp_test/
 
     }
 
@@ -38,8 +40,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            buildConfigField("String", "BASE_URL", "\"http://www.fdp.io/v2\"")
-            buildConfigField("String", "API_KEY", "prod")
 
         }
 
@@ -50,7 +50,7 @@ android {
             useProguard false
             //buildConfigField("String", "API_KEY", "testkey")
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
-            buildConfigField "String", "END_POINT", "\"http://52.15.172.252/\""
+            buildConfigField "String", "END_POINT", "\"http://52.15.172.252/fdp_test/\""
 
 
         }
@@ -147,6 +147,7 @@ android {
         implementation "com.crashlytics.sdk.android:crashlytics:$rootProject.ext.crashyticsVersion"
 
         // room database
+        implementation "android.arch.lifecycle:livedata:$rootProject.ext.roomVersion"
         implementation "android.arch.persistence.room:rxjava2:$rootProject.ext.roomVersion"
         implementation "android.arch.persistence.room:runtime:$rootProject.ext.roomVersion"
         annotationProcessor "android.arch.persistence.room:compiler:$rootProject.ext.roomVersion"

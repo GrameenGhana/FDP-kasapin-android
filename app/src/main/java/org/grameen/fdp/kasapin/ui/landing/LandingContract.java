@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.ui.landing;
 
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 

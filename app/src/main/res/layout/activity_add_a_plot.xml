@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_normal"
@@ -91,7 +91,7 @@
                             android:textStyle="bold" />
 
 
-                        <android.support.percent.PercentRelativeLayout
+                        <androidx.percentlayout.widget.PercentRelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
@@ -125,16 +125,16 @@
                                 />
 
 
-                        </android.support.percent.PercentRelativeLayout>
+                        </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
                     </LinearLayout>
 
 
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_normal"
@@ -165,7 +165,7 @@
                             />
 
 
-                        <android.support.percent.PercentRelativeLayout
+                        <androidx.percentlayout.widget.PercentRelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
@@ -197,7 +197,7 @@
                                 app:layout_widthPercent="50%" />
 
 
-                        </android.support.percent.PercentRelativeLayout>
+                        </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
                     </LinearLayout>
@@ -242,7 +242,7 @@
                     </LinearLayout>
 
 
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
                 <TextView
@@ -262,7 +262,7 @@
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -284,7 +284,7 @@
     </ScrollView>
 
 
-    <android.support.percent.PercentRelativeLayout
+    <androidx.percentlayout.widget.PercentRelativeLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -316,7 +316,7 @@
 
             />
 
-    </android.support.percent.PercentRelativeLayout>
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
 </RelativeLayout>

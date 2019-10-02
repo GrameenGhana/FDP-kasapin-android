@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 
     >
     <!--<EditTextPreference android:title="Your Name"
@@ -15,7 +15,7 @@
          android:entryValues="@array/listValues" />-->
 
 
-    <android.support.v7.preference.PreferenceCategory android:title="User Interface">
+    <androidx.preference.PreferenceCategory android:title="User Interface">
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -40,7 +40,7 @@
             android:key="key3"
             android:summary="CheckBox Summary"
             android:title="CheckBox Preference" />
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

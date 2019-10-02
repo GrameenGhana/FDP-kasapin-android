@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.utilities;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import org.grameen.fdp.kasapin.data.db.entity.Logic;

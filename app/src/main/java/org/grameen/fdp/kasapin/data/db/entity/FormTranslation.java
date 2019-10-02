@@ -7,9 +7,9 @@ package org.grameen.fdp.kasapin.data.db.entity;
  * Personal mail aang.jnr@gmail.com
  */
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
 

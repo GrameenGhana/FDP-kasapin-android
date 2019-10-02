@@ -3,7 +3,7 @@ package org.grameen.fdp.kasapin.ui.form.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -192,7 +192,7 @@ public class DynamicFormFragment extends FormFragment {
                 .subscribeOn(Schedulers.io())
                 .doOnNext(question ->
                         getAppDataManager().getCompositeDisposable().add(Observable.just(question).subscribeOn(Schedulers.io())
-                                .filter(question1 -> question1.getTypeC().equalsIgnoreCase(AppConstants.TYPE_FORMULA))
+                                .filter(question1 -> question1.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA))
                                 .observeOn(Schedulers.computation())
                                 .subscribe(this::applyFormulas)))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -315,7 +315,6 @@ public class DynamicFormFragment extends FormFragment {
 
 
     }
-
 
     public void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogics) {
         getComputationUtils().setUpPropertyChangeListeners2(q.getLabelC(), skipLogics);

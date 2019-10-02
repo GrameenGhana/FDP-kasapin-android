@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.syncManager;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.District;
 import org.grameen.fdp.kasapin.data.db.entity.Form;
@@ -14,10 +13,10 @@ import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -30,15 +29,16 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 
 public class DownloadResources {
-
-    String TAG = "DownloadResources";
-    boolean showProgress;
+    private int TOTAL_COUNT = 0;
+    private int INDEX = 1;
+    private String TAG = "DownloadResources";
+    private boolean showProgress;
     private FdpCallbacks.OnDownloadResourcesListener onDownloadResourcesListener;
     private BaseContract.View mView;
     private AppDataManager mAppDataManager;
 
 
-    public DownloadResources(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress) {
+    private DownloadResources(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress) {
 
         this.mAppDataManager = appDataManager;
         this.mView = view;
@@ -58,16 +58,6 @@ public class DownloadResources {
     public BaseContract.View getView() {
         return mView;
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -131,7 +121,7 @@ public class DownloadResources {
 
 
 
-    public void getSurveyData() {
+    private void getSurveyData() {
 
         if (showProgress)
             getView().setLoadingMessage("Getting survey data...");
@@ -253,7 +243,7 @@ public class DownloadResources {
 
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
         getAppDataManager().getFdpApiService()
-                .fetchSyncDownData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), 0, 0)
+                .fetchSyncDownData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), INDEX, AppConstants.BATCH_NO)
                 .subscribe(new DisposableSingleObserver<SyncDownData>() {
                     @Override
                     public void onSuccess(SyncDownData syncDownData) {
@@ -266,32 +256,47 @@ public class DownloadResources {
 
                         if(syncDownData.getSuccess().trim().equalsIgnoreCase("true")) {
 
+                            TOTAL_COUNT = syncDownData.getTotal_count();
+
                             //check for total count here against pageDown/pageEnd and loop method getFarmersData
 
-                            if(syncDownData.getData() != null && syncDownData.getData().size() > 0)
-                            for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
-                                /**
-                                 * Check if farmer exists or not
-                                 * if farmer exists, skip else save
-                                **/
+                            if(syncDownData.getData() != null && syncDownData.getData().size() > 0) {
 
-                                if(getAppDataManager().getDatabaseManager().realFarmersDao().checkIfFarmerExists(farmerAndAnswers1.getFarmer().getCode()) == 0) {
+                                INDEX += syncDownData.getData().size();
 
-                                    //Todo replace village id with country admin level fromm the server
 
-                                    getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
-                                    getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
+                                for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
+                                    /**
+                                     * Check if farmer exists or not
+                                     * if farmer exists, skip else save
+                                     **/
 
-                                    if (farmerAndAnswers1.getPlotDetails() != null && farmerAndAnswers1.getPlotDetails().size() > 0)
-                                        for (List<Plot> plots : farmerAndAnswers1.getPlotDetails()) {
-                                            for(Plot p : plots){
-                                                getAppDataManager().getDatabaseManager().plotsDao().insertOne(p);
+                                    if (getAppDataManager().getDatabaseManager().realFarmersDao().checkIfFarmerExists(farmerAndAnswers1.getFarmer().getCode()) == 0) {
 
-                                                if(p.getMonitoringList() != null)
-                                                getAppDataManager().getDatabaseManager().monitoringsDao().insertAll(p.getMonitoringList());
+                                        //Todo replace village id with country admin level fromm the server
+
+                                        getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
+                                        getAppDataManager().getDatabaseManager().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
+
+                                        if (farmerAndAnswers1.getPlotDetails() != null && farmerAndAnswers1.getPlotDetails().size() > 0)
+                                            for (List<Plot> plots : farmerAndAnswers1.getPlotDetails()) {
+                                                for (Plot p : plots) {
+                                                    getAppDataManager().getDatabaseManager().plotsDao().insertOne(p);
+
+                                                    if (p.getMonitoringList() != null)
+                                                        getAppDataManager().getDatabaseManager().monitoringsDao().insertAll(p.getMonitoringList());
+                                                }
                                             }
-                                        }
+                                    }
                                 }
+
+
+                                if(TOTAL_COUNT != (INDEX - 1)) {
+                                    showProgress = false;
+                                    getView().setLoadingMessage("Downloading next batch (" + INDEX + "/" + TOTAL_COUNT  + ") of farmer and answers data...\nNB: This will not replace already existing farmer data!");
+                                    getFarmersData();
+                                }
+
                             }
 
                             showSuccess("Data download completed!");
@@ -308,16 +313,14 @@ public class DownloadResources {
     }
 
 
-
-
-    void showError(Throwable e) {
+    private void showError(Throwable e) {
         if (onDownloadResourcesListener != null)
             onDownloadResourcesListener.onError(e);
 
         onDownloadResourcesListener = null;
     }
 
-    void showSuccess(String message) {
+    private void showSuccess(String message) {
         if (onDownloadResourcesListener != null)
             onDownloadResourcesListener.onSuccess(message);
         onDownloadResourcesListener = null;

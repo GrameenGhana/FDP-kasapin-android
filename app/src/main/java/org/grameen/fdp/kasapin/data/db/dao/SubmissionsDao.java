@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.data.db.dao;
 
 
-import android.arch.persistence.room.Dao;
+import androidx.room.Dao;
 
 /**
  * Created by AangJnr on 19, September, 2018 @ 1:30 PM

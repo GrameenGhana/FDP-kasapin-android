@@ -105,8 +105,6 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
 
     @Override
     public void openNextActivity() {
-
-
         getView().openNextActivity();
 
 

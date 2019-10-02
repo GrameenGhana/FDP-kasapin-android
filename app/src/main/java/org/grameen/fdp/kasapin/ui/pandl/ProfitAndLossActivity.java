@@ -600,7 +600,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
             if (aggregateResultsFormId != null) {
 
-
                 List<Question> AGGREGATE_ECO_RESULTS_QUESTIONS = getAppDataManager().getDatabaseManager()
                         .questionDao().getQuestionsByForm(aggregateResultsFormId).blockingGet();
 
@@ -814,49 +813,66 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 AppLogger.i(TAG, "Button item clicked with tag " + view.getTag());
 
                 try {
-                    Plot plot = realPlotList.get(Integer.valueOf(view.getTag().toString()));
+
+                    String plotExtId = view.getTag().toString().split("_")[0];
+                    String recoToChangeToName = view.getTag().toString().split("_")[1];
 
 
-                    Recommendation PLOT_REC = getAppDataManager().getDatabaseManager().recommendationsDao().get(plot.getRecommendationId()).blockingGet();
-                    Recommendation GAPS_RECOMMENDATION_FOR_START_YEAR;
+                    Plot plot = null;
 
-
-                    if (PLOT_REC != null) {
-
-
-                        if (PLOT_REC.getRecommendationName().equalsIgnoreCase("Replant") || PLOT_REC.getRecommendationName().equalsIgnoreCase("Replant + Extra soil")) {
-
-                            GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getByRecommendationName("Minimal GAPs").blockingGet();
-
-                        } else if (PLOT_REC.getRecommendationName().equalsIgnoreCase("Grafting") || PLOT_REC.getRecommendationName().equalsIgnoreCase("Grafting + Extra soil")) {
-
-                            GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getByRecommendationName("Modest GAPs").blockingGet();
-
-
-                        } else {
-
-                            GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getByRecommendationName("Maintenance (GAPs)").blockingGet();
-
+                    for(Plot p : realPlotList)
+                        if(p.getExternalId().equals(plotExtId)) {
+                            plot = p;
+                            break;
                         }
 
-                        plot.setGapsId(GAPS_RECOMMENDATION_FOR_START_YEAR.getId());
+                    if(plot != null) {
+                        Recommendation NEW_PLOT_RECO = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                .getByRecommendationName(recoToChangeToName).blockingGet();
+                        Recommendation GAPS_RECOMMENDATION_FOR_START_YEAR;
 
 
-                        mPresenter.updatePlotData(plot, true);
-                    }
+                        if (NEW_PLOT_RECO != null) {
+                            AppLogger.e(TAG, "PLOT RECO IS >>>>>>>>>>>>>>>>>>>>> " + getGson().toJson(NEW_PLOT_RECO));
+
+                            if (NEW_PLOT_RECO.getRecommendationName().equalsIgnoreCase("Replant") || NEW_PLOT_RECO.getRecommendationName().equalsIgnoreCase("Replant + Extra soil")) {
+
+                                GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                        .getByRecommendationName("Minimal GAPs").blockingGet();
+
+                            } else if (NEW_PLOT_RECO.getRecommendationName().equalsIgnoreCase("Grafting") || NEW_PLOT_RECO.getRecommendationName().equalsIgnoreCase("Grafting + Extra soil")) {
+
+                                GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                        .getByRecommendationName("Modest GAPs").blockingGet();
 
 
-                    if (getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot) > 0) {
-                        showLoading(getStringResources(R.string.updating_table_data), getStringResources(R.string.please_wait), true, 0,
-                                false);
+                            } else {
 
-                        Completable.fromAction(this::populateTableData).subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe();
-                    }
+                                GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                        .getByRecommendationName("Maintenance (GAPs)").blockingGet();
+
+                            }
+
+                            plot.setGapsId(GAPS_RECOMMENDATION_FOR_START_YEAR.getId());
+                            plot.setRecommendationId(NEW_PLOT_RECO.getId());
+
+
+                            mPresenter.updatePlotData(plot, true);
+                        }
+/*
+
+                        if (getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot) > 0) {
+                            showLoading(getStringResources(R.string.updating_table_data), getStringResources(R.string.please_wait), true, 0,
+                                    false);
+
+                            Completable.fromAction(this::populateTableData).subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe();
+                        }*/
+
+
+                    } else
+                        showMessage("An error occurred changing start year");
 
                 } catch (Exception e) {
                     e.printStackTrace();

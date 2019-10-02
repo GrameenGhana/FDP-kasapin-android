@@ -64,8 +64,6 @@ public class ComputationUtils {
 
             if (ANSWERS_JSON.has(q.getLabelC())) {
                 defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
-
-
             } else
                 defVal = q.getDefaultValueC();
 

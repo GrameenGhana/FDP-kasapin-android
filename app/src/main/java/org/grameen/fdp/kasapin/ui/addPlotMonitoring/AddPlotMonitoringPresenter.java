@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.ui.addPlotMonitoring;
 
 
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;

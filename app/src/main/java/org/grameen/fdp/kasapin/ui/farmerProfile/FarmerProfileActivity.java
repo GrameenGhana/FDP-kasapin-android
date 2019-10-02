@@ -4,10 +4,10 @@ package org.grameen.fdp.kasapin.ui.farmerProfile;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,7 +46,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -314,13 +313,10 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
             if (!getAppDataManager().isMonitoring())
                 plotsListAdapter.OnLongClickListener((view, position) -> {
-
-                    final Plot plot = PLOTS.get(position);
-
-                    showDialog(true, "Delete Plot Info", "Do you want to delete data for " + plot.getName() + "?", (dialogInterface, i) -> {
+                    showDialog(true, "Delete Plot Info", "Do you want to delete data for " + PLOTS.get(position).getName() + "?", (dialogInterface, i) -> {
 
                         dialogInterface.dismiss();
-                        mPresenter.deletePlot(plot);
+                        mPresenter.deletePlot(PLOTS.get(position));
 
                         //TODO DELETE monitoring for a plot
                         PLOTS.remove(position);

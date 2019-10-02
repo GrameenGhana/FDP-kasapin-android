@@ -1,45 +1,28 @@
 package org.grameen.fdp.kasapin.ui.familyMembers;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.evrencoskun.tableview.TableView;
 import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
-import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
-import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
-import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
-import org.grameen.fdp.kasapin.ui.addPlotMonitoring.AddPlotMonitoringActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.Cell;
 import org.grameen.fdp.kasapin.ui.base.model.ColumnHeader;
-import org.grameen.fdp.kasapin.ui.base.model.PlotMonitoringTableData;
 import org.grameen.fdp.kasapin.ui.base.model.RowHeader;
-import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
-import org.grameen.fdp.kasapin.ui.plotReview.HistoricalTableHeaderAdapter;
-import org.grameen.fdp.kasapin.ui.plotReview.PlotMonitoringTablePagerAdapter;
-import org.grameen.fdp.kasapin.ui.plotReview.PlotMonitoringTableViewAdapter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
-import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
-import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,8 +35,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.codecrafters.tableview.model.TableColumnWeightModel;
-import io.reactivex.functions.Action;
 
 
 public class FamilyMembersActivity extends BaseActivity implements FamilyMembersContract.View,  FdpCallbacks.UpdateJsonArray {

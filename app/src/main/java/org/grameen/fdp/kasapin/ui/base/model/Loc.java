@@ -5,7 +5,7 @@ package org.grameen.fdp.kasapin.ui.base.model;
  */
 
 
-import android.arch.persistence.room.Ignore;
+import androidx.room.Ignore;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;

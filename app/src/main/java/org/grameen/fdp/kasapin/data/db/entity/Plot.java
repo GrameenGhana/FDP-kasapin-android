@@ -1,10 +1,10 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -17,7 +17,7 @@ import java.util.List;
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
- * Created by aangjnr on 08/11/2017.
+ * Created by aangjnr on 08/11/2017.far
  */
 //, foreignKeys = @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE)
 @Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
@@ -55,6 +55,8 @@ public class Plot {
     @SerializedName("recommendation_id")
     int recommendationId;
     int gapsId = 1;
+
+    @SerializedName("start_year")
     int startYear = 1;
 
     @Ignore

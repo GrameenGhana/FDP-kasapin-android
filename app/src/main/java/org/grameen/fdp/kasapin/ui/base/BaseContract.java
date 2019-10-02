@@ -2,8 +2,8 @@ package org.grameen.fdp.kasapin.ui.base;
 
 
 import android.content.DialogInterface;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 import android.view.Window;
 
 /**

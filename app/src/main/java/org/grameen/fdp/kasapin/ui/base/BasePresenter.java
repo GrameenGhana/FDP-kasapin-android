@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.ui.base;
 
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
@@ -268,7 +268,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                                     answerJson.put("field_name", mapping.getFieldName());
 
                                                                                     //For decimal values, add answer to payload as a decimal instead of as a string
-                                                                                    answerJson.put("answer", question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ? Double.parseDouble(answer.trim().replace(",", "")) :answer);
+                                                                                    answerJson.put("answer", (question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ||
+                                                                                            question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)) ? Double.parseDouble(answer.trim().replace(",", "")) :answer);
 
                                                                                     jsonArray.put(answerJson);
                                                                                 }

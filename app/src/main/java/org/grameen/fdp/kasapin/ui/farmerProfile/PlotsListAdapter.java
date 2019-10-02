@@ -5,7 +5,7 @@ package org.grameen.fdp.kasapin.ui.farmerProfile;
  */
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +16,6 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 
 import java.util.List;
-
-import io.reactivex.annotations.NonNull;
 
 
 /**

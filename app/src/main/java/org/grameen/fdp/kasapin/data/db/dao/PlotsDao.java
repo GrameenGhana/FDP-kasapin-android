@@ -1,9 +1,9 @@
 package org.grameen.fdp.kasapin.data.db.dao;
 
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
+import androidx.room.Dao;
+import androidx.room.Query;
+import androidx.room.Transaction;
 
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 
@@ -25,15 +25,11 @@ public interface PlotsDao extends BaseDao<Plot> {
     @Query("SELECT * FROM plots WHERE farmerCode = :farmerCode")
     Single<List<Plot>> getFarmersPlots(String farmerCode);
 
-   /* @Transaction
-    @Query("SELECT * FROM plots WHERE farmerCode = :farmerCode")
-    List<Plot> getFarmersPlots(String farmerCode);
-*/
     @Query("SELECT * FROM plots WHERE id = :id")
     Plot getPlotById(String id);
 
-    @Query("DELETE FROM plots WHERE id = :id")
-    int deleteOne(int id);
+    @Query("DELETE FROM plots WHERE externalId = :id")
+    int deleteOne(String id);
 
     @Query("DELETE FROM plots")
     void deleteAllPlots();

@@ -3,8 +3,8 @@ package org.grameen.fdp.kasapin.ui.pandl;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.view.ContextThemeWrapper;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,7 +14,6 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
-import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.ui.base.model.Data;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -147,13 +146,13 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
             switch (data.getTag()) {
                 case TAG_TITLE_TEXT_VIEW: {
+
                     TextView textView = new TextView(getContext());
                     textView.setText(data.getLabel());
                     textView.setPadding(20, 10, 20, 10);
                     textView.setTextSize(TITLE_TEXT_SIZE);
-                     textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+                    textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
-
                     view = textView;
 
                     break;
@@ -176,6 +175,8 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     final Button button = new Button(newContext);
                     // button.setBackgroundResource(R.drawable.button_background_accent);
 
+
+
                     String name = "";
                     try {
                         Recommendation recommendation = mAppDatabase.recommendationsDao().get(Integer.parseInt(data.getLabel())).blockingGet();
@@ -185,6 +186,9 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                             name = getResources().getString(R.string.change_to) + " " + name;
                         }
                     } catch (Exception ignored) {
+
+
+
 
                         name = getResources().getString(R.string.change_to) + " " + data.getLabel().split("_")[1];
 

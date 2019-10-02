@@ -4,7 +4,7 @@ package org.grameen.fdp.kasapin.ui.plotReview;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
@@ -218,18 +217,29 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
                 Question plotSizeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_");
                 if (plotSizeQuestion != null)
-                    historicalTableViewDataList.add(new HistoricalTableViewData(plotSizeQuestion.getCaptionC(), ComputationUtils.getDataValue(plotSizeQuestion, jsonObject), "", "", null));
+                    historicalTableViewDataList.add(new HistoricalTableViewData(plotSizeQuestion.getCaptionC(), plot.getArea(), "", "", null));
 
+                Question estProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_estimate_production");
+                if (estProdQuestion != null) {
+                    if (jsonObject.has(estProdQuestion.getLabelC()))
+                        jsonObject.remove(estProdQuestion.getLabelC());
+                    try {
+                        jsonObject.put(estProdQuestion.getLabelC(), plot.getEstimatedProductionSize());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-                Question estProd = getAppDataManager().getDatabaseManager().questionDao().get("plot_estimate_production");
-                if (estProd != null)
-                    historicalTableViewDataList.add(new HistoricalTableViewData(estProd.getCaptionC(), ComputationUtils.getDataValue(estProd, jsonObject), "", "", null));
-
-
-                Question limeNeeded = getAppDataManager().getDatabaseManager().questionDao().get("lime_");
-                if (limeNeeded != null)
-                    historicalTableViewDataList.add(new HistoricalTableViewData(limeNeeded.getCaptionC(), ComputationUtils.getDataValue(limeNeeded, jsonObject), "", "", null));
-
+                Question startYearQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_intervention_start_year_");
+                if (startYearQuestion != null) {
+                    if (jsonObject.has(startYearQuestion.getLabelC()))
+                        jsonObject.remove(startYearQuestion.getLabelC());
+                    try {
+                        jsonObject.put(startYearQuestion.getLabelC(), plot.getStartYear());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 Question plotRec = getAppDataManager().getDatabaseManager().questionDao().get("plot_recommendation");
                 if (plotRec != null) {

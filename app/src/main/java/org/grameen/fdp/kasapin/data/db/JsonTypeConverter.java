@@ -1,17 +1,9 @@
 package org.grameen.fdp.kasapin.data.db;
 
 
-import android.arch.persistence.room.TypeConverter;
+import androidx.room.TypeConverter;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-
-import org.grameen.fdp.kasapin.ui.base.model.Loc;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
 
 /**
  * Created by AangJnr on 20, September, 2018 @ 4:11 PM

@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.ui.familyMembers;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.List;
-
-import io.fabric.sdk.android.ActivityLifecycleManager;
 
 /**
  * Created by aangjnr on 22/02/2018.

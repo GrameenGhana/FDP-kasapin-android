@@ -5,11 +5,9 @@ import android.os.Environment;
 import java.io.File;
 
 public class AppConstants {
-
-
-    public static final String SERVER_URL = "http://104.236.220.235/";
-    public static final String API_VERSION = "fdp/api/v1/";
-    public static final String API = "fdp/api/";
+    public static final String SERVER_URL = "server_url";
+    public static final String API_VERSION = "api/v1/";
+    public static final String API = "api/";
     public static final int PERMISSION_FINE_LOCATION = 1001;
     public static final int PLACE_PICKER_REQUEST = 1002;
     public static final int PERMISSION_CALL = 1003;
@@ -38,9 +36,6 @@ public class AppConstants {
     public static final String PLOT_GPS_POINT_PRECISION_FIELD = "precision_c";
 
     public static final String TYPE_FIELD_NAME = "type_c";
-
-
-
 
     public static final String PLOT_EXTERNAL_ID_FIELD = "plot_external_id_c";
 
@@ -92,6 +87,7 @@ public class AppConstants {
     public static final String TYPE_DATEPICKER = "date";
     public static final String TYPE_FORMULA = "formula";
     public static final String TYPE_MATH_FORMULA = "math formula";
+    public static final int BATCH_NO = 30;
     public static final String TYPE_LOGIC_FORMULA = "logic formula";
     public static final String SHOW = "false";
     public static final String HIDE = "true";

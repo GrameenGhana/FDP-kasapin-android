@@ -4,7 +4,7 @@ package org.grameen.fdp.kasapin.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 7:18 PM

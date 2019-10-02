@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;

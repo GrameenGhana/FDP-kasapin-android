@@ -1,8 +1,8 @@
 package org.grameen.fdp.kasapin.ui.addPlotMonitoring;
 
 
-import android.support.annotation.Nullable;
-import android.view.View;
+import androidx.annotation.Nullable;
+
 import android.widget.Spinner;
 
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;

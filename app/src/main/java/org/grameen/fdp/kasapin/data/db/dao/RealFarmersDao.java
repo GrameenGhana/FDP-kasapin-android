@@ -1,9 +1,9 @@
 package org.grameen.fdp.kasapin.data.db.dao;
 
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.room.Dao;
+import androidx.room.Query;
+import androidx.room.Update;
 
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 

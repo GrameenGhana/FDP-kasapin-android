@@ -7,11 +7,11 @@ package org.grameen.fdp.kasapin.utilities;
  * Personal mail aang.jnr@gmail.com
  */
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.fragment.FormModelFragment;

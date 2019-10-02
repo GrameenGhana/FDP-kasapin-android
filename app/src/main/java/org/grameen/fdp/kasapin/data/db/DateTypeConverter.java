@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.data.db;
 
 
-import android.arch.persistence.room.TypeConverter;
+import androidx.room.TypeConverter;
 
 import java.util.Date;
 

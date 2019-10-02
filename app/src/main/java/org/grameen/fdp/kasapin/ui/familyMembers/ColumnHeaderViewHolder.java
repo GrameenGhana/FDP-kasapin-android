@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.ui.familyMembers;
 
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
