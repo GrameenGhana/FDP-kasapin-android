@@ -1,6 +1,7 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,9 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +40,8 @@ import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
+import org.grameen.fdp.kasapin.ui.preferences.SettingsActivity;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 
@@ -102,6 +108,11 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
+
+
+        AppLogger.e(TAG, "STORED SERVER URL IS *************   " + mPresenter.getAppDataManager().getPreferences().getString(AppConstants.SERVER_URL, "NONE"));
+
+        AppLogger.e(TAG, "STORED SERVER URL IS *************   " + PreferenceManager.getDefaultSharedPreferences(this).getString(AppConstants.SERVER_URL, "NONE"));
 
 
         if (FORM_AND_QUESTIONS == null)
@@ -317,10 +328,10 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public void toggleDrawer() {
 
-        if (drawerLayout.isDrawerOpen(Gravity.START))
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawers();
         else
-            drawerLayout.openDrawer(Gravity.START);
+            drawerLayout.openDrawer(GravityCompat.START);
     }
 
 
@@ -334,7 +345,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
         final int id = menuItem.getItemId();
 
-        mPresenter.toggleDrawer();
+        toggleDrawer();
 
 
         switch (id) {
@@ -356,6 +367,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             case R.id.logout:
 
                 logOut();
+
+                break;
+
+            case R.id.action_settings:
+
+                startActivity(new Intent(this, SettingsActivity.class));
 
                 break;
 
@@ -394,6 +411,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
 
+
+
   @Override
     protected void onResume() {
 
@@ -407,6 +426,10 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         }
 
       super.onResume();
+
+        AppLogger.e(TAG, "URL IS >>> " + mAppDataManager.getPreferences().getString(AppConstants.SERVER_URL, "DEFAULT IS SET"));
+
+
     }
 
 

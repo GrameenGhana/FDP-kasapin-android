@@ -17,6 +17,7 @@ package org.grameen.fdp.kasapin.data;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
@@ -31,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.prefs.Preferences;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -89,6 +91,13 @@ public class AppDataManager implements DataManager {
     public void clearPreferences() {
         mPreferencesHelper.clearPreferences();
     }
+
+
+    @Override
+    public SharedPreferences getPreferences() {
+        return mPreferencesHelper.getPreferences();
+    }
+
 
     @Override
     public void setIsTranslationToggled(boolean isTranslationToggled) {

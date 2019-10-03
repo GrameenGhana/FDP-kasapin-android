@@ -55,7 +55,7 @@ public class ViewModule {
 
     @Provides
     AlertDialog.Builder provideAppDialogBuilder() {
-        return new AlertDialog.Builder(mActivity, R.style.AppDialog);
+        return new AlertDialog.Builder(mActivity, R.style.AppAlertDialog);
     }
 
 

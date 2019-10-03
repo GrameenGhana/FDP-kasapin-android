@@ -5,12 +5,15 @@ import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 
+import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 
@@ -48,6 +51,8 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
         setContentView(R.layout.activity_splash);
 
+
+        //PreferenceManager.getDefaultSharedPreferences(this).edit().putString(AppConstants.SERVER_URL, BuildConfig.END_POINT).apply();
 
 
         getActivityComponent().inject(this);

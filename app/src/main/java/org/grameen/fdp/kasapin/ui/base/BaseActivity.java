@@ -21,6 +21,8 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -140,7 +142,7 @@ public abstract class BaseActivity extends AppCompatActivity
         TAG = getClass().getSimpleName();
 
         //Sets theme for if Diagnostic or Monitoring mode
-        if (getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE).getBoolean(AppPreferencesHelper.PREF_KEY_IS_MONITORING_MODE, true))
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(AppPreferencesHelper.PREF_KEY_IS_MONITORING_MODE, true))
             setTheme(R.style.AppTheme_Monitoring);
 
 
@@ -254,6 +256,8 @@ public abstract class BaseActivity extends AppCompatActivity
     public void showMessage(@StringRes int resId) {
         showMessage(getString(resId));
     }
+
+
 
     @Override
     public boolean isNetworkConnected() {

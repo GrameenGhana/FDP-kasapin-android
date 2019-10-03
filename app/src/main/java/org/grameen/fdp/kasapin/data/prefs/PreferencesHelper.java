@@ -16,6 +16,8 @@
 package org.grameen.fdp.kasapin.data.prefs;
 
 
+import android.content.SharedPreferences;
+
 import org.grameen.fdp.kasapin.data.DataManager;
 
 
@@ -83,6 +85,8 @@ public interface PreferencesHelper {
 
 
     void clearSecurePreferences();
+
+    SharedPreferences getPreferences();
 
 
     String getStringValue(String key);

@@ -431,4 +431,20 @@
     <string name="click_to_select">Click to select</string>
     <string name="no_monitoring_data">No monitoring data available yet!</string>
 
+
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="settings_general">General Settings</string>
+
+
+    <!-- Messages Preferences -->
+    <string name="server_url_title">Server Url</string>
+    <string name="default_server_url" translatable="false">http://52.15.172.252/fdp/</string>
+    <string name="enter_valid_url">Please enter a valid url. The default url is set.</string>
+    <string name="server_url_rational">Please enter server url in the form "http://" or "https://" and end with "/"</string>
+
+    <!-- Preferences Keys-->
+    <string name="server_url_key">server_url</string>
+
 </resources>

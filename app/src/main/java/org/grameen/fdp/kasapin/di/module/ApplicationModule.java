@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
@@ -82,7 +83,7 @@ public class ApplicationModule {
     @Singleton
     @Provides
     SharedPreferences providesSharedPrefs() {
-        return application.getSharedPreferences(AppConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return PreferenceManager.getDefaultSharedPreferences(application);
     }
 
 

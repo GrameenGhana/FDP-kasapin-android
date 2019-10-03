@@ -50,7 +50,6 @@ public class MainContract {
 
         void openSearchDialog();
 
-        void toggleDrawer();
 
         void getVillagesDataFromDbAndUpdateUI();
 

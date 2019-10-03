@@ -101,10 +101,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
     }
 
-    @Override
-    public void toggleDrawer() {
-        getView().toggleDrawer();
-    }
 
     @Override
     public void getVillagesDataFromDbAndUpdateUI() {
