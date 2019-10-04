@@ -503,18 +503,25 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                             for (Mapping mapping : mappingEntry.getValue()) {
 
-                                                                String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
+                                                                Question question = getAppDataManager().getDatabaseManager().questionDao().get(mapping.getQuestionId()).blockingGet();
 
 
-                                                                if (allAnswersJsonObject.has(questionLabel)) {
+                                                                //String questionLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel(mapping.getQuestionId()).blockingGet();
 
-                                                                    String answer = allAnswersJsonObject.get(questionLabel).toString();
+
+                                                                if (allAnswersJsonObject.has(question.getLabelC())) {
+
+                                                                    String answer = allAnswersJsonObject.get(question.getLabelC()).toString();
 
                                                                     if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
 
                                                                         JSONObject answerJson = new JSONObject();
 
                                                                         answerJson.put("answer", answer);
+
+                                                                        answerJson.put("answer", (question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ||
+                                                                                question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)) ? Double.parseDouble(answer.trim().replace(",", "")) :answer);
+
                                                                         answerJson.put("field_name", mapping.getFieldName());
 
                                                                         arrayOfValues.put(answerJson);

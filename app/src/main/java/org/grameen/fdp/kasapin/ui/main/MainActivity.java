@@ -344,36 +344,23 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
         final int id = menuItem.getItemId();
-
         toggleDrawer();
 
 
         switch (id) {
-
-
             case R.id.download_resources:
 
-                if (NetworkUtils.isNetworkConnected(MainActivity.this)) {
-
+                if (NetworkUtils.isNetworkConnected(MainActivity.this))
                     //Todo Sync data down
                     new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 500);
-
-                } else
+                    else
                     showMessage(R.string.no_internet_connection_available);
 
 
                 break;
 
             case R.id.logout:
-
                 logOut();
-
-                break;
-
-            case R.id.action_settings:
-
-                startActivity(new Intent(this, SettingsActivity.class));
-
                 break;
 
             case R.id.sync_farmer:
@@ -392,6 +379,12 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;
+
+
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+
 
 
         }
@@ -426,10 +419,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         }
 
       super.onResume();
-
-        AppLogger.e(TAG, "URL IS >>> " + mAppDataManager.getPreferences().getString(AppConstants.SERVER_URL, "DEFAULT IS SET"));
-
-
     }
 
 

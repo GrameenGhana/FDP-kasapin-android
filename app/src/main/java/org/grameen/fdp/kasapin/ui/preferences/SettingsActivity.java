@@ -56,6 +56,9 @@ public class SettingsActivity extends BaseActivity {
 
 
         mAlertDialogBuilder = new AlertDialog.Builder(this, R.style.AppDialog);
+
+
+        onBackClicked();
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
