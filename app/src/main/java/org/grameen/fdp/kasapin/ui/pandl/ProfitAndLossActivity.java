@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.ui.pandl;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +15,8 @@ import com.google.gson.Gson;
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Calculation;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
@@ -32,6 +33,7 @@ import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,7 +64,6 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.TYPE_TEXT;
  * A login screen that offers login via email/password.
  */
 public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLossContract.View {
-
     static final int MAX_YEARS = 7;
     @Inject
     ProfitAndLossPresenter mPresenter;
@@ -81,7 +82,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @BindView(R.id.print)
     ImageView print;
     @BindView(R.id.fdp_status)
-
     TextView fdpStatus;
     @BindView(R.id.back)
     Button back;
@@ -145,27 +145,21 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     String plotSizeInHaValue = "0.0";
     private JSONObject PLOT_ANSWERS_JSON_OBJECT = new JSONObject();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         toggleFullScreen(false, getWindow());
         setContentView(R.layout.activity_profit_and_loss);
-
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
         setUnBinder(ButterKnife.bind(this));
         engine = new ScriptEngineManager().getEngineByName("rhino");
-
         farmer = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
-
         START_YEAR_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("start_year_");
         START_YEAR_LABEL = START_YEAR_QUESTION.getLabelC();
         CSSV_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("ao_disease_");
         PLOT_INTERVENTION_START_YEAR = getAppDataManager().getDatabaseManager().questionDao().get("plot_intervention_start_year_");
-
         currency.setText(getAppDataManager().getStringValue("currency"));
-
         mathFormulaParser = MathFormulaParser.getInstance();
         logicFormulaParser = LogicFormulaParser.getInstance();
 
@@ -176,35 +170,27 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             showMessage(getStringResources(R.string.error_has_occurred));
         }
 
-
         if (BuildConfig.DEBUG)
             issuePrint();
-
 
         if (getAppDataManager().isMonitoring()) {
             save.setVisibility(View.GONE);
             submitAgreement.setVisibility(View.GONE);
         }
-
     }
 
     @Override
     public void setUpViews() {
         farmerName.setText(farmer.getFarmerName());
         farmerCode.setText(farmer.getCode());
-
         tableView.setColumnCount(9);
-
         String[] TABLE_HEADERS = getResources().getStringArray(R.array.seven_years);
-
         MyTableHearderAdapter tableHearderAdapter = new MyTableHearderAdapter(this, TABLE_HEADERS);
         tableView.setHeaderAdapter(tableHearderAdapter);
 
         tableHearderAdapter.setHeaderClickListener(view -> {
-
             int position = Integer.parseInt(view.getTag().toString());
             AppLogger.i("P & L ACTIVITY", position + "");
-
             Intent intent = new Intent(this, DetailedMonthActivity.class);
             intent.putExtra("year", position - 1);
             intent.putExtra("farmer", new Gson().toJson(farmer));
@@ -212,55 +198,33 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             intent.putExtra("labourType", LABOUR_TYPE);
             intent.putExtra("multiplier", PLOT_SIZES_IN_HA_JSON.toString());
             startActivity(intent);
-
         });
 
-
         tableView.setSaveEnabled(true);
-
-
         if (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.YES) && farmer.getSyncStatus() == 1) {
             submitAgreement.setVisibility(View.GONE);
             findViewById(R.id.save).setVisibility(View.GONE);
         }
 
-
         submitAgreement.setOnClickListener(v -> {
-
             if (farmer.getHasSubmitted() == null || farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.NO)) {
-
                 if (checkIfFarmerFdpStatusFormFilled(farmer.getCode())) {
-
-
                     if (NetworkUtils.isNetworkConnected(ProfitAndLossActivity.this)) {
 
                         showDialog(true, getStringResources(R.string.caution), getStringResources(R.string.read_only_rational),
                                 (dialog, which) -> {
-
                                     //Todo sync up, set agreement submitted
-
-
                                 }, getStringResources(R.string.ok), (dialog, which) -> dialog.dismiss(), getStringResources(R.string.cancel), 0);
-
-
                     } else {
-
                         showDialog(false, getStringResources(R.string.status_submitted), getStringResources(R.string.no_internet_connection_available) + "\n" +
                                         getStringResources(R.string.you_can_still_make_edits) + farmer.getFarmerName() +
                                         getStringResources(R.string.apostrophe_s) + getStringResources(R.string.data_before_sync),
                                 (d, w) -> {
                                     d.dismiss();
-
                                     //Todo update farmer data, set agreement submitted to true
-
                                 }, getStringResources(R.string.ok), null, "", 0);
-
                     }
-
-
                 } else {
-
-
                     showDialog(true, getStringResources(R.string.fdp_status_incomplete), getStringResources(R.string.fill_out_fdp_status) + farmer.getFarmerName(),
                             (d, w) -> d.dismiss(), getStringResources(R.string.ok), (d, w1) -> {
 
@@ -268,12 +232,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                                 moveToFdpStatusActivity();
 
                             }, getStringResources(R.string.go_to_fdp_status_form), 0);
-
                 }
-
-
             } else if (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.YES)) {
-
                 showDialog(false, getStringResources(R.string.status_submitted), getStringResources(R.string.no_more_mods) + farmer.getFarmerName()
                                 + getStringResources(R.string.apostrophe_s) + getStringResources(R.string.data),
                         (d, w) -> {
@@ -283,14 +243,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                         }, getStringResources(R.string.ok), null, "", 0);
             }
         });
-
         onBackClicked();
-
         showLoading(getStringResources(R.string.populating_data), getStringResources(R.string.please_wait), true, 0, false);
-
         mPresenter.getAllAnswers(farmer.getCode());
-
-
     }
 
     @Override
@@ -301,10 +256,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
     @Override
-    public void openLoginActivityOnTokenExpire() {
-
-
-    }
+    public void openLoginActivityOnTokenExpire() {}
 
 
     @OnClick(R.id.fdp_status)
@@ -320,21 +272,14 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @Override
     public void issuePrint() {
         findViewById(R.id.print).setVisibility(View.VISIBLE);
-
         findViewById(R.id.print).setOnClickListener(v -> {
-
             findViewById(R.id.bottom_buttons).setVisibility(View.GONE);
             findViewById(R.id.fdpStatus).setVisibility(View.GONE);
             findViewById(R.id.currency_layout).setVisibility(View.GONE);
-
-
             showLoading("Initializing print", "Please wait...", false, 0, false);
-
-
             new Handler().postDelayed(() -> {
                 String fileLocation = captureScreenshot(findViewById(R.id.main_layout), "pandl");
                 hideLoading();
-
                 if (fileLocation != null) {
                     showMessage("File saved!");
 
@@ -345,26 +290,15 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                         findViewById(R.id.bottom_buttons).setVisibility(View.VISIBLE);
                         findViewById(R.id.fdpStatus).setVisibility(View.VISIBLE);
                         findViewById(R.id.currency_layout).setVisibility(View.VISIBLE);*/
-
-
                 } else
                     showMessage("Error starting the printer service!");
-
-
             }, 2000);
-
-
         });
-
     }
-
 
     @Override
     public void setAnswerData(JSONObject object) {
-
         VALUES_JSON_OBJECT = object;
-
-
         //Todo remove this value
         try {
             if (!VALUES_JSON_OBJECT.has("total_family_income_ghana"))
@@ -377,8 +311,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         logicFormulaParser.setAllValuesJsonObject(VALUES_JSON_OBJECT);
         mathFormulaParser.setAllValuesJsonObject(VALUES_JSON_OBJECT);
-
-
         final Question labourQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour");
         final Question labourTypeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour_type");
 
@@ -400,44 +332,30 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             e.printStackTrace();
         }
 
-
         AppLogger.d("P & L ACTIVITY", "MAIN JSON OBJECT ITERATION COMPLETE. DATA IS \n" + VALUES_JSON_OBJECT);
-
-
-
         PLOT_SIZE_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_ha_");
         PLOT_PROD_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_production_kg_");
         FARM_AREA_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_area_units_").blockingGet();
         FARM_WEIGHT_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_weight_units_").blockingGet();
 
-
         Completable.fromAction(this::populateTableData).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
-                    public void onComplete() {
-                    }
-
+                    public void onComplete() {}
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         showMessage(R.string.error_has_occurred_loading_data);
-
                         hideLoading();
-
                     }
                 });
-
-
     }
-
 
     @Override
     public boolean checkIfFarmerFdpStatusFormFilled(String code) {
-
         return false;
     }
-
 
     @Override
     public void populateTableData() {
@@ -451,33 +369,23 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         TOTAL_NET_INCOME_FROM_OTHER_SOURCES = new ArrayList<>();
         TOTAL_INCOME = new ArrayList<>();
         NET_FAMILY_INCOME = new ArrayList<>();
-
         TOTAL_INVESTMENT_IN_FDP = new ArrayList<>();
         TOTAL_P_AND_L_LIST = new ArrayList<>();
-
-
         GROSS_COCOA_STRING_BUILDERS = new ArrayList<>();
         MAINTENANCE_COST_STRING_BUILDERS = new ArrayList<>();
         LABOR_DAYS_STRING_BUILDERS = new ArrayList<>();
         LABOR_COST_STRING_BUILDERS = new ArrayList<>();
 
         for (int i = 0; i <= MAX_YEARS; i++) {
-
             GROSS_COCOA_STRING_BUILDERS.add(new StringBuilder());
             MAINTENANCE_COST_STRING_BUILDERS.add(new StringBuilder());
             LABOR_DAYS_STRING_BUILDERS.add(new StringBuilder());
             LABOR_COST_STRING_BUILDERS.add(new StringBuilder());
         }
-
         PLOT_SIZES_IN_HA_JSON = new JSONObject();
-
-
         if (farmer != null) {
             realPlotList = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmer.getCode()).blockingGet();
-
-
             COUNTER = 0;
-
             for (Plot PLOT : realPlotList) {
                 try {
                     PLOT_ANSWERS_JSON_OBJECT = PLOT.getAOJsonData();
@@ -486,40 +394,25 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
                     PLOT_ANSWERS_JSON_OBJECT = new JSONObject();
                 }
-
-
                 if (START_YEAR_LABEL != null) {
-
                     AppLogger.e("P & L ACTIVITY", "START YEAR LABEL " + START_YEAR_LABEL);
-
-
                     try {
                         PLOT.setStartYear(Integer.valueOf(PLOT_ANSWERS_JSON_OBJECT.getString(START_YEAR_LABEL)));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
-
                 shouldHideStartYear = false;
-
                 AppLogger.e("P & L ACTIVITY", "START YEAR IS " + PLOT.getStartYear());
-
-
                 logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON_OBJECT);
-
 
                 try {
                     //Todo complex calculation Application
                     plotSizeInHaValue = logicFormulaParser.evaluate(PLOT_SIZE_QUESTION.getFormulaC());
-
                     PLOT_SIZES_IN_HA_JSON.put(PLOT.getExternalId(), plotSizeInHaValue);
-
                     if (PLOT_ANSWERS_JSON_OBJECT.has(PLOT_SIZE_QUESTION.getLabelC()))
                         PLOT_ANSWERS_JSON_OBJECT.remove(PLOT_SIZE_QUESTION.getLabelC());
-
                     PLOT_ANSWERS_JSON_OBJECT.put(PLOT_SIZE_QUESTION.getLabelC(), plotSizeInHaValue);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -528,11 +421,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
                 AppLogger.i(TAG, "^^^^^^^^^^^^^^   PLOT SIZE IN HA VALUE IS ^^^^^^^^^^^^^^^^^  " + plotSizeInHaValue);
-
-
                 String plot_production_kg = "0.0";
                 try {
                     //Todo complex calculation Application
@@ -540,37 +429,24 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
                     if (PLOT_ANSWERS_JSON_OBJECT.has(PLOT_PROD_QUESTION.getLabelC()))
                         PLOT_ANSWERS_JSON_OBJECT.remove(PLOT_PROD_QUESTION.getLabelC());
-
                     PLOT_ANSWERS_JSON_OBJECT.put(PLOT_PROD_QUESTION.getLabelC(), plot_production_kg);
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-
                 AppLogger.i(TAG, "^^^^^^^^^^^^^^   PLOT PROD IN HA VALUE IS ^^^^^^^^^^^^^^^^^  " + plot_production_kg);
-
-
                 logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON_OBJECT);
                 mathFormulaParser.setJsonObject(PLOT_ANSWERS_JSON_OBJECT);
-
-
                 GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao().get(PLOT.getGapsId()).blockingGet();
                 PLOT_RECOMMENDATION = getAppDataManager().getDatabaseManager().recommendationsDao().get(PLOT.getRecommendationId()).blockingGet();
 
-
                 if (PLOT.getStartYear() > 0) {
                     loadYearData(PLOT, PLOT.getStartYear());
-
                 } else if (PLOT.getStartYear() < 0) {
                     loadYearDataForInterventionMade(PLOT, PLOT.getStartYear());
                 }
-
                 COUNTER++;
-
-
             }// For Loop ends
-
 
             for (int i = 0; i < MAX_YEARS + 1; i++) {
                 TOTAL_MAINTENANCE_COST.add(mathFormulaParser.evaluate(MAINTENANCE_COST_STRING_BUILDERS.get(i).toString() + "0"));
@@ -578,161 +454,96 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 TOTAL_LABOR_COST.add(mathFormulaParser.evaluate(LABOR_COST_STRING_BUILDERS.get(i).toString() + "0"));
                 TOTAL_GROSS_INCOME_FROM_COCOA.add(mathFormulaParser.evaluate(GROSS_COCOA_STRING_BUILDERS.get(i).toString() + "0.0"));
             }
-
             if (DID_LABOUR) {
-
-
                 //TABLE_DATA_LIST.add(new Data("Total Costs" + prefs.getString("labourType", ""), null, TAG_TITLE_TEXT_VIEW));
-
                 TABLE_DATA_LIST.add(new Data(getStringResources(R.string.total_maintenance_cost), TOTAL_MAINTENANCE_COST, TAG_RESULTS));
                 TABLE_DATA_LIST.add(new Data(getStringResources(R.string.total_labour_days), TOTAL_LABOR_DAYS, TAG_RESULTS));
                 TABLE_DATA_LIST.add(new Data(getStringResources(R.string.total_labour_cost), TOTAL_LABOR_COST, TAG_RESULTS));
-
             }
 
             TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
             TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
-
-
             //Get All Aggregate results questions
 
             Integer aggregateResultsFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.AGGREGATE_ECONOMIC_RESULTS).blockingGet();
 
             if (aggregateResultsFormId != null) {
-
                 List<Question> AGGREGATE_ECO_RESULTS_QUESTIONS = getAppDataManager().getDatabaseManager()
                         .questionDao().getQuestionsByForm(aggregateResultsFormId).blockingGet();
-
-
                 if (AGGREGATE_ECO_RESULTS_QUESTIONS != null) {
-
                     for (Question q : AGGREGATE_ECO_RESULTS_QUESTIONS) {
                         mathFormulaParser.setMathFormula(q.getFormulaC());
-
-
                         if (q.getLabelC().startsWith("net_income_cocoa_")) {
-
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), TOTAL_GROSS_INCOME_FROM_COCOA, TAG_RESULTS));
-
-
                         } else if (q.getLabelC().startsWith("net_income_other_crops_")) {
-
                             String value = mathFormulaParser.evaluate();
                             calculationsList = new ArrayList<>();
-
                             for (int i = 0; i < MAX_YEARS + 1; i++) {
                                 calculationsList.add(value);
                             }
-
                             TOTAL_NET_INCOME_FROM_OTHER_CROPS = calculationsList;
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
-
-
                         } else if (q.getLabelC().startsWith("farming_income_")) {
-
                             calculationsList = new ArrayList<>();
-
                             for (int i = 0; i < MAX_YEARS + 1; i++)
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_GROSS_INCOME_FROM_COCOA.get(i) + "+" + TOTAL_NET_INCOME_FROM_OTHER_CROPS.get(i))));
-
-
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
                             TOTAL_FARMING_INCOME = calculationsList;
-
-
-                        } else if (q.getLabelC().startsWith("net_income_other_sources_")) {
-
+                        }else if (q.getLabelC().startsWith("net_income_other_sources_")) {
                             String value = mathFormulaParser.evaluate();
-
                             calculationsList = new ArrayList<>();
-
                             for (int i = 0; i < MAX_YEARS + 1; i++) {
                                 calculationsList.add(value);
                             }
-
                             TOTAL_NET_INCOME_FROM_OTHER_SOURCES = calculationsList;
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
-
-
-                        } else if (q.getLabelC().startsWith("total_income_")) {
+                        }else if (q.getLabelC().startsWith("total_income_")) {
                             calculationsList = new ArrayList<>();
-
                             for (int i = 0; i < MAX_YEARS + 1; i++)
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_FARMING_INCOME.get(i) + "+" + TOTAL_NET_INCOME_FROM_OTHER_SOURCES.get(i))));
-
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
-
                             TOTAL_INCOME = calculationsList;
-
-
                         } else if (q.getLabelC().startsWith("total_family_expenses_")) {
-
                             String value = mathFormulaParser.evaluate();
                             calculationsList = new ArrayList<>();
-
                             for (int i = 0; i < MAX_YEARS + 1; i++) {
                                 calculationsList.add(value);
                             }
-
                             TOTAL_FAMILY_EXPENSES = value;
-
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
-
-
                         } else if (q.getLabelC().startsWith("net_family_income_")) {
-
                             calculationsList = new ArrayList<>();
                             for (int i = 0; i < MAX_YEARS + 1; i++) {
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_INCOME.get(i) + "-" + TOTAL_FAMILY_EXPENSES)));
                             }
-
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
-
                             NET_FAMILY_INCOME = calculationsList;
-
-
                         } else if (q.getLabelC().startsWith("fdp_invest_")) {
-
                             calculationsList = new ArrayList<>();
 
                             for (int i = 0; i < MAX_YEARS + 1; i++) {
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_MAINTENANCE_COST.get(i) + "+" + TOTAL_LABOR_COST.get(i))));
                             }
-
-
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
-
-
                             TOTAL_INVESTMENT_IN_FDP = calculationsList;
-
                         } else if (q.getLabelC().startsWith("p&l_")) {
                             calculationsList = new ArrayList<>();
                             try {
-
                                 for (int i = 0; i < MAX_YEARS + 1; i++) {
                                     calculationsList.add(mathFormulaParser.evaluate((NET_FAMILY_INCOME.get(i) + "-" + TOTAL_INVESTMENT_IN_FDP.get(i))));
                                 }
-
                             } catch (Exception ignored) {
                                 calculationsList = new ArrayList<>();
-
                                 for (int i = 0; i < MAX_YEARS + 1; i++) {
                                     calculationsList.add(mathFormulaParser.evaluate((TOTAL_INCOME.get(i) + "-" + TOTAL_INVESTMENT_IN_FDP.get(i))));
                                 }
-
-
                             }
-
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
                             TOTAL_P_AND_L_LIST = calculationsList;
-
                         }
                     }
-
                 }
-
             }
-
             TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
             TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
 
@@ -748,57 +559,31 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
                 TABLE_DATA_LIST.add(new Data(hhs.getCaptionC(), "0.00"));
             }
-
-
             try {
-
                 TABLE_DATA_LIST.add(new Data(pI.getCaptionC(), VALUES_JSON_OBJECT.get(pI.getLabelC()).toString()));
-
             } catch (JSONException e) {
                 e.printStackTrace();
-
                 TABLE_DATA_LIST.add(new Data(pI.getCaptionC(), "0.00"));
-
             }
-
-
             TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
             TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
-
 
             myTableViewAdapter = new MyTableViewAdapter(ProfitAndLossActivity.this, TABLE_DATA_LIST, tableView, getAppDataManager().getDatabaseManager());
-
             runOnUiThread(() -> tableView.setDataAdapter(myTableViewAdapter));
 
             myTableViewAdapter.setItemSelectedListener((view, i, id, item) -> {
-
                 AppLogger.i(TAG, "Spinner item selected with tag " + view.getTag());
-
-
                 //Position of plot selected from the list is saved as a tag to the start year view for you to know which plot has its start year changed
-
-
                 try {
-
                     int position = Integer.valueOf(view.getTag().toString());
-
-
                     if (PLOT_ANSWERS_JSON_OBJECT.has(START_YEAR_LABEL))
                         PLOT_ANSWERS_JSON_OBJECT.remove(START_YEAR_LABEL);
                     PLOT_ANSWERS_JSON_OBJECT.put(START_YEAR_LABEL, String.valueOf(i + 1));
-
                     if (PLOT_ANSWERS_JSON_OBJECT.has(PLOT_INTERVENTION_START_YEAR.getLabelC()))
                         PLOT_ANSWERS_JSON_OBJECT.remove(PLOT_INTERVENTION_START_YEAR.getLabelC());
                     PLOT_ANSWERS_JSON_OBJECT.put(PLOT_INTERVENTION_START_YEAR.getLabelC(), String.valueOf(i + 1));
-
                     realPlotList.get(position).setStartYear(i + 1);
                     realPlotList.get(position).setAnswersData(PLOT_ANSWERS_JSON_OBJECT.toString());
-
-
-                    System.out.println("-------------------------------------------------------------------------------");
-                    AppLogger.e(TAG, "UPDATED JSON DATA IS " + getGson().toJson(realPlotList.get(position)));
-                    System.out.println("-------------------------------------------------------------------------------");
-
 
                     mPresenter.updatePlotData(realPlotList.get(position), true);
 
@@ -808,30 +593,20 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 }
             });
 
-
             myTableViewAdapter.setClickistener(view -> {
-                AppLogger.i(TAG, "Button item clicked with tag " + view.getTag());
-
                 try {
-
                     String plotExtId = view.getTag().toString().split("_")[0];
                     String recoToChangeToName = view.getTag().toString().split("_")[1];
-
-
                     Plot plot = null;
-
                     for(Plot p : realPlotList)
                         if(p.getExternalId().equals(plotExtId)) {
                             plot = p;
                             break;
                         }
-
                     if(plot != null) {
                         Recommendation NEW_PLOT_RECO = getAppDataManager().getDatabaseManager().recommendationsDao()
                                 .getByRecommendationName(recoToChangeToName).blockingGet();
                         Recommendation GAPS_RECOMMENDATION_FOR_START_YEAR;
-
-
                         if (NEW_PLOT_RECO != null) {
                             AppLogger.e(TAG, "PLOT RECO IS >>>>>>>>>>>>>>>>>>>>> " + getGson().toJson(NEW_PLOT_RECO));
 
@@ -839,38 +614,17 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
                                 GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                         .getByRecommendationName("Minimal GAPs").blockingGet();
-
                             } else if (NEW_PLOT_RECO.getRecommendationName().equalsIgnoreCase("Grafting") || NEW_PLOT_RECO.getRecommendationName().equalsIgnoreCase("Grafting + Extra soil")) {
-
                                 GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                         .getByRecommendationName("Modest GAPs").blockingGet();
-
-
                             } else {
-
                                 GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                         .getByRecommendationName("Maintenance (GAPs)").blockingGet();
-
                             }
-
                             plot.setGapsId(GAPS_RECOMMENDATION_FOR_START_YEAR.getId());
                             plot.setRecommendationId(NEW_PLOT_RECO.getId());
-
-
                             mPresenter.updatePlotData(plot, true);
                         }
-/*
-
-                        if (getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot) > 0) {
-                            showLoading(getStringResources(R.string.updating_table_data), getStringResources(R.string.please_wait), true, 0,
-                                    false);
-
-                            Completable.fromAction(this::populateTableData).subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe();
-                        }*/
-
-
                     } else
                         showMessage("An error occurred changing start year");
 
@@ -880,11 +634,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 }
             });
             hideLoading();
-
-
         }
     }
-
 
     @Override
     public void reloadTableData() {

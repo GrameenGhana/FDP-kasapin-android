@@ -28,19 +28,9 @@ public interface MonitoringsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<Monitoring> objects);
 
-    @Query("SELECT * FROM  monitorings")
-    List<Monitoring> getAllMonitorings();
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMonitoring(Monitoring monitoring);
 
-
-    @Query("SELECT * FROM monitorings WHERE id = :id")
-    Monitoring getMonitoringById(String id);
-
-    @Query("SELECT * FROM monitorings WHERE externalId = :monitoringExternalId")
-    Maybe<Monitoring> getMonitoringForSelectedYear(String monitoringExternalId);
 
     @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId")
     Maybe<List<Monitoring>> getAllMonitoringForPlot(String plotExternalId);
@@ -57,17 +47,5 @@ public interface MonitoringsDao {
 
     @Query("SELECT COUNT(id) FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year")
     Maybe<Integer> countMonitoringsForSelectedYear(String plotExternalId, int year);
-
-    @Update
-    int updateMonitoring(Monitoring monitoring);
-
-
-    @Query("DELETE FROM monitorings")
-    void deleteAllMonitoring();
-
-
-    @Query("DELETE FROM monitorings WHERE id = :id")
-    int deleteMonitoringById(String id);
-
 
 }

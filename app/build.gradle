@@ -156,7 +156,8 @@ android {
         implementation "com.ogaclejapan.smarttablayout:utils-v4:$rootProject.ext.smartTabVersion"
 
         // debug database
-        debugImplementation "com.amitshekhar.android:debug-db:$rootProject.ext.debugDBVersion"
+        //debugImplementation "com.amitshekhar.android:debug-db:$rootProject.ext.debugDBVersion"
+        debugImplementation "com.amitshekhar.android:debug-db-encrypt:$rootProject.ext.debugDBVersion"
 
         // dagger dependency injection
         implementation "com.google.dagger:dagger:$rootProject.ext.dagger2Version"

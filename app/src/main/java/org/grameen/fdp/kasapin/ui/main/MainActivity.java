@@ -352,11 +352,9 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
                     //Todo Sync data down
-                    new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 500);
+                    new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 1000);
                     else
                     showMessage(R.string.no_internet_connection_available);
-
-
                 break;
 
             case R.id.logout:
@@ -367,7 +365,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 //Todo Sync all un synced farmer data
                 //Generate the json object here, pass the object as a value
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
-                    mPresenter.syncData(true);
+                    new Handler().postDelayed(() -> mPresenter.syncData(true), 1000);
+
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;
@@ -375,13 +374,15 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             case R.id.download_farmer_data:
                 //Todo Sync down new data from server
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
-                mPresenter.downloadFarmersData(true);
+
+                new Handler().postDelayed(() -> mPresenter.downloadFarmersData(true), 1000);
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;
 
 
             case R.id.action_settings:
+
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
 

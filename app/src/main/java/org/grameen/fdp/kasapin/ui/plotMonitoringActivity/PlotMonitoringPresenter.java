@@ -73,18 +73,21 @@ public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContrac
     @Override
     public void getMonitoringForSelectedYear(Plot plot, int selectedYear) {
 
+        AppLogger.e(TAG, "###########  Getting monitoring for year " + selectedYear + " with external id " + plot.getExternalId());
+
         getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringsForSelectedYear(plot.getExternalId(), selectedYear)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableSingleObserver<List<Monitoring>>() {
                     @Override
                     public void onSuccess(List<Monitoring> monitorings) {
+                        AppLogger.e(TAG, "########### Monitoring size is " +monitorings.size());
+
                         getView().updateTableData(monitorings);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
                         getView().showMessage(e.getMessage());
                         e.printStackTrace();
                     }

@@ -47,7 +47,6 @@ public class AppConstants {
     public static final String OBSERVATION_TABLE = "observation_c";
     public static final String DIAGONOSTIC_MONITORING_TABLE = "diagnostic_monitoring_c";
     public static final String DIAGONOSTIC_MONITORING_EXTERNAL_ID_C = "diagnostic_monitoring_external_id_c";
-
     public static final String LABOR_DAYS = "laborDays";
     public static final String LABOR_COSTS = "laborCosts";
     public static final String SUPPLIES_COSTS = "suppliesCosts";
@@ -87,7 +86,7 @@ public class AppConstants {
     public static final String TYPE_DATEPICKER = "date";
     public static final String TYPE_FORMULA = "formula";
     public static final String TYPE_MATH_FORMULA = "math formula";
-    public static final int BATCH_NO = 30;
+    public static final int BATCH_NO = 20;
     public static final String TYPE_LOGIC_FORMULA = "logic formula";
     public static final String SHOW = "false";
     public static final String HIDE = "true";
@@ -150,8 +149,6 @@ public class AppConstants {
     public static String RECOMMENDATION_NO_FDP = "incomplete ao";
     public static String MODULE_TYPE_DIAGNOSTIC = "Diagnostic";
     public static String MODULE_TYPE_MONITORING = "Monitoring";
-
-
 
     //Token Constants
     public static int TOKEN_IF = 1;

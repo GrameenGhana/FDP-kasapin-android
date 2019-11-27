@@ -85,6 +85,13 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
     }
 
     @Override
+    public void onSuccess(String message) {
+        if (mActivity != null) {
+            mActivity.onSuccess(message);
+        }
+    }
+
+    @Override
     public void showMessage(String message) {
         if (mActivity != null) {
             mActivity.showMessage(message);

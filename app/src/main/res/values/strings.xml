@@ -446,5 +446,8 @@
 
     <!-- Preferences Keys-->
     <string name="server_url_key">server_url</string>
+    <string name="select_url_rational">Please select a valid server url.</string>
+    <string name="add_a_new_url">Add a new url</string>
+    <string name="default_url_set_message">Default url has been set.</string>
 
 </resources>

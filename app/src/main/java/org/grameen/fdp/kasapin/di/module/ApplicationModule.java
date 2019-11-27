@@ -50,7 +50,6 @@ public class ApplicationModule {
         return application;
     }
 
-
     @Provides
     Application providesApplication() {
         return application;

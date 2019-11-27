@@ -37,9 +37,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".ui.preferences.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings">
+        </activity>
 
         <activity
             android:name=".ui.splash.SplashActivity"
@@ -47,17 +49,16 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.login.LoginActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.landing.LandingActivity" />
+        <activity android:name=".ui.landing.LandingActivity"/>
         <activity
             android:name=".ui.main.MainActivity"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".ui.addFarmer.AddEditFarmerActivity"
             android:configChanges="orientation|screenSize" />
@@ -91,6 +92,8 @@
         <activity android:name=".ui.farmAssessment.FarmAssessmentActivity" />
 
         <service android:name=".services.SyncService" />
+
+        <activity android:name=".ui.serverUrl.AddEditServerUrlActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

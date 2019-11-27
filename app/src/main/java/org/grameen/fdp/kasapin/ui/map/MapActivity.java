@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 
@@ -63,6 +65,8 @@ public class MapActivity extends BaseActivity implements MapContract.View {
     Double AREA_OF_PLOT;
     android.location.LocationListener locationListener;
 
+    int MIN_NO_OF_POINTS = 6;
+
     double accuracy;
     double altitude;
     boolean hasGpsDataBeenSaved = false;
@@ -77,7 +81,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         mPresenter.takeView(this);
 
 
-        progressDialog = new ProgressDialog(this, R.style.DialogTheme);
+        progressDialog = new ProgressDialog(this, R.style.AppDialog);
 
 
         recyclerView = findViewById(R.id.recycler_view);
@@ -116,7 +120,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
             mAdapter.removePoint(position);
             //latLngs.remove(position);
 
-            calculateArea.setEnabled((latLngs.size() > 2));
+            calculateArea.setEnabled((latLngs.size() >= MIN_NO_OF_POINTS ));
 
 
 
@@ -135,10 +139,10 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         });
 
 
-        calculateArea.setEnabled((latLngs.size() > 2));
+        calculateArea.setEnabled((latLngs.size() >= MIN_NO_OF_POINTS));
         calculateArea.setOnClickListener(view -> {
 
-            if (latLngs != null && latLngs.size() > 2) {
+            if (latLngs != null && latLngs.size() >= MIN_NO_OF_POINTS ) {
 
                 if (!hasCalculated) {
                     computeAreaInSquareMeters();
@@ -165,14 +169,14 @@ public class MapActivity extends BaseActivity implements MapContract.View {
                 }
 
             } else
-                showMessage("Please add 3 or more points to calculate the area of " + plot.getName());
+                showMessage("Please add "+ MIN_NO_OF_POINTS + " or more points to calculate the area of " + plot.getName());
 
 
         });
 
         addPoint.setOnClickListener(v -> {
-            progressDialog = CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
             getCurrentLocation();
+
         });
 
 
@@ -221,7 +225,7 @@ public class MapActivity extends BaseActivity implements MapContract.View {
 
                     }
 
-                    if (latLngs.size() > 2) {
+                    if (latLngs.size() >= MIN_NO_OF_POINTS ) {
                         calculateArea.setEnabled(true);
                     } else {
                         calculateArea.setEnabled(false);
@@ -306,6 +310,9 @@ public class MapActivity extends BaseActivity implements MapContract.View {
         GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
         if (GpsStatus) {
+            CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
+
+
 
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -330,8 +337,12 @@ public class MapActivity extends BaseActivity implements MapContract.View {
                 }
             }
         } else {
+            final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
-            showMessage("Please Enable GPS First");
+            showDialog(true, "GPS disabled", "Do you want to open GPS settings?", (dialog, which) -> {
+                dialog.dismiss();
+                startActivity(new Intent(action));
+            }, getStringResources(R.string.yes), (dialog, which) ->dialog.dismiss(), getStringResources(R.string.no), 0);
 
         }
 

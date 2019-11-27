@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/spacing_normal"
+    >
+
+
+
+    <TextView
+        android:id="@+id/url_caption_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please specify the name and the url"
+        android:textColor="@color/colorPrimary"
+        android:padding="@dimen/spacing_normal"
+        android:textStyle="bold"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_marginBottom="@dimen/spacing_half"
+        />
+
+    <EditText
+        android:id="@+id/name_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_half"
+        android:background="@drawable/border_background"
+        android:hint="@string/name"
+        android:inputType="textCapWords"
+        android:maxLines="1"
+        android:textColorHint="@android:color/secondary_text_dark"
+        android:padding="@dimen/spacing_normal" />
+
+    <EditText
+        android:id="@+id/url_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_half"
+        android:background="@drawable/border_background"
+        android:hint="@string/server_url_title"
+        android:inputType="textUri"
+        android:textColorHint="@android:color/secondary_text_dark"
+        android:maxLines="1"
+        android:padding="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"/>
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/spacing_normal">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="100dp"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/spacing_normal"
+            style="@style/TextAppearance.AppCompat.Button"
+            android:text="@string/cancel"
+            android:textColor="@color/divider_2"
+
+            />
+
+
+        <TextView
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="100dp"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/spacing_normal"
+            style="@style/TextAppearance.AppCompat.Button"
+            android:text="@string/ok"
+            android:textColor="@color/colorPrimary"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

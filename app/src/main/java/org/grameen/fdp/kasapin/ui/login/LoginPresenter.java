@@ -134,7 +134,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
         e.printStackTrace();
 
 
-        getView().showDialog(true, "An error occurred.", e.getMessage(),
+        getView().showDialog(true, "Error", e.getMessage(),
                 (dialog, which) -> dialog.dismiss(), "OK", null, "", 0);
 
 

@@ -1,9 +1,10 @@
 package org.grameen.fdp.kasapin.ui.plotReview;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.Button;
@@ -38,12 +39,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.codecrafters.tableview.TableView;
-
-/**
- * A login screen that offers login via email/password.
- */
 public class PlotReviewActivity extends BaseActivity implements PlotReviewContract.View {
-
     @Inject
     PlotReviewPresenter mPresenter;
     @BindView(R.id.plotName)
@@ -93,7 +89,6 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
     FormAnswerData laborFormAnswerData = null;
     JSONObject LABOUR_FORM_ANSWER_JSON = new JSONObject();
 
-
     public static Intent getStartIntent(Context context) {
         return new Intent(context, PlotReviewActivity.class);
     }
@@ -104,97 +99,48 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
         toggleFullScreen(false, getWindow());
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_plot_review);
-
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
         setUnBinder(ButterKnife.bind(this));
-
-
         FARMER = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
         getAppDataManager().setBooleanValue("refreshViewPager", false);
-
-
         if (FARMER != null) {
             mPresenter.getAllPlotQuestions();
         }
-
-
     }
-
 
     @Override
     public void setPlotQuestions(List<Question> questions) {
-
         ALL_PLOT_DATA_QUESTIONS = questions;
-
         PLOTS_LIST = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(FARMER.getCode()).blockingGet();
-
         AppLogger.e(TAG, getGson().toJson(PLOTS_LIST));
         
         if (ALL_PLOT_DATA_QUESTIONS != null && PLOTS_LIST != null && PLOTS_LIST.size() > 0)
             setUpViewPager();
-
     }
 
     @Override
     public void setUpViewPager() {
-
         viewPager = findViewById(R.id.view_pager);
         viewPager.setClipToPadding(false);
         viewPager.setPadding(0, 0, 130, 0);
         viewPager.setPageMargin(60);
-
         farmerName = findViewById(R.id.name);
         farmerCode = findViewById(R.id.code);
         plotName = findViewById(R.id.plotName);
-
         farmerName.setText(FARMER.getFarmerName());
         farmerCode.setText(FARMER.getCode());
-
-
         plotMonitoringTableDataList = new ArrayList<>();
-
         updateTableData();
 
         plotMonitoringTablePagerAdapter = new ReviewTablePagerAdapter(this, plotMonitoringTableDataList);
-
-
         if (plotMonitoringTableDataList.size() > 0) {
             viewPager.setAdapter(plotMonitoringTablePagerAdapter);
-
-
-            //titleTextView.setText("Edit" + plotMonitoringTableDataList.get(0).getTitle());
-
-           /* viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-
-
-
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });*/
-
             findViewById(R.id.noData).setVisibility(View.GONE);
-
         } else findViewById(R.id.noData).setVisibility(View.VISIBLE);
-
-
         setupLaborTypeAndSpinner();
-
         onBackClicked();
-
     }
-
 
     void updateTableData() {
 
@@ -213,8 +159,6 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                     e.printStackTrace();
                     jsonObject = new JSONObject();
                 }
-
-
                 Question plotSizeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_");
                 if (plotSizeQuestion != null)
                     historicalTableViewDataList.add(new HistoricalTableViewData(plotSizeQuestion.getCaptionC(), plot.getArea(), "", "", null));
@@ -271,11 +215,8 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
 
     }
 
-
     void setupLaborTypeAndSpinner() {
         Integer labourFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.LABOUR_FORM).blockingGet();
-
-
         if (labourFormId != null) {
             laborFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), labourFormId);
 
@@ -286,9 +227,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                 laborFormAnswerData = new FormAnswerData();
                 laborFormAnswerData.setFormId(labourFormId);
                 laborFormAnswerData.setFarmerCode(FARMER.getCode());
-
             }
-
                 labourSpinner.setItems("-select-", "Yes", "No");
                 labourSpinner.setSelectedIndex(0);
                 MaterialSpinner labourType = findViewById(R.id.labour_type_spinner);
@@ -330,7 +269,6 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     labourType.setOnItemSelectedListener((view, position, id, item) -> {
 
                         if (LABOUR_FORM_ANSWER_JSON.has(labourTypeQuestion.getLabelC()))
@@ -340,39 +278,24 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        ;
-
-
                     });
-
                 } else
                     CustomToast.makeToast(this, "Labour Question is missing. Labour value won't be saved.", Toast.LENGTH_LONG).show();
-
-
                 if (FARMER.getHasSubmitted().equalsIgnoreCase(AppConstants.YES) && FARMER.getSyncStatus() == 1) {
                     findViewById(R.id.save).setVisibility(View.GONE);
                     labourSpinner.setEnabled(false);
                     labourType.setEnabled(false);
                 }
-
-
-
         }
 
         save.setOnClickListener(v -> {
 
                 laborFormAnswerData.setData(LABOUR_FORM_ANSWER_JSON.toString());
-
                 getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(laborFormAnswerData);
-
                 mPresenter.setFarmerAsUnsynced(FARMER);
-
                 getAppDataManager().setBooleanValue("reload", true);
-
                 finish();
         });
-
-
     }
 
     @Override
@@ -381,19 +304,12 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
         super.onDestroy();
     }
 
-
     @Override
     public void openMainActivity() {
-
         startActivity(new Intent(this, MainActivity.class));
-
     }
 
     @Override
     public void openLoginActivityOnTokenExpire() {
-
-
     }
-
-
 }

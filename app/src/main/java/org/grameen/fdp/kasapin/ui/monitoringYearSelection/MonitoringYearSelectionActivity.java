@@ -43,7 +43,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
 
     @Inject
     MonitoringYearSelectionPresenter mPresenter;
-
     @BindView(R.id.photo)
     CircleImageView circleImageView;
     @BindView(R.id.initials)
@@ -83,8 +82,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         PLOT = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
 
         setUpViews();
-
-
         onBackClicked();
 
     }
@@ -106,7 +103,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, view, position, id) -> {
-
             if (PLOT.getRecommendationId() > 0) {
                 int year = position + 1;
 

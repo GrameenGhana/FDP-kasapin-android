@@ -73,7 +73,7 @@ ext {
     butterKnifeVersion = '10.2.0'
     greenDaoVersion = '3.2.0'
     placeholderviewVersion = '0.6.1'
-    debugDBVersion = '1.0.3'
+    debugDBVersion = '1.0.6'
     timberVersion = '4.7.1'
 
     smartTabVersion = '1.6.1@aar'

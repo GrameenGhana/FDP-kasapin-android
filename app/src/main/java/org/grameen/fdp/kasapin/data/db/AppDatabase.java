@@ -27,6 +27,7 @@ import org.grameen.fdp.kasapin.data.db.dao.QuestionDao;
 import org.grameen.fdp.kasapin.data.db.dao.RealFarmersDao;
 import org.grameen.fdp.kasapin.data.db.dao.RecommendationActivitiesDao;
 import org.grameen.fdp.kasapin.data.db.dao.RecommendationsDao;
+import org.grameen.fdp.kasapin.data.db.dao.ServerUrlsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SkipLogicsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SubmissionsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SuppliesCostsDao;
@@ -51,6 +52,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.data.db.entity.RecommendationActivity;
+import org.grameen.fdp.kasapin.data.db.entity.ServerUrl;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.SuppliesCost;
@@ -67,7 +69,7 @@ import javax.inject.Singleton;
 @Singleton
 @Database(entities = {Country.class, District.class, Community.class, Form.class, FormTranslation.class, Question.class, SkipLogic.class, Mapping.class, Logic.class, Recommendation.class,
         RecommendationActivity.class, ActivitiesPlusInput.class, Activity.class, Input.class, Calculation.class, ComplexCalculation.class,
-        RealFarmer.class, FormAnswerData.class, Plot.class, Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class
+        RealFarmer.class, FormAnswerData.class, Plot.class, Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class, ServerUrl.class
 }, version = 1, exportSchema = false)
 
 @TypeConverters({DateTypeConverter.class, ListTypeConverter.class})
@@ -126,6 +128,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CommunityAndFarmersDao villageAndFarmersDao();
 
     public abstract FormAndQuestionsDao formAndQuestionsDao();
+
+    public abstract ServerUrlsDao serverUrlsDao();
 
 
 }

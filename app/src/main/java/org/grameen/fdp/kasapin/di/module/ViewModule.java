@@ -50,6 +50,8 @@ public class ViewModule {
     @Provides
     public BasePresenter providesPresenter(AppDataManager appDataManager) {
         return new BasePresenter(appDataManager);
+
+
     }
 
 

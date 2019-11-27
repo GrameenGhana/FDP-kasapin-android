@@ -13,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+
+import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import com.google.android.material.snackbar.Snackbar;
@@ -64,6 +66,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -125,6 +128,10 @@ public abstract class BaseActivity extends AppCompatActivity
         recyclerView.setLayoutAnimation(controller);
         //recyclerView.getAdapter().notifyAll();
         recyclerView.scheduleLayoutAnimation();
+
+        
+
+
     }
 
 
@@ -211,10 +218,12 @@ public abstract class BaseActivity extends AppCompatActivity
         }
     }
 
-    private void showSnackBar(String message) {
+    private void showSnackBar(String message, int color) {
         Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
-                message, Snackbar.LENGTH_SHORT);
+                message, Snackbar.LENGTH_LONG);
         View sbView = snackbar.getView();
+        sbView.setBackgroundColor(ContextCompat.getColor(this, color));
+
         TextView textView = (TextView) sbView
                 .findViewById(R.id.snackbar_text);
         textView.setTextColor(ContextCompat.getColor(this, R.color.white));
@@ -225,12 +234,21 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onError(String message) {
         runOnUiThread(() -> {
             if (message != null) {
-                showSnackBar(message);
+                showSnackBar(message, R.color.cpb_red);
             } else {
-                showSnackBar(getString(R.string.some_error));
+                showSnackBar(getString(R.string.some_error), R.color.cpb_red);
             }
         });
 
+    }
+
+    @Override
+    public void onSuccess(String message) {
+        runOnUiThread(() -> {
+            if (message != null) {
+                showSnackBar(message, R.color.colorPrimary);
+            }
+        });
     }
 
     @Override

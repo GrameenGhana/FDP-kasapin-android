@@ -34,8 +34,6 @@ import io.reactivex.schedulers.Schedulers;
 @Singleton
 public class FdpApiService {
 
-    @Inject
-    AppDataManager appDataManager;
     private FdpApi fdpApi;
 
     @Inject

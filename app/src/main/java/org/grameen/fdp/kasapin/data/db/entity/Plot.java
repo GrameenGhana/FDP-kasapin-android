@@ -19,7 +19,6 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 /**
  * Created by aangjnr on 08/11/2017.far
  */
-//, foreignKeys = @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE)
 @Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
 public class Plot {
     @PrimaryKey(autoGenerate = true)
@@ -29,7 +28,7 @@ public class Plot {
     String externalId;
     String distanceBetweenCocoaTrees;
 
-     String farmerName;
+    String farmerName;
     @SerializedName("farmer_code")
     String farmerCode;
     String numberOfShadeTrees = null;

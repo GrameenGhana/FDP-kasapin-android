@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
-    <include layout="@layout/toolbar" />
-
+    <include layout="@layout/toolbar"/>
 
     <RelativeLayout
-        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_buttons"/>
-
-
         <LinearLayout
-            android:id="@+id/placeHolder"
+            android:id="@+id/place_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -36,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_quarter"
-                android:text="@string/no_points"
+                android:text="No urls added"
                 android:textColor="@color/black"
                 android:textStyle="bold"
 
@@ -45,11 +35,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_3_more_points"
+                android:text="To add a new server url, please click on the ADD A NEW URL button below"
 
                 />
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_buttons"
+            android:layout_marginTop="@dimen/spacing_half"/>
+
 
 
         <LinearLayout
@@ -74,31 +72,17 @@
 
 
             <Button
-                android:id="@+id/addPoint"
+                android:id="@+id/add_url"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_normal"
                 android:layout_weight="1"
                 android:padding="@dimen/spacing_normal"
-                android:text="add GPS point"
-
-                />
-
-
-            <Button
-                android:id="@+id/calculate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_normal"
-                android:layout_weight="1"
-                android:padding="@dimen/spacing_normal"
-                android:text="calculate area"
+                android:text="@string/add_a_new_url"
 
                 />
 
         </LinearLayout>
-
-
     </RelativeLayout>
 
 

@@ -19,6 +19,13 @@ public class FdpCallbacks {
 
     }
 
+    public interface UrlSelectedListener{
+
+        void onUrlSelected(String url);
+
+
+    }
+
 
 
 

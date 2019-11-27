@@ -51,6 +51,8 @@ public class BaseContract {
 
         void openLoginActivityOnTokenExpire();
 
+        void onSuccess(String message);
+
         void onError(@StringRes int resId);
 
         void onError(String message);

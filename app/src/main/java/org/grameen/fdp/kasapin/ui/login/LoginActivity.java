@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.karan.churi.PermissionManager.PermissionManager;
 
@@ -23,8 +24,11 @@ import org.grameen.fdp.kasapin.FDPKasapin;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
+import org.grameen.fdp.kasapin.ui.serverUrl.AddEditServerUrlActivity;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
+import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.ArrayList;
 
@@ -38,7 +42,7 @@ import butterknife.OnClick;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends BaseActivity implements LoginContract.View {
+public class LoginActivity extends BaseActivity implements LoginContract.View, FdpCallbacks.UrlSelectedListener {
 
     @Inject
     LoginPresenter mPresenter;
@@ -48,6 +52,9 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @BindView(R.id.password)
     EditText mPasswordView;
+
+    @BindView(R.id.url_text)
+    TextView serverUrlTextView;
 
     PermissionManager permissionManager;
 
@@ -67,6 +74,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         setUnBinder(ButterKnife.bind(this));
 
         mPresenter.takeView(this);
+
+
+
+
+
+        serverUrlTextView.setText((!TextUtils.isEmpty(getAppDataManager().getStringValue(AppConstants.SERVER_URL))
+                ? getAppDataManager().getStringValue(AppConstants.SERVER_URL)
+                : "N/A"));
+
+
 
         mPasswordView.setOnEditorActionListener((textView, i, keyEvent) -> {
 
@@ -116,7 +133,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
             public void ifCancelledAndCannotRequest(Activity activity) {
                 AppLogger.i("****** Cannot request");
 
-
                 showDialog(false, getString(R.string.permissions_not_provided),
                         "Please provide the permission in Settings.", null,
                         "", (dialogInterface, i) -> supportFinishAfterTransition(), getString(R.string.quit), 0);
@@ -124,6 +140,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
             }
 
         };
+
 
 
         new Handler().postDelayed(() -> showDialog(false, getString(R.string.hello),
@@ -140,7 +157,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         if (isNetworkConnected())
             validateData();
         else
-            showMessage(R.string.no_internet_connection_available);
+            onError(R.string.no_internet_connection_available);
     }
 
 
@@ -167,12 +184,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     }
 
+
+    @OnClick(R.id.url_text)
+    void goToAddServerActivity(){
+        startActivity(new Intent(this, AddEditServerUrlActivity.class));
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         //To get Granted Permission and Denied Permission
         ArrayList<String> granted = permissionManager.getStatus().get(0).granted;
         ArrayList<String> denied = permissionManager.getStatus().get(0).denied;
-
 
         if (granted.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             FDPKasapin.createNoMediaFile();
@@ -183,7 +204,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     }
 
 
-    private boolean validateData() {
+    private void validateData() {
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -194,6 +215,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
         boolean cancel = false;
         View focusView = null;
+
+
+        // Check for a server url, if the user entered one.
+        if (TextUtils.isEmpty(mAppDataManager.getStringValue(AppConstants.SERVER_URL))) {
+            onError(getString(R.string.select_url_rational));
+            return;
+        }
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
@@ -220,7 +248,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         } else {  //Todo Perform login
             mPresenter.makeLoginApiCall(mEmailView.getText().toString(), mPasswordView.getText().toString());
         }
-        return cancel;
+
     }
 
     private boolean isEmailValid(String email) {
@@ -233,4 +261,23 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         return password.length() >= 6;
     }
 
+    @Override
+    public void onUrlSelected(String url) {
+        //On url selected, save the url in cache, quit the app and restart the login screen
+        //This is to allow all cached data by dagger to be reloaded from the application resources
+/*
+        getAppDataManager().setStringValue(AppConstants.SERVER_URL, url);
+
+        new Handler().post(() -> {
+            System.exit(0);
+            android.os.Process.killProcess(android.os.Process.myPid());
+
+            new Handler().postDelayed(() -> {
+                Intent i = new Intent(this, LoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+              startActivity(i);
+            }, 1000);
+        });*/
+
+    }
 }
