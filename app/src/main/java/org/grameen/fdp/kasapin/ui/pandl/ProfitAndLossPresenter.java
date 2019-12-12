@@ -27,59 +27,42 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
 
     private JSONObject ALL_DATA_JSON = new JSONObject();
 
-
     @Inject
     public ProfitAndLossPresenter(AppDataManager appDataManager) {
         super(appDataManager);
         this.mAppDataManager = appDataManager;
-
-
     }
-
 
     @Override
     public void getAllAnswers(String farmerCode) {
-
         runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getAll(farmerCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(formAnswerDatas -> {
-
                     if (formAnswerDatas != null) {
                         for (FormAnswerData formAnswerData : formAnswerDatas) {
 
                             JSONObject object = formAnswerData.getJsonData();
                             Iterator iterator = object.keys();
-
                             while (iterator.hasNext()) {
                                 String key = (String) iterator.next();
                                 try {
                                     if (ALL_DATA_JSON.has(key))
                                         ALL_DATA_JSON.remove(key);
-
                                     ALL_DATA_JSON.put(key, formAnswerData.getJsonData().get(key));
-
                                 } catch (JSONException ignored) {
                                     ignored.printStackTrace();
                                 }
                             }
                         }
-
-
                         getView().setAnswerData(ALL_DATA_JSON);
                     }
-
-
                 }, throwable -> getView().showMessage("Couldn't obtain data!")));
-
-
     }
 
 
     @Override
     public void updatePlotData(Plot plot, boolean reloadTable) {
-
-
         Completable.fromAction(() ->
                 getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
                 .subscribeOn(Schedulers.io())
@@ -91,15 +74,11 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                         getAppDataManager().setBooleanValue("reload", true);
                         getView().reloadTableData();
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         getView().showMessage(e.getMessage());
-
                     }
                 });
-
-
     }
 }

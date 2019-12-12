@@ -3,23 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:orientation="vertical">
-
-
     <LinearLayout
         android:id="@+id/ll1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_buttons"
-        android:orientation="vertical"
-
-        >
-
-
+        android:layout_above="@+id/bottom_buttons_layout"
+        android:orientation="vertical">
         <include layout="@layout/toolbar" />
-
-
         <RelativeLayout
             android:id="@+id/currencyLayout"
             android:layout_width="match_parent"
@@ -27,24 +20,20 @@
 
             >
 
-            <LinearLayout
-                android:id="@+id/nameLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/spacing_normal"
-                android:paddingLeft="@dimen/spacing_normal"
-                android:paddingRight="@dimen/spacing_normal">
 
                 <LinearLayout
+                    android:id="@+id/name_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/spacing_normal">
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/spacing_normal">
+
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/spacing_half"
+                        android:layout_marginEnd="@dimen/spacing_half"
                         android:text="@string/farmer_name"
                         android:textColor="@color/text_black_87" />
 
@@ -52,7 +41,7 @@
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Aang Junior"
+                        tools:text="Aang Junior"
                         android:textColor="@color/text_black_87"
                         android:textStyle="bold" />
 
@@ -60,14 +49,19 @@
 
 
                 <LinearLayout
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/name_layout"
+                    android:id="@+id/farmer_code_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_quarter">
+                    android:layout_marginBottom="@dimen/spacing_quarter"
+                    android:layout_toStartOf="@+id/scroll_buttons_layout"
+                    >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/spacing_half"
+                        android:layout_marginEnd="@dimen/spacing_half"
                         android:text="@string/farmer_code"
 
                         />
@@ -76,53 +70,44 @@
                         android:id="@+id/code"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="23445"
+                        tools:text="23445"
                         android:textStyle="bold" />
-
-
                 </LinearLayout>
 
 
-            </LinearLayout>
-
             <LinearLayout
+                android:id="@+id/scroll_buttons_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:padding="@dimen/spacing_half"
-                android:paddingRight="@dimen/spacing_normal"
-
+                android:paddingEnd="@dimen/spacing_normal"
+                android:paddingStart="@dimen/spacing_normal"
                 >
 
                 <ImageView
                     android:id="@+id/scrollLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="@dimen/spacing_half"
+                    android:padding="@dimen/spacing_normal"
                     android:src="@drawable/ic_arrow_back_black_24dp"
                     android:tint="@color/colorAccent"
 
                     />
-
-
                 <ImageView
                     android:id="@+id/scrollRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/spacing_half"
+                    android:layout_marginEnd="@dimen/spacing_half"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="@dimen/spacing_half"
+                    android:padding="@dimen/spacing_normal"
                     android:src="@drawable/ic_arrow_forward_black_24dp"
                     android:tint="@color/colorAccent" />
-
-
             </LinearLayout>
 
         </RelativeLayout>
-
-
         <FrameLayout
             android:id="@+id/horizontalView"
             android:layout_width="match_parent"
@@ -136,45 +121,28 @@
             android:paddingRight="2dp"
             android:paddingBottom="2dp"
             android:scrollbars="horizontal|vertical"
-
             >
-
 
             <com.evrencoskun.tableview.TableView
                 android:id="@+id/table_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:clickable="false"
                 android:focusable="false"
                 app:column_header_height="60dp"
-
                 />
-
         </FrameLayout>
-
     </LinearLayout>
-
-
-    <LinearLayout
-
-        android:id="@+id/bottom_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="@dimen/spacing_normal"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_normal"
-
-        >
-
-
         <LinearLayout
+            android:id="@+id/bottom_buttons_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/spacing_normal"
+            android:layout_alignParentBottom="true"
+            android:padding="@dimen/spacing_normal">
 
             <Button
                 android:id="@+id/back"
@@ -183,22 +151,18 @@
                 android:layout_weight="2"
                 android:padding="@dimen/spacing_normal"
                 android:text="@string/back"
+                style="?attr/bottomAppBarStyle"
                 android:theme="@style/PrimaryButtonGrey" />
-
 
             <Button
                 android:id="@+id/save"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_normal"
                 android:layout_weight="3"
                 android:padding="@dimen/spacing_normal"
                 android:text="@string/save_and_continue"
-
+                style="?attr/bottomAppBarStyle"
                 />
-
         </LinearLayout>
-    </LinearLayout>
-
-
 </RelativeLayout>

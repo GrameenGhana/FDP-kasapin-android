@@ -22,46 +22,35 @@ import java.util.List;
 public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHeader, Cell> {
 
     // Cell View Types by Column Position
-    List<Question> questions;
-    Context context;
+    private List<Question> questions;
 
-    public FineTableViewAdapter(Context p_jContext, List<Question> questionList) {
+    FineTableViewAdapter(Context p_jContext, List<Question> questionList) {
         super(p_jContext);
-        this.context = p_jContext;
         this.questions = questionList;
-
     }
 
     /**
      * This is where you create your custom Cell ViewHolder. This method is called when Cell
      * RecyclerView of the TableView needs a new RecyclerView.ViewHolder of the given type to
      * represent an item.
-     *
      * @param viewType : This value comes from "getCellItemViewType" method to support different
      *                 type of viewHolder as a Cell item.
      * @see #getCellItemViewType(int);
      */
     @Override
     public RecyclerView.ViewHolder onCreateCellViewHolder(ViewGroup parent, int viewType) {
-
-
         String TYPE = questions.get(viewType).getTypeC().toLowerCase();
-        Log.i("FINE TABLE ADAPTER", "TYPE = " + TYPE);
-
-        if (TYPE.equalsIgnoreCase(AppConstants.TYPE_TEXT))
-            return new CellViewHolder(getLayoutView(parent, AppConstants.TYPE_TEXT), AppConstants.TYPE_TEXT);
-
-        else if (TYPE.equalsIgnoreCase(AppConstants.TYPE_SELECTABLE))
-            return new SpinnerViewHolder(getLayoutView(parent, AppConstants.TYPE_SELECTABLE), AppConstants.TYPE_SELECTABLE);
-
-        else if (TYPE.equalsIgnoreCase(AppConstants.TYPE_CHECKBOX))
-            return new CheckBoxViewHolder(getLayoutView(parent, AppConstants.TYPE_CHECKBOX), AppConstants.TYPE_SELECTABLE);
-        else
-            return new CellViewHolder(getLayoutView(parent, AppConstants.TYPE_TEXT), AppConstants.TYPE_TEXT);
-
-
+        switch (TYPE){
+            case AppConstants.TYPE_TEXT:
+                return new CellViewHolder(getLayoutView(parent, AppConstants.TYPE_TEXT));
+            case AppConstants.TYPE_SELECTABLE:
+                return new SpinnerViewHolder(getLayoutView(parent, AppConstants.TYPE_SELECTABLE));
+            case AppConstants.TYPE_CHECKBOX:
+                return new CheckBoxViewHolder(getLayoutView(parent, AppConstants.TYPE_CHECKBOX));
+            default:
+                return new CellViewHolder(getLayoutView(parent, AppConstants.TYPE_TEXT));
+        }
     }
-
     /**
      * That is where you set Cell View Model data to your custom Cell ViewHolder. This method is
      * Called by Cell RecyclerView of the TableView to display the data at the specified position.
@@ -77,59 +66,39 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
      * @see #onCreateCellViewHolder(ViewGroup, int) ;
      */
 
-
     @Override
     public void onBindCellViewHolder(AbstractViewHolder holder, Object cellItemModel, int columnPosition, int rowPosition) {
-
         Cell cell = (Cell) cellItemModel;
-
-        Log.i("FINE TABLE ADAPTER", "COLUMN POSITION = " + columnPosition);
-        Log.i("FINE TABLE ADAPTER", "ROW POSITION = " + rowPosition);
-
-
         if (holder instanceof CellViewHolder) {
             CellViewHolder viewHolder = (CellViewHolder) holder;
             viewHolder.setData(rowPosition, (Question) cell.getData());
-
         } else if (holder instanceof CheckBoxViewHolder) {
             CheckBoxViewHolder viewHolder = (CheckBoxViewHolder) holder;
             viewHolder.setData(rowPosition, (Question) cell.getData());
-
         } else if (holder instanceof SpinnerViewHolder) {
-
             SpinnerViewHolder viewHolder = (SpinnerViewHolder) holder;
             viewHolder.setData(rowPosition, (Question) cell.getData());
-
         }
-
     }
-
     /**
      * This is where you create your custom Column Header ViewHolder. This method is called when
      * Column Header RecyclerView of the TableView needs a new RecyclerView.ViewHolder of the given
      * type to represent an item.
-     *
      * @param viewType : This value comes from "getColumnHeaderItemViewType" method to support
      *                 different type of viewHolder as a Column Header item.
      * @see #getColumnHeaderItemViewType(int);
      */
     @Override
     public RecyclerView.ViewHolder onCreateColumnHeaderViewHolder(ViewGroup parent, int viewType) {
-
         // Get Column Header xml Layout
-        View layout = LayoutInflater.from(mContext).inflate(R.layout
-                .table_view_column_header_layout, parent, false);
-
-        // Create a ColumnHeader ViewHolder
+        View layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_column_header_layout, parent, false);
         return new ColumnHeaderViewHolder(layout, getTableView());
     }
-
     /**
      * That is where you set Column Header View Model data to your custom Column Header ViewHolder.
      * This method is Called by ColumnHeader RecyclerView of the TableView to display the data at
      * the specified position. This method gives you everything you need about a column header
      * item.
-     *
      * @param holder                : This is one of your column header ViewHolders that was created
      *                              on ```onCreateColumnHeaderViewHolder``` method. In this example
      *                              we have created "ColumnHeaderViewHolder" holder.
@@ -147,35 +116,26 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         ColumnHeaderViewHolder columnHeaderViewHolder = (ColumnHeaderViewHolder) holder;
         columnHeaderViewHolder.setColumnHeader(columnHeader);
     }
-
     /**
      * This is where you create your custom Row Header ViewHolder. This method is called when
      * Row Header RecyclerView of the TableView needs a new RecyclerView.ViewHolder of the given
      * type to represent an item.
-     *
      * @param viewType : This value comes from "getRowHeaderItemViewType" method to support
      *                 different type of viewHolder as a row Header item.
      * @see #getRowHeaderItemViewType(int);
-     *
      */
 
     @Override
     public RecyclerView.ViewHolder onCreateRowHeaderViewHolder(ViewGroup parent, int viewType) {
-
         // Get Row Header xml Layout
         View layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_row_header_layout, parent, false);
-
         // Create a Row Header ViewHolder
         return new RowHeaderViewHolder(layout);
-
     }
-
-
     /**
      * That is where you set Row Header View Model data to your custom Row Header ViewHolder. This
      * method is Called by RowHeader RecyclerView of the TableView to display the data at the
      * specified position. This method gives you everything you need about a row header item.
-     *
      * @param holder             : This is one of your row header ViewHolders that was created on
      *                           ```onCreateRowHeaderViewHolder``` method. In this example we have
      *                           created "RowHeaderViewHolder" holder.
@@ -185,25 +145,17 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
      * @see #onCreateRowHeaderViewHolder(ViewGroup, int) ;
      */
     @Override
-    public void onBindRowHeaderViewHolder(AbstractViewHolder holder, Object rowHeaderItemModel,
-                                          int rowPosition) {
+    public void onBindRowHeaderViewHolder(AbstractViewHolder holder, Object rowHeaderItemModel, int rowPosition) {
         RowHeader rowHeader = (RowHeader) rowHeaderItemModel;
-
         // Get the holder to update row header item text
         RowHeaderViewHolder rowHeaderViewHolder = (RowHeaderViewHolder) holder;
         rowHeaderViewHolder.row_header_textview.setText(String.valueOf(rowHeader.getData()));
-
-
-        //rowHeaderViewHolder.row_header_textview.
     }
-
 
     @Override
     public View onCreateCornerView() {
         // Get Corner xml layout
-        View corner = LayoutInflater.from(mContext).inflate(R.layout.table_view_corner_layout, null);
-
-        return corner;
+        return LayoutInflater.from(mContext).inflate(R.layout.table_view_corner_layout, null);
     }
 
     @Override
@@ -226,8 +178,6 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
 
     @Override
     public int getCellItemViewType(int column) {
-
-        Log.i("getCellItemViewType", "*** COLUMN IS " + column);
         // The unique ID for this type of cell item
         // If you have different items for Cell View by X (Column) position,
         // then you should fill this method to be able create different
@@ -241,45 +191,31 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
                 // Default view type
                 return 0;
         }*/
-
         return column;
     }
 
-
     private View getLayoutView(ViewGroup parent, String TYPE) {
-
-        View layout = null;
+        View layout;
         switch (TYPE) {
-
             case AppConstants.TYPE_TEXT:
-                layout = LayoutInflater.from(mContext).inflate(R.layout
-                        .table_view_edittext, parent, false);
+                layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_edittext, parent, false);
                 layout.setTag(TYPE);
-
                 break;
 
             case AppConstants.TYPE_SELECTABLE:
-                layout = LayoutInflater.from(mContext).inflate(R.layout
-                        .table_view_spinner, parent, false);
+                layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_spinner, parent, false);
                 layout.setTag(TYPE);
-
                 break;
 
             case AppConstants.TYPE_CHECKBOX:
-                layout = LayoutInflater.from(mContext).inflate(R.layout
-                        .table_view_checkbox, parent, false);
+                layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_checkbox, parent, false);
                 layout.setTag(TYPE);
                 break;
 
-
             default:
-                layout = LayoutInflater.from(mContext).inflate(R.layout
-                        .table_view_cell_layout, parent, false);
+                layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_cell_layout, parent, false);
                 layout.setTag(TYPE);
-
         }
-
-
         return layout;
     }
 }

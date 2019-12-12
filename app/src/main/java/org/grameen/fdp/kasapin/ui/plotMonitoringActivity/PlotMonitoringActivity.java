@@ -46,7 +46,6 @@ import io.reactivex.functions.Action;
 
 
 public class PlotMonitoringActivity extends BaseActivity implements PlotMonitoringContract.View {
-
     @Inject
     PlotMonitoringPresenter mPresenter;
     @BindView(R.id.plotName)

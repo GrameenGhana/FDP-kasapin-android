@@ -164,9 +164,6 @@ android {
         annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
         implementation "com.google.dagger:dagger-android-support:$rootProject.ext.dagger2Version"
 
-        // compileOnly 'javax.annotation:jsr250-api:1.0'
-        //implementation 'javax.inject:javax.inject:1'
-
         // butterknife code generator for view
         implementation "com.jakewharton:butterknife:$rootProject.ext.butterKnifeVersion"
         annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterKnifeVersion"

@@ -550,13 +550,10 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
             Question hhs = getAppDataManager().getDatabaseManager().questionDao().get("hh_savings_");
             Question pI = getAppDataManager().getDatabaseManager().questionDao().get("hh_planed_investment_");
-
             try {
-
                 TABLE_DATA_LIST.add(new Data(hhs.getCaptionC(), VALUES_JSON_OBJECT.get(hhs.getLabelC()).toString()));
             } catch (JSONException e) {
                 e.printStackTrace();
-
                 TABLE_DATA_LIST.add(new Data(hhs.getCaptionC(), "0.00"));
             }
             try {

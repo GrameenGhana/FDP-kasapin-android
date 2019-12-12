@@ -92,6 +92,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
     Iterator i1;
     String tmp_key;
     String startYearLabel;
+    int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         setContentView(R.layout.activity_add_new_plot_monitoring);
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
-
         mPresenter.takeView(this);
         FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
         PLOT = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
@@ -107,7 +107,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         MONITORING = getGson().fromJson(getIntent().getStringExtra("monitoring"), Monitoring.class);
         SELECTED_YEAR = String.valueOf(getIntent().getIntExtra("year", -1));
         scriptEngine = new ScriptEngineManager().getEngineByName("rhino");
-
         IS_NEW_MONITORING = MONITORING == null;
         startYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet();
         setUpViews();
@@ -123,7 +122,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             e.printStackTrace();
             PLOT_AO_ANSWERS_JSON = new JSONObject();
         }
-
+        
         plotName.setText(PLOT.getName());
         ph.setText(PLOT.getPh());
         i1 = PLOT_AO_ANSWERS_JSON.keys();
@@ -244,8 +243,16 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @Override
     public void addViewsDynamically(Question q) {
+
+
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setBackgroundColor( (counter % 2 == 0)
+                    ? ContextCompat.getColor(this, R.color.light_grey)
+                    : ContextCompat.getColor(this, R.color.white));
+
+            counter++;
+
 
         LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
                 0,
@@ -257,6 +264,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         linearLayout.addView(labelView, labelParams);
 
         ALL_VIEWS_LIST.add(labelView);
+
         LinearLayout.LayoutParams aoParam = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -264,12 +272,14 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         aoParam.gravity = Gravity.CENTER;
         aoParam.leftMargin = 10;
         aoParam.rightMargin = 10;
+        aoParam.topMargin = 20;
+        aoParam.bottomMargin = 20;
 
         View AOView = getAOView(q);
         linearLayout.addView(AOView, aoParam);
         ALL_VIEWS_LIST.add(AOView);
 
-        String relatedQuestions[] = q.splitRelatedQuestions();
+        String[] relatedQuestions = q.splitRelatedQuestions();
 
         if (relatedQuestions != null) {
             String competenceName = relatedQuestions[0];
@@ -282,6 +292,8 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             competenceParams.gravity = Gravity.CENTER;
             competenceParams.leftMargin = 10;
             competenceParams.rightMargin = 10;
+            competenceParams.topMargin = 20;
+            competenceParams.bottomMargin = 20;
 
             View competenceView = getCompetenceView(getAppDataManager().getDatabaseManager().questionDao().get((competenceName)));
             linearLayout.addView(competenceView, competenceParams);
@@ -295,6 +307,9 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             reasonForFailureParam.gravity = Gravity.CENTER;
             reasonForFailureParam.leftMargin = 10;
             reasonForFailureParam.rightMargin = 10;
+            reasonForFailureParam.topMargin = 20;
+            reasonForFailureParam.bottomMargin = 20;
+
             View failureView = getReasonForFailureView(getAppDataManager().getDatabaseManager().questionDao().get((reasonForFailureName)));
             linearLayout.addView(failureView, reasonForFailureParam);
             ALL_VIEWS_LIST.add(failureView);
@@ -302,12 +317,13 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         }
     }
 
+
     @Override
     public View getLabelView(Question q) {
         View view;
         TextView textView = new TextView(this);
         textView.setText(q.getCaptionC());
-        textView.setTextSize(12);
+        textView.setTextSize(13);
         textView.setTag(q.getId());
         textView.setPadding(10, 10, 10, 10);
         view = textView;
@@ -316,12 +332,11 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @Override
     public View getAOView(Question q) {
-
         final View view;
         if(q.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER)){
             EditText editText = new EditText(this);
             editText.setHint(ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON));
-            editText.setTextSize(12);
+            editText.setTextSize(13);
             editText.setTag(q.getLabelC());
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
             editText.setPadding(10, 10, 10, 10);
@@ -399,7 +414,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         final Spinner spinner = new Spinner(this);
         spinner.setPrompt(q.getDefaultValueC());
         spinner.setTag(q.getLabelC());
-
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(AddPlotMonitoringActivity.this, android.R.layout.simple_spinner_item, items) {
             @NonNull
             @Override
@@ -450,13 +464,11 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         final Spinner spinner = new Spinner(this);
         spinner.setPrompt(q.getDefaultValueC());
         spinner.setTag(q.getLabelC());
-
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(AddPlotMonitoringActivity.this, android.R.layout.simple_spinner_item, items) {
             @NonNull
             @Override
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-
                 if (position == getCount()) {
                     TextView itemView = (view.findViewById(android.R.id.text1));
                     itemView.setText("");
@@ -476,16 +488,12 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                     try {
-
                         if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
                             MONITORING_ANSWERS_JSON.remove(q.getLabelC());
                             MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-
                         } else
                             MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-
                         setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -495,7 +503,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             }
         });
         refresh(spinner, ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON), items);
-
         view = spinner;
         return view;
     }
@@ -516,9 +523,8 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         }
              if (year >= oldYear)
                 getAppDataManager().setStringValue(PLOT.getFarmerCode(), String.valueOf(year));
-        //Todo go to plot activity, reload viewpager
-        PlotMonitoringActivity.newMonitoringAdded = IS_NEW_MONITORING;
-
+             //Todo go to plot activity, reload viewpager
+             PlotMonitoringActivity.newMonitoringAdded = IS_NEW_MONITORING;
         getAppDataManager().setBooleanValue("refreshViewPager", true);
         finish();
     }
@@ -541,7 +547,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
     public void setUpPropertyChangeListeners(Question question, String value) {
         List<SkipLogic> skipLogics = getAppDataManager().getDatabaseManager().skipLogicsDao().getMaybeSkipLogicByQuestionId(question.getId()).blockingGet();
         if (skipLogics != null && skipLogics.size() > 0) {
-
             for (SkipLogic sl : skipLogics) {
                 String[] values = sl.getFormula().replace("\"", "").split(" ");
                 sl.setComparingQuestion(values[0]);
@@ -569,11 +574,9 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                             }
                         } else
                             for(int i = 0; i < ALL_VIEWS_LIST.size(); i++){
-
                                 if(ALL_VIEWS_LIST.get(i).getTag().equals(sl.getComparingQuestion())) {
                                     ALL_VIEWS_LIST.get(i).setVisibility(View.VISIBLE);
                                     ALL_VIEWS_LIST.get(i).setEnabled(true);
-
                                     break;
                                 }
                         }
@@ -582,7 +585,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             }
         }
     }
-
 
     @OnClick(R.id.saveButton)
     void saveData(){

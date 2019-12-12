@@ -28,38 +28,21 @@ public class TableViewListener implements ITableViewListener {
     public void onCellClicked(@NonNull RecyclerView.ViewHolder cellView, int columnPosition, int
             rowPosition) {
         // Do what you want.
-
-
-        Log.i(TAG, "CELL CLICKED");
         View view = cellView.itemView;
 
         View childView = view.findViewById(R.id.cell_data);
 
         if(childView instanceof MaterialEditText){
-            Log.i(TAG, "EDIT TEXT");
-
-
             childView.requestFocus();
             InputMethodManager imm = (InputMethodManager) childView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(childView, InputMethodManager.SHOW_IMPLICIT);
-
-
-
         }else if(childView instanceof CheckBox){
-            Log.i(TAG, "CHECK BOX");
-
             CheckBox c = (CheckBox) childView;
-
             c.setChecked(!c.isChecked());
         }else if(childView instanceof Spinner){
-            Log.i(TAG, "SPINNER");
-
             Spinner spinner = (Spinner) childView;
             spinner.performClick();
-
         }
-
-
     }
 
     /**
@@ -72,9 +55,6 @@ public class TableViewListener implements ITableViewListener {
     @Override
     public void onCellLongPressed(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
         // Do What you want
-
-        Log.i(TAG, "CELL LONG CLICKED");
-
     }
 
     /**

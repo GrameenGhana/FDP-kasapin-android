@@ -22,49 +22,39 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 @Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
 public class Plot {
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     int id;
     @SerializedName("external_id_c")
-    String externalId;
-    String distanceBetweenCocoaTrees;
-
-    String farmerName;
+    private String externalId;
+    private String distanceBetweenCocoaTrees;
+    private String farmerName;
     @SerializedName("farmer_code")
-    String farmerCode;
-    String numberOfShadeTrees = null;
+    private String farmerCode;
+    private String numberOfShadeTrees = null;
     @SerializedName("age_c")
-    String plotAge = "0";
+    private String plotAge = "0";
     @SerializedName("area_c")
-    String area = null;
-
+    private String area = null;
     @SerializedName("plot_gps_points")
-    String plotPoints;
+    private String plotPoints;
     @SerializedName("name_c")
-    String name;
+    private String name;
     @SerializedName("ph_c")
-    String ph;
-
-    String lastVisitDate;
+    private String ph;
+    private String lastVisitDate;
     @SerializedName("estimated_production_c")
-    String estimatedProductionSize = null;
-
+    private String estimatedProductionSize = null;
     @SerializedName("data")
-    String answersData;
-
+    private String answersData;
     @SerializedName("recommendation_id")
-    int recommendationId;
-    int gapsId = 1;
-
+    private int recommendationId;
+    private int gapsId = 1;
     @SerializedName("start_year")
-    int startYear = 1;
-
+    private int startYear = 1;
     @Ignore
     @SerializedName("monitoring_list")
-    List<Monitoring> monitoringList;
+    private List<Monitoring> monitoringList;
 
     public Plot() {}
-
-
 
     @Ignore
     public List<PlotGpsPoint> getGpsPoints(){
@@ -111,7 +101,6 @@ public class Plot {
         this.distanceBetweenCocoaTrees = distanceBetweenCocoaTrees;
     }
 
-
     public String getNumberOfShadeTrees() {
         return numberOfShadeTrees;
     }
@@ -136,12 +125,11 @@ public class Plot {
         this.plotPoints = plotPoints;
     }
 
-    @NonNull
-    public int getId() {
+     public int getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -185,7 +173,6 @@ public class Plot {
         this.answersData = answersData;
     }
 
-
     public int getGapsId() {
         return gapsId;
     }
@@ -199,7 +186,8 @@ public class Plot {
     }
 
     public void setRecommendationId(int recommendation_id) {
-        this.recommendationId = recommendation_id;}
+        this.recommendationId = recommendation_id;
+    }
 
     @Ignore
     public JSONObject getAOJsonData() throws JSONException {
