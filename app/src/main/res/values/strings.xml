@@ -277,7 +277,9 @@
     <string name="title_area_calc">GPS Area Calculation</string>
     <string name="no_points">No Points added yet</string>
     <string name="add_3_more_points">To calculate area, please add 3 or more points.</string>
-    <string name="delete">Delete photo</string>
+    <string name="delete">Delete</string>
+    <string name="delete_photo">Delete photo</string>
+
     <string name="delete_photo_rationale">Are you sure you want to delete photo?</string>
     <string name="click_photo_to_delete">You can click on photo to remove/delete</string>
     <string name="no_image_taken">No photo was selected.</string>
@@ -449,5 +451,7 @@
     <string name="select_url_rational">Please select a valid server url.</string>
     <string name="add_a_new_url">Add a new url</string>
     <string name="default_url_set_message">Default url has been set.</string>
+    <string name="http">http://</string>
+    <string name="please_specify_the_name_and_the_url">Please specify the name and the url</string>
 
 </resources>

@@ -218,9 +218,7 @@ android {
         variant.outputs.all { output ->
             def formattedDate = new Date().format('ddMMM')
             def newApkName = "FDP-kasapin" + variant.versionName + "@" + formattedDate + ".apk"
-
             outputFileName = new File(variant.name, newApkName)
-
         }
     }
 }

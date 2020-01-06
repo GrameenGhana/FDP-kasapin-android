@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.ui.serverUrl;
 
-
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.DataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
@@ -30,17 +29,10 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 public class AddEditServerUrlPresenter extends BasePresenter<AddEditServerUrlContract.View> implements AddEditServerUrlContract.Presenter{
 
-    private AppDataManager mAppDataManager;
-
-
     @Inject
-    public AddEditServerUrlPresenter(AppDataManager appDataManager) {
+     AddEditServerUrlPresenter(AppDataManager appDataManager) {
         super(appDataManager);
-        this.mAppDataManager = appDataManager;
-
-
     }
-
 
     @Override
     public void fetchData() {
@@ -52,14 +44,11 @@ public class AddEditServerUrlPresenter extends BasePresenter<AddEditServerUrlCon
                     public void onSuccess(List<ServerUrl> serverUrls) {
                         getView().showServerList(serverUrls);
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         getView().showMessage(e.getMessage());
                     }
                 });
-
-
     }
 
     @Override
@@ -69,9 +58,6 @@ public class AddEditServerUrlPresenter extends BasePresenter<AddEditServerUrlCon
 
     @Override
     public void saveUrl(ServerUrl serverUrl) {
-
      getAppDataManager().getDatabaseManager().serverUrlsDao().insertOne(serverUrl);
-
-
     }
 }

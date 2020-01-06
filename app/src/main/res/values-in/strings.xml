@@ -270,7 +270,8 @@
     <string name="title_area_calc">Perhitungan Area GPS</string>
     <string name="no_points">Belum ada Poin yang ditambahkan</string>
     <string name="add_3_more_points">Untuk menghitung luas, tambahkan 3 poin atau lebih.</string>
-    <string name="delete">Menghapus foto</string>
+    <string name="delete">Menghapus</string>
+    <string name="delete_photo">Menghapus foto</string>
     <string name="delete_photo_rationale">Anda yakin ingin menghapus foto?</string>
     <string name="click_photo_to_delete">Anda dapat mengklik pada foto untuk menghapus menghapus</string>
     <string name="no_image_taken">Tidak ada foto yang dipilih.</string>
@@ -416,4 +417,5 @@
     <string name="select_url_rational">Please select a valid server url.</string>
     <string name="add_a_new_url">Add a new url</string>
     <string name="default_url_set_message">Default url has been set.</string>
+    <string name="please_specify_the_name_and_the_url">Please specify the name and the url</string>
 </resources>
