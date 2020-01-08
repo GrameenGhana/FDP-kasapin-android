@@ -696,24 +696,24 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
 
                     plotsGPSData = new JSONObject();
-                    plotsGPSData.put("answer", point.getLatitude_c());
+                    plotsGPSData.put("answer", point.getLatitude());
                     plotsGPSData.put("field_name", AppConstants.PLOT_GPS_POINT_LAT_FIELD);
                     pointJsonArray.put(plotsGPSData);
 
                     plotsGPSData = new JSONObject();
-                    plotsGPSData.put("answer", point.getLongitude_c());
+                    plotsGPSData.put("answer", point.getLongitude());
                     plotsGPSData.put("field_name", AppConstants.PLOT_GPS_POINT_LNG_FIELD);
                     pointJsonArray.put(plotsGPSData);
 
 
                     plotsGPSData = new JSONObject();
-                    plotsGPSData.put("answer", point.getAltitude_c());
+                    plotsGPSData.put("answer", point.getAltitude());
                     plotsGPSData.put("field_name", AppConstants.PLOT_GPS_POINT_ALTITUDE_FIELD);
                     pointJsonArray.put(plotsGPSData);
 
 
                     plotsGPSData = new JSONObject();
-                    plotsGPSData.put("answer", point.getPrecision_c());
+                    plotsGPSData.put("answer", point.getPrecision());
                     plotsGPSData.put("field_name", AppConstants.PLOT_GPS_POINT_PRECISION_FIELD);
                     pointJsonArray.put(plotsGPSData);
 

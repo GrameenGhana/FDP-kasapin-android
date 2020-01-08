@@ -118,10 +118,10 @@ android {
         implementation "com.android.support:preference-v14:$rootProject.supportLibraryVersion"
         implementation "com.android.support:percent:$rootProject.ext.supportLibraryVersion"
 
-        implementation "com.google.android.gms:play-services-maps:$rootProject.ext.mapsVersion"
-        implementation "com.google.android.gms:play-services-location:$rootProject.ext.mapsVersion"
+        implementation "com.google.android.gms:play-services-maps:$rootProject.ext.playServicesVersion"
+        implementation "com.google.android.gms:play-services-location:$rootProject.ext.playServicesVersion"
 
-        implementation 'com.google.maps.android:android-maps-utils:0.5+'
+        implementation 'com.google.maps.android:android-maps-utils:0.5'
 
         implementation "com.android.support:gridlayout-v7:$rootProject.ext.supportLibraryVersion"
 

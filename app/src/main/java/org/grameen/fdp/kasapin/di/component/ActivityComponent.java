@@ -16,7 +16,7 @@ import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.ui.main.FarmerListFragment;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
-import org.grameen.fdp.kasapin.ui.map.MapActivity;
+import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
 import org.grameen.fdp.kasapin.ui.monitoringYearSelection.MonitoringYearSelectionActivity;
 import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;

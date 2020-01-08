@@ -1,4 +1,4 @@
-package org.grameen.fdp.kasapin.ui.map;
+package org.grameen.fdp.kasapin.ui.gpsPicker;
 
 /**
  * Created by AangJnr on 9/21/16.

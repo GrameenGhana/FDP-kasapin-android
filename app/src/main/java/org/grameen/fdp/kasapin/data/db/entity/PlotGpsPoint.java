@@ -1,48 +1,42 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PlotGpsPoint {
+    @SerializedName("latitude")
+    private double latitude;
+    @SerializedName("longitude")
+    private double longitude;
+    @SerializedName("altitude")
+    private double altitude;
+    @SerializedName("precision")
+    private double precision;
 
-    double latitude_c;
-    double longitude_c;
-    double altitude_c;
-    double precision_c;
-
-
-
-    public PlotGpsPoint(){}
-
-
-    public void setAltitude_c(double altitude_c) {
-        this.altitude_c = altitude_c;
+    public PlotGpsPoint(){
     }
 
-
-    public void setPrecision_c(double precision_c) {
-        this.precision_c = precision_c;
+    public void setAltitude(double altitude) {
+        this.altitude = altitude;
     }
-
-    public double getAltitude_c() {
-        return altitude_c;
+    public void setPrecision(double precision) {
+        this.precision = precision;
     }
-
-
-    public void setLatitude_c(double latitude_c) {
-        this.latitude_c = latitude_c;
+    public double getAltitude() {
+        return altitude;
     }
-
-    public void setLongitude_c(double longitude_c) {
-        this.longitude_c = longitude_c;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
-
-    public double getLatitude_c() {
-        return latitude_c;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
-
-    public double getLongitude_c() {
-        return longitude_c;
+    public double getLatitude() {
+        return latitude;
     }
-
-    public double getPrecision_c() {
-        return precision_c;
+    public double getLongitude() {
+        return longitude;
+    }
+    public double getPrecision() {
+        return precision;
     }
 }

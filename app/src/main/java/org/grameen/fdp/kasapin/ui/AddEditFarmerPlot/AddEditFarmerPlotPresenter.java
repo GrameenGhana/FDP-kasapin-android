@@ -65,7 +65,7 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
 
                     getView().hideLoading();
 
-                    if (flag != null && flag.equalsIgnoreCase("map"))
+                    if (flag != null && flag.equalsIgnoreCase("gpsPicker"))
                         getView().moveToMapActivity(plot);
                     else
                         getView().showPlotDetailsActivity(plot);

@@ -1,4 +1,4 @@
-package org.grameen.fdp.kasapin.ui.map;
+package org.grameen.fdp.kasapin.ui.gpsPicker;
 
 
 import org.grameen.fdp.kasapin.data.AppDataManager;

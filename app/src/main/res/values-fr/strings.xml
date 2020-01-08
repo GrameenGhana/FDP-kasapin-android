@@ -271,7 +271,7 @@
     <string name="calc_area">cliquez pour calculer la zone de tracé</string>
     <string name="title_area_calc">Calcul de la surface GPS</string>
     <string name="no_points">Aucun point ajouté pour le moment</string>
-    <string name="add_3_more_points">Pour calculer la superficie, veuillez ajouter 3 points ou plus.</string>
+    <string name="add_6_more_points">Pour calculer la superficie, veuillez ajouter 6 points ou plus.</string>
     <string name="delete">Supprimer</string>
     <string name="delete_photo">Supprimer la photo</string>
 
@@ -424,4 +424,5 @@
     <string name="add_a_new_url">Add a new url</string>
     <string name="default_url_set_message">Default url has been set.</string>
     <string name="please_specify_the_name_and_the_url">Please specify the name and the url</string>
+    <string name="add_gps_point">add gps point</string>
 </resources>

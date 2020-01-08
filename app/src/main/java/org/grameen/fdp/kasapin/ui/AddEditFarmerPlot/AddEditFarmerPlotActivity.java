@@ -4,7 +4,7 @@ package org.grameen.fdp.kasapin.ui.AddEditFarmerPlot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.core.content.ContextCompat;
+
 import androidx.cardview.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -24,7 +24,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
-import org.grameen.fdp.kasapin.ui.map.MapActivity;
+import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -50,7 +50,6 @@ import io.reactivex.schedulers.Schedulers;
  * A login screen that offers login via email/password.
  */
 public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFarmerPlotContract.View {
-
     @Inject
     AddEditFarmerPlotPresenter mPresenter;
     @BindView(R.id.plotNameEdittext)
@@ -68,12 +67,9 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     @BindView(R.id.saveButton)
     Button saveButton;
     boolean isEditMode = false;
-
-
     Plot PLOT;
     String FARMER_CODE;
     RealFarmer FARMER;
-
     DynamicPlotFormFragment dynamicPlotFormFragment;
     @BindView(R.id.plot_name_text)
     TextView plotNameText;
@@ -83,7 +79,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     TextView plotEstProdText;
     @BindView(R.id.plot_ph_text)
     TextView plotPhText;
-
     Question soilPhQuestion;
     Question estProductionQuestion;
     Question plotAreaQuestion;
@@ -93,32 +88,22 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_add_a_plot);
         setUnBinder(ButterKnife.bind(this));
-
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
         mAppDataManager = mPresenter.getAppDataManager();
-
 
         FARMER = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
 
         if (FARMER != null)
             FARMER_CODE = FARMER.getCode();
-
-
-
          plotNameQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_name_");
          soilPhQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_ph_");
          estProductionQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_estimate_production_");
          plotAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_");
 
-
-
-
         setupViews();
-
     }
 
 
@@ -245,39 +230,27 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             //New Plot
             setToolbar(getStringResources(R.string.add_new_plot));
         }
-
-
-
         mPresenter.getPlotQuestions();
         saveButton.setOnClickListener(v -> savePlotData(null));
-
     }
 
-
     void savePlotData(String flag) {
-
         showLoading();
-
         JSONObject jsonObject = dynamicPlotFormFragment.getAnswersData();
-
         try {
             if (jsonObject.has(soilPhQuestion.getLabelC()))
                 jsonObject.remove(soilPhQuestion.getLabelC());
-
             jsonObject.put(soilPhQuestion.getLabelC(), phEdittext.getText().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         try {
             if (jsonObject.has(estProductionQuestion.getLabelC()))
                 jsonObject.remove(estProductionQuestion.getLabelC());
-
              jsonObject.put(estProductionQuestion.getLabelC(), estimatedProductionEdittext.getText().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         try {
             if (jsonObject.has(plotAreaQuestion.getLabelC()))
                 jsonObject.remove(plotAreaQuestion.getLabelC());
@@ -286,44 +259,27 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             e.printStackTrace();
         }
 
-
-
         AppLogger.e(TAG, jsonObject);
-
         LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
         logicFormulaParser.setJsonObject(jsonObject);
-
 
         //Compute AOR and AI question values here, put values into the json
         for (FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS) {
             AppLogger.e(TAG, "---------------------------------------------------------------------------");
 
             AppLogger.e(TAG, "FORM NAME ===>>> " + formAndQuestions.getForm().getFormNameC() + " *****");
-
-
-
             if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADOPTION_OBSERVATION_RESULTS)
                     || formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADDITIONAL_INTERVENTION)) {
-
-
                 for (Question question : formAndQuestions.getQuestions()) {
                     if (question.getFormulaC() != null && !question.getFormulaC().equalsIgnoreCase("null")) {
-
-
                         try {
-
                            AppLogger.e(TAG, "---------------------------------------------------------------------------");
                             AppLogger.e(TAG, "Question name is ***** " + question.getLabelC() + " *****");
-
                             String value = logicFormulaParser.evaluate(question.getFormulaC());
-
                             if (jsonObject.has(question.getLabelC()))
                                 jsonObject.remove(question.getLabelC());
-
                             jsonObject.put(question.getLabelC(), value);
-
                             //AppLogger.e(TAG, "Added " + value + " to json for " + question.getLabelC());
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -332,11 +288,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 //AOR_AI_QUESTIONS.addAll(formAndQuestions.getQuestions());
             }
 
-
-
-
             /*else if(formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.PLOT_INFORMATION)){
-
                 for(Question question : formAndQuestions.getQuestions()){
                     if(question.getTypeC().equalsIgnoreCase(AppConstants.FORMULA_TYPE_COMPLEX_FORMULA) && !question.getFormulaC().equalsIgnoreCase("null")){
 
@@ -359,12 +311,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 }
             }*/
         }
-
-        AppLogger.e(TAG, "FINAL JSON DATA IS >>>>>> " + jsonObject);
-
-
-
-
         //Todo check if farm size corresponds
         //Todo check if checkIfFarmProductionCorresponds
         //Todo checkIfPlotWasRenovatedRecently
@@ -374,35 +320,22 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         Question PLOT_RENOVATION_MADE_YEARS = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_");
         Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
         Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
-
-
-
         if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE_YEARS != null) {
-
             if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
                 try {
                     if (ComputationUtils.getValue(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC(), jsonObject).equalsIgnoreCase("yes")) {
-
-                        AppLogger.e(TAG, "PLOT RENOVATED CORRECTLY? >>>> YES");
                         year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE_YEARS.getLabelC()));
-
-                        AppLogger.e(TAG, "START YEAR >>>> " + year);
-
                         String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
 
                         if (recommendationName.equalsIgnoreCase("replanting"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                     .getByRecommendationName("Replant").blockingGet();
-
-
                         else if (recommendationName.equalsIgnoreCase("grafting"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                     .getByRecommendationName("Grafting").blockingGet();
 
                         if (GAPS_RECOMENDATION_FOR_START_YEAR != null) {
-
                             AppLogger.e(TAG, "RECOMMENDATION MADE  >>>> " + GAPS_RECOMENDATION_FOR_START_YEAR.getLabel());
-
                             PLOT.setRecommendationId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
                             PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
                         }
@@ -414,15 +347,11 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             }
         }
 
-
-
         try {
             String plotInterventionStartYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_intervention_start_year_").blockingGet("null");
             if (jsonObject.has(plotInterventionStartYearLabel))
                 jsonObject.remove(plotInterventionStartYearLabel);
             jsonObject.put(plotInterventionStartYearLabel, year);
-
-
             String startYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet("null");
             if (jsonObject.has(startYearLabel))
                 jsonObject.remove(startYearLabel);
@@ -430,8 +359,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         //PLOT.setRecommendationId(-1);
         PLOT.setStartYear(year);
         PLOT.setAnswersData(jsonObject.toString());
@@ -447,10 +374,9 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
     @OnClick(R.id.plot_area_calculation)
     void onPlotAreaCalculationClicked() {
-
         //Todo go to Map Activity
         if (!TextUtils.isEmpty(plotNameEdittext.getText().toString()))
-            savePlotData("MAP");
+            savePlotData("gpsPicker");
         else
             showMessage(R.string.provide_plot_name);
     }

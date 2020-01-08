@@ -38,7 +38,7 @@ public class MyFormController {
      * Constructs a new FormController.
      *
      * @param context   the Activity's context
-     * @param formModel the backing model that stores the fields values. A map-based implementation is provided by {@link MapFormModel}.
+     * @param formModel the backing model that stores the fields values. A gpsPicker-based implementation is provided by {@link MapFormModel}.
      */
     public MyFormController(Context context, FormModel formModel) {
         this.model = formModel;
