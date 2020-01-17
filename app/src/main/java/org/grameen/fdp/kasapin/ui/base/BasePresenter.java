@@ -133,7 +133,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
 
     public void setFarmerAsUnsynced(RealFarmer realFarmer) {
-
         realFarmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
         getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
     }

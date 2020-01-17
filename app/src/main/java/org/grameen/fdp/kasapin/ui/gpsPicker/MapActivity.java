@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -26,11 +25,8 @@ import android.widget.Button;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -56,7 +52,7 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     ProgressDialog progressDialog;
     String TAG = getClass().getSimpleName();
     @BindView(R.id.addPoint)
-    Button addPoint;
+    Button addPointButton;
     @BindView(R.id.calculate)
     Button calculateArea;
     Plot plot;
@@ -70,10 +66,12 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     int MIN_NO_OF_POINTS = 6;
     double accuracy;
     double altitude;
-    boolean hasGpsDataBeenSaved = false;
+    boolean hasGpsDataBeenSaved = true;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
     private GoogleApiClient googleApiClient;
+    String action = "";
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,7 +102,7 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
 
         mAdapter.setOnItemClickListener((view, position) -> {
             mAdapter.removePoint(position);
-            calculateArea.setEnabled((latLngs.size() >= MIN_NO_OF_POINTS ));
+
             if (latLngs.size() > 0) {
                 if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
                     findViewById(R.id.placeHolder).setVisibility(View.GONE);
@@ -112,41 +110,34 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
                 if (findViewById(R.id.placeHolder).getVisibility() == View.GONE)
                     findViewById(R.id.placeHolder).setVisibility(View.VISIBLE);
             }
+            hasGpsDataBeenSaved = false;
+
         });
 
-        calculateArea.setEnabled((latLngs.size() >= MIN_NO_OF_POINTS));
         calculateArea.setOnClickListener(view -> {
-            if (latLngs != null && latLngs.size() >= MIN_NO_OF_POINTS ) {
-                if (!hasCalculated) {
-                    computeAreaInSquareMeters();
-                } else {
-                    if (progressDialog.isShowing())
-                        progressDialog.dismiss();
-
-                    Double inHectares = convertToHectares(AREA_OF_PLOT);
-                    Double inAcres = convertToAcres(AREA_OF_PLOT);
-                    String message = "Area in Hectares is " + new DecimalFormat("0.00").format(inHectares) +
-                            "\nArea in Acres is " + new DecimalFormat("0.00").format(inAcres) +
-                            "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
-
-                    showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> {
-                        dialogInterface.dismiss();
-                        saveGpsPointsData(false);
-                        }, getStringResources(R.string.save), (dialog, which) -> dialog.dismiss(), getStringResources(R.string.cancel), 0);
-                    hasCalculated = true;
-                }
-            } else
-                showMessage("Please add "+ MIN_NO_OF_POINTS + " or more points to calculate the area of " + plot.getName());
+            action = "calculate area of ";
+            if(checkNoGPSPointsAdded())
+            computeAreaInSquareMeters();
         });
-        addPoint.setOnClickListener(v ->getLocationUpdates());
 
+        addPointButton.setOnClickListener(v ->getLocationUpdates());
+        findViewById(R.id.save).setOnClickListener(v-> {
+            action = "save data of ";
+        if(checkNoGPSPointsAdded())
+                saveGpsPointsData(false);});
         onBackClicked();
     }
 
-    void computeAreaInSquareMeters() {
-        if (progressDialog.isShowing())
-            progressDialog.dismiss();
+    boolean checkNoGPSPointsAdded(){
+        if(latLngs.size() < MIN_NO_OF_POINTS) {
+            showMessage("Please add " + MIN_NO_OF_POINTS + " or more points to " + action  + plot.getName());
+            return false;
+        }
+        return true;
+    }
 
+    void computeAreaInSquareMeters() {
+        hideProgress();
         AREA_OF_PLOT = SphericalUtil.computeArea(latLngs);
         AppLogger.d(TAG, "computeAreaInSquareMeters " + AREA_OF_PLOT);
 
@@ -156,12 +147,9 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
                 "\nArea in Acres is " + new DecimalFormat("0.00").format(inAcres) +
                 "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
 
-        showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-                    //Todo save latLngs
-                    saveGpsPointsData(false);
-                },
-                getStringResources(R.string.save), (dialog, which) -> dialog.dismiss(), getStringResources(R.string.cancel), 0);
+        showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) ->
+            dialogInterface.dismiss(),
+                getStringResources(R.string.ok), null, null, 0);
         hasCalculated = true;
     }
 
@@ -189,6 +177,8 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     }
 
     void startLocationListener(){
+        CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
+
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL);
@@ -216,109 +206,61 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         @Override
         public void onLocationChanged(Location location) {
 
+            hideProgress();
+
             altitude = location.getAltitude();
             accuracy = CommonUtils.round(location.getAccuracy(), 2);
             AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
             String msg =
-                    "Do you want to save this? \n\n" +
+                    "Do you want to add this point? \n\n" +
                             "Latitude    :   " +  location.getLatitude() + "\n" +
                             "Longitude  :   " + location.getLongitude() + "\n" +
                             "Accuracy   :   " + accuracy + " meters\n" +
                             "Altitude    :   " + altitude + " high";
 
-            if (progressDialog.isShowing())
-                progressDialog.dismiss();
             showDialog(true, "Location update!", msg, (dialog, which) -> {
                 dialog.dismiss();
                 LatLng newLL = new LatLng(location.getLatitude(), location.getLongitude());
                 mAdapter.addPoint(newLL);
-                addPoint.setEnabled(true);
-                progressDialog.dismiss();
+
                 hasCalculated = false;
                 if (latLngs.size() > 0) {
                     if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
                         findViewById(R.id.placeHolder).setVisibility(View.GONE);
                 }
-                if (latLngs.size() >= MIN_NO_OF_POINTS ) {
-                    calculateArea.setEnabled(true);
-                } else {
-                    calculateArea.setEnabled(false);
-                }
                 hasGpsDataBeenSaved = false;
-            }, "YES, CONTINUE", (dialog, which) -> dialog.dismiss(), "NO, CANCEL", 0);
+            }, "ADD POINT", (dialog, which) -> dialog.dismiss(), "CANCEL", 0);
 
             removeLocationListener();
         }
     };
 
 
-    LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            if (locationResult == null) {
-                return;
+    void saveGpsPointsData(boolean shouldExit){
+            plotGpsPoints.clear();
+            //Todo save latLngs
+            for (LatLng latLng : latLngs) {
+                PlotGpsPoint points = new PlotGpsPoint();
+                points.setLatitude(latLng.latitude);
+                points.setLongitude(latLng.longitude);
+                points.setPrecision(accuracy);
+                points.setAltitude(altitude);
+                plotGpsPoints.add(points);
             }
 
-            if(locationResult.getLocations().size() > 0) {
-                Location location = locationResult.getLocations().get(0);
-
-                altitude = location.getAltitude();
-                accuracy = CommonUtils.round(location.getAccuracy(), 2);
-                AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
-                String msg =
-                        "Do you want to save this? \n\n" +
-                                "Latitude    :   " +  location.getLatitude() + "\n" +
-                                "Longitude  :   " + location.getLongitude() + "\n" +
-                                "Accuracy   :   " + accuracy + " meters\n" +
-                                "Altitude    :   " + altitude + " high";
-
-                if (progressDialog.isShowing())
-                    progressDialog.dismiss();
-                showDialog(true, "Location update!", msg, (dialog, which) -> {
-                    dialog.dismiss();
-                    LatLng newLL = new LatLng(location.getLatitude(), location.getLongitude());
-                    mAdapter.addPoint(newLL);
-                    addPoint.setEnabled(true);
-                    progressDialog.dismiss();
-                    hasCalculated = false;
-                    if (latLngs.size() > 0) {
-                        if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
-                            findViewById(R.id.placeHolder).setVisibility(View.GONE);
-                    }
-                    if (latLngs.size() >= MIN_NO_OF_POINTS ) {
-                        calculateArea.setEnabled(true);
-                    } else {
-                        calculateArea.setEnabled(false);
-                    }
-                    hasGpsDataBeenSaved = false;
-                }, "YES, CONTINUE", (dialog, which) -> dialog.dismiss(), "NO, CANCEL", 0);
-
-                removeLocationListener();
-            }else
-                showDialog(true, "No location obtained", "Location could not be obtained. Please check and ensure that the GPS is enabled then try again.",
-                        (d, v)->d.dismiss(), getString(R.string.ok), null, null, 0);
-        }
-    };
-
-    void saveGpsPointsData(boolean shouldExit){
-        plotGpsPoints.clear();
-        //Todo save latLngs
-        for (LatLng latLng : latLngs) {
-            PlotGpsPoint points = new PlotGpsPoint();
-            points.setLatitude(latLng.latitude);
-            points.setLongitude(latLng.longitude);
-            points.setPrecision(accuracy);
-            points.setAltitude(altitude);
-            plotGpsPoints.add(points);
-        }
-
-        plot.setPlotPoints(getGson().toJson(plotGpsPoints));
-        saveData(shouldExit);
+            plot.setPlotPoints(getGson().toJson(plotGpsPoints));
+            if (getAppDataManager().getDatabaseManager().plotsDao().updateOne(plot) > 0) {
+                hasGpsDataBeenSaved = true;
+                showMessage(R.string.new_data_updated);
+                if (shouldExit)
+                    moveToPlotDetailsActivity();
+            } else
+                showMessage(R.string.data_not_saved);
     }
 
     @Override
     protected void onPause() {
-        AppLogger.e(TAG, "********************* ON PAUSE");
+        if(!hasGpsDataBeenSaved)
         saveGpsPointsData(false);
         super.onPause();
     }
@@ -327,8 +269,9 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     public void onBackPressed() {
         if(!hasGpsDataBeenSaved)
         showDialog(true, "Save GPS data", "Do you want to save the GPS points?", (d, w)->{
-            saveGpsPointsData(true);
-        }, "YES", (d, w)-> moveToPlotDetailsActivity(), "NO", 0);
+                if(checkNoGPSPointsAdded())
+                    saveGpsPointsData(true);
+                }, "YES", (d, w)-> moveToPlotDetailsActivity(), "NO", 0);
         else
            moveToPlotDetailsActivity();
     }
@@ -340,23 +283,12 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         supportFinishAfterTransition();
     }
 
-    void saveData(boolean shouldExit) {
-        if(getAppDataManager().getDatabaseManager().plotsDao().updateOne(plot) > 0) {
-            hasGpsDataBeenSaved = true;
-            showMessage(R.string.new_data_updated);
-            if (shouldExit)
-                moveToPlotDetailsActivity();
-        } else
-            showMessage(R.string.data_not_saved);
-    }
-
     @Override
     public void openMainActivity() {}
 
     @Override
     protected void onStart() {
         super.onStart();
-        AppLogger.e(TAG, "ON START");
         //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -377,8 +309,6 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     @Override
     protected void onResume() {
         super.onResume();
-        AppLogger.e(TAG, "ON RESUME");
-
         if (!checkPlayServices()) {
             showDialog(false, "Missing Google Play Services","You need to install Google Play Services to use the App properly", (w1, v)->{
                 try {
@@ -415,6 +345,10 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         AppLogger.e(TAG, "GOOGLE API CLIENT FAILED");
         AppLogger.e(TAG, connectionResult.getErrorMessage());
 
+    }
 
+    private void hideProgress(){
+        if (progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 }

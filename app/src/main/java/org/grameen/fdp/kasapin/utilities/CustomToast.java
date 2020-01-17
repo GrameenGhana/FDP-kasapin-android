@@ -16,35 +16,22 @@ import org.grameen.fdp.kasapin.R;
  * Personal mail aang.jnr@gmail.com
  */
 
-
 public class CustomToast extends Toast {
-
     static Toast toast;
-    Context context;
-
     public CustomToast(Context context) {
         super(context);
     }
-
 
     public static Toast makeToast(Context c, String message, int duration) {
 
         LayoutInflater inflater = LayoutInflater.from(c);
         View layout = inflater.inflate(R.layout.custom_toast, null, false);
-        // set a message
-        TextView text = (TextView) layout.findViewById(R.id.toast_text);
+        TextView text = layout.findViewById(R.id.toast_text);
         text.setText(message);
-        // Toast...
         toast = new Toast(c);
-        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0,
-                (int) (ScreenUtils.getScreenHeight(c) / 3));
-
+        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0,(ScreenUtils.getScreenHeight(c) / 3));
         toast.setDuration(duration);
         toast.setView(layout);
-
         return toast;
-
     }
-
-
 }

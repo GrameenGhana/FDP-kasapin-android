@@ -245,23 +245,16 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     @Override
     public void setAreaUnits(String unit) {
 
-        landSize.setText(PLOT.getArea() + " " + unit);
+        landSize.setText(String.format("%s %s", PLOT.getArea(), unit));
     }
 
     @Override
     public void setProductionUnit(String unit) {
-        estimatedProductionSize.setText(PLOT.getEstimatedProductionSize() + " " + unit);
+        estimatedProductionSize.setText(String.format("%s %s", PLOT.getEstimatedProductionSize(), unit));
     }
 
     void checkRecommendation() {
         AppLogger.e(TAG, "#########   RECOMMENDATION ID IS " + PLOT.getRecommendationId());
-
-      /*  if (PLOT.getAnswersData() != null && PLOT.getAnswersData().contains("--")) {
-            recommendedIntervention.setText(R.string.fill_out_ao_data);
-            recommendedIntervention.setTextColor(ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red));
-            return;
-        }*/
-
         if (!getAppDataManager().getBooleanValue("reloadRecommendation")) {
 
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationId(PLOT.getRecommendationId())
@@ -351,7 +344,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     @Override
     public void showRecommendation() {
-
         recommendationProgress.setVisibility(View.GONE);
         recommendedIntervention.setText(recNames);
 
@@ -372,14 +364,10 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
     @Override
-    public void openNextActivity() {
-
-
-    }
+    public void openNextActivity() {}
 
     @Override
     public void openLoginActivityOnTokenExpire() {
-
     }
     @Override
     public void onBackPressed() {

@@ -41,15 +41,13 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
     private static final int TEXT_SIZE = 11;
     private static final int TITLE_TEXT_SIZE = 14;
-    static MaterialSpinner.OnItemSelectedListener itemSelectedListener;
-    static View.OnClickListener mOnClickListener;
-
-    Context context;
-    AppDatabase mAppDatabase;
-    // String[] YEARS = {"YEAR 1", "YEAR 2", "YEAR 3", "YEAR 4", "YEAR 5"};
+    private static MaterialSpinner.OnItemSelectedListener itemSelectedListener;
+    private static View.OnClickListener mOnClickListener;
+    private Context context;
+    private AppDatabase mAppDatabase;
 
 
-    public MyTableViewAdapter(final Context context, final List<Data> data, final TableView<Data> tableView, AppDatabase appDatabase) {
+     MyTableViewAdapter(final Context context, final List<Data> data, final TableView<Data> tableView, AppDatabase appDatabase) {
         super(context, data, tableView);
         this.context = context;
         this.mAppDatabase = appDatabase;
@@ -57,30 +55,18 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
     }
 
-    public void setItemSelectedListener(final MaterialSpinner.OnItemSelectedListener mItemSelectedListener) {
+     void setItemSelectedListener(final MaterialSpinner.OnItemSelectedListener mItemSelectedListener) {
         this.itemSelectedListener = mItemSelectedListener;
     }
 
-    public void setClickistener(final View.OnClickListener listener) {
+     void setClickListener(final View.OnClickListener listener) {
         this.mOnClickListener = listener;
     }
 
     @Override
     public View getDefaultCellView(int i, int i1, ViewGroup viewGroup) {
-
         final Data myTableData = getRowData(i);
-        View renderedView = new View(getContext());
-
-
-        if (i1 == 0) {
-            //Todo render thew labels in the table ie Column 0
-
-            renderedView = renderColumn0Values(myTableData);
-
-        } else renderedView = renderCalculatedValuesForYear(myTableData, i1 - 1);
-
-
-        return renderedView;
+        return (i1 == 0) ? renderColumn0Values(myTableData) : renderCalculatedValuesForYear(myTableData, i1 - 1);
     }
 
     @Override
@@ -90,12 +76,10 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
 
     private View renderCalculatedValuesForYear(final Data data, int year) {
-
         TextView textView = null;
         List<String> calculationsForTheYears = data.getYearsDataFormula();
 
         if (calculationsForTheYears != null) {
-
             textView = new TextView(getContext());
             textView.setPadding(20, 10, 20, 10);
             if (data.getTag().equals(TAG_RESULTS))
@@ -104,14 +88,10 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
             try {
                 Double value = Double.parseDouble(calculationsForTheYears.get(year));
-
                 NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
                 DecimalFormat formatter = (DecimalFormat) nf;
                 formatter.applyPattern("#,###,###.##");
-
                 textView.setText(formatter.format(value));
-
-
                 if (value < 0.0) {
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.cpb_red));
                 } else if (value > 0) {
@@ -120,10 +100,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                 }
             } catch (Exception e) {
                 AppLogger.i("MY TABLE ADAPTER", e.getMessage());
-
             }
-
-
         } else {
 
             if (year == 0) {
@@ -134,7 +111,6 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                 textView.setTextSize(TEXT_SIZE);
             }
         }
-
         return textView;
     }
 
@@ -173,10 +149,6 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     @SuppressLint("RestrictedApi") ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PrimaryButton);
 
                     final Button button = new Button(newContext);
-                    // button.setBackgroundResource(R.drawable.button_background_accent);
-
-
-
                     String name = "";
                     try {
                         Recommendation recommendation = mAppDatabase.recommendationsDao().get(Integer.parseInt(data.getLabel())).blockingGet();
@@ -186,15 +158,8 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                             name = getResources().getString(R.string.change_to) + " " + name;
                         }
                     } catch (Exception ignored) {
-
-
-
-
                         name = getResources().getString(R.string.change_to) + " " + data.getLabel().split("_")[1];
-
                     }
-
-
                     button.setText(name);
                     // button.setTextColor(ContextCompat.getColor(context, R.color.white));
                     button.setTag(data.getLabel());
@@ -204,38 +169,28 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
                         if (mOnClickListener != null)
                             mOnClickListener.onClick(button);
-
-
                     });
                     view = button;
-
-
                     break;
+
                 case TAG_VIEW:
                     if (ProfitAndLossActivity.START_YEAR_QUESTION != null) {
-
                         String[] values = data.getLabel().split("_");
-
                         final MaterialSpinner spinner = new MaterialSpinner(getContext());
                         spinner.setItems(ProfitAndLossActivity.START_YEAR_QUESTION.formatQuestionOptions());
                         spinner.setTag(values[0]);
                         spinner.setPadding(20, 10, 20, 10);
                         spinner.setTextSize(TEXT_SIZE);
                         spinner.setOnItemSelectedListener((view1, position, id, item) -> {
-
                             AppLogger.i("TABLE ADAPTER", "Spinner item selected with tag " + spinner.getTag());
-
                             if (itemSelectedListener != null)
                                 itemSelectedListener.onItemSelected(view1, position, id, item);
-
                         });
                         try {
                             spinner.setSelectedIndex(Integer.parseInt(values[1]));
-                        } catch (Exception ignored) {
-                            ignored.getMessage();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-
                         view = spinner;
                     }
 
@@ -255,15 +210,12 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                 }
             }
         } else {
-
             TextView textView = new TextView(getContext());
             textView.setText(data.getLabel());
             textView.setPadding(20, 10, 20, 10);
             textView.setTextSize(TEXT_SIZE);
             view = textView;
         }
-
-
         return view;
     }
 

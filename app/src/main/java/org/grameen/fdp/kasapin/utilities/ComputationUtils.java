@@ -42,17 +42,13 @@ public class ComputationUtils {
     public static String getValue(String label, JSONObject ANSWERS_JSON) {
         String defVal;
         try {
-
             if (ANSWERS_JSON.has(label)) {
                 defVal = ANSWERS_JSON.get(label).toString();
             } else
                 defVal = "--";
-
-
         } catch (JSONException ignored) {
             defVal = "--";
         }
-
         AppLogger.e("Computation Utils", "GETTING VALUE FOR " + label + " --> Value = " + defVal);
         return defVal;
     }
@@ -61,13 +57,10 @@ public class ComputationUtils {
     public static String getDataValue(Question q, JSONObject ANSWERS_JSON) {
         String defVal;
         try {
-
             if (ANSWERS_JSON.has(q.getLabelC())) {
                 defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
             } else
                 defVal = q.getDefaultValueC();
-
-
         } catch (JSONException ignored) {
             defVal = q.getDefaultValueC();
         }
@@ -75,7 +68,6 @@ public class ComputationUtils {
         AppLogger.e("Computation Utils", "GETTING VALUE FOR " + q.getLabelC() + " --> Value = " + defVal);
         return defVal;
     }
-
 
     public static boolean parseEquation(String equation, ScriptEngine _engine) {
         AppLogger.i(ComputationUtils.class.getSimpleName(), "Equation is " + equation);
@@ -114,30 +106,23 @@ public class ComputationUtils {
         System.out.println("---------------------------------------------------");
         System.out.println( "FORMULA  >>>>>  " + equation  + " ---> " + answer);
         System.out.println("---------------------------------------------------");
-
         return answer;
     }
 
     public String getValue(Question q, JSONObject ANSWERS_JSON) {
         String defVal;
         try {
-
             if (ANSWERS_JSON.has(q.getLabelC())) {
                 defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
-
                 if (defVal.isEmpty() ||  defVal.equalsIgnoreCase("null"))
                     defVal = q.getDefaultValueC();
-
                 if (getModel() != null)
                     getModel().setValue(q.getLabelC(), defVal);
             } else
                 defVal = q.getDefaultValueC();
-
-
         } catch (JSONException ignored) {
             defVal = q.getDefaultValueC();
         }
-
         AppLogger.i(getClass().getSimpleName(), "GETTING VALUE FOR " + q.getLabelC() + " --> Value = " + defVal);
         return defVal;
     }
@@ -146,7 +131,7 @@ public class ComputationUtils {
         return formController.getModel();
     }
 
-    public MyFormController getFormController() {
+    private MyFormController getFormController() {
         return formController;
     }
 
@@ -167,138 +152,56 @@ public class ComputationUtils {
         return true;
     }
 
-
-    public void setUpPropertyChangeListeners(String label, List<SkipLogic> skipLogics) {
-
-        if (skipLogics != null && skipLogics.size() > 0) {
-            getModel().addPropertyChangeListener(label, event -> {
-
-                AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + label + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue());
-
-                for (SkipLogic sl : skipLogics) {
-                    String[] values = sl.getFormula().replace("\"", "").split(" ");
-                    sl.setComparingQuestion(values[0]);
-                    sl.setLogicalOperator(values[1]);
-                    sl.setAnswerValue(values[2]);
-
-                    try {
-                        if (compareValues(sl, String.valueOf(event.getNewValue()))) {
-
-                            if (sl.shouldHide())
-                                getFormController().getElement(label).getView().setVisibility(View.GONE);
-
-                            else
-                                getFormController().getElement(label).getView().setVisibility(View.VISIBLE);
-
-                        } else {
-
-                            if (sl.shouldHide())
-                                getFormController().getElement(label).getView().setVisibility(View.VISIBLE);
-                            else
-                                getFormController().getElement(label).getView().setVisibility(View.GONE);
-                        }
-                    } catch (Exception ignored) {
-                        ignored.printStackTrace();
-                    }
-                }
-            });
-        }
-    }
-
     public void setUpPropertyChangeListeners2(String questiontoHide, List<SkipLogic> skipLogics) {
-
         if (skipLogics != null && skipLogics.size() > 0) {
-
             for (SkipLogic sl : skipLogics) {
-
                 String[] values = sl.getFormula().replace("\"", "").split(" ");
                 sl.setComparingQuestion(values[0]);
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
-
                 getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
-
                     AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue());
-
-
                     try {
-                        if (compareValues(sl, String.valueOf(event.getNewValue()))) {
-
-                            if (sl.shouldHide())
-                                getFormController().getElement(questiontoHide).getView().setVisibility(View.GONE);
-
-                            else
-                                getFormController().getElement(questiontoHide).getView().setVisibility(View.VISIBLE);
-
-                        } else {
-
-                            if (sl.shouldHide())
-                                getFormController().getElement(questiontoHide).getView().setVisibility(View.VISIBLE);
-                            else
-                                getFormController().getElement(questiontoHide).getView().setVisibility(View.GONE);
-                        }
+                        if (compareValues(sl, String.valueOf(event.getNewValue())))
+                            getFormController().getElement(questiontoHide).getView().setVisibility((sl.shouldHide()) ? View.GONE : View.VISIBLE);
+                        else
+                           getFormController().getElement(questiontoHide).getView().setVisibility((sl.shouldHide()) ? View.VISIBLE : View.GONE);
                     } catch (Exception ignored) {
                     }
-
                 });
-
             }
         }
     }
 
     public void initiateSkipLogicsAndHideViews(String label, List<SkipLogic> skipLogics) {
         if (skipLogics != null && skipLogics.size() > 0) {
-
             for (final SkipLogic sl : skipLogics) {
                 String[] values = sl.getFormula().replace("\"", "").split(" ");
                 sl.setComparingQuestion(values[0]);
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
                 try {
-
                     AppLogger.i("SKIP LOGIC view to hide = ", label);
-
                     if (compareValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString())) {
-
                         AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + true);
-
-                        if (sl.shouldHide())
-                            formController.getElement(label).getView().setVisibility(View.GONE);
-                        else
-                            formController.getElement(label).getView().setVisibility(View.VISIBLE);
-
+                        formController.getElement(label).getView().setVisibility((sl.shouldHide()) ? View.GONE : View.VISIBLE);
                     } else {
-
                         AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + false);
-
-                        if (sl.shouldHide())
-                            formController.getElement(label).getView().setVisibility(View.VISIBLE);
-                        else formController.getElement(label).getView().setVisibility(View.GONE);
-
+                        formController.getElement(label).getView().setVisibility((sl.shouldHide()) ? View.VISIBLE : View.GONE);
                     }
-
-
                 } catch (Exception ignored) {
                 }
-
-
             }
         }
-
-
     }
 
     public void applyFormulas(Question question) {
         if (!question.getFormulaC().isEmpty() && !question.getFormulaC().equalsIgnoreCase("null")) {
-
             AppLogger.e("Computation Utils", "Question = " + question.getLabelC() + " Formula = " + question.getFormulaC());
-
             List<String> operands = getOperands(question.getFormulaC());
             for (String questionToListenTo : operands) {
                 getModel().addPropertyChangeListener(questionToListenTo, propertyChangeEvent -> {
-
                     String equation = question.getFormulaC();
-
                     try {
                         for (String operand : operands) {
                             equation = equation.replace(operand, getFormController().getModel().getValue(operand).toString());
@@ -307,9 +210,7 @@ public class ComputationUtils {
                         i.printStackTrace();
                         equation = "0";
                     }
-
                     AppLogger.e("Computation Utils", "Applying Formula calc " + equation);
-
                     String newValue = "0.00";
                     try {
                         newValue = calculate(equation.replace(",", ""));
@@ -320,7 +221,6 @@ public class ComputationUtils {
                     }
                     System.out.println("####### NEW VALUE IS " + newValue);
                 });
-
             }
         }
     }
@@ -333,17 +233,14 @@ public class ComputationUtils {
         return (formatter.format(value));
     }
 
-    public Boolean compareValues(SkipLogic sl, String newValue) {
+    private Boolean compareValues(SkipLogic sl, String newValue){
         String equation = sl.getAnswerValue() + sl.getLogicalOperator() + newValue;
-
         boolean value = false;
         try {
             value = (Boolean) engine.eval(equation.trim());
-
         } catch (ScriptException | NumberFormatException e) {
             System.out.println("******* EXCEPTION ****** " + e.getMessage());
             value = sl.getAnswerValue().equalsIgnoreCase(newValue);
-
         } finally {
             System.out.println(equation + " --> " + value);
         }
@@ -352,15 +249,12 @@ public class ComputationUtils {
 
     public static Boolean compareValues(SkipLogic sl, String newValue, ScriptEngine _engine) {
         String equation = sl.getAnswerValue() + sl.getLogicalOperator() + newValue;
-
         boolean value = false;
         try {
             value = (Boolean) _engine.eval(equation.trim());
-
         } catch (ScriptException | NumberFormatException e) {
             System.out.println("******* EXCEPTION ****** " + e.getMessage());
             value = sl.getAnswerValue().equalsIgnoreCase(newValue);
-
         } finally {
             System.out.println(equation + " --> " + value);
         }
@@ -368,17 +262,14 @@ public class ComputationUtils {
     }
 
 
-    List<String> getOperands(String formula) {
+    private List<String> getOperands(String formula) {
         List<String> operandList = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(formula, "+-*/", true);
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
-            if (!"+-/*".contains(token)) {
+            if (!"+-/*".contains(token))
                 operandList.add(token);
-            }
         }
         return operandList;
     }
-
-
 }

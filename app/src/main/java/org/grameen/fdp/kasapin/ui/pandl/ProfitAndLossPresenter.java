@@ -70,7 +70,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-
+                        setFarmerAsUnsynced(mAppDataManager.getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet());
                         getAppDataManager().setBooleanValue("reload", true);
                         getView().reloadTableData();
                     }
