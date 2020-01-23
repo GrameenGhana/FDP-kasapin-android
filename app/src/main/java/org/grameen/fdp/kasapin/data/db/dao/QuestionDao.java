@@ -23,12 +23,8 @@ import io.reactivex.Single;
 @Dao
 public interface QuestionDao extends BaseDao<Question> {
 
-    @Query("SELECT * FROM questions")
-    Single<List<Question>> getAllQuestions();
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertQuestion(Question question);
-
 
     @Query("SELECT * FROM questions WHERE id = :id")
     Question getQuestionById(int id);
@@ -36,13 +32,11 @@ public interface QuestionDao extends BaseDao<Question> {
     @Query("SELECT * FROM questions WHERE formTranslationId = :formTranslationId ORDER BY displayOrderC ASC ")
     Single<List<Question>> getQuestionsByForm(int formTranslationId);
 
-
-    @Query("SELECT * FROM questions WHERE labelC  LIKE :label || '%'")
-    Single<Question> getSingle(String label);
+    @Query("SELECT * FROM questions WHERE formTranslationId = :formTranslationId AND labelC  LIKE :label || '%'")
+    Question get(int formTranslationId, String label);
 
     @Query("SELECT * FROM questions WHERE labelC  LIKE :label || '%'")
     Question get(String label);
-
 
     @Query("SELECT labelC FROM questions WHERE labelC  LIKE :label || '%'")
     Maybe<String> getLabel(String label);
@@ -55,17 +49,5 @@ public interface QuestionDao extends BaseDao<Question> {
 
     @Query("SELECT * FROM questions WHERE id = :id")
     Maybe<Question> get(int id);
-
-    @Update
-    int updateQuestion(Question question);
-
-
-    @Query("DELETE FROM questions")
-    void deleteAllQuestions();
-
-
-    @Query("DELETE FROM questions WHERE id = :id")
-    int deleteQuestionById(int id);
-
 
 }

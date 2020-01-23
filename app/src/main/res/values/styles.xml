@@ -364,13 +364,12 @@
     </style>
 
 
-    <style name="AppAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="AppAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- To tint the buttons -->
         <item name="android:background">@color/white</item>
         <item name="android:textColorPrimary">@color/text_black_87</item>
         <item name="android:textColorSecondary">@android:color/secondary_text_light</item>
         <item name="android:itemPadding">@dimen/alert_def_padding</item>
-        <item name="panelBackground">@color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
 

@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 /**
  * A login screen that offers login via email/password.
  */
@@ -36,7 +35,7 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
     RecyclerView recyclerView;
     ServerUrlListAdapter mAdapter;
     @BindView(R.id.place_holder)
-    View placceHolderView;
+    View placeHolderView;
     boolean wereChangesMade = false;
 
     @Override
@@ -75,19 +74,17 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
     }
 
     void togglePlaceholder(){
-        placceHolderView.setVisibility((mAdapter.getUrls().size() > 0) ? View.GONE : View.VISIBLE);
+        placeHolderView.setVisibility((mAdapter.getUrls().size() > 0) ? View.GONE : View.VISIBLE);
     }
 
 
     @OnClick(R.id.add_url)
     void showAddUrlDialog(){
-        Dialog dialog = new Dialog(this, R.style.AppAlertDialog);
+        Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.custom_dialog_view_add_url);
         dialog.setCancelable(true);
-
         EditText nameEditText = dialog.findViewById(R.id.name_view);
         EditText urlEditText = dialog.findViewById(R.id.url_view);
-
         dialog.findViewById(R.id.cancel).setOnClickListener(v -> dialog.dismiss());
         dialog.findViewById(R.id.ok).setOnClickListener(v -> {
             String url = urlEditText.getText().toString().trim();
@@ -103,7 +100,6 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
                 serverUrl.setUrl(url);
                 mPresenter.saveUrl(serverUrl);
                 mAdapter.add(serverUrl);
-
                 updateCurrentUrl(mAdapter.getItemCount() - 1);
                 togglePlaceholder();
             }
@@ -115,18 +111,7 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
 
     @Override
     public void onItemClick(View view, int position) {
-
         updateCurrentUrl(position);
-        //Confirm default setting of currently clicked url
-      /*  showDialog(true, "Default Url", "Do you want to set " + mAdapter.getUrls().get(position).getUrl() + " as default url?", (d, w)->{
-                   // updateCurrentUrl(position);
-
-            showMessage(getString(R.string.default_url_set_message));
-
-                    wereChangesMade = true;
-
-                }, getStringResources(R.string.yes),
-                (d, w) -> d.dismiss(), getStringResources(R.string.cancel), 0);*/
     }
 
     void updateCurrentUrl(int position){

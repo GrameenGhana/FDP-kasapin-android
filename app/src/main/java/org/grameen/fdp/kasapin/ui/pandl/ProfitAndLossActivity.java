@@ -829,10 +829,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                     plotIncomes.add(mathFormulaParser.evaluate());
                 } else
                     plotIncomes.add("0");
-
             } else {
                 calculation = getAppDataManager().getDatabaseManager().calculationsDao().getByRecommendationYear(PLOT_RECOMMENDATION.getId(), TEMP);
-
                 if (calculation != null) {
                     AppLogger.i(TAG, "\nYEAR " + i + " >> " + calculation.getFormula());
                     mathFormulaParser.setMathFormula(calculation.getFormula());
@@ -844,7 +842,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             AppLogger.i(TAG, "^^^^^^^^^^^^^^    TEMP IS NOW " + TEMP);
         }
         String name = PLOT_RECOMMENDATION.getLabel();
-        TABLE_DATA_LIST.add(new Data(PLOT.getName() + "\n" + name, null, TAG_TITLE_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new Data(PLOT.getName() + "\n" + name + "\nYear " + PLOT.getStartYear(), null, TAG_TITLE_TEXT_VIEW));
 
         Question plotIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_income_");
 
@@ -858,12 +856,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         TEMP = 0;
 
         List<RecommendationActivity> recommendationActivities;
-
-        System.out.println();
-        System.out.println("**********************************************");
-        System.out.println("MAINTENANCE COST AND LABOUR COST CALCULATIONS");
-        System.out.println("**********************************************");
-        System.out.println();
 
         AppLogger.i(TAG, "\nYEAR " + 0);
         calculation = getAppDataManager().getDatabaseManager().calculationsDao().getByRecommendationYearAndType(PLOT_RECOMMENDATION.getId(), 0, AppConstants.RECOMMENDATION_CALCULATION_TYPE_COST);
@@ -885,19 +877,13 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
         for (int i = 1; i <= MAX_YEARS; i++) {
-            System.out.println("**********************************************");
-            System.out.println("TEMP 2 = " + TEMP2 + " and i = " + i);
-            System.out.println("**********************************************");
             TEMP = TEMP2 + i;
-
             if (TEMP <= MAX_YEARS)
                 recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
                         .getAllByRecommendation(PLOT_RECOMMENDATION.getId(), String.valueOf(TEMP)).blockingGet();
             else
-
                 recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
                         .getAllByRecommendation(PLOT_RECOMMENDATION.getId(), "7").blockingGet();
-
             maintenanceCostList.add(mathFormulaParser.evaluate(computeCost(recommendationActivities, AppConstants.SUPPLIES_COSTS, false) + "*" + plotSizeInHaValue));
             MAINTENANCE_COST_STRING_BUILDERS.get(i).append(maintenanceCostList.get(i)).append("+");
 

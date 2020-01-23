@@ -129,38 +129,28 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
     @Override
     public void showForm(List<FormAndQuestions> formAndQuestionsList) {
-
         AppLogger.e(TAG, "Plot Questions list size is " + formAndQuestionsList.size());
-
         PLOT_FORM_AND_QUESTIONS = formAndQuestionsList;
-
         dynamicPlotFormFragment = DynamicPlotFormFragment.newInstance(isEditMode, FARMER_CODE,
                 getAppDataManager().isMonitoring(), PLOT.getAnswersData());
-
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, FARMER_CODE);
-
     }
 
 
     void setupViews() {
-
         //SetCaptionLabels
         Completable.fromAction(() -> {
             if (estProductionQuestion != null)
                 plotEstProdText.setText(estProductionQuestion.getCaptionC());
 
-
              if (soilPhQuestion != null)
                 plotPhText.setText(soilPhQuestion.getCaptionC());
-
 
              if (plotNameQuestion != null)
                 plotNameText.setText(plotNameQuestion.getCaptionC());
 
-
              if (plotAreaQuestion != null)
                 plotSizeText.setText(plotAreaQuestion.getCaptionC());
-
 
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -168,12 +158,10 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                     @Override
                     public void onComplete() {
                     }
-
                     @Override
                     public void onError(Throwable ignored) {
                     }
                 });
-
 
         //Edit Plot
         saveButton.setEnabled(false);
@@ -198,35 +186,23 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 } else saveButton.setEnabled(true);
             }
         });
-
-
         if (getIntent().getStringExtra("flag") != null && getIntent().getStringExtra("flag").equals("edit")) {
-
             isEditMode = true;
             setToolbar(getStringResources(R.string.edit_plot));
-
             PLOT = getGson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
             FARMER_CODE = PLOT.getFarmerCode();
-
-
             plotNameEdittext.setText(PLOT.getName());
             plotSizeEdittext.setText(PLOT.getArea());
             estimatedProductionEdittext.setText(PLOT.getEstimatedProductionSize());
             phEdittext.setText(PLOT.getPh());
-
-
         } else {
-
             PLOT = new Plot();
             PLOT.setExternalId(String.valueOf(System.currentTimeMillis()));
             PLOT.setFarmerCode(FARMER_CODE);
             PLOT.setAnswersData(new JSONObject().toString());
-
             String name = "Plot " + (getIntent().getIntExtra("plotSize", 0) + 1);
-
             plotNameEdittext.setText(name);
             PLOT.setName(name);
-
             //New Plot
             setToolbar(getStringResources(R.string.add_new_plot));
         }
@@ -291,8 +267,11 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         //Todo check if checkIfFarmProductionCorresponds
         //Todo checkIfPlotWasRenovatedRecently
 
+
+
+
         int year = 1;
-        Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_");
+        Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get(PLOT_FORM_AND_QUESTIONS.get(0).getForm().getFormTranslationId(), "plot_renovated_");
         Question PLOT_RENOVATION_MADE_YEARS = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_");
         Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
         Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
@@ -309,11 +288,11 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                         else if (recommendationName.equalsIgnoreCase("grafting"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                     .getByRecommendationName("Grafting").blockingGet();
-
                         if (GAPS_RECOMENDATION_FOR_START_YEAR != null) {
                             AppLogger.e(TAG, "RECOMMENDATION MADE  >>>> " + GAPS_RECOMENDATION_FOR_START_YEAR.getLabel());
                             PLOT.setRecommendationId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
                             PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
+                          year = year * -1;
                         }
                     }
                 } catch (Exception e) {
@@ -335,7 +314,9 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //PLOT.setRecommendationId(-1);
+
+
+        AppLogger.e(TAG, ">>>>>>>>>>  YEAR  >>>>>>>>>>>> " + year);
         PLOT.setStartYear(year);
         PLOT.setAnswersData(jsonObject.toString());
         PLOT.setPh(phEdittext.getText().toString());
@@ -347,7 +328,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         mPresenter.saveData(PLOT, flag);
     }
 
-
     @OnClick(R.id.plot_area_calculation)
     void onPlotAreaCalculationClicked() {
         //Todo go to Map Activity
@@ -356,7 +336,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         else
             showMessage(R.string.provide_plot_name);
     }
-
 
     @Override
     public void showPlotDetailsActivity(Plot plot) {
@@ -372,13 +351,11 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
     @Override
     public void moveToMapActivity(Plot plot) {
-
         final Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("plot", new Gson().toJson(plot));
             startActivity(intent);
             finish();
     }
-
 
     @Override
     public void onBackPressed() {
