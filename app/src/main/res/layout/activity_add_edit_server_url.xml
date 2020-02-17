@@ -29,14 +29,14 @@
                 android:text="No urls added"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-
+                android:textSize="@dimen/text_size_medium"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="To add a new server url, please click on the ADD A NEW URL button below"
-
+                android:gravity="center"
                 />
 
         </LinearLayout>

@@ -25,8 +25,8 @@ import java.util.Set;
 public class EditTextController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     private final String placeholder;
-    boolean IS_ENABLED = true;
-    String helpertext;
+    private boolean IS_ENABLED;
+    private String helperText;
     private int inputType;
 
     /**
@@ -40,7 +40,7 @@ public class EditTextController extends MyLabeledFieldController {
      * @param inputType   the content type of the text box as a mask; possible values are defined by {@link InputType}.
      *                    For example, to enable multi-line, enable {@code InputType.TYPE_TEXT_FLAG_MULTI_LINE}.
      */
-    public EditTextController(Context ctx, String name, String content_desc, String labelText, String placeholder, Set<InputValidator> validators, int inputType, boolean isEnabled) {
+    private EditTextController(Context ctx, String name, String content_desc, String labelText, String placeholder, Set<InputValidator> validators, int inputType, boolean isEnabled) {
         super(ctx, name, content_desc, labelText, validators, isEnabled);
         this.placeholder = placeholder;
         this.inputType = inputType;
@@ -61,6 +61,17 @@ public class EditTextController extends MyLabeledFieldController {
         this(ctx, name, content_desc, labelText, placeholder, validators, InputType.TYPE_CLASS_TEXT, isEnabled);
     }
 
+    public EditTextController(Context context, String id, String content_desc, String caption__c, String default_value__c, boolean isRequired, int typeClassText, boolean isEnabled, String help_text__c,
+                              Set<InputValidator> validators) {
+        this(context, id, content_desc, caption__c, default_value__c, isRequired, typeClassText, isEnabled);
+        this.helperText = help_text__c;
+
+        if(isRequired)
+        this.setValidators(validators);
+
+
+    }
+
     /**
      * Constructs a new instance of an edit text field.
      *
@@ -76,6 +87,7 @@ public class EditTextController extends MyLabeledFieldController {
         super(ctx, name, content_desc, labelText, isRequired, isEnabled);
         this.placeholder = placeholder;
         this.inputType = inputType;
+        IS_ENABLED = true;
         this.IS_ENABLED = isEnabled;
 
     }
@@ -91,7 +103,7 @@ public class EditTextController extends MyLabeledFieldController {
      */
     public EditTextController(Context ctx, String name, String content_desc, String labelText, String placeholder, boolean isRequired, boolean isEnabled, String helperText) {
         this(ctx, name, content_desc, labelText, placeholder, isRequired, InputType.TYPE_CLASS_TEXT, isEnabled);
-        this.helpertext = helperText;
+        this.helperText = helperText;
     }
 
     /**
@@ -117,18 +129,12 @@ public class EditTextController extends MyLabeledFieldController {
         this(ctx, name, content_desc, labelText, null, false, InputType.TYPE_CLASS_TEXT, isEnabled);
     }
 
-    public EditTextController(Context context, String id, String content_desc, String caption__c, String default_value__c, boolean b, int typeClassText, boolean b1, String help_text__c) {
-        this(context, id, content_desc, caption__c, default_value__c, b, typeClassText, b1);
-        this.helpertext = help_text__c;
-
-    }
-
     /**
      * Returns the EditText view associated with this element.
      *
      * @return the EditText view associated with this element
      */
-    public EditText getEditText() {
+    private EditText getEditText() {
         return (EditText) getView().findViewById(editTextId);
     }
 
@@ -191,15 +197,13 @@ public class EditTextController extends MyLabeledFieldController {
 
     @Override
     protected View createFieldView() {
-
         if (IS_ENABLED) {
-
             final MaterialEditText editText = new MaterialEditText(getContext());
             editText.setId(editTextId);
             editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_NONE);
             editText.setContentDescription(getContentDesc());
             editText.setTextSize(15f);
-            editText.setPaddings(20, 0, 0, 0);
+           //editText.setPaddings(10, 0, 10, 0);
             editText.setSingleLine(!isMultiLine());
             editText.setInputType(inputType);
 
@@ -209,25 +213,17 @@ public class EditTextController extends MyLabeledFieldController {
                     getModel().setValue(getName(), placeholder);
                 else
                     getModel().setValue(getName(), getModel().getValue(getName()));
-
-                //editText.setHint(placeholder);
             }
-
-
             try {
-
                 refresh(editText);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-
-            if (helpertext != null) {
-                editText.setHelperText(helpertext);
+            if (helperText != null) {
+                editText.setHelperText(helperText);
                 editText.setHelperTextAlwaysShown(true);
-
             }
-
 
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -267,20 +263,10 @@ public class EditTextController extends MyLabeledFieldController {
             });
             editText.setOnFocusChangeListener((v, hasFocus) -> {
                 if (!hasFocus) {
-
                     double doubleValue = 0;
                     if (editText.getText() != null) {
-
-
                         if (getModel().getValue(getName()) != null)
                             editText.setText(getModel().getValue(getName()).toString());
-                    /*try {
-                        doubleValue = Double.parseDouble(editText.getText().toString().replace(".", ""));
-                        editText.setText(new DecimalFormat("#,###,###.##").format(doubleValue));
-
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }*/
                     }
                 }
             });
@@ -291,13 +277,15 @@ public class EditTextController extends MyLabeledFieldController {
 
     }
 
-    private void refresh(EditText editText) {
+    @Override
+    public void setValidators(Set<InputValidator> newValidators) {
+        super.setValidators(newValidators);
+    }
 
+    private void refresh(EditText editText) {
         if (editText != null) {
             Object value = getModel().getValue(getName());
-
             String valueStr = value != null ? value.toString() : placeholder;
-
             if (editText.getText() != null)
                 if (valueStr != null && !valueStr.equals(editText.getText().toString())) {
                     try {

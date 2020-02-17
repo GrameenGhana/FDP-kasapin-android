@@ -179,7 +179,6 @@ public class MyFormController {
      */
     public List<ValidationError> validateInput() {
         List<ValidationError> errors = new ArrayList<ValidationError>();
-
         for (MyFormSectionController section : getSections()) {
             for (MyFormElementController element : section.getElements()) {
                 if (element instanceof MyLabeledFieldController) {
@@ -188,7 +187,6 @@ public class MyFormController {
                 }
             }
         }
-
         return errors;
     }
 
@@ -233,9 +231,7 @@ public class MyFormController {
      */
     public void recreateViews(ViewGroup containerView) {
         containerView.removeAllViews();
-
-        for (MyFormSectionController section : getSections()) {
-            ((MyFormElementController) section).setModel(getModel());
+        for (MyFormSectionController section : getSections()) { section.setModel(getModel());
             containerView.addView(section.getView());
 
             for (MyFormElementController element : section.getElements()) {

@@ -89,12 +89,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
     String recNames;
 
-    //String limeNeededValue = "--";
-    private DynamicPlotFormFragment dynamicPlotFormFragment;
 
-    public static Intent getStartIntent(Context context) {
-        return new Intent(context, PlotDetailsActivity.class);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,8 +149,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         } catch (JSONException ignored) {}
 
 
-
-        dynamicPlotFormFragment = DynamicPlotFormFragment.newInstance(true, PLOT.getFarmerCode(),
+        //String limeNeededValue = "--";
+        DynamicPlotFormFragment dynamicPlotFormFragment = DynamicPlotFormFragment.newInstance(true, PLOT.getFarmerCode(),
                 true, PLOT.getAnswersData());
 
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, PLOT.getFarmerCode());

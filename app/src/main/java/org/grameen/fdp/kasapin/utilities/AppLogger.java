@@ -24,13 +24,11 @@ public class AppLogger {
         if (!BuildConfig.ENABLE_CRASHLYTICS) {
             Timber.plant(new Timber.DebugTree());
         } else {
-
             String crashReporterPath = AppConstants.ROOT_DIR + File.separator + "crashReports";
             CrashReporter.initialize(applicationContext, crashReporterPath);
 
             //Todo Initialize Crashytics here
             Fabric.with(applicationContext, new Crashlytics());
-
         }
     }
 
@@ -79,8 +77,8 @@ public class AppLogger {
     }
 
     public static void e(String tag, String message) {
-        //Timber.e("%s%s  -> %s", " ******** ",tag, message);
-        largeLog(tag, message);
+        Timber.e("%s%s  -> %s", " ******** ",tag, message);
+        //largeLog(tag, message);
     }
 
     public static void largeLog(String tag, String content) {

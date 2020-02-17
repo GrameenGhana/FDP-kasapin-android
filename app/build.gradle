@@ -30,7 +30,6 @@ android {
 
 
     buildTypes {
-
         release {
             debuggable false
             minifyEnabled false
@@ -208,7 +207,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            def formattedDate = new Date().format('ddMMM')
+            def formattedDate = new Date().format('ddMMMYY')
             def newApkName = "FDP-kasapin" + variant.versionName + "@" + formattedDate + ".apk"
             outputFileName = new File(variant.name, newApkName)
         }

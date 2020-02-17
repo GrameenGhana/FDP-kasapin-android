@@ -4,18 +4,25 @@ import android.text.TextUtils;
 
 import org.grameen.fdp.kasapin.ui.form.model.RequiredField;
 
-public class RequiredFieldValidator implements InputValidator {
+public class TextFieldValidator implements InputValidator {
+    private String message;
+    private String defaultValue;
+
+    public TextFieldValidator(String _defaultValue, String _message){
+        this.message = _message;
+        this.defaultValue = _defaultValue;
+    }
 
     @Override
     public ValidationError validate(Object value, String fieldName, String fieldLabel) {
-        if (value == null || (value instanceof String && TextUtils.isEmpty((String) value))) {
-            return new RequiredField(fieldName, fieldLabel);
+        if (value == null || (value instanceof String && TextUtils.isEmpty((String) value)) || value == defaultValue) {
+            return new RequiredField(fieldName, fieldLabel, message);
         }
         return null;
     }
 
     /**
-     * Makes every instances of {@link RequiredFieldValidator} equal.
+     * Makes every instances of {@link TextFieldValidator} equal.
      *
      * @param o The object to compare.
      * @return true if o is also an instance of RequiredFieldValidator, false otherwise.
@@ -26,7 +33,7 @@ public class RequiredFieldValidator implements InputValidator {
     }
 
     /**
-     * Every instance of {{@link RequiredFieldValidator}} share the same hashcode.
+     * Every instance of {{@link TextFieldValidator}} share the same hashcode.
      *
      * @return 0
      */

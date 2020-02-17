@@ -271,17 +271,20 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
 
         int year = 1;
-        Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get(PLOT_FORM_AND_QUESTIONS.get(0).getForm().getFormTranslationId(), "plot_renovated_");
+        Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_correctly_");
         Question PLOT_RENOVATION_MADE_YEARS = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_");
         Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
         Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
         if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE_YEARS != null) {
+            AppLogger.e(TAG, "#######################################  PLOT RENOVATED CORRECTLY");
+            AppLogger.e(TAG, jsonObject.toString());
             if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
                 try {
                     if (ComputationUtils.getValue(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC(), jsonObject).equalsIgnoreCase("yes")) {
                         year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE_YEARS.getLabelC()));
                         String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
 
+                        AppLogger.e(TAG, "RECOMMENDATION NAME IS " + recommendationName);
                         if (recommendationName.equalsIgnoreCase("replanting"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                     .getByRecommendationName("Replant").blockingGet();

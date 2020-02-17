@@ -15,7 +15,9 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
+import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
+import org.grameen.fdp.kasapin.ui.form.TextFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.controller.MyFormSectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.ButtonController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.CheckBoxController;
@@ -31,12 +33,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
 
 /**
  * Created by aangjnr on 01/12/2017.
@@ -44,23 +46,17 @@ import io.reactivex.schedulers.Schedulers;
 
 
 public class DynamicPlotFormFragment extends FormFragment {
+    private ComputationUtils computationUtils;
+    private JSONObject ANSWERS_JSON;
+    private String FARMER_ID = "";
+    private boolean shouldLoadOldValues = false;
+    private boolean IS_CONTROLLER_ENABLED;
+    private String TAG = "MYFORMFRAGMENT";
 
-    //@Inject
-    //DynamicFormFragmentPresenter mPresenter;
-    ComputationUtils computationUtils;
-    JSONObject ANSWERS_JSON;
-    MyFormSectionController formSectionController;
-    String FARMER_ID = "";
-    boolean shouldLoadOldValues = false;
-    boolean IS_CONTROLLER_ENABLED;
-    String TAG = "MYFORMFRAGMENT";
-
-    List<Question> ALL_QUESTIONS = new ArrayList<>();
+    private List<Question> ALL_QUESTIONS = new ArrayList<>();
 
 
     public DynamicPlotFormFragment() {
-
-
     }
 
     public static DynamicPlotFormFragment newInstance(boolean shouldLoadOldValues, @Nullable String farmerId, boolean isMonitoring, @Nullable String data) {
@@ -129,7 +125,7 @@ public class DynamicPlotFormFragment extends FormFragment {
                 AppLogger.e(TAG, "Adding controller for " + formAndQuestions.getForm().getTranslation());
 
 
-                formSectionController = new MyFormSectionController(getContext(), formAndQuestions.getForm().getTranslation());
+                MyFormSectionController formSectionController = new MyFormSectionController(getContext(), formAndQuestions.getForm().getTranslation());
                 loadQuestionsValues(context, formAndQuestions.getQuestions(), formSectionController);
                 controller.addSection(formSectionController);
                 ALL_QUESTIONS.addAll(formAndQuestions.getQuestions());
@@ -153,21 +149,20 @@ public class DynamicPlotFormFragment extends FormFragment {
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(skipLogics -> {
                                         if (skipLogics != null && skipLogics.size() > 0)
-                                            applySkipLogicsAndHideViews(question, skipLogics);
+                                            applySkipLogicAndHideViews(question, skipLogics);
 
                                     }))
                     ).subscribe();
     }
 
 
-    void loadQuestionsValues(Context context, List<Question> questions, MyFormSectionController formSectionController) {
-
+    private void loadQuestionsValues(Context context, List<Question> questions, MyFormSectionController formSectionController) {
         for (final Question q : questions) {
+            HashSet<InputValidator> validation = new HashSet<>();
+            validation.add(new TextFieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
 
             if (!q.shouldHide()) {
-
                 String storedValue;
-
                 if (shouldLoadOldValues) {
                     storedValue = getComputationUtils().getValue(q, ANSWERS_JSON);
                     if (storedValue.isEmpty() || storedValue.equalsIgnoreCase("null"))
@@ -177,113 +172,80 @@ public class DynamicPlotFormFragment extends FormFragment {
 
                 switch (q.getTypeC().toLowerCase()) {
                     case AppConstants.TYPE_TEXT:
-                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_TEXT, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
-                        //getValue(q);
+                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_TEXT, IS_CONTROLLER_ENABLED, q.getHelpTextC(), validation));
 
                         break;
                     case AppConstants.TYPE_NUMBER:
-                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
-                        //getValue(q);
+                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED, q.getHelpTextC(), validation));
 
                         break;
 
                     case AppConstants.TYPE_NUMBER_DECIMAL:
-                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
-                        //getValue(q);
-
+                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL,
+                                IS_CONTROLLER_ENABLED, q.getHelpTextC(), validation));
                         break;
 
                     case AppConstants.TYPE_SELECTABLE:
-                        formSectionController.addElement(new SelectionController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), true, storedValue, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
-                        //getValue(q);
-
+                        formSectionController.addElement(new SelectionController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), storedValue, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
                         break;
 
                     case AppConstants.TYPE_MULTI_SELECTABLE:
-                        formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), true, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED));
-                        //getValue(q, jsonObject);
-
+                        formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED));
                         break;
 
                     case AppConstants.TYPE_TIMEPICKER:
                         formSectionController.addElement(new TimePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC()));
-                        //getValue(q);
-
                         break;
                     case AppConstants.TYPE_DATEPICKER:
                         formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), IS_CONTROLLER_ENABLED));
-                        //getValue(q);
-
                         break;
 
                     case AppConstants.TYPE_MATH_FORMULA:
-                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_TEXT, false));
-                        //getValue(q);
-                        //applyCalculation(databaseHelper.getCalculation(q.getId()));
-
-                        break;
-
                     case AppConstants.TYPE_LOGIC_FORMULA:
-                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, true, InputType.TYPE_CLASS_TEXT, false));
-                        //getValue(q);
+                        formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_TEXT, false));
                         break;
-
 
                     case AppConstants.TYPE_LOCATION:
-                        formSectionController.addElement(new ButtonController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), v -> {
-
-                            if (!hasPermissions(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION))
+                        formSectionController.addElement(new ButtonController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),storedValue, v -> {
+                            if (hasPermissions(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION))
                                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
                             else {
-
                                 getCurrentLocation(context, q);
-
                             }
-                        }, IS_CONTROLLER_ENABLED));
-                        //getValue(q);
+                        }, IS_CONTROLLER_ENABLED, q.isRequired(), validation));
                         break;
-
 
                     case AppConstants.TYPE_PHOTO:
                         formSectionController.addElement(new PhotoButtonController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
                                 v -> {
                                     try {
-
                                         startCameraIntent(String.valueOf(q.getLabelC()));
-
-
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                 }, IS_CONTROLLER_ENABLED));
                         getComputationUtils().getValue(q, ANSWERS_JSON);
                         break;
-
                 }
             }
-
 
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
-                    .subscribe(skipLogics -> applyPropertyChangeListeners(q, skipLogics),
+                    .subscribe(skipLogic -> applyPropertyChangeListeners(q, skipLogic),
                             Throwable::printStackTrace)
             );
-
-
         }
-
-
     }
 
 
-    public void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogics) {
-        getComputationUtils().setUpPropertyChangeListeners2(q.getLabelC(), skipLogics);
+    private void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogic) {
+        getComputationUtils().setUpPropertyChangeListeners2(q.getLabelC(), skipLogic);
     }
 
 
-    public void applySkipLogicsAndHideViews(Question question, List<SkipLogic> skipLogics) {
-        getComputationUtils().initiateSkipLogicsAndHideViews(question.getLabelC(), skipLogics);
+    private void applySkipLogicAndHideViews(Question question, List<SkipLogic> skipLogic) {
+        getComputationUtils().initiateSkipLogicsAndHideViews(question.getLabelC(), skipLogic);
     }
 
     @Override
@@ -307,14 +269,13 @@ public class DynamicPlotFormFragment extends FormFragment {
     }
 
 
-    public ComputationUtils getComputationUtils() {
+    private ComputationUtils getComputationUtils() {
         return computationUtils;
     }
 
 
     public JSONObject getAnswersData() {
         JSONObject jsonObject = new JSONObject();
-
         for (Question q : ALL_QUESTIONS) {
             try {
                 jsonObject.put(q.getLabelC(), getModel().getValue(q.getLabelC()));
@@ -324,5 +285,4 @@ public class DynamicPlotFormFragment extends FormFragment {
         }
         return jsonObject;
     }
-
 }

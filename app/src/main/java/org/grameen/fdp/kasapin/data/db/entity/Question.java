@@ -20,8 +20,6 @@ import timber.log.Timber;
 /**
  * Created by aangjnr on 29/11/2017.
  */
-
-//, foreignKeys = {@ForeignKey(entity = FormTranslation.class, parentColumns = "id", childColumns = "formTranslationId", deferred = true)}
 @Entity(tableName = "questions", indices = {@Index(value = "formTranslationId"), @Index(value = "id", unique = true), @Index(value = "labelC", unique = true)})
 public class Question {
 
@@ -55,7 +53,6 @@ public class Question {
     @SerializedName("formula_c")
     @Expose
     private String formulaC;
-
     @SerializedName("label_c")
     @Expose
     private String labelC;
@@ -81,6 +78,16 @@ public class Question {
     @SerializedName("related_questions_c")
     @Expose
     private String relatedQuestions;
+    @SerializedName("min_c")
+    @Expose
+    private String minValue;
+    @SerializedName("max_c")
+    @Expose
+    private String maxValue;
+
+    @Expose
+    @SerializedName("error_display_message_c")
+    String errorMessage;
 
 
 
@@ -89,24 +96,6 @@ public class Question {
      */
     public Question() {
     }
-
-    /**
-     * @param defaultValueC
-     * @param id
-     * @param captionC
-     * @param createTime
-     * @param helpTextC
-     * @param hideC
-     * @param labelC
-     * @param formTranslationId
-     * @param updateTime
-     * @param formulaC
-     * @param displayOrderC
-     * @param requiredC
-     * @param canEdit
-     * @param optionsC
-     * @param typeC
-     */
 
     @Ignore
     public Question(int id, int formTranslationId, String createTime, String updateTime, String captionC, String typeC, int requiredC, String formulaC, String labelC, String defaultValueC, int displayOrderC, String helpTextC, int hideC, String optionsC, int canEdit) {
@@ -342,14 +331,26 @@ public class Question {
         return canEdit == 1;
     }
 
+    public String getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(String maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public String getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(String minValue) {
+        this.minValue = minValue;
+    }
 
     @Ignore
     public List<String> formatQuestionOptions() {
-
-        String s = "";
+        String s;
         s = getOptionsC();
-        Timber.i("OPTIONS = %s", s);
-
         if (!s.equalsIgnoreCase("null"))
             try {
                 return Arrays.asList(s.trim().split(","));
@@ -357,10 +358,7 @@ public class Question {
                 e.printStackTrace();
                 return Collections.singletonList(s);
             }
-
         else return new ArrayList<>();
-
-
     }
 
     public String getRelatedQuestions() {
@@ -371,6 +369,13 @@ public class Question {
         this.relatedQuestions = relatedQuestions;
     }
 
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
     @Ignore
     public String[] splitRelatedQuestions(){
@@ -386,5 +391,9 @@ public class Question {
 
     public void setSkipLogics(List<SkipLogic> skipLogics) {
         this.skipLogics = skipLogics;
+    }
+
+    public boolean isRequired(){
+        return requiredC == 1;
     }
 }

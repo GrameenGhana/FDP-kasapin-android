@@ -125,7 +125,7 @@
             android:layout_marginBottom="@dimen/spacing_normal"
             android:background="@drawable/border_background"
             android:hint="@string/email"
-            android:inputType="textEmailAddress"
+            android:inputType="textWebEmailAddress"
             android:maxLines="1"
             android:padding="@dimen/spacing_normal"
             />

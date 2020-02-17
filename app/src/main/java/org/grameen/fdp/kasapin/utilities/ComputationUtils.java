@@ -43,7 +43,7 @@ public class ComputationUtils {
         String defVal;
         try {
             if (ANSWERS_JSON.has(label)) {
-                defVal = ANSWERS_JSON.get(label).toString();
+                defVal = ANSWERS_JSON.get(label).toString().trim();
             } else
                 defVal = "--";
         } catch (JSONException ignored) {

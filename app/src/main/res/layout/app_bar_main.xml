@@ -118,7 +118,6 @@
             android:layout_weight="3"
             android:padding="@dimen/spacing_normal"
             android:text="@string/add_farmer"
-
             />
 
     </LinearLayout>

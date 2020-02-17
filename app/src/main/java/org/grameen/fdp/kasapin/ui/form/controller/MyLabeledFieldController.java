@@ -1,24 +1,17 @@
 package org.grameen.fdp.kasapin.ui.form.controller;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.os.Build;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import com.rengwuxian.materialedittext.MaterialEditText;
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.RequiredFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.ValidationError;
-
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,12 +56,11 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         super(ctx, name, content_desc);
         this.labelText = labelText;
         this.validators = validators;
-
     }
 
 
     public MyLabeledFieldController(Context ctx, String name, String content_desc, String labelText, boolean isRequired) {
-        this(ctx, name, content_desc, labelText, new HashSet<InputValidator>());
+        this(ctx, name, content_desc, labelText, new HashSet<>());
         setIsRequired(isRequired);
     }
 
@@ -85,7 +77,6 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         super(ctx, name, content_desc);
         this.labelText = labelText;
         this.validators = validators;
-
     }
 
     /**
@@ -117,7 +108,12 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
      * @param newValidators THe new validators to use.
      */
     public void setValidators(Set<InputValidator> newValidators) {
+        validators.clear();
         validators = newValidators;
+
+        AppLogger.e("EditTextController", getName() + " is required == true");
+        AppLogger.e(this.getClass().getSimpleName(), "Setting validations for " + getName() );
+        AppLogger.e(this.getClass().getSimpleName(), "Validation size == " + validators.size());
     }
 
     /**
@@ -162,7 +158,7 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
      *
      * @return the view for this element
      */
-    public View getFieldView() {
+    private View getFieldView() {
         if (fieldView == null) {
             fieldView = createFieldView();
         }
@@ -180,9 +176,9 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
     protected View createView() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.form_labeled_element, null);
-        errorView = (TextView) view.findViewById(R.id.field_error);
+        errorView =  view.findViewById(R.id.field_error);
 
-        TextView label = (TextView) view.findViewById(R.id.field_label);
+        TextView label = view.findViewById(R.id.field_label);
         if (labelText == null) {
             label.setVisibility(View.GONE);
         } else {
@@ -190,9 +186,8 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
             label.setContentDescription(getName());
         }
 
-        FrameLayout container = (FrameLayout) view.findViewById(R.id.field_container);
+        FrameLayout container = view.findViewById(R.id.field_container);
         container.addView(getFieldView());
-
         return view;
     }
 
@@ -206,12 +201,10 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         }
     }
 
-    public View inflateViewOnlyView() {
+    protected View inflateViewOnlyView() {
         MaterialEditText textView = new MaterialEditText(getContext());
         textView.setPaddings(20, 0, 0, 0);
         textView.setTextSize(15f);
-        //textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black_87));
-
 
         if (getModel().getValue(getName()) != null) {
             textView.setText(getModel().getValue(getName()).toString());
@@ -223,20 +216,4 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         return textView;
     }
 
-
-    public boolean hasPermissions(Context context, String permission) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
-
-            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
-
-
-                }
-                return false;
-            }
-
-        }
-        return true;
-    }
 }

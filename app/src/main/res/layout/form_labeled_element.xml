@@ -6,11 +6,8 @@
     android:gravity="center_vertical"
     android:minHeight="40dp"
     android:orientation="horizontal"
-    android:paddingLeft="?android:attr/scrollbarSize"
-    android:paddingTop="@dimen/spacing_quarter"
-    android:paddingRight="?android:attr/scrollbarSize"
-    android:paddingBottom="@dimen/spacing_quarter">
-
+     android:paddingTop="@dimen/spacing_quarter"
+     android:paddingBottom="@dimen/spacing_quarter">
 
     <TextView
         android:id="@+id/field_label"
@@ -19,7 +16,8 @@
         android:layout_weight="1"
         android:paddingLeft="@dimen/spacing_normal"
         android:paddingRight="@dimen/spacing_normal"
-        android:textColor="@color/black"
+        android:textColor="@color/textColorTertiaryLight"
+        android:textStyle="bold"
         tools:text="Label" />
 
     <LinearLayout
@@ -34,14 +32,19 @@
         <FrameLayout
             android:id="@+id/field_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:paddingLeft="@dimen/spacing_half"
+            android:paddingRight="@dimen/spacing_half"
             android:layout_weight="1" />
 
         <TextView
             android:id="@+id/field_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#cc0000"
+            android:textColor="@color/cpb_red"
+            tools:text="This is an error!"
+            android:textSize="@dimen/text_size_small"
+            android:paddingStart="@dimen/spacing_half"
             android:visibility="gone" />
     </LinearLayout>
 

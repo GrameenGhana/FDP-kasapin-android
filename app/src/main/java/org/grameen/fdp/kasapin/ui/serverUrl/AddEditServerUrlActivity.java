@@ -80,7 +80,7 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
 
     @OnClick(R.id.add_url)
     void showAddUrlDialog(){
-        Dialog dialog = new Dialog(this);
+        Dialog dialog = new Dialog(this, R.style.Dialog);
         dialog.setContentView(R.layout.custom_dialog_view_add_url);
         dialog.setCancelable(true);
         EditText nameEditText = dialog.findViewById(R.id.name_view);

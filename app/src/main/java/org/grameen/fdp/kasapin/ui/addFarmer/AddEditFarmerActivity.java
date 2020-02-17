@@ -225,6 +225,16 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @OnClick(R.id.save)
     void saveAndContinue() {
+
+        //Validate inputs
+        if(!dynamicFormFragment.getFormController().isValidInput()){
+            dynamicFormFragment.getFormController().resetValidationErrors();
+            dynamicFormFragment.getFormController().showValidationErrors();
+            return;
+        }
+
+
+
         if (farmerName.getText().toString().trim().isEmpty() || farmerName.getText().toString().trim().equalsIgnoreCase(" ")) {
             showMessage(R.string.enter_valid_farmer_name);
             return;
@@ -257,6 +267,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         FARMER.setVillageName(villageName);
         FARMER.setLastModifiedDate(TimeUtils.getDateTime());
         FARMER.setImageUrl(BASE64_STRING);
+
 
         mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
 

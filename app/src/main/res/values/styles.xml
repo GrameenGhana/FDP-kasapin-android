@@ -1,7 +1,6 @@
 <resources>
 
     <!-- Base application theme. -->
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -372,6 +371,14 @@
         <item name="android:itemPadding">@dimen/alert_def_padding</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
+
+    </style>
+
+    <style name="Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <!-- To tint the buttons -->
+        <item name="android:textColorPrimary">@color/text_black_87</item>
+        <item name="android:textColorSecondary">@android:color/secondary_text_light</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
     </style>
 

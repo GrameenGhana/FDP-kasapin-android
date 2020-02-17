@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/spacing_normal"
     >
 
@@ -13,10 +13,9 @@
         android:layout_height="wrap_content"
         android:text="@string/please_specify_the_name_and_the_url"
         android:textColor="@color/colorPrimary"
-        android:padding="@dimen/spacing_normal"
         android:textStyle="bold"
-        style="@style/TextAppearance.AppCompat.Headline"
-        android:layout_marginBottom="@dimen/spacing_half"
+       android:textSize="@dimen/text_size_medium"
+        android:layout_marginTop="@dimen/spacing_normal"
         />
 
     <EditText
@@ -24,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/spacing_half"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:background="@drawable/border_background"
         android:hint="@string/name"
         android:inputType="textCapWords"

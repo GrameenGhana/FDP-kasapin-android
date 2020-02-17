@@ -108,8 +108,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         }
         try {
             oldValuesArray = new JSONArray(answerData.getData());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
             oldValuesArray = new JSONArray();
         }
 
@@ -163,12 +162,16 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         CellViewHolder.UpdateJsonArrayListener(this);
         CheckBoxViewHolder.UpdateJsonArrayListener(this);
 
-        new Handler().postDelayed(() -> {
-            LinearLayoutManager linearLayoutManager = tableView.getRowHeaderLayoutManager();
-            if(linearLayoutManager != null)
-                lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-            SCROLL_POSITION = lastVisibleItemPosition;
-         }, 2000);
+        try {
+            new Handler().postDelayed(() -> {
+                if(tableView != null) {
+                    LinearLayoutManager linearLayoutManager = tableView.getRowHeaderLayoutManager();
+                    if (linearLayoutManager != null)
+                        lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    SCROLL_POSITION = lastVisibleItemPosition;
+                }
+            }, 2000);
+        }catch(Exception ignore){}
 
     }
 

@@ -277,7 +277,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 hideLoading();
                 if (fileLocation != null) {
                     showMessage("File saved!");
-
                        /* Intent intent = new Intent(this, PrintingActivity.class);
                         intent.putExtra("file_location", fileLocation);
                         startActivity(intent);

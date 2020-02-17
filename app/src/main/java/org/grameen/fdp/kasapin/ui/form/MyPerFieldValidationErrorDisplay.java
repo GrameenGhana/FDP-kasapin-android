@@ -16,7 +16,7 @@ public class MyPerFieldValidationErrorDisplay implements ValidationErrorDisplay 
     private final Context context;
     private final MyFormController controller;
 
-    public MyPerFieldValidationErrorDisplay(Context context, MyFormController controller) {
+    MyPerFieldValidationErrorDisplay(Context context, MyFormController controller) {
         this.context = context;
         this.controller = controller;
     }

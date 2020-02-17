@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-
+    android:paddingBottom="@dimen/spacing_normal"
     >
 
 
@@ -12,11 +13,11 @@
         style="@style/TextAppearance.AppCompat.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/spacing_half"
+        android:paddingStart="@dimen/spacing_normal"
         android:paddingTop="@dimen/spacing_normal"
-        android:paddingRight="@dimen/spacing_normal"
+        android:paddingEnd="@dimen/spacing_normal"
         android:paddingBottom="@dimen/spacing_normal"
-        android:text="Title"
+        tools:text="Title"
         android:textAllCaps="true"
         android:textColor="?attr/colorAccent"
         android:textStyle="bold" />
@@ -26,6 +27,4 @@
         android:layout_height="2dp"
         android:layout_marginBottom="@dimen/spacing_normal"
         android:background="@color/divider" />
-
-
 </LinearLayout>
