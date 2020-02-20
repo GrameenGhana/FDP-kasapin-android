@@ -68,8 +68,6 @@ public class EditTextController extends MyLabeledFieldController {
 
         if(isRequired)
         this.setValidators(validators);
-
-
     }
 
     /**
@@ -246,8 +244,6 @@ public class EditTextController extends MyLabeledFieldController {
                                 NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
                                 DecimalFormat formatter = (DecimalFormat) nf;
                                 formatter.applyPattern("#,###,###.##");
-
-
                                 doubleValue = Double.parseDouble(editText.getText().toString().replace(",", ""));
                                 getModel().setValue(getName(), formatter.format(doubleValue));
 

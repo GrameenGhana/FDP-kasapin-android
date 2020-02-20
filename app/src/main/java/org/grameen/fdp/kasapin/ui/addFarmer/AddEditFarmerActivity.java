@@ -198,7 +198,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setCode(FARMER.getExternalId());
             farmerCode.setText(FARMER.getCode());
             setToolbar("Add a new Farmer");
-            save.setText("Save");
+            save.setText(getStringResources(R.string.save));
 
             gender = genders[0];
             educationLevel = educationLevels[0];
@@ -226,16 +226,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     @OnClick(R.id.save)
     void saveAndContinue() {
 
-        //Validate inputs
-        if(!dynamicFormFragment.getFormController().isValidInput()){
-            dynamicFormFragment.getFormController().resetValidationErrors();
-            dynamicFormFragment.getFormController().showValidationErrors();
-            return;
-        }
-
-
-
-        if (farmerName.getText().toString().trim().isEmpty() || farmerName.getText().toString().trim().equalsIgnoreCase(" ")) {
+        if (farmerName.getText().toString().trim().isEmpty()) {
             showMessage(R.string.enter_valid_farmer_name);
             return;
         }
@@ -252,26 +243,41 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
         }
 
+        if (educationLevel == null|| educationLevel.isEmpty()) {
+            showMessage("Please select education level of farmer");
+            return;
+        }
+
+        if (gender == null|| gender.isEmpty()) {
+            showMessage("Please select gender of farmer");
+            return;
+        }
+
 
         if (isNewFarmer) {
             FARMER = new RealFarmer();
             FARMER.setFirstVisitDate(new Date(System.currentTimeMillis()));
         }
 
-        FARMER.setFarmerName(farmerName.getText().toString().trim());
-        FARMER.setBirthYear(birthYearEdittext.getText().toString().trim());
-        FARMER.setCode(farmerCode.getText().toString().trim());
-        FARMER.setGender(gender);
-        FARMER.setEducationLevel(educationLevel);
-        FARMER.setVillageId(villageId);
-        FARMER.setVillageName(villageName);
-        FARMER.setLastModifiedDate(TimeUtils.getDateTime());
-        FARMER.setImageUrl(BASE64_STRING);
 
+        //Validate inputs
+        if(!dynamicFormFragment.getFormController().isValidInput()) {
+            dynamicFormFragment.getFormController().resetValidationErrors();
+            dynamicFormFragment.getFormController().showValidationErrors();
+            return;
+        }
 
-        mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
+            FARMER.setFarmerName(farmerName.getText().toString().trim());
+            FARMER.setBirthYear(birthYearEdittext.getText().toString().trim());
+            FARMER.setCode(farmerCode.getText().toString().trim());
+            FARMER.setGender(gender);
+            FARMER.setEducationLevel(educationLevel);
+            FARMER.setVillageId(villageId);
+            FARMER.setVillageName(villageName);
+            FARMER.setLastModifiedDate(TimeUtils.getDateTime());
+            FARMER.setImageUrl(BASE64_STRING);
 
-
+            mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
     }
 
 

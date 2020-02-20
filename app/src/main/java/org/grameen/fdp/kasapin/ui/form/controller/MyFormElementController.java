@@ -16,6 +16,8 @@ public abstract class MyFormElementController {
     private final String contentDesc;
     private FormModel model;
     private View view;
+    private boolean isHidden = false;
+
 
     /**
      * Constructs a new instance with the specified name.
@@ -80,6 +82,13 @@ public abstract class MyFormElementController {
 
     public void setView(View view) {
         this.view = view;
+    }
+
+    public boolean isHidden(){
+        return isHidden;
+    }
+    public void setHidden(boolean hidden){
+        isHidden = hidden;
     }
 
     /**

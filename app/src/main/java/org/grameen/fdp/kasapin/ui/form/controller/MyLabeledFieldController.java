@@ -142,16 +142,25 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
      */
     public List<ValidationError> validateInput() {
         List<ValidationError> errors = new ArrayList<>();
-        Object value = getModel().getValue(getName());
-        ValidationError error;
-        for (InputValidator validator : validators) {
-            error = validator.validate(value, getName(), getLabel());
-            if (error != null) {
-                errors.add(error);
+       /* if(isHidden()) {
+            AppLogger.e("LabeledFieldController", getLabel() + " removing validations because isHidden is " + isHidden());
+            return errors;
+        }else {*/
+            Object value = getModel().getValue(getName());
+            ValidationError error;
+            for (InputValidator validator : validators) {
+                error = validator.validate(value, getName(), getLabel());
+                if (error != null) {
+                    errors.add(error);
+                }
             }
-        }
-        return errors;
+            return errors;
+
     }
+
+
+
+
 
     /**
      * Returns the associated view for the field (without the label view) of this element.

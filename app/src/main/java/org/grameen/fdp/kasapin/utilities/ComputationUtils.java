@@ -162,10 +162,17 @@ public class ComputationUtils {
                 getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
                     AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue());
                     try {
-                        if (compareValues(sl, String.valueOf(event.getNewValue())))
+                        if (compareValues(sl, String.valueOf(event.getNewValue()))) {
                             getFormController().getElement(questiontoHide).getView().setVisibility((sl.shouldHide()) ? View.GONE : View.VISIBLE);
-                        else
-                           getFormController().getElement(questiontoHide).getView().setVisibility((sl.shouldHide()) ? View.VISIBLE : View.GONE);
+                            getFormController().getElement(questiontoHide).setHidden(sl.shouldHide());
+                        }
+                        else {
+                            getFormController().getElement(questiontoHide).getView().setVisibility((sl.shouldHide()) ? View.VISIBLE : View.GONE);
+                            getFormController().getElement(questiontoHide).setHidden(!sl.shouldHide());
+                        }
+
+                        AppLogger.e(TAG, questiontoHide + " state is  --->> " + getFormController().getElement(questiontoHide).isHidden());
+
                     } catch (Exception ignored) {
                     }
                 });
@@ -185,10 +192,15 @@ public class ComputationUtils {
                     if (compareValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString())) {
                         AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + true);
                         formController.getElement(label).getView().setVisibility((sl.shouldHide()) ? View.GONE : View.VISIBLE);
+                        formController.getElement(label).setHidden((sl.shouldHide()));
                     } else {
                         AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + false);
                         formController.getElement(label).getView().setVisibility((sl.shouldHide()) ? View.VISIBLE : View.GONE);
+                        formController.getElement(label).setHidden(!sl.shouldHide());
                     }
+
+                    AppLogger.e(TAG, label + " state is  --->> " + getFormController().getElement(label).isHidden());
+
                 } catch (Exception ignored) {
                 }
             }

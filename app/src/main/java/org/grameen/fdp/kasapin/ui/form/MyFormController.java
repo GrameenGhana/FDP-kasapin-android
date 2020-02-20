@@ -33,7 +33,6 @@ public class MyFormController {
     private FormModel model;
     private ValidationErrorDisplay validationErrorDisplay;
     private PropertyChangeListener modelListener = event -> getElement(event.getPropertyName()).refresh();
-
     /**
      * Constructs a new FormController.
      *
@@ -183,6 +182,7 @@ public class MyFormController {
             for (MyFormElementController element : section.getElements()) {
                 if (element instanceof MyLabeledFieldController) {
                     MyLabeledFieldController field = (MyLabeledFieldController) element;
+                    if(!field.isHidden())
                     errors.addAll(field.validateInput());
                 }
             }

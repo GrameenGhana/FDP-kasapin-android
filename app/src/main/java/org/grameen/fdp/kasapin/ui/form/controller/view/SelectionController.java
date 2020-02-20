@@ -83,6 +83,7 @@ public class SelectionController extends MyLabeledFieldController {
         this.values = new ArrayList<>(values);
         this.IS_ENABLED = isEnabled;
 
+
     }
 
     /**
@@ -99,8 +100,11 @@ public class SelectionController extends MyLabeledFieldController {
      *                         {@code SelectionController} expects the form model to use index (as an Integer) to
      *                         represent the selected item
      */
-    public SelectionController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String prompt, List<String> items, boolean useItemsAsValues, boolean isEnabled, String helperText) {
+    public SelectionController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String prompt, List<String> items, boolean useItemsAsValues, boolean isEnabled, String helperText, Set<InputValidator> validators) {
         this(ctx, name, content_desc, labelText, isRequired, prompt, items, useItemsAsValues ? items : null, isEnabled, helperText);
+
+        if(isRequired)
+            this.setValidators(validators);
     }
 
     /**
@@ -153,13 +157,13 @@ public class SelectionController extends MyLabeledFieldController {
             spinnerView.setContentDescription(getContentDesc());
             spinnerView.setId(spinnerId);
             spinnerView.setPrompt(prompt);
-            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, items) {
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.simple_spinner_item, items) {
                 @NonNull
                 @Override
                 public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
                     if (position == getCount()) {
-                        TextView itemView = ((TextView) view.findViewById(android.R.id.text1));
+                        TextView itemView = view.findViewById(android.R.id.text1);
                         itemView.setText("");
                         itemView.setHint(getItem(getCount()));
                     }

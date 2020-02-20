@@ -22,6 +22,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
+import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
 import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
@@ -211,124 +212,151 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     }
 
     void savePlotData(String flag) {
-        showLoading();
-        JSONObject jsonObject = dynamicPlotFormFragment.getAnswersData();
-        try {
-            if (jsonObject.has(soilPhQuestion.getLabelC()))
-                jsonObject.remove(soilPhQuestion.getLabelC());
-            jsonObject.put(soilPhQuestion.getLabelC(), phEdittext.getText().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (jsonObject.has(estProductionQuestion.getLabelC()))
-                jsonObject.remove(estProductionQuestion.getLabelC());
-             jsonObject.put(estProductionQuestion.getLabelC(), estimatedProductionEdittext.getText().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (jsonObject.has(plotAreaQuestion.getLabelC()))
-                jsonObject.remove(plotAreaQuestion.getLabelC());
-            jsonObject.put(plotAreaQuestion.getLabelC(), plotSizeEdittext.getText().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        if (validateFields()) {
+            showLoading();
+            JSONObject jsonObject = dynamicPlotFormFragment.getAnswersData();
+            try {
+                if (jsonObject.has(soilPhQuestion.getLabelC()))
+                    jsonObject.remove(soilPhQuestion.getLabelC());
+                jsonObject.put(soilPhQuestion.getLabelC(), phEdittext.getText().toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (jsonObject.has(estProductionQuestion.getLabelC()))
+                    jsonObject.remove(estProductionQuestion.getLabelC());
+                jsonObject.put(estProductionQuestion.getLabelC(), estimatedProductionEdittext.getText().toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (jsonObject.has(plotAreaQuestion.getLabelC()))
+                    jsonObject.remove(plotAreaQuestion.getLabelC());
+                jsonObject.put(plotAreaQuestion.getLabelC(), plotSizeEdittext.getText().toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-        AppLogger.e(TAG, jsonObject);
-        LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
-        logicFormulaParser.setJsonObject(jsonObject);
+            AppLogger.e(TAG, jsonObject);
+            LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
+            logicFormulaParser.setJsonObject(jsonObject);
 
-        //Compute AOR and AI question values here, put values into the json
-        for (FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS) {
-            AppLogger.e(TAG, "---------------------------------------------------------------------------");
+            //Compute AOR and AI question values here, put values into the json
+            for (FormAndQuestions formAndQuestions : PLOT_FORM_AND_QUESTIONS) {
+                AppLogger.e(TAG, "---------------------------------------------------------------------------");
 
-            AppLogger.e(TAG, "FORM NAME ===>>> " + formAndQuestions.getForm().getFormNameC() + " *****");
-            if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADOPTION_OBSERVATION_RESULTS)
-                    || formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADDITIONAL_INTERVENTION)) {
-                for (Question question : formAndQuestions.getQuestions()) {
-                    if (question.getFormulaC() != null && !question.getFormulaC().equalsIgnoreCase("null")) {
-                        try {
-                           AppLogger.e(TAG, "---------------------------------------------------------------------------");
-                            AppLogger.e(TAG, "Question name is ***** " + question.getLabelC() + " *****");
-                            String value = logicFormulaParser.evaluate(question.getFormulaC());
-                            if (jsonObject.has(question.getLabelC()))
-                                jsonObject.remove(question.getLabelC());
-                            jsonObject.put(question.getLabelC(), value);
-                            //AppLogger.e(TAG, "Added " + value + " to json for " + question.getLabelC());
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                AppLogger.e(TAG, "FORM NAME ===>>> " + formAndQuestions.getForm().getFormNameC() + " *****");
+                if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADOPTION_OBSERVATION_RESULTS)
+                        || formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.ADDITIONAL_INTERVENTION)) {
+                    for (Question question : formAndQuestions.getQuestions()) {
+                        if (question.getFormulaC() != null && !question.getFormulaC().equalsIgnoreCase("null")) {
+                            try {
+                                AppLogger.e(TAG, "---------------------------------------------------------------------------");
+                                AppLogger.e(TAG, "Question name is ***** " + question.getLabelC() + " *****");
+                                String value = logicFormulaParser.evaluate(question.getFormulaC());
+                                if (jsonObject.has(question.getLabelC()))
+                                    jsonObject.remove(question.getLabelC());
+                                jsonObject.put(question.getLabelC(), value);
+                                //AppLogger.e(TAG, "Added " + value + " to json for " + question.getLabelC());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
             }
-        }
-        //Todo check if farm size corresponds
-        //Todo check if checkIfFarmProductionCorresponds
-        //Todo checkIfPlotWasRenovatedRecently
+            //Todo check if farm size corresponds
+            //Todo check if checkIfFarmProductionCorresponds
+            //Todo checkIfPlotWasRenovatedRecently
 
 
+            int year = 1;
+            Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_correctly_");
+            Question PLOT_RENOVATION_MADE_YEARS = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_");
+            Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
+            Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
+            if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE_YEARS != null) {
+                AppLogger.e(TAG, "#######################################  PLOT RENOVATED CORRECTLY");
+                AppLogger.e(TAG, jsonObject.toString());
+                if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
+                    try {
+                        if (ComputationUtils.getValue(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC(), jsonObject).equalsIgnoreCase("yes")) {
+                            year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE_YEARS.getLabelC()));
+                            String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
 
-
-        int year = 1;
-        Question PLOT_RENOVATED_CORRECTLY_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_correctly_");
-        Question PLOT_RENOVATION_MADE_YEARS = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_made_");
-        Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
-        Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
-        if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE_YEARS != null) {
-            AppLogger.e(TAG, "#######################################  PLOT RENOVATED CORRECTLY");
-            AppLogger.e(TAG, jsonObject.toString());
-            if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
-                try {
-                    if (ComputationUtils.getValue(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC(), jsonObject).equalsIgnoreCase("yes")) {
-                        year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE_YEARS.getLabelC()));
-                        String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
-
-                        AppLogger.e(TAG, "RECOMMENDATION NAME IS " + recommendationName);
-                        if (recommendationName.equalsIgnoreCase("replanting"))
-                            GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getByRecommendationName("Replant").blockingGet();
-                        else if (recommendationName.equalsIgnoreCase("grafting"))
-                            GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
-                                    .getByRecommendationName("Grafting").blockingGet();
-                        if (GAPS_RECOMENDATION_FOR_START_YEAR != null) {
-                            AppLogger.e(TAG, "RECOMMENDATION MADE  >>>> " + GAPS_RECOMENDATION_FOR_START_YEAR.getLabel());
-                            PLOT.setRecommendationId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
-                            PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
-                          year = year * -1;
+                            AppLogger.e(TAG, "RECOMMENDATION NAME IS " + recommendationName);
+                            if (recommendationName.equalsIgnoreCase("replanting"))
+                                GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                        .getByRecommendationName("Replant").blockingGet();
+                            else if (recommendationName.equalsIgnoreCase("grafting"))
+                                GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
+                                        .getByRecommendationName("Grafting").blockingGet();
+                            if (GAPS_RECOMENDATION_FOR_START_YEAR != null) {
+                                AppLogger.e(TAG, "RECOMMENDATION MADE  >>>> " + GAPS_RECOMENDATION_FOR_START_YEAR.getLabel());
+                                PLOT.setRecommendationId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
+                                PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
+                                year = year * -1;
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        year = 1;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    year = 1;
                 }
             }
+
+            try {
+                String plotInterventionStartYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_intervention_start_year_").blockingGet("null");
+                if (jsonObject.has(plotInterventionStartYearLabel))
+                    jsonObject.remove(plotInterventionStartYearLabel);
+                jsonObject.put(plotInterventionStartYearLabel, year);
+                String startYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet("null");
+                if (jsonObject.has(startYearLabel))
+                    jsonObject.remove(startYearLabel);
+                jsonObject.put(startYearLabel, year);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            AppLogger.e(TAG, ">>>>>>>>>>  YEAR  >>>>>>>>>>>> " + year);
+            PLOT.setStartYear(year);
+            PLOT.setAnswersData(jsonObject.toString());
+            PLOT.setPh(phEdittext.getText().toString());
+            PLOT.setName(plotNameEdittext.getText().toString());
+            PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
+            PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
+            PLOT.setArea(plotSizeEdittext.getText().toString());
+
+            mPresenter.saveData(PLOT, flag);
+        }
+    }
+
+    private boolean validateFields(){
+        if(soilPhQuestion.isRequired() && phEdittext.getText().toString().trim().isEmpty()){
+            showMessage(soilPhQuestion.getErrorMessage());
+            return false;
         }
 
-        try {
-            String plotInterventionStartYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_intervention_start_year_").blockingGet("null");
-            if (jsonObject.has(plotInterventionStartYearLabel))
-                jsonObject.remove(plotInterventionStartYearLabel);
-            jsonObject.put(plotInterventionStartYearLabel, year);
-            String startYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("start_year_").blockingGet("null");
-            if (jsonObject.has(startYearLabel))
-                jsonObject.remove(startYearLabel);
-            jsonObject.put(startYearLabel, year);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(plotNameEdittext.getText().toString().trim().isEmpty()){
+            showMessage(plotNameQuestion.getErrorMessage());
+            return false;
+        }
+        if(estProductionQuestion.isRequired() && estimatedProductionEdittext.getText().toString().trim().isEmpty()){
+            showMessage(estProductionQuestion.getErrorMessage());
+            return false;
+        }
+        if(plotAreaQuestion.isRequired() && plotSizeEdittext.getText().toString().trim().isEmpty()){
+             showMessage(plotAreaQuestion.getErrorMessage());
+            return false;
         }
 
-
-        AppLogger.e(TAG, ">>>>>>>>>>  YEAR  >>>>>>>>>>>> " + year);
-        PLOT.setStartYear(year);
-        PLOT.setAnswersData(jsonObject.toString());
-        PLOT.setPh(phEdittext.getText().toString());
-        PLOT.setName(plotNameEdittext.getText().toString());
-        PLOT.setEstimatedProductionSize(estimatedProductionEdittext.getText().toString());
-        PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
-        PLOT.setArea(plotSizeEdittext.getText().toString());
-
-        mPresenter.saveData(PLOT, flag);
+        if(!dynamicPlotFormFragment.getFormController().isValidInput()) {
+            dynamicPlotFormFragment.getFormController().resetValidationErrors();
+            dynamicPlotFormFragment.getFormController().showValidationErrors();
+            return false;
+        }
+        return true;
     }
 
     @OnClick(R.id.plot_area_calculation)

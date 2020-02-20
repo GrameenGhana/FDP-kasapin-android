@@ -17,6 +17,8 @@ import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
+import org.grameen.fdp.kasapin.ui.form.FieldValidator;
+import org.grameen.fdp.kasapin.ui.form.NumericalFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.TextFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.controller.MyFormSectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.ButtonController;
@@ -159,45 +161,40 @@ public class DynamicPlotFormFragment extends FormFragment {
     private void loadQuestionsValues(Context context, List<Question> questions, MyFormSectionController formSectionController) {
         for (final Question q : questions) {
             HashSet<InputValidator> validation = new HashSet<>();
-            validation.add(new TextFieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
+            validation.add(new FieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
 
             if (!q.shouldHide()) {
-                String storedValue;
-                if (shouldLoadOldValues) {
-                    storedValue = getComputationUtils().getValue(q, ANSWERS_JSON);
-                    if (storedValue.isEmpty() || storedValue.equalsIgnoreCase("null"))
-                        storedValue = q.getDefaultValueC();
-                } else
-                    storedValue = q.getDefaultValueC();
-
+                String storedValue = (shouldLoadOldValues) ? getComputationUtils().getValue(q, ANSWERS_JSON) : q.getDefaultValueC();
                 switch (q.getTypeC().toLowerCase()) {
                     case AppConstants.TYPE_TEXT:
+                        validation.add(new TextFieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_TEXT, IS_CONTROLLER_ENABLED, q.getHelpTextC(), validation));
 
                         break;
                     case AppConstants.TYPE_NUMBER:
+                        validation.add(new NumericalFieldValidator(q.getMinValue(), q.getMaxValue(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED, q.getHelpTextC(), validation));
-
                         break;
 
                     case AppConstants.TYPE_NUMBER_DECIMAL:
+                        validation.add(new NumericalFieldValidator(q.getMinValue(), q.getMaxValue(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL,
                                 IS_CONTROLLER_ENABLED, q.getHelpTextC(), validation));
                         break;
 
                     case AppConstants.TYPE_SELECTABLE:
-                        formSectionController.addElement(new SelectionController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), storedValue, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED, q.getHelpTextC()));
+                        formSectionController.addElement(new SelectionController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), storedValue, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED, q.getHelpTextC(), validation));
                         break;
 
                     case AppConstants.TYPE_MULTI_SELECTABLE:
-                        formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED));
+                        formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED, validation));
                         break;
 
                     case AppConstants.TYPE_TIMEPICKER:
-                        formSectionController.addElement(new TimePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC()));
+                        formSectionController.addElement(new TimePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), validation));
                         break;
                     case AppConstants.TYPE_DATEPICKER:
-                        formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), IS_CONTROLLER_ENABLED));
+                        formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), IS_CONTROLLER_ENABLED, q.isRequired(), validation));
                         break;
 
                     case AppConstants.TYPE_MATH_FORMULA:

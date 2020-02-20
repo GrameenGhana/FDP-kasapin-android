@@ -71,8 +71,10 @@ public class TimePickerController extends MyLabeledFieldController {
      * @param name      the name of the field
      * @param labelText the label to display beside the field
      */
-    public TimePickerController(Context context, String name, String content_desc, String labelText) {
+    public TimePickerController(Context context, String name, String content_desc, String labelText, Boolean isRequired,  Set<InputValidator> validators) {
         this(context, name, content_desc, labelText, false, new SimpleDateFormat("hh:mm a", Locale.getDefault()), false);
+        if(isRequired)
+            this.setValidators(validators);
     }
 
     @Override
@@ -84,19 +86,11 @@ public class TimePickerController extends MyLabeledFieldController {
         editText.setInputType(InputType.TYPE_CLASS_DATETIME);
         editText.setKeyListener(null);
         refresh(editText);
-        editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimePickerDialog(getContext(), editText);
-            }
-        });
+        editText.setOnClickListener(v -> showTimePickerDialog(getContext(), editText));
 
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    showTimePickerDialog(getContext(), editText);
-                }
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                showTimePickerDialog(getContext(), editText);
             }
         });
 
@@ -114,24 +108,16 @@ public class TimePickerController extends MyLabeledFieldController {
             calendar.setTimeZone(timeZone);
             calendar.setTime(date);
 
-            timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    Calendar calendar = Calendar.getInstance(Locale.getDefault());
-                    calendar.setTimeZone(timeZone);
-                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    calendar.set(Calendar.MINUTE, minute);
-                    getModel().setValue(getName(), calendar.getTime());
-                    editText.setText(displayFormat.format(calendar.getTime()));
-                }
+            timePickerDialog = new TimePickerDialog(context, (view, hourOfDay, minute) -> {
+                Calendar calendar1 = Calendar.getInstance(Locale.getDefault());
+                calendar1.setTimeZone(timeZone);
+                calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar1.set(Calendar.MINUTE, minute);
+                getModel().setValue(getName(), calendar1.getTime());
+                editText.setText(displayFormat.format(calendar1.getTime()));
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), is24HourView);
 
-            timePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    timePickerDialog = null;
-                }
-            });
+            timePickerDialog.setOnDismissListener(dialog -> timePickerDialog = null);
 
             timePickerDialog.show();
         }

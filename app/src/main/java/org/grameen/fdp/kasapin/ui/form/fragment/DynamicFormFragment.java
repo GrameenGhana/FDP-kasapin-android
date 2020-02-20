@@ -4,19 +4,24 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
+import org.grameen.fdp.kasapin.ui.form.FieldValidator;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
+import org.grameen.fdp.kasapin.ui.form.NumericalFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.TextFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.controller.MyFormSectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.ButtonController;
@@ -175,24 +180,27 @@ public class DynamicFormFragment extends FormFragment {
 
         for (final Question q : questions) {
             HashSet<InputValidator> validation = new HashSet<>();
-            validation.add(new TextFieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
+            validation.add(new FieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
 
             if (!q.shouldHide()) {
                 String storedValue = (shouldLoadOldValues) ? getComputationUtils().getValue(q, ANSWERS_JSON) : q.getDefaultValueC();
                 switch (q.getTypeC().toLowerCase()) {
                     case AppConstants.TYPE_TEXT:
                         //Define validations
+                        validation.add(new TextFieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_TEXT,
                                 IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC(), validation));
                         break;
 
                     case AppConstants.TYPE_NUMBER_DECIMAL:
+                        validation.add(new NumericalFieldValidator(q.getMinValue(), q.getMaxValue(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(),
                                 InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL,
                                 IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC(), validation));
                         break;
 
                     case AppConstants.TYPE_NUMBER:
+                        validation.add(new NumericalFieldValidator(q.getMinValue(), q.getMaxValue(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(),
                                 InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC(), validation));
                         break;
@@ -200,19 +208,19 @@ public class DynamicFormFragment extends FormFragment {
                     case AppConstants.TYPE_SELECTABLE:
                         formSectionController.addElement(new SelectionController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
                                 q.isRequired(), storedValue, q.formatQuestionOptions(), true,
-                                IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC()));
+                                IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC(), validation));
                         break;
 
                     case AppConstants.TYPE_MULTI_SELECTABLE:
                         formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
-                                q.isRequired(), q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED && q.caEdit()));
+                                q.isRequired(), q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED && q.caEdit(), validation));
                         break;
                     case AppConstants.TYPE_TIMEPICKER:
-                        formSectionController.addElement(new TimePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC()));
+                        formSectionController.addElement(new TimePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),q.isRequired(),  validation));
                         break;
                     case AppConstants.TYPE_DATEPICKER:
                         formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(),
-                                q.getCaptionC(), IS_CONTROLLER_ENABLED));
+                                q.getCaptionC(), IS_CONTROLLER_ENABLED, q.isRequired(), validation));
                         break;
 
                     case AppConstants.TYPE_MATH_FORMULA:

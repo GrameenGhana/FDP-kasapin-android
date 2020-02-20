@@ -106,12 +106,11 @@ public class CheckBoxController extends MyLabeledFieldController {
         Log.i("CHECK BOX CONTROLLER", oldValues);
 
     }*/
-    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, List<String> items, boolean useItemsAsValues, boolean isEnabled) {
+    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, List<String> items, boolean useItemsAsValues, boolean isEnabled,  Set<InputValidator> validators) {
         this(ctx, name, content_desc, labelText, isRequired, items, useItemsAsValues ? items : null, isEnabled);
 
-
-        // Log.i("CHECK BOX CONTROLLER", oldValues);
-
+        if(isRequired)
+            this.setValidators(validators);
     }
 
     /**

@@ -425,4 +425,5 @@
     <string name="default_url_set_message">Default url has been set.</string>
     <string name="please_specify_the_name_and_the_url">Please specify the name and the url</string>
     <string name="add_gps_point">add gps point</string>
+    <string name="error_enter_valid_word">Please enter a valid word</string>
 </resources>

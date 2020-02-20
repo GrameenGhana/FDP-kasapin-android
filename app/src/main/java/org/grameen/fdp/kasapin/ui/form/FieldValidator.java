@@ -1,35 +1,35 @@
 package org.grameen.fdp.kasapin.ui.form;
 
-import android.os.PatternMatcher;
-
 import org.grameen.fdp.kasapin.ui.form.model.RequiredField;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
 
-import javax.annotation.RegEx;
-
-public class TextFieldValidator implements InputValidator {
+public class FieldValidator implements InputValidator {
     private String message;
     private String defaultValue;
 
-    public TextFieldValidator(String _defaultValue, String _message){
+    public FieldValidator(String _defaultValue, String _message){
         this.message = _message;
         this.defaultValue = _defaultValue;
     }
 
     @Override
     public ValidationError validate(Object value, String fieldName, String fieldLabel) {
+        AppLogger.e("FieldValidator", "Validation ---> Value == " + value + " default == " + defaultValue);
 
-        if (!value.toString().matches("^[a-zA-Z]*$")) {
+        if (value == null ||  value.toString().trim().isEmpty()
+                || Objects.equals(value.toString(), "-select-")
+                || Objects.equals(value.toString(), "--")
+                || Objects.equals(value.toString(), "-")) {
+            AppLogger.e("FieldValidator", "Validation didn't pass.");
             return new RequiredField(fieldName, fieldLabel, message);
         }
         return null;
     }
 
     /**
-     * Makes every instances of {@link TextFieldValidator} equal.
+     * Makes every instances of {@link FieldValidator} equal.
      *
      * @param o The object to compare.
      * @return true if o is also an instance of RequiredFieldValidator, false otherwise.
@@ -40,7 +40,7 @@ public class TextFieldValidator implements InputValidator {
     }
 
     /**
-     * Every instance of {{@link TextFieldValidator}} share the same hashcode.
+     * Every instance of {{@link FieldValidator}} share the same hashcode.
      *
      * @return 0
      */
