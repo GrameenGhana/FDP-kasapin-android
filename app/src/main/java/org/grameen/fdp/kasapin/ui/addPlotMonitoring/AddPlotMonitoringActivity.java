@@ -588,6 +588,19 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @OnClick(R.id.saveButton)
     void saveData(){
+
+
+        if(!dynamicFormFragment.getFormController().isValidInput()) {
+            dynamicFormFragment.getFormController().resetValidationErrors();
+            dynamicFormFragment.getFormController().showValidationErrors();
+            return;
+        }
+
+
+
+
+
+
          /* Merge AO/AOR values generated in diagnostic into one JSON. This is needed to get values from a single JSON to parse the formulas instead of having 2 separate JSONs
          * where we obtain values from
          * Start year (start_year_COUNTRY) key:value is not added to the merged json because when the Logic formula parser is iterating through the JSONObject and replacing

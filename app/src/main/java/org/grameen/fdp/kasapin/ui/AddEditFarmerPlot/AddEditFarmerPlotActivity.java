@@ -333,30 +333,37 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     }
 
     private boolean validateFields(){
-        if(soilPhQuestion.isRequired() && phEdittext.getText().toString().trim().isEmpty()){
-            showMessage(soilPhQuestion.getErrorMessage());
-            return false;
-        }
+        boolean isValid = true;
 
         if(plotNameEdittext.getText().toString().trim().isEmpty()){
-            showMessage(plotNameQuestion.getErrorMessage());
-            return false;
-        }
+            plotNameEdittext.setError(plotNameQuestion.getErrorMessage());
+            isValid = false;
+        }else
+            plotNameEdittext.setError(null);
+
         if(estProductionQuestion.isRequired() && estimatedProductionEdittext.getText().toString().trim().isEmpty()){
-            showMessage(estProductionQuestion.getErrorMessage());
-            return false;
-        }
+            estimatedProductionEdittext.setError(estProductionQuestion.getErrorMessage());
+            isValid = false;
+        }else
+            estimatedProductionEdittext.setError(null);
+
         if(plotAreaQuestion.isRequired() && plotSizeEdittext.getText().toString().trim().isEmpty()){
-             showMessage(plotAreaQuestion.getErrorMessage());
-            return false;
-        }
+            plotSizeEdittext.setError(plotAreaQuestion.getErrorMessage());
+            isValid = false;
+        }else
+            plotSizeEdittext.setError(null);
+        if(soilPhQuestion.isRequired() && phEdittext.getText().toString().trim().isEmpty()){
+            phEdittext.setError(soilPhQuestion.getErrorMessage());
+            isValid = false;
+        }else
+            phEdittext.setError(null);
 
         if(!dynamicPlotFormFragment.getFormController().isValidInput()) {
             dynamicPlotFormFragment.getFormController().resetValidationErrors();
             dynamicPlotFormFragment.getFormController().showValidationErrors();
-            return false;
+            isValid = false;
         }
-        return true;
+        return isValid;
     }
 
     @OnClick(R.id.plot_area_calculation)

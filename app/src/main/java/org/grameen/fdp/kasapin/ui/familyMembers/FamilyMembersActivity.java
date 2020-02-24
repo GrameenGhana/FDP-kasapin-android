@@ -6,12 +6,15 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.evrencoskun.tableview.TableView;
 import com.google.gson.Gson;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -23,14 +26,20 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.Cell;
 import org.grameen.fdp.kasapin.ui.base.model.ColumnHeader;
 import org.grameen.fdp.kasapin.ui.base.model.RowHeader;
+import org.grameen.fdp.kasapin.ui.form.FieldValidator;
+import org.grameen.fdp.kasapin.ui.form.InputValidator;
+import org.grameen.fdp.kasapin.ui.form.NumericalFieldValidator;
+import org.grameen.fdp.kasapin.ui.form.ValidationError;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
+import org.grameen.fdp.kasapin.utilities.Validator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -64,6 +73,9 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     int lastVisibleItemPosition;
     int noFamilyMembers;
     FormAnswerData answerData;
+    FineTableViewAdapter mTableViewAdapter;
+    Validator validator = new Validator();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +151,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     public void setupTableView(FormAndQuestions _familyMembersFormAndQuestions) {
         this.familyMembersFormAndQuestions = _familyMembersFormAndQuestions;
 
-        FineTableViewAdapter mTableViewAdapter = new FineTableViewAdapter(this, familyMembersFormAndQuestions.getQuestions());
+        mTableViewAdapter = new FineTableViewAdapter(this, familyMembersFormAndQuestions.getQuestions(), ROW_SIZE);
         tableView.setAdapter(mTableViewAdapter);
         tableView.setTableViewListener(new TableViewListener());
 
@@ -148,8 +160,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         tableView.setScrollBarSize(50);
 
         List<RowHeader> rowHeaders = getRowHeaderList();
-        List<ColumnHeader> columnHeaders = getColumnHeaderList(); //getRandomColumnHeaderList(); //
-        List<List<Cell>> cellList =  getCellList(); //getCellListForSortingTest();
+        List<ColumnHeader> columnHeaders = getColumnHeaderList();
+        List<List<Cell>> cellList =  getCellList();
 
         mRowHeaderList.addAll(rowHeaders);
         mColumnHeaderList.addAll(columnHeaders);
@@ -176,8 +188,54 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     }
 
 
+
+    boolean validate(){
+
+        List<ValidationError> errors = new ArrayList<>();
+        for (int i = 0; i < ROW_SIZE; i++) {
+            for (int j = 0; j < COLUMN_SIZE; j++) {
+                View view = mTableViewAdapter.getCellViews(i, j);
+                if(view != null){
+                String name = mTableViewAdapter.getCellItem(j, i).getId();
+                HashSet<InputValidator> validators = validator.getValidators(name + i);
+
+                if(validators != null) {
+                    ValidationError error;
+                    for (InputValidator inputVal : validators) {
+                        error = inputVal.validate(getValue(i, name), name, "");
+                        if (error != null) {
+                            errors.add(error);
+                            try {
+                                if (view.getTag().toString().equals("edittext")) {
+                                    EditText edittext = view.findViewById(R.id.cell_data);
+                                    edittext.setError(error.getMessage(getResources()));
+                                } else if (view.getTag().toString().equals("spinner")) {
+                                    Spinner spinner = view.findViewById(R.id.cell_data);
+                                    TextView itemView = spinner.findViewById(android.R.id.text1);
+                                    itemView.setError((error.getMessage(getResources())));
+                                }
+                            }catch(Exception ignore){}
+                        }
+                    }
+                }
+                }
+            }
+        }
+
+        AppLogger.e(TAG, "ERRORS SIZE IS " + errors.size());
+       return  errors.isEmpty();
+    }
+
+
     @OnClick(R.id.save)
     void saveData(){
+
+       // check validations here
+
+        if(!validate()){
+            return;
+        }
+
         /*
         ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
         */
@@ -291,12 +349,14 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             List<Cell> cellList = new ArrayList<>();
             for (int j = 0; j < COLUMN_SIZE; j++) {
                 Question q = mQuestionsList.get(i).get(j);
-                //q.setMax_value__c(i + "");
+                //q.setMax_value__c(i + ");
                 String value = getValue(i, q.getLabelC());
                 if (value != null)
                     q.setDefaultValueC(value);
                 Cell cell = new Cell(q.getLabelC(), q);
                 cellList.add(cell);
+
+                validator.addValidation(i, q);
             }
             list.add(cellList);
         }
@@ -328,6 +388,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         }
         return list;
     }
+
+
 
     public static String getValue(int index, String uid){
         String value = "";

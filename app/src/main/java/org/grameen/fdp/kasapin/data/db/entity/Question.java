@@ -87,7 +87,7 @@ public class Question {
 
     @Expose
     @SerializedName("error_display_message_c")
-    String errorMessage;
+    private String errorMessage;
 
 
 

@@ -16,17 +16,25 @@ import org.grameen.fdp.kasapin.ui.base.model.Cell;
 import org.grameen.fdp.kasapin.ui.base.model.ColumnHeader;
 import org.grameen.fdp.kasapin.ui.base.model.RowHeader;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHeader, Cell> {
 
     // Cell View Types by Column Position
     private List<Question> questions;
+    List<List<View>> views = new ArrayList<>();
+    int CURRENT_VISIBLE_COLUMN = 0;
 
-    FineTableViewAdapter(Context p_jContext, List<Question> questionList) {
+
+    FineTableViewAdapter(Context p_jContext, List<Question> questionList, int rowSize) {
         super(p_jContext);
         this.questions = questionList;
+
+        for (int i = 0; i < rowSize; i++)
+            views.add(new ArrayList<>());
     }
 
     /**
@@ -41,10 +49,9 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
     public RecyclerView.ViewHolder onCreateCellViewHolder(ViewGroup parent, int viewType) {
         String TYPE = questions.get(viewType).getTypeC().toLowerCase();
         switch (TYPE){
-            case AppConstants.TYPE_TEXT:
-                return new CellViewHolder(getLayoutView(parent, AppConstants.TYPE_TEXT));
             case AppConstants.TYPE_SELECTABLE:
                 return new SpinnerViewHolder(getLayoutView(parent, AppConstants.TYPE_SELECTABLE));
+
             case AppConstants.TYPE_CHECKBOX:
                 return new CheckBoxViewHolder(getLayoutView(parent, AppConstants.TYPE_CHECKBOX));
             default:
@@ -68,17 +75,26 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
 
     @Override
     public void onBindCellViewHolder(AbstractViewHolder holder, Object cellItemModel, int columnPosition, int rowPosition) {
+        CURRENT_VISIBLE_COLUMN = columnPosition;
         Cell cell = (Cell) cellItemModel;
         if (holder instanceof CellViewHolder) {
             CellViewHolder viewHolder = (CellViewHolder) holder;
+
             viewHolder.setData(rowPosition, (Question) cell.getData());
+            viewHolder.itemView.setTag("edittext");
+            views.get(rowPosition).add(columnPosition, viewHolder.itemView);
         } else if (holder instanceof CheckBoxViewHolder) {
             CheckBoxViewHolder viewHolder = (CheckBoxViewHolder) holder;
             viewHolder.setData(rowPosition, (Question) cell.getData());
+            viewHolder.itemView.setTag("checkbox");
+            views.get(rowPosition).add(columnPosition, viewHolder.itemView);
         } else if (holder instanceof SpinnerViewHolder) {
             SpinnerViewHolder viewHolder = (SpinnerViewHolder) holder;
             viewHolder.setData(rowPosition, (Question) cell.getData());
+            viewHolder.itemView.setTag("spinner");
+            views.get(rowPosition).add(columnPosition, viewHolder.itemView);
         }
+
     }
     /**
      * This is where you create your custom Column Header ViewHolder. This method is called when
@@ -178,45 +194,41 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
 
     @Override
     public int getCellItemViewType(int column) {
-        // The unique ID for this type of cell item
-        // If you have different items for Cell View by X (Column) position,
-        // then you should fill this method to be able create different
-        // type of CellViewHolder on "onCreateCellViewHolder"
-       /* switch (column) {
-            case MainFragment.MOOD_COLUMN_INDEX:
-                return MOOD_CELL_TYPE;
-            case MainFragment.GENDER_COLUMN_INDEX:
-                return GENDER_CELL_TYPE;
-            default:
-                // Default view type
-                return 0;
-        }*/
         return column;
     }
 
     private View getLayoutView(ViewGroup parent, String TYPE) {
-        View layout;
+        View view;
         switch (TYPE) {
             case AppConstants.TYPE_TEXT:
-                layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_edittext, parent, false);
-                layout.setTag(TYPE);
+                view = LayoutInflater.from(mContext).inflate(R.layout.table_view_edittext, parent, false);
+                view.setTag(TYPE);
                 break;
 
             case AppConstants.TYPE_SELECTABLE:
-                layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_spinner, parent, false);
-                layout.setTag(TYPE);
+                view = LayoutInflater.from(mContext).inflate(R.layout.table_view_spinner, parent, false);
+                view.setTag(TYPE);
                 break;
 
             case AppConstants.TYPE_CHECKBOX:
-                layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_checkbox, parent, false);
-                layout.setTag(TYPE);
+                view = LayoutInflater.from(mContext).inflate(R.layout.table_view_checkbox, parent, false);
+                view.setTag(TYPE);
                 break;
 
             default:
-                layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_cell_layout, parent, false);
-                layout.setTag(TYPE);
+                view = LayoutInflater.from(mContext).inflate(R.layout.table_view_cell_layout, parent, false);
+                view.setTag(TYPE);
         }
-        return layout;
+        return view;
     }
+
+     View getCellViews(int rowIndex, int columnIndex){
+        try {
+            return views.get(rowIndex).get(columnIndex);
+        }catch(Exception ignore){return null;}
+    }
+
+
+    int getCurrentVisibleColumn(){ return CURRENT_VISIBLE_COLUMN;}
 }
 

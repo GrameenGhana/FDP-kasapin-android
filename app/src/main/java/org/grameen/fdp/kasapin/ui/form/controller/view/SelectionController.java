@@ -143,7 +143,6 @@ public class SelectionController extends MyLabeledFieldController {
 
 
         if (IS_ENABLED) {
-
             int id;
             AtomicInteger nextGeneratedViewId = new AtomicInteger(1);
             id = nextGeneratedViewId.get();
@@ -167,8 +166,6 @@ public class SelectionController extends MyLabeledFieldController {
                         itemView.setText("");
                         itemView.setHint(getItem(getCount()));
                     }
-
-
                     return view;
                 }
 
@@ -239,13 +236,10 @@ public class SelectionController extends MyLabeledFieldController {
 
 
                 imageView.setOnClickListener(v -> {
-
-
                     if (popupWindow != null && popupWindow.isShowing())
                         popupWindow.dismiss();
 
                     else if (getContext() != null) {
-
                         LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                         View popupView = layoutInflater.inflate(R.layout.popup_info_layout, null);
                         popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -258,10 +252,7 @@ public class SelectionController extends MyLabeledFieldController {
 
                         popupWindow.setFocusable(false);
                         popupWindow.showAsDropDown(imageView, 0, 5);
-
                     }
-
-
                 });
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -269,24 +260,12 @@ public class SelectionController extends MyLabeledFieldController {
                 params.addRule(RelativeLayout.CENTER_VERTICAL);
                 params.leftMargin = 10;
                 imageView.setLayoutParams(params);
-
                 imageView.requestLayout();
-
                 linearLayout.addView(imageView);
-
-                //  linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                //linearLayout.requestLayout();
-
-
             }
-
             spinnerView.setLayoutParams(spinnerViewLayoutParamsparams);
-
             spinnerView.requestLayout();
-
             linearLayout.addView(spinnerView);
-
-
             return linearLayout;
         } else
             return inflateViewOnlyView();

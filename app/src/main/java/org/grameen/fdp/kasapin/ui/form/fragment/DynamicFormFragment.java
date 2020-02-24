@@ -176,8 +176,6 @@ public class DynamicFormFragment extends FormFragment {
 
 
     private void loadQuestionsValues(Context context, List<Question> questions, MyFormSectionController formSectionController) {
-
-
         for (final Question q : questions) {
             HashSet<InputValidator> validation = new HashSet<>();
             validation.add(new FieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
