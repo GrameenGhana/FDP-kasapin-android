@@ -9,16 +9,19 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+
 import com.jaredrummler.materialspinner.MaterialSpinner;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -34,19 +37,21 @@ import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
+
 import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
-import ir.mirrajabi.searchdialog.core.SearchResultListener;
 
 public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmerContract.View {
 
@@ -84,7 +89,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     private FormAndQuestions CURRENT_FORM_QUESTION;
     private DynamicFormFragment dynamicFormFragment;
     private SimpleSearchDialogCompat communitySearchDialog;
-    String gender, educationLevel, villageName;
+    String gender, educationLevel, villageName = null;
     int villageId;
 
 
@@ -225,7 +230,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @OnClick(R.id.save)
     void saveAndContinue() {
-
         if (farmerName.getText().toString().trim().isEmpty()) {
             showMessage(R.string.enter_valid_farmer_name);
             return;
@@ -234,31 +238,27 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         if (birthYearEdittext.getText().toString().isEmpty()) {
             showMessage("Please enter birth year of farmer");
             return;
-
         }
 
         if (villageId == 0 || villageName == null) {
             showMessage("Please select community of farmer");
             return;
-
         }
 
-        if (educationLevel == null|| educationLevel.isEmpty()) {
+        if (educationLevel == null || educationLevel.isEmpty() || educationLevel.equalsIgnoreCase("-select-")) {
             showMessage("Please select education level of farmer");
             return;
         }
 
-        if (gender == null|| gender.isEmpty()) {
+        if (gender == null || gender.isEmpty() || gender.equalsIgnoreCase("-select-")) {
             showMessage("Please select gender of farmer");
             return;
         }
-
 
         if (isNewFarmer) {
             FARMER = new RealFarmer();
             FARMER.setFirstVisitDate(new Date(System.currentTimeMillis()));
         }
-
 
         //Validate inputs
         if(!dynamicFormFragment.getFormController().isValidInput()) {
@@ -279,7 +279,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
             mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
     }
-
 
     @Override
     public void moveToNextForm() {

@@ -4,15 +4,15 @@ package org.grameen.fdp.kasapin.ui.farmerProfile;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
@@ -171,8 +171,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     public void initializeViews(boolean shouldLoadButtons) {
 
         mPresenter.getFarmersPlots(FARMER.getCode());
-
-
         name.setText(FARMER.getFarmerName());
         code.setText(FARMER.getCode());
 
@@ -234,12 +232,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             circleImageView.setOnClickListener(v -> showMessage("No image to display!"));
         }
 
-
-
-        //AppLogger.e(TAG, getGson().toJson(FILTERED_FORMS));
-
-
-
         if(shouldLoadButtons) {
             FILTERED_FORMS = new ArrayList<>();
             mPresenter.loadDynamicButtons(FORM_AND_QUESTIONS);
@@ -281,11 +273,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
             plotsRecyclerView.setLayoutManager(horizontalLayoutManagaer);
-               /* SpacesGridItemDecoration decoration = new SpacesGridItemDecoration(4);
-            plotsRecyclerView.removeItemDecoration(decoration);
-            plotsRecyclerView.addItemDecoration(decoration);*/
-
-
             plotsListAdapter = new PlotsListAdapter(this, PLOTS);
             plotsListAdapter.setHasStableIds(true);
 
@@ -341,14 +328,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         syncIndicator.setImageResource(R.drawable.ic_check_circle_black_24dp);
         syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent));
-
-
-
-
     }
-
-
-
 
     @Override
     public void addButtons(List<Button> buttons) {
@@ -367,16 +347,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     goToFamilyMembersTable(FARMER);
                     return;
                 }
-
-                AppLogger.i(TAG, "BUTTON CLICKED, CURRENT FORM IS " + CURRENT_FORM_POSITION);
-
                 Intent intent = new Intent(FarmerProfileActivity.this, AddEditFarmerActivity.class);
                 intent.putExtra("farmer", getGson().toJson(FARMER));
                 startActivity(intent);
-
             });
         }
-
         mPresenter.getFarmersPlots(FARMER.getCode());
     }
 
@@ -387,24 +362,13 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         super.onDestroy();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-
-        AppLogger.e(TAG, "On Resume...");
-
          if (getAppDataManager().getBooleanValue("reload")) {
-            // getAppDataManager().setBooleanValue("reloadPlotsData", false);
-
             FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(FARMER.getCode()).blockingGet();
             initializeViews(false);
-
-            /*startActivity(new Intent(this, getClass()).putExtra("farmer", getGson().toJson(FARMER)));
-            supportFinishAfterTransition();*/
         }
-
-
     }
 
     @Override
@@ -416,7 +380,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.photo:
-
                 Intent intent = new Intent(FarmerProfileActivity.this, ImageViewActivity.class);
                 intent.putExtra("image_string", FARMER.getImageUrl());
                 startActivity(intent);

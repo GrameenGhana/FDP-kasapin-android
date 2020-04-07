@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.ui.form;
 
 import org.grameen.fdp.kasapin.ui.form.model.RequiredField;
-
 public class NumericalFieldValidator implements InputValidator {
     private String message;
     private String minimum;
@@ -26,7 +25,9 @@ public class NumericalFieldValidator implements InputValidator {
 
             if((actual >= min && actual <= max))
                 return null;
-        }catch(Exception ignore){}
+        } catch (Exception ignore) {
+            return new RequiredField(fieldName, fieldLabel, message);
+        }
         return new RequiredField(fieldName, fieldLabel, message);
     }
 

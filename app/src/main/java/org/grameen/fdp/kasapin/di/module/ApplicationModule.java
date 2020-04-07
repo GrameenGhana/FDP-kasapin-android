@@ -2,10 +2,11 @@ package org.grameen.fdp.kasapin.di.module;
 
 
 import android.app.Application;
-import androidx.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import androidx.room.Room;
 
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
@@ -69,9 +70,7 @@ public class ApplicationModule {
                 .fallbackToDestructiveMigration()
                 .allowMainThreadQueries()
                 .build();
-
     }
-
 
     @Singleton
     @Provides
@@ -85,13 +84,11 @@ public class ApplicationModule {
         return PreferenceManager.getDefaultSharedPreferences(application);
     }
 
-
     @Singleton
     @Provides
     CompositeDisposable providesCompositeDisposable() {
         return new CompositeDisposable();
     }
-
 
     @Provides
     @Singleton
@@ -103,7 +100,6 @@ public class ApplicationModule {
             return new OkHttpClient.Builder().build();
         }
     }
-
 
     @Singleton
     @Provides

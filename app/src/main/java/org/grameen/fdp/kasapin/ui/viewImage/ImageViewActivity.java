@@ -22,10 +22,7 @@ import org.grameen.fdp.kasapin.utilities.TouchImageView;
  */
 
 public class ImageViewActivity extends BaseActivity {
-
     String decodableString = "";
-
-
     RelativeLayout appBar;
     TouchImageView touchImageView;
 
@@ -43,51 +40,29 @@ public class ImageViewActivity extends BaseActivity {
 
           /*  getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);*/
-
-
         }
 
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_image_fullscreen);
-        appBar = (RelativeLayout) findViewById(R.id.appBar);
+        appBar = findViewById(R.id.appBar);
         hideToolBr();
 
 
         Intent intent = getIntent();
         decodableString = intent.getStringExtra("image_string");
-
         if (decodableString != null && !decodableString.equalsIgnoreCase("")) {
-
-            touchImageView = (TouchImageView) findViewById(R.id.touch_image_view);
-
+            touchImageView = findViewById(R.id.touch_image_view);
             try {
                 touchImageView.setImageBitmap(ImageUtil.base64ToBitmap(decodableString));
-
             } catch (Exception e) {
                 e.printStackTrace();
                 finish();
                 CustomToast.makeToast(this, "Could not preview image!", Toast.LENGTH_LONG).show();
-
             }
-
-
-            touchImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    hideToolBr();
-
-                }
-            });
-
-
+            touchImageView.setOnClickListener(v -> hideToolBr());
         } else {
-
             CustomToast.makeToast(this, "Could not load image!", Toast.LENGTH_SHORT).show();
-
         }
-
-
     }
 
 

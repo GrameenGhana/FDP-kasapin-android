@@ -2,15 +2,12 @@ package org.grameen.fdp.kasapin.ui.addPlotMonitoring;
 
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,7 +16,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import com.google.gson.Gson;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -30,6 +34,8 @@ import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
+import org.grameen.fdp.kasapin.ui.form.InputValidator;
+import org.grameen.fdp.kasapin.ui.form.ValidationError;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
 import org.grameen.fdp.kasapin.ui.plotMonitoringActivity.PlotMonitoringActivity;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
@@ -37,14 +43,19 @@ import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
+import org.grameen.fdp.kasapin.utilities.Validator;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -52,7 +63,6 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
-
 public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMonitoringContract.View, FdpCallbacks.AnItemSelectedListener {
     @Inject
     AddPlotMonitoringPresenter mPresenter;
@@ -93,6 +103,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
     String tmp_key;
     String startYearLabel;
     int counter = 0;
+    Validator validator = new Validator();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,14 +163,12 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             String limeNeededCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("lime_");
             if (!TextUtils.isEmpty(limeNeededCaption))
                 limeNeededCaptionTextView.setText(limeNeededCaption);
-
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
                     }
-
                     @Override
                     public void onError(Throwable ignored) {
                     }
@@ -243,80 +252,62 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @Override
     public void addViewsDynamically(Question q) {
-
-
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setBackgroundColor( (counter % 2 == 0)
                     ? ContextCompat.getColor(this, R.color.light_grey)
                     : ContextCompat.getColor(this, R.color.white));
-
             counter++;
 
-
-        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams labelParams = getParas();
         labelParams.weight = 4;
-        labelParams.gravity = Gravity.CENTER;
 
         View labelView = getLabelView(q);
         linearLayout.addView(labelView, labelParams);
-
         ALL_VIEWS_LIST.add(labelView);
 
-        LinearLayout.LayoutParams aoParam = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams aoParam = getParas();
         aoParam.weight = 2;
-        aoParam.gravity = Gravity.CENTER;
-        aoParam.leftMargin = 10;
-        aoParam.rightMargin = 10;
-        aoParam.topMargin = 20;
-        aoParam.bottomMargin = 20;
 
         View AOView = getAOView(q);
         linearLayout.addView(AOView, aoParam);
         ALL_VIEWS_LIST.add(AOView);
 
         String[] relatedQuestions = q.splitRelatedQuestions();
-
         if (relatedQuestions != null) {
             String competenceName = relatedQuestions[0];
             String reasonForFailureName = relatedQuestions[1];
-            LinearLayout.LayoutParams competenceParams = new LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-
+            LinearLayout.LayoutParams competenceParams = getParas();
             competenceParams.weight = 2;
-            competenceParams.gravity = Gravity.CENTER;
-            competenceParams.leftMargin = 10;
-            competenceParams.rightMargin = 10;
-            competenceParams.topMargin = 20;
-            competenceParams.bottomMargin = 20;
 
-            View competenceView = getCompetenceView(getAppDataManager().getDatabaseManager().questionDao().get((competenceName)));
+            Question competenceQuestion = getAppDataManager().getDatabaseManager().questionDao().get(competenceName);
+            View competenceView = getCompetenceView(competenceQuestion);
             linearLayout.addView(competenceView, competenceParams);
 
             ALL_VIEWS_LIST.add(competenceView);
-            COMPETENCE_VIEWS.add(competenceView);
-            LinearLayout.LayoutParams reasonForFailureParam = new LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams reasonForFailureParam = getParas();
             reasonForFailureParam.weight = 3;
-            reasonForFailureParam.gravity = Gravity.CENTER;
-            reasonForFailureParam.leftMargin = 10;
-            reasonForFailureParam.rightMargin = 10;
-            reasonForFailureParam.topMargin = 20;
-            reasonForFailureParam.bottomMargin = 20;
 
-            View failureView = getReasonForFailureView(getAppDataManager().getDatabaseManager().questionDao().get((reasonForFailureName)));
+            Question reasonForFailureQuestion = getAppDataManager().getDatabaseManager().questionDao().get(reasonForFailureName);
+            View failureView = getReasonForFailureView(reasonForFailureQuestion);
             linearLayout.addView(failureView, reasonForFailureParam);
             ALL_VIEWS_LIST.add(failureView);
             monitoringAOLayout.addView(linearLayout);
         }
+        validator.addValidation(q);
     }
 
+    LinearLayout.LayoutParams getParas() {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER_VERTICAL;
+        params.leftMargin = 10;
+        params.rightMargin = 10;
+        params.topMargin = 10;
+        params.bottomMargin = 10;
+        return params;
+    }
 
     @Override
     public View getLabelView(Question q) {
@@ -324,7 +315,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         TextView textView = new TextView(this);
         textView.setText(q.getCaptionC());
         textView.setTextSize(13);
-        textView.setTag(q.getId());
+        textView.setTag(null);
         textView.setPadding(10, 10, 10, 10);
         view = textView;
         return view;
@@ -332,14 +323,13 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @Override
     public View getAOView(Question q) {
-        final View view;
         if(q.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER)){
-            EditText editText = new EditText(this);
+            View layout = LayoutInflater.from(this).inflate(R.layout.layout_edittext, null, false);
+            layout.setTag(q);
+            EditText editText = layout.findViewById(R.id.cell_data);
             editText.setHint(ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON));
-            editText.setTextSize(13);
-            editText.setTag(q.getLabelC());
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-            editText.setPadding(10, 10, 10, 10);
+            editText.setTag(q);
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -350,120 +340,46 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     try {
                         if(MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
                             MONITORING_ANSWERS_JSON.remove(q.getLabelC());
+                        }
                             MONITORING_ANSWERS_JSON.put(q.getLabelC(), s.toString());
-                        }else  MONITORING_ANSWERS_JSON.put(q.getLabelC(), s.toString());
                         setUpPropertyChangeListeners(q, s.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             });
-            view = editText;
-
-        }else {
-            final List<String>items = q.formatQuestionOptions();
-            final Spinner spinner = new Spinner(this);
-            spinner.setPrompt(q.getDefaultValueC());
-            spinner.setTag(q.getLabelC());
-            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(AddPlotMonitoringActivity.this, android.R.layout.simple_spinner_item, items) {
-                @NonNull
-                @Override
-                public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getView(position, convertView, parent);
-                    if (position == getCount()) {
-                        TextView itemView = (view.findViewById(android.R.id.text1));
-                        itemView.setText("");
-                        itemView.setHint(getItem(getCount()));
-                    }
-                    return view;
-                }
-                @Override
-                public int getCount() {
-                    return super.getCount(); // don't display last item (it's used for the prompt)
-                }
-            };
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(spinnerAdapter);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                    try {
-                        if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
-                            MONITORING_ANSWERS_JSON.remove(q.getLabelC());
-                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-                        } else
-                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-                        setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
-            refresh(spinner, ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON), items);
-            view = spinner;
+            return layout;
+        } else {
+            View layout = LayoutInflater.from(this).inflate(R.layout.layout_spinner, null, false);
+            //final Spinner spinner = new Spinner(this);
+            layout.setTag(q);
+            setSpinnerAdapter(layout.findViewById(R.id.cell_data), q);
+            return layout;
         }
-        return view;
     }
 
     @Override
     public View getCompetenceView(Question q) {
-        View view;
-        final List<String>items = q.formatQuestionOptions();
-        final Spinner spinner = new Spinner(this);
-        spinner.setPrompt(q.getDefaultValueC());
-        spinner.setTag(q.getLabelC());
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(AddPlotMonitoringActivity.this, android.R.layout.simple_spinner_item, items) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                if (position == getCount()) {
-                    TextView itemView = (view.findViewById(android.R.id.text1));
-                    itemView.setText("");
-                    itemView.setHint(getItem(getCount()));
-                }
-                return view;
-            }
-            @Override
-            public int getCount() {
-                return super.getCount();
-            }
-        };
-
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                    try {
-                        if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
-                            MONITORING_ANSWERS_JSON.remove(q.getLabelC());
-                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-                        } else
-                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-                        setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        refresh(spinner, ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON), items);
-        view = spinner;
-        return view;
+        View layout = LayoutInflater.from(this).inflate(R.layout.layout_spinner, null, false);
+        layout.setTag(q);
+        Spinner spinner = layout.findViewById(R.id.cell_data);
+        setSpinnerAdapter(spinner, q);
+        COMPETENCE_VIEWS.add(spinner);
+        return layout;
     }
 
     @Override
     public View getReasonForFailureView(Question q) {
-        View view;
-        final List<String>items = q.formatQuestionOptions();
-        final Spinner spinner = new Spinner(this);
+        View layout = LayoutInflater.from(this).inflate(R.layout.layout_spinner, null, false);
+        layout.setTag(q);
+        setSpinnerAdapter(layout.findViewById(R.id.cell_data), q);
+        return layout;
+    }
+
+
+    void setSpinnerAdapter(Spinner spinner, Question q) {
         spinner.setPrompt(q.getDefaultValueC());
-        spinner.setTag(q.getLabelC());
+        final List<String>items = q.formatQuestionOptions();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(AddPlotMonitoringActivity.this, android.R.layout.simple_spinner_item, items) {
             @NonNull
             @Override
@@ -478,33 +394,31 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             }
             @Override
             public int getCount() {
-                return super.getCount();
+                return super.getCount(); // don't display last item (it's used for the prompt)
             }
         };
-
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                    try {
-                        if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
-                            MONITORING_ANSWERS_JSON.remove(q.getLabelC());
-                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-                        } else
-                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-                        setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
+                        MONITORING_ANSWERS_JSON.remove(q.getLabelC());
+                        MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
+                    } else
+                        MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
+                    setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
         refresh(spinner, ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON), items);
-        view = spinner;
-        return view;
     }
 
     @Override
@@ -552,54 +466,57 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 sl.setComparingQuestion(values[0]);
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
-                    try {
+                try {
                         if (ComputationUtils.compareValues(sl, value, scriptEngine)) {
                             if (sl.shouldHide()) {
                                 for(int i = 0; i < ALL_VIEWS_LIST.size(); i++){
-                                    if(ALL_VIEWS_LIST.get(i).getTag().equals(sl.getComparingQuestion())) {
-                                        ALL_VIEWS_LIST.get(i).setVisibility(View.INVISIBLE);
-                                        ALL_VIEWS_LIST.get(i).setEnabled(false);
-                                        break;
+                                    if (ALL_VIEWS_LIST.get(i).getTag() != null) {
+                                        Question q = (Question) ALL_VIEWS_LIST.get(i).getTag();
+                                        if (q.getLabelC().equals(sl.getComparingQuestion())) {
+                                            ALL_VIEWS_LIST.get(i).setVisibility(View.INVISIBLE);
+                                            ALL_VIEWS_LIST.get(i).setEnabled(false);
+                                            break;
+                                        }
                                     }
                                 }
                             }else{
-                                for(int i = 0; i < ALL_VIEWS_LIST.size(); i++){
-                                    if(ALL_VIEWS_LIST.get(i).getTag().equals(sl.getComparingQuestion())) {
-                                        ALL_VIEWS_LIST.get(i).setVisibility(View.VISIBLE);
-                                        ALL_VIEWS_LIST.get(i).setEnabled(true);
-
-                                        break;
+                                for (int i = 0; i < ALL_VIEWS_LIST.size(); i++) {
+                                    if (ALL_VIEWS_LIST.get(i).getTag() != null) {
+                                        Question q = (Question) ALL_VIEWS_LIST.get(i).getTag();
+                                        if (q.getLabelC().equals(sl.getComparingQuestion())) {
+                                            ALL_VIEWS_LIST.get(i).setVisibility(View.VISIBLE);
+                                            ALL_VIEWS_LIST.get(i).setEnabled(true);
+                                            break;
+                                        }
                                     }
                                 }
                             }
                         } else
                             for(int i = 0; i < ALL_VIEWS_LIST.size(); i++){
-                                if(ALL_VIEWS_LIST.get(i).getTag().equals(sl.getComparingQuestion())) {
-                                    ALL_VIEWS_LIST.get(i).setVisibility(View.VISIBLE);
-                                    ALL_VIEWS_LIST.get(i).setEnabled(true);
-                                    break;
+                                if (ALL_VIEWS_LIST.get(i).getTag() != null) {
+                                    Question q = (Question) ALL_VIEWS_LIST.get(i).getTag();
+                                    if (q.getLabelC().equals(sl.getComparingQuestion())) {
+                                        ALL_VIEWS_LIST.get(i).setVisibility(View.VISIBLE);
+                                        ALL_VIEWS_LIST.get(i).setEnabled(true);
+                                        break;
+                                    }
                                 }
-                        }
-                    } catch (Exception ignored) {
-                    }
+                            }
+                } catch (Exception ignored) {
+                }
             }
         }
     }
 
     @OnClick(R.id.saveButton)
     void saveData(){
-
-
         if(!dynamicFormFragment.getFormController().isValidInput()) {
             dynamicFormFragment.getFormController().resetValidationErrors();
             dynamicFormFragment.getFormController().showValidationErrors();
             return;
         }
-
-
-
-
-
+        if (!validate())
+            return;
 
          /* Merge AO/AOR values generated in diagnostic into one JSON. This is needed to get values from a single JSON to parse the formulas instead of having 2 separate JSONs
          * where we obtain values from
@@ -609,7 +526,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
          * Eg.When iterating through the JSONObject, start_year_COUNTRY comes before plot_intervention_start_year_COUNTRY. If the value for start_year_COUNTRY = 3
          * in the formula string, plot_intervention_start_year_COUNTRY becomes plot_intervention_3 because
          * start_year_COUNTRY in plot_intervention_start_year_COUNTRY was replaced by 3 and that's not what we want.
-         **/
+          */
 
         i1 = PLOT_AO_ANSWERS_JSON.keys();
         while (i1.hasNext()) {
@@ -647,11 +564,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         } catch (JSONException e) {
              e.printStackTrace();
          }
-
-        System.out.println("#########################################################################################################");
-        AppLogger.e(TAG, "MERGED JSON DATA >>>> " + MONITORING_ANSWERS_JSON);
-        System.out.println("--------------------------------------------------------------------------------------------------------");
-
         //Get monitoring results question and apply logic
         FormAndQuestions aoMonitoringResultsFormAndQuestions = getAppDataManager().getDatabaseManager().formAndQuestionsDao().maybeGetFormAndQuestionsByName(AppConstants.AO_MONITORING_RESULT)
                 .blockingGet();
@@ -663,10 +575,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 System.out.println();
 
                 for(Question q : aoMonitoringResultsFormAndQuestions.getQuestions()) {
-                    AppLogger.e(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    AppLogger.e(TAG, "Applying parser to evaluate formula of question " + q.getLabelC());
-                    AppLogger.e(TAG, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
                     String value;
                     if(q.getTypeC().equalsIgnoreCase(AppConstants.FORMULA_TYPE_COMPLEX_FORMULA))
                         value = logicFormulaParser.evaluateComplexFormula(q.getFormulaC());
@@ -702,5 +610,38 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     dialogInterface.dismiss();
                     finish();
                 }, getStringResources(R.string.no), 0);
+    }
+
+
+    boolean validate() {
+        List<ValidationError> errors = new ArrayList<>();
+        for (View view : ALL_VIEWS_LIST) {
+            if (view != null && view.getTag() != null) {
+                Question q = (Question) view.getTag();
+                HashSet<InputValidator> set = validator.getValidators(q.getLabelC());
+                if (set != null) {
+                    ValidationError error;
+                    for (InputValidator inputVal : set) {
+                        error = inputVal.validate(ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON), q.getLabelC(), q.getLabelC());
+                        if (error != null) {
+                            errors.add(error);
+                            try {
+                                if (view.findViewById(R.id.cell_data) instanceof EditText) {
+                                    EditText edittext = view.findViewById(R.id.cell_data);
+                                    edittext.setError(error.getMessage(getResources()));
+                                } else if (view.findViewById(R.id.cell_data) instanceof Spinner) {
+                                    TextView errorTextView = view.findViewById(R.id.info);
+                                    errorTextView.setText((error.getMessage(getResources())));
+                                    errorTextView.setVisibility(View.VISIBLE);
+                                }
+                            } catch (Exception ignore) {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        AppLogger.e(TAG, "ERRORS SIZE IS " + errors.size());
+        return errors.isEmpty();
     }
 }

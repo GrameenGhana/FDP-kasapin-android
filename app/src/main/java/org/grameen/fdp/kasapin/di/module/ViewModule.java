@@ -4,6 +4,7 @@ package org.grameen.fdp.kasapin.di.module;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,10 +27,7 @@ import dagger.Provides;
 
 @Module
 public class ViewModule {
-
-
     private AppCompatActivity mActivity;
-
     public ViewModule(AppCompatActivity activity) {
         mActivity = activity;
     }
@@ -50,8 +48,6 @@ public class ViewModule {
     @Provides
     public BasePresenter providesPresenter(AppDataManager appDataManager) {
         return new BasePresenter(appDataManager);
-
-
     }
 
 

@@ -4,26 +4,18 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.ui.form.FieldValidator;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.NumericalFieldValidator;
-import org.grameen.fdp.kasapin.ui.form.ValidationError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class Validator {
-
     private JSONObject VALIDATIONS = new JSONObject();
 
-
-    public Validator(){
+    public Validator() {
     }
 
-
-
-
-    public void addValidation(int rowIndex, Question question){
+    public void addValidation(Question question) {
         HashSet<InputValidator> validation = new HashSet<>();
         if(question.isRequired()) {
             validation.add(new FieldValidator(question.getDefaultValueC(), question.getErrorMessage()));
@@ -32,26 +24,27 @@ public class Validator {
                 validation.add(new NumericalFieldValidator(question.getMinValue(), question.getMaxValue(), question.getErrorMessage()));
             }
             try {
-                VALIDATIONS.put(question.getLabelC()+rowIndex, validation);
+                VALIDATIONS.put(question.getLabelC(), validation);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void addValidation(int position, Question question) {
+        question.setLabelC(question.getLabelC() + position);
+        addValidation(question);
+    }
 
     void removeValidation(String label){
         VALIDATIONS.remove(label);
     }
 
     public HashSet<InputValidator> getValidators(String key){
-
         try {
             return (HashSet<InputValidator>) VALIDATIONS.get(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException ignore) {
             return null;
         }
     }
-
 }

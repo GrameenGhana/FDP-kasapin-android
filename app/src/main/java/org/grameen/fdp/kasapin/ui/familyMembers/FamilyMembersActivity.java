@@ -3,7 +3,6 @@ package org.grameen.fdp.kasapin.ui.familyMembers;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.evrencoskun.tableview.TableView;
 import com.google.gson.Gson;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -26,9 +24,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.Cell;
 import org.grameen.fdp.kasapin.ui.base.model.ColumnHeader;
 import org.grameen.fdp.kasapin.ui.base.model.RowHeader;
-import org.grameen.fdp.kasapin.ui.form.FieldValidator;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
-import org.grameen.fdp.kasapin.ui.form.NumericalFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.ValidationError;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -190,7 +186,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
 
     boolean validate(){
-
         List<ValidationError> errors = new ArrayList<>();
         for (int i = 0; i < ROW_SIZE; i++) {
             for (int j = 0; j < COLUMN_SIZE; j++) {
@@ -198,7 +193,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 if(view != null){
                 String name = mTableViewAdapter.getCellItem(j, i).getId();
                 HashSet<InputValidator> validators = validator.getValidators(name + i);
-
                 if(validators != null) {
                     ValidationError error;
                     for (InputValidator inputVal : validators) {
@@ -221,7 +215,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 }
             }
         }
-
         AppLogger.e(TAG, "ERRORS SIZE IS " + errors.size());
        return  errors.isEmpty();
     }

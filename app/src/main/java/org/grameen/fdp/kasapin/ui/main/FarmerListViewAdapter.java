@@ -2,9 +2,6 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
@@ -78,29 +79,8 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
 
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-
         }
-
-
-       /* Animation animation;
-
-
-        if(CURRENT_PAGE == 0) {
-
-            if (ScreenUtils.isTablet((AppCompatActivity) context))
-                animation = AnimationUtils.loadAnimation(context,
-                        (position % AppConstants.TABLET_COLUMN_COUNT - 1 < AppConstants.TABLET_COLUMN_COUNT) ? R.anim.up_from_bottom : R.anim.down_from_top);
-            else
-                animation = AnimationUtils.loadAnimation(context,
-                        (position % AppConstants.PHONE_COLUMN_COUNT - 1 < AppConstants.PHONE_COLUMN_COUNT) ? R.anim.up_from_bottom : R.anim.down_from_top);
-
-            view.startAnimation(animation);
-        }
-        lastPosition = position;*/
-
-
         setData(realFarmer, viewHolder);
-
         return convertView;
     }
 
@@ -157,41 +137,11 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
                 viewHolder.fdpStatus.setColorFilter(ContextCompat.getColor(context, R.color.colorAccent));
             }
         }
-
-        // viewHolder.mainLayout.setOnClickListener(this);
-        //viewHolder.mainLayout.setOnLongClickListener(this);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
-
-
-/*
-f
-    @Override
-    public void onClick(View view) {
-
-
-
-        if (mItemClickListener != null) {
-            mItemClickListener.onItemClick(view);
-        }
-
-    }
-
-    @Override
-    public boolean onLongClick(View view) {
-
-        if(longClickListener != null)
-        longClickListener.onLongClick(view);
-
-
-
-
-        return false;
-    }
-*/
 
     public void OnLongClickListener(final OnLongClickListener mLongClickListener) {
         this.longClickListener = mLongClickListener;
@@ -207,7 +157,6 @@ f
     }
 
     private static class ViewHolder {
-
         RelativeLayout mainLayout;
         RelativeLayout rl1;
         TextView name;

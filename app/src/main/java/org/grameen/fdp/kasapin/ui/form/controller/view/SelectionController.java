@@ -2,7 +2,6 @@ package org.grameen.fdp.kasapin.ui.form.controller.view;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import androidx.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
@@ -140,8 +141,6 @@ public class SelectionController extends MyLabeledFieldController {
 
     @Override
     protected View createFieldView() {
-
-
         if (IS_ENABLED) {
             int id;
             AtomicInteger nextGeneratedViewId = new AtomicInteger(1);
@@ -189,9 +188,7 @@ public class SelectionController extends MyLabeledFieldController {
                         // last pos indicates nothing is selected
                         if (pos == items.size() - 1) {
 
-                            if (prompt != null)
-                                value = prompt;
-                            else value = null;
+                            value = prompt;
 
                         } else {    // if something is selected, set the value on the model
                             value = values.get(pos);

@@ -1,23 +1,12 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-
 import android.preference.PreferenceManager;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +15,23 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.navigation.NavigationView;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.Bundler;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
+import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -45,7 +45,9 @@ import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -98,6 +100,22 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     SimpleSearchDialogCompat searchDialogCompat;
     private FragmentPagerItemAdapter viewPagerAdapter;
 
+
+    public static void setInMemoryRoomDatabases(SupportSQLiteDatabase... database) {
+        if (BuildConfig.DEBUG) {
+            try {
+                Class<?> debugDB = Class.forName("com.amitshekhar.DebugDB");
+                Class[] argTypes = new Class[]{HashMap.class};
+                HashMap<String, SupportSQLiteDatabase> inMemoryDatabases = new HashMap<>();
+                // set your inMemory databases
+                inMemoryDatabases.put("InMemoryOne.db", database[0]);
+                Method setRoomInMemoryDatabase = debugDB.getMethod("setInMemoryRoomDatabases", argTypes);
+                setRoomInMemoryDatabase.invoke(null, inMemoryDatabases);
+            } catch (Exception ignore) {
+
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +200,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        setInMemoryRoomDatabases(getAppDataManager().getDatabaseManager().getOpenHelper().getWritableDatabase());
     }
 
 
