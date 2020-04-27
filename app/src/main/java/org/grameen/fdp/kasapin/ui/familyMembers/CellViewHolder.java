@@ -3,13 +3,10 @@ package org.grameen.fdp.kasapin.ui.familyMembers;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
-
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
@@ -64,7 +61,7 @@ public class CellViewHolder extends AbstractViewHolder {
 
         if (q.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)) {
             editText.setOnFocusChangeListener((v, hasFocus) -> {
-                if (!hasFocus) {
+                if (!hasFocus && editText.getText() != null && !editText.getText().toString().isEmpty()) {
                     NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
                     DecimalFormat formatter = (DecimalFormat) nf;
                     formatter.applyPattern("#,###,###.##");
@@ -73,6 +70,7 @@ public class CellViewHolder extends AbstractViewHolder {
                 }
             });
         }
+
         if (updateJsonArrayListener != null)
             updateJsonArrayListener.onItemValueChanged(rowPosition, q.getLabelC(), FamilyMembersActivity.getValue(rowPosition, q.getLabelC()));
         editText.requestLayout();

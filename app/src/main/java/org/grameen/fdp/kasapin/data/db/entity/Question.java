@@ -4,7 +4,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -14,20 +13,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import timber.log.Timber;
-
 
 /**
  * Created by aangjnr on 29/11/2017.
  */
 @Entity(tableName = "questions", indices = {@Index(value = "formTranslationId"), @Index(value = "id", unique = true), @Index(value = "labelC", unique = true)})
 public class Question {
-
-
     @PrimaryKey(autoGenerate = true)
-    @NonNull
+    private
     int base_id;
     @Ignore
+    private
     List<SkipLogic> skipLogics;
     @SerializedName("id")
     @Expose
@@ -52,7 +48,7 @@ public class Question {
     private int requiredC;
     @SerializedName("formula_c")
     @Expose
-    private String formulaC;
+    private String formulaC = "";
     @SerializedName("label_c")
     @Expose
     private String labelC;
@@ -89,6 +85,9 @@ public class Question {
     @SerializedName("error_display_message_c")
     private String errorMessage;
 
+    @Ignore
+    private String validationId = null;
+
 
 
     /**
@@ -117,12 +116,11 @@ public class Question {
         this.canEdit = canEdit;
     }
 
-    @NonNull
     public int getBase_id() {
         return base_id;
     }
 
-    public void setBase_id(@NonNull int base_id) {
+    public void setBase_id(int base_id) {
         this.base_id = base_id;
     }
 
@@ -138,6 +136,17 @@ public class Question {
     public Question withId(int id) {
         this.id = id;
         return this;
+    }
+
+    public String getValidationId() {
+        if (validationId == null)
+            return labelC;
+        else
+            return validationId;
+    }
+
+    public void setValidationId(String validationId) {
+        this.validationId = validationId;
     }
 
     public int getFormTranslationId() {

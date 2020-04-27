@@ -92,7 +92,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     String gender, educationLevel, villageName = null;
     int villageId;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +112,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     @Override
     public void setUpViews() {
         List<Community> villages = getAppDataManager().getDatabaseManager().villagesDao().getAll().blockingGet();
+        villageItems.clear();
         for(Community v : villages){
             villageItems.add(new MySearchItem(String.valueOf(v.getId()), v.getName()));
         }
@@ -295,7 +295,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         overridePendingTransition(0, 0);
     }
 
-
     @Override
     public void disableViews() {
         findViewById(R.id.save).setVisibility(View.GONE);
@@ -367,7 +366,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         AppLogger.d(TAG, "RESULT CODE = " + resultCode + " REQUEST CODE " + requestCode);
         if (resultCode == RESULT_OK) {
             if (requestCode == AppConstants.CAMERA_INTENT) {
-                Bitmap bitmap = null;
+                Bitmap bitmap;
                 try {
                     bitmap = ImageUtil.handleSamplingAndRotationBitmap(AddEditFarmerActivity.this, URI);
                     BASE64_STRING = ImageUtil.bitmapToBase64(bitmap);

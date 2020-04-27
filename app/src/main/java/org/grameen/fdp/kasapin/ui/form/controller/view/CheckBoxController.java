@@ -1,13 +1,8 @@
 package org.grameen.fdp.kasapin.ui.form.controller.view;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +11,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 
@@ -39,9 +37,7 @@ public class CheckBoxController extends MyLabeledFieldController {
     private final int CHECKBOX_ID = MyFormController.generateViewId();
     private final List<String> items;
     private final List<?> values;
-    boolean IS_ENABLED = true;
-    AlertDialog dialog;
-
+    private boolean IS_ENABLED;
     String oldValues;
 
     /**
@@ -72,7 +68,7 @@ public class CheckBoxController extends MyLabeledFieldController {
      * @param values     a list of Objects representing the values to set the form model on a selection (in
      *                   the same order as the {@code items}.
      */
-    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, List<String> items, List<?> values, boolean isEnabled) {
+    private CheckBoxController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, List<String> items, List<?> values, boolean isEnabled) {
         super(ctx, name, content_desc, labelText, validators, isEnabled);
         this.items = items;
         this.values = values;
@@ -124,7 +120,7 @@ public class CheckBoxController extends MyLabeledFieldController {
      * @param values     a list of Objects representing the values to set the form model on a selection (in
      *                   the same order as the {@code items}.
      */
-    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, List<String> items, List<?> values, boolean isEnabled) {
+    private CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, List<String> items, List<?> values, boolean isEnabled) {
         super(ctx, name, content_desc, labelText, isRequired, isEnabled);
         this.items = items;
         this.values = values;
@@ -138,16 +134,12 @@ public class CheckBoxController extends MyLabeledFieldController {
     @Override
     protected View createFieldView() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewGroup checkboxContainer = (ViewGroup) inflater.inflate(R.layout.form_checkbox_container, null);
-
+        @SuppressLint("InflateParams") ViewGroup checkboxContainer = (ViewGroup) inflater.inflate(R.layout.form_checkbox_container, null);
 
         if (IS_ENABLED) {
-
-
             final MaterialAutoCompleteTextView editText = new MaterialAutoCompleteTextView(getContext());
             editText.setId(CHECKBOX_ID);
             editText.setContentDescription(getContentDesc());
-//            editText.setSingleLine(false);
             editText.setTextSize(15f);
             editText.setPaddings(20, 0, 0, 0);
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -162,41 +154,8 @@ public class CheckBoxController extends MyLabeledFieldController {
             });
 
             editText.setEnabled(IS_ENABLED);
-
-
             getModel().setValue(getName(), "");
             return editText;
-
-
-
-
-      /*      CheckBox checkBox;
-        int nbItem = items.size();
-        for (int index = 0; index < nbItem; index++) {
-            checkBox = new CheckBox(getContext());
-            checkBox.setText(items.get(index).trim());
-            checkBox.setContentDescription(getContentDesc());
-            checkBox.setId(CHECKBOX_ID + index);
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                int position = buttonView.getId() - CHECKBOX_ID;
-                Object value = areValuesDefined() ? values.get(position) : position;
-                Set<Object> modelValues = new HashSet<>(retrieveModelValues());
-                if (isChecked) {
-                    modelValues.add(value);
-                } else {
-                    modelValues.remove(value);
-                }
-                getModel().setValue(getName(), modelValues);
-            });
-
-
-            checkboxContainer.addView(checkBox);
-            refresh(checkBox, index);
-
-           // checkBox.setEnabled(IS_ENABLED);
-        }*/
-
-
         } else {
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -214,9 +173,7 @@ public class CheckBoxController extends MyLabeledFieldController {
 
 
             for (int index = 0; index < nbItem; index++) {
-
                 if (modelValues.contains(areValuesDefined() ? values.get(index) : index)) {
-
                     textView = new TextView(getContext());
                     textView.setPadding(8, 4, 8, 4);
 
@@ -224,22 +181,14 @@ public class CheckBoxController extends MyLabeledFieldController {
                     drawable.setCornerRadius(10);
                     drawable.setColor(ContextCompat.getColor(getContext(), R.color.divider));
                     textView.setBackground(drawable);
-
-
                     textView.setText(items.get(index).trim());
                     textView.setId(CHECKBOX_ID + index);
-
-
                     checkboxContainer.addView(textView, params);
                     //refresh(textView, index);
-
                     // checkBox.setEnabled(IS_ENABLED);
                 }
             }
-
-
         }
-
         return checkboxContainer;
 
 
@@ -282,37 +231,18 @@ public class CheckBoxController extends MyLabeledFieldController {
      * @return The values from the model.
      */
     private Set<Object> retrieveModelValues() {
-
-
         String value;
         try {
             value = getModel().getValue(getName()).toString();
         } catch (NullPointerException ignore) {
             value = "";
         }
-
-      /*  JSONArray jsonArray = new JSONArray();
-        try {
-            jsonArray = new JSONArray(value);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
-
-        /*Set<Object> modelValues = new HashSet<Object>(Arrays.asList(jsonArray));
-        if (modelValues == null) {
-            modelValues = new HashSet<>();
-        }*/
-        Set<Object> modelValues = new HashSet<Object>();
+        Set<Object> modelValues = new HashSet<>();
         for (int i = 0; i < items.size(); i++) {
-
             if (value.contains(items.get(i))) {
                 modelValues.add(items.get(i));
             }
-
-
         }
-
-
         return modelValues;
     }
 
@@ -326,18 +256,14 @@ public class CheckBoxController extends MyLabeledFieldController {
     }
 
 
-    void showCheckboxDialog(EditText editText) {
+    private void showCheckboxDialog(EditText editText) {
         Set<Object> modelValues = retrieveModelValues();
-
-
         final boolean[] checked = new boolean[items.size()];
         for (int index = 0; index < checked.length; index++)
             checked[index] = modelValues.contains(areValuesDefined() ? values.get(index) : index);
 
-
         String[] arr = new String[items.size()];
         items.toArray(arr);
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppDialog);
         builder.setMultiChoiceItems(arr, checked, (dialog, which, isChecked) -> {
@@ -347,34 +273,21 @@ public class CheckBoxController extends MyLabeledFieldController {
         builder.setCancelable(false);
         builder.setTitle("Select options");
         builder.setPositiveButton("OK", (dialog, which) -> {
-
-
             Set<Object> newValues = new HashSet<>(retrieveModelValues());
 
-
-            //StringBuilder values = new StringBuilder();
-
             for (int i = 0; i < checked.length; i++) {
-
                 boolean isChecked = checked[i];
                 if (isChecked) {
                     newValues.add(items.get(i));
-                    //values.append(items.get(i)).append("\n");
                 } else
                     newValues.remove(items.get(i));
-
             }
-
-
             if (!newValues.isEmpty())
                 getModel().setValue(getName(), newValues);
-
             else
                 getModel().setValue(getName(), "");
 
             editText.setText(getModel().getValue(getName()).toString());
-
-
         });
 
         // Set the negative/no button click listener
@@ -383,22 +296,17 @@ public class CheckBoxController extends MyLabeledFieldController {
             dialog.dismiss();
         });
 
-        dialog = builder.create();
-        dialog.show();
-
-
+        AlertDialog dialog1 = builder.create();
+        dialog1.show();
     }
 
 
     private void refresh(EditText editText) {
         String value = null;
-
         if (getModel().getValue(getName()) != null) {
             value = getModel().getValue(getName()).toString();
         }
         editText.setHint(value != null ? value : "Click to select");
-
-
     }
 
 

@@ -421,4 +421,23 @@
     <string name="add_gps_point">add gps point</string>
     <string name="calculate_area">calculate area</string>
     <string name="error_enter_valid_word">Please enter a valid word</string>
+    <string name="plot_adoption_observations">Plot Adoption Observations</string>
+
+
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="settings_general">General Settings</string>
+
+
+    <!-- Messages Preferences -->
+    <string name="server_url_title">Server Url</string>
+    <string name="default_server_url" translatable="false">http://52.15.172.252/fdp/</string>
+    <string name="enter_valid_url">Please enter a valid url. The default url is set.</string>
+    <string name="server_url_rational">Please enter server url in the form "http://" or "https://" and end with "/"</string>
+
+    <!-- Preferences Keys-->
+    <string name="server_url_key">server_url</string>
+    <string name="http">http://</string>
+
 </resources>

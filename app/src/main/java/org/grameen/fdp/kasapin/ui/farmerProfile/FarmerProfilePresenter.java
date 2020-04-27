@@ -7,40 +7,23 @@ import android.widget.Button;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
-import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.Submission;
-import org.grameen.fdp.kasapin.syncManager.UploadData;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.ui.main.MainPresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.observers.DisposableCompletableObserver;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.FILTERED_FORMS;
-import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:06 PM
@@ -82,7 +65,6 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
 
     public void loadDynamicButtons(List<FormAndQuestions> formAndQuestions) {
         count = 0;
-
         if (getAppDataManager().isMonitoring()){
             runSingleCall(Observable.fromIterable(formAndQuestions)
                     .subscribeOn(Schedulers.io())
@@ -131,9 +113,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
                         count += 1;
                         return btn;
 
-                    }).toList().subscribe(buttons -> getView().addButtons(buttons), throwable -> {
-                        AppLogger.e(TAG, throwable);
-                    }));
+                    }).toList().subscribe(buttons -> getView().addButtons(buttons), throwable -> AppLogger.e(TAG, throwable)));
         }
     }
 

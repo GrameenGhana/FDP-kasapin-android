@@ -1,6 +1,7 @@
 package org.grameen.fdp.kasapin.ui.familyMembers;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -45,7 +46,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class FamilyMembersActivity extends BaseActivity implements FamilyMembersContract.View,  FdpCallbacks.UpdateJsonArray {
-
     @Inject
     FamilyMembersPresenter mPresenter;
     RealFarmer FARMER;
@@ -93,6 +93,17 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         setUpViews();
         onBackClicked();
     }
+
+    public static String getValue(int index, String uid) {
+        String value = "";
+        try {
+            if (oldValuesArray.getJSONObject(index).has(uid))
+                return oldValuesArray.getJSONObject(index).getString(uid);
+        } catch (JSONException ignored) {
+        }
+        return value;
+    }
+
     @Override
     public void setUpViews() {
         setToolbar("Family Members Table");
@@ -126,7 +137,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         for (int i = 0; i < ROW_SIZE; i++)
             mQuestionsList.add(familyMembersFormAndQuestions.getQuestions());
 
-        for(int i = 0; i < ROW_SIZE; i++){
+        for (int i = 0; i < ROW_SIZE; i++) {
             JSONObject jsonObject = new JSONObject();
             try {
                 if(i < oldValuesArray.length()) {
@@ -137,7 +148,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 //allFamilyMembersArrayData.put(i, jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
-
             }
         }
         setupTableView(familyMembersFormAndQuestions);
@@ -169,6 +179,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         SpinnerViewHolder.UpdateJsonArrayListener(this);
         CellViewHolder.UpdateJsonArrayListener(this);
         CheckBoxViewHolder.UpdateJsonArrayListener(this);
+        MultiSelectViewHolder.UpdateJsonArrayListener(this);
 
         try {
             new Handler().postDelayed(() -> {
@@ -180,11 +191,9 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 }
             }, 2000);
         }catch(Exception ignore){}
-
     }
 
-
-
+    @SuppressLint("CutPasteId")
     boolean validate(){
         List<ValidationError> errors = new ArrayList<>();
         for (int i = 0; i < ROW_SIZE; i++) {
@@ -200,7 +209,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                         if (error != null) {
                             errors.add(error);
                             try {
-                                if (view.getTag().toString().equals("edittext")) {
+                                if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
                                     EditText edittext = view.findViewById(R.id.cell_data);
                                     edittext.setError(error.getMessage(getResources()));
                                 } else if (view.getTag().toString().equals("spinner")) {
@@ -220,9 +229,50 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     }
 
 
+    @Override
+    protected void onDestroy() {
+        mPresenter.dropView();
+        super.onDestroy();
+    }
+
+
+    @Override
+    public void openNextActivity() {
+    }
+
+
+    @OnClick(R.id.scrollRight)
+    void scrollTableToTheRight() {
+        if (COLUMN_SIZE - SCROLL_POSITION < lastVisibleItemPosition) {
+            tableView.scrollToColumnPosition(COLUMN_SIZE - 1);
+            SCROLL_POSITION = 0;
+        } else {
+            if (SCROLL_POSITION == 0) {
+                tableView.scrollToColumnPosition(0);
+                SCROLL_POSITION = lastVisibleItemPosition;
+            } else {
+                SCROLL_POSITION += lastVisibleItemPosition;
+                tableView.scrollToColumnPosition(SCROLL_POSITION);
+            }
+        }
+    }
+
+
+    @OnClick(R.id.scrollLeft)
+    void scrollTableToTheLeft() {
+        if (SCROLL_POSITION <= lastVisibleItemPosition) {
+            SCROLL_POSITION = lastVisibleItemPosition;
+            tableView.scrollToColumnPosition(0);
+            return;
+        }
+        SCROLL_POSITION -= lastVisibleItemPosition;
+        tableView.scrollToColumnPosition(SCROLL_POSITION);
+    }
+
     @OnClick(R.id.save)
     void saveData(){
 
+        AppLogger.e(oldValuesArray.toString());
        // check validations here
 
         if(!validate()){
@@ -285,56 +335,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        mPresenter.dropView();
-        super.onDestroy();
-    }
-
-    @Override
-    public void openNextActivity() {
-    }
-
-    @OnClick(R.id.scrollRight)
-    void scrollTableToTheRight(){
-        if (COLUMN_SIZE - SCROLL_POSITION < lastVisibleItemPosition) {
-            tableView.scrollToColumnPosition(COLUMN_SIZE - 1);
-            SCROLL_POSITION = 0;
-        } else {
-            if(SCROLL_POSITION == 0) {
-                tableView.scrollToColumnPosition(0);
-                SCROLL_POSITION = lastVisibleItemPosition;
-            }else {
-                SCROLL_POSITION += lastVisibleItemPosition;
-                tableView.scrollToColumnPosition(SCROLL_POSITION);
-            }
-        }
-    }
-
-    @OnClick(R.id.scrollLeft)
-    void scrollTableToTheLeft(){
-        if(SCROLL_POSITION <= lastVisibleItemPosition) {
-            SCROLL_POSITION = lastVisibleItemPosition;
-            tableView.scrollToColumnPosition(0);
-            return;
-        }
-            SCROLL_POSITION -= lastVisibleItemPosition;
-            tableView.scrollToColumnPosition(SCROLL_POSITION);
-    }
-
-    @Override
-    public void onItemValueChanged(int index, String uid, String value) {
-        try {
-            JSONObject object = oldValuesArray.getJSONObject(index);
-            if(object != null){
-                if(object.has(uid))
-                    object.remove(uid);
-                    object.put(uid, value);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     private List<List<Cell>> getCellList() {
         List<List<Cell>> list = new ArrayList<>();
@@ -356,6 +356,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return list;
     }
 
+
     private List<RowHeader> getRowHeaderList() {
         List<RowHeader> list = new ArrayList<>();
         for (int i = 0; i < ROW_SIZE; i++) {
@@ -365,6 +366,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         }
         return list;
     }
+
 
     private List<ColumnHeader> getColumnHeaderList() {
         List<ColumnHeader> list = new ArrayList<>();
@@ -382,15 +384,19 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return list;
     }
 
+    @Override
+    public void onItemValueChanged(int index, String uid, String value) {
+        AppLogger.e("ItemValueChanged --> Uuid == " + uid + " Value == " + value);
 
-
-    public static String getValue(int index, String uid){
-        String value = "";
         try {
-            JSONObject object = oldValuesArray.getJSONObject(index);
-            if(object.has(uid))
-                return object.getString(uid);
-        } catch (JSONException ignored) {}
-        return value;
+            if (oldValuesArray.getJSONObject(index) != null) {
+                if (oldValuesArray.getJSONObject(index).has(uid))
+                    oldValuesArray.getJSONObject(index).remove(uid);
+                oldValuesArray.getJSONObject(index).put(uid, value);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            e.printStackTrace();
+        }
     }
 }

@@ -1,11 +1,12 @@
 package org.grameen.fdp.kasapin.ui.familyMembers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.evrencoskun.tableview.adapter.AbstractTableAdapter;
 import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder;
@@ -16,7 +17,6 @@ import org.grameen.fdp.kasapin.ui.base.model.Cell;
 import org.grameen.fdp.kasapin.ui.base.model.ColumnHeader;
 import org.grameen.fdp.kasapin.ui.base.model.RowHeader;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +25,16 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
 
     // Cell View Types by Column Position
     private List<Question> questions;
-    List<List<View>> views = new ArrayList<>();
-    int CURRENT_VISIBLE_COLUMN = 0;
-
+    private ArrayList<List<View>> views;
+    private int CURRENT_VISIBLE_COLUMN;
 
     FineTableViewAdapter(Context p_jContext, List<Question> questionList, int rowSize) {
         super(p_jContext);
         this.questions = questionList;
-
+        views = new ArrayList<>();
         for (int i = 0; i < rowSize; i++)
             views.add(new ArrayList<>());
+        CURRENT_VISIBLE_COLUMN = 0;
     }
 
     /**
@@ -54,6 +54,8 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
 
             case AppConstants.TYPE_CHECKBOX:
                 return new CheckBoxViewHolder(getLayoutView(parent, AppConstants.TYPE_CHECKBOX));
+            case AppConstants.TYPE_MULTI_SELECTABLE:
+                return new MultiSelectViewHolder(getLayoutView(parent, AppConstants.TYPE_MULTI_SELECTABLE));
             default:
                 return new CellViewHolder(getLayoutView(parent, AppConstants.TYPE_TEXT));
         }
@@ -93,8 +95,12 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
             viewHolder.setData(rowPosition, (Question) cell.getData());
             viewHolder.itemView.setTag("spinner");
             views.get(rowPosition).add(columnPosition, viewHolder.itemView);
+        } else if (holder instanceof MultiSelectViewHolder) {
+            MultiSelectViewHolder viewHolder = (MultiSelectViewHolder) holder;
+            viewHolder.setData(rowPosition, (Question) cell.getData());
+            viewHolder.itemView.setTag("multi_select");
+            views.get(rowPosition).add(columnPosition, viewHolder.itemView);
         }
-
     }
     /**
      * This is where you create your custom Column Header ViewHolder. This method is called when
@@ -168,6 +174,7 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         rowHeaderViewHolder.row_header_textview.setText(String.valueOf(rowHeader.getData()));
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View onCreateCornerView() {
         // Get Corner xml layout
@@ -201,6 +208,11 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         View view;
         switch (TYPE) {
             case AppConstants.TYPE_TEXT:
+                view = LayoutInflater.from(mContext).inflate(R.layout.table_view_edittext, parent, false);
+                view.setTag(TYPE);
+                break;
+
+            case AppConstants.TYPE_MULTI_SELECTABLE:
                 view = LayoutInflater.from(mContext).inflate(R.layout.table_view_edittext, parent, false);
                 view.setTag(TYPE);
                 break;

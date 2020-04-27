@@ -16,7 +16,7 @@ public class FieldValidator implements InputValidator {
 
     @Override
     public ValidationError validate(Object value, String fieldName, String fieldLabel) {
-        AppLogger.e("FieldValidator", "Validation ---> |" + value + "==" + defaultValue + "|");
+        AppLogger.e("FieldValidator", "Validation --->  " + fieldName + " |" + value + "==" + defaultValue + "|");
 
         if (value == null ||  value.toString().trim().isEmpty()
                 || Objects.equals(value.toString(), "-select-")

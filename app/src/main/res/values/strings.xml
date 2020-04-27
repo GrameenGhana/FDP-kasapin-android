@@ -68,7 +68,7 @@
     <string name="labour">Labour Cost</string>
     <string name="family_members">Family Members</string>
     <string name="farmer_details">Farmer Profile</string>
-    <string name="plot_monitoring">Plot Monitoring</string>
+    <string name="plot_monitoring" tools:ignore="MissingTranslation">Plot Monitoring</string>
 
     <string name="error_getting_farmer_info">There was an error attempting to retrieve farmer info</string>
     <string name="fill_data">Enter data</string>
@@ -456,5 +456,6 @@
     <string name="add_gps_point">add gps point</string>
     <string name="calculate_area">calculate area</string>
     <string name="error_enter_valid_word">Please enter a valid word</string>
+    <string name="plot_adoption_observations">Plot Adoption Observations</string>
 
 </resources>

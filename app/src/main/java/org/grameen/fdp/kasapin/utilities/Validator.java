@@ -24,15 +24,20 @@ public class Validator {
                 validation.add(new NumericalFieldValidator(question.getMinValue(), question.getMaxValue(), question.getErrorMessage()));
             }
             try {
-                VALIDATIONS.put(question.getLabelC(), validation);
+                VALIDATIONS.put(question.getValidationId(), validation);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
 
+
+    //Some answers to questions require multiple variants of the same answer eg. Answers to Family Members questions of a farmer
+    //Since the data is usually represented in a JsonArray for such cases, we use the indexes of the answer json in the array to distinguish
+    //which answer of the same question is coming from which family member.
+
     public void addValidation(int position, Question question) {
-        question.setLabelC(question.getLabelC() + position);
+        question.setValidationId(question.getLabelC() + position);
         addValidation(question);
     }
 

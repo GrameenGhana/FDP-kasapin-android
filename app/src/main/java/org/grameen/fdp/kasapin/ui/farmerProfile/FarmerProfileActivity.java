@@ -59,10 +59,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
-/**
- * A login screen that offers login via email/password.
- */
 public class FarmerProfileActivity extends BaseActivity implements FarmerProfileContract.View {
 
     @Inject
@@ -83,56 +79,38 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     TextView lastVisitDate;
     @BindView(R.id.lastSyncDate)
     TextView lastSyncDate;
-
-
     @BindView(R.id.syncIndicator)
     ImageView syncIndicator;
-
-
     @BindView(R.id.syncIndicator1)
     View syncIndicator1;
-
-
     @BindView(R.id.farm_assessment_layout)
     View farmAssessmentLayout;
-
     @BindView(R.id.edit)
     View edit;
-
     @BindView(R.id.dynamicButtons)
     LinearLayout dynamicButtons;
-
     @BindView(R.id.noOfPlots)
     TextView noOfPlots;
-
     @BindView(R.id.plotsRecyclerView)
     RecyclerView plotsRecyclerView;
-
     @BindView(R.id.addPlot)
     TextView addPlot;
-
     @BindView(R.id.review_page)
     ImageView reviewPage;
-
     @BindView(R.id.pandl)
     ImageView pandl;
-
     @BindView(R.id.farm_assessment)
     ImageView farmAssessment;
-
     @BindView(R.id.sync_farmer)
     Button syncFarmer;
-
     List<Plot> PLOTS;
     List<PlotAssessment> PLOT_ASSESSMENTS;
     List<String> PLOT_ASSESSMENT_VALUES;
     JSONObject MONITORING_DATA_JSON;
-
     RealFarmer FARMER;
     int plotsSize = 0;
     public static int familyMembersFormPosition = 0;
     int currentMonitoringYear = -1;
-
     private PlotsListAdapter plotsListAdapter;
 
     @Override
@@ -155,36 +133,27 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             farmAssessmentLayout.setVisibility(View.GONE);
 
         FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
-
-
         if (FARMER != null)
             initializeViews(true);
         else
             showMessage(getStringResources(R.string.error_getting_farmer_info));
-
-
         CURRENT_FORM_POSITION = 0;
     }
 
 
     @Override
     public void initializeViews(boolean shouldLoadButtons) {
-
         mPresenter.getFarmersPlots(FARMER.getCode());
         name.setText(FARMER.getFarmerName());
         code.setText(FARMER.getCode());
 
         if(FARMER.getVillageId() > 0){
             Community village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
-
             if(village != null) {
                 FARMER.setVillageName(village.getName());
                 villageName.setText(FARMER.getVillageName());
             }
         }
-
-
-
 
         landSize.setText(FARMER.getLandArea());
 
@@ -202,12 +171,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
         if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().equals("")) {
-
             circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(FARMER.getImageUrl()));
             initials.setText("");
-
-            //Picasso.with(this).load(farmer.getImageUrl()).resize(200, 200).into(circleImageView);
-
         } else {
 
             try {
@@ -216,7 +181,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 initials.setText(value);
 
             } catch (Exception e) {
-
                 initials.setText(FARMER.getFarmerName().substring(0, 1));
             }
 
@@ -236,8 +200,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             FILTERED_FORMS = new ArrayList<>();
             mPresenter.loadDynamicButtons(FORM_AND_QUESTIONS);
         }
-
-
 
         /*
         if (IS_MONITIRING_MODE && BuildConfig.DEBUG) {
@@ -299,18 +261,16 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
             if (!getAppDataManager().isMonitoring())
-                plotsListAdapter.OnLongClickListener((view, position) -> {
-                    showDialog(true, "Delete Plot Info", "Do you want to delete data for " + PLOTS.get(position).getName() + "?", (dialogInterface, i) -> {
+                plotsListAdapter.OnLongClickListener((view, position) -> showDialog(true, "Delete Plot Info", "Do you want to delete data for " + PLOTS.get(position).getName() + "?", (dialogInterface, i) -> {
 
-                        dialogInterface.dismiss();
-                        mPresenter.deletePlot(PLOTS.get(position));
+                    dialogInterface.dismiss();
+                    mPresenter.deletePlot(PLOTS.get(position));
 
-                        //TODO DELETE monitoring for a plot
-                        PLOTS.remove(position);
-                        plotsListAdapter.notifyItemRemoved(position);
-                    }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0);
-                });
-        } else noOfPlots.setText("Plot Adoption Observations");
+                    //TODO DELETE monitoring for a plot
+                    PLOTS.remove(position);
+                    plotsListAdapter.notifyItemRemoved(position);
+                }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0));
+        } else noOfPlots.setText(getStringResources(R.string.plot_adoption_observations));
 
 
     }
@@ -417,23 +377,16 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                                 return;
                             }
                         }
-
                         intent = new Intent(this, ProfitAndLossActivity.class);
                         intent.putExtra("farmer", new Gson().toJson(FARMER));
                         startActivity(intent);
-
                     }
-
                 } else
                     showDialog(true, getStringResources(R.string.no_plots), getStringResources(R.string.add_plot_to_access_pl),
                             (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok),
                             null, "", 0);
-
-
                 break;
             case R.id.farm_assessment:
-
-
 
                 JSONObject FARM_RESULTS = new JSONObject();
                 PLOT_ASSESSMENTS = new ArrayList<>();
@@ -468,48 +421,31 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                         AppLogger.e(TAG, "EVALUATING QUESTION WITH LABEL " + question.getLabelC() + " AND TYPE " + question.getTypeC());
                         AppLogger.e(TAG, "FORMULA == " + question.getFormulaC());
 
-
-                        String value = "0";
+                        StringBuilder value = new StringBuilder("0");
 
                         for (Plot plot : PLOTS){
-
-
-
-
-
-
                             switch(question.getTypeC().toLowerCase()){
                                 case AppConstants.FORMULA_TYPE_COMPLEX_FORMULA:
-
-                                    value = parseCollectionsFormula(question.getFormulaC(), PLOT_ASSESSMENT_VALUES);
-
-
+                                    value = new StringBuilder(parseCollectionsFormula(question.getFormulaC(), PLOT_ASSESSMENT_VALUES));
                                     break;
-
                                 case AppConstants.TYPE_MATH_FORMULA:
                                     mathFormulaParser.setJsonObject(valuesJsonObject);
                                     mathFormulaParser.setMathFormula(question.getFormulaC());
-                                    value = mathFormulaParser.evaluate();
+                                    value = new StringBuilder(mathFormulaParser.evaluate());
                                     break;
                             }
-
-                            value += "+";
+                            value.append("+");
                         }
-
                         try {
-                            valuesJsonObject.put(question.getLabelC(), mathFormulaParser.evaluate(value + "0"));
+                            valuesJsonObject.put(question.getLabelC(), mathFormulaParser.evaluate(value.toString() + "0"));
                         }catch(JSONException e){
                             e.printStackTrace();
                         }
-
                         mathFormulaParser.setJsonObject(valuesJsonObject);
                         logicFormulaParser.setJsonObject(valuesJsonObject);
                     }
-
                         try{
                             String farmResultsValue = logicFormulaParser.evaluate(farmResultsQuestion.getFormulaC());
-
-
                             FarmResult farmResult = new FarmResult();
                             farmResult.setCaption(getStringResources(R.string.farm_result));
 
@@ -520,49 +456,32 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                             intent.putExtra("farmResults", getGson().toJson(farmResult));
                             intent.putExtra("farmer", new Gson().toJson(FARMER));
                             startActivity(intent);
-
-
                         }catch(Exception e){
                             showMessage("Could not obtain farm results question.");
                             e.printStackTrace();
                         }
-
                 }
-
                 break;
             case R.id.sync_farmer:
-
-
                 if (FARMER.getSyncStatus() == AppConstants.SYNC_OK) {
                     showMessage(R.string.no_new_data);
                     return;
                 }
-
-
                 if (NetworkUtils.isNetworkConnected(this))
                     mPresenter.syncFarmerData(FARMER, true);
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;
 
-
             case R.id.historical_view:
-
                 //showSelectFormDialog();
-
-
                 break;
-
-
         }
     }
 
     boolean checkIfFarmSizeCorresponds(List<Plot> plots) {
-
         boolean value = true;
-
         Double farmAcre;
-
         Question cocoaAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_area_");
 
         if (cocoaAreaQuestion != null) {
@@ -575,42 +494,26 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     farmAcre = 0.0;
                 }
 
-
                 StringBuilder stringBuilder = new StringBuilder();
-                // StringBuilder stringUnitBuilder = new StringBuilder();
-
-
-                Double totalSizes = -1.0;
-
+                Double totalSizes;
                 if (plots != null)
                     for (Plot plot : plots) {
-
                         try {
                             AppLogger.i(TAG, "******* PLOT NAME " + plot.getName() + " AND DATA IS " + plot.getAnswersData());
-
-
                             stringBuilder.append(plot.getArea()).append("+");
-
-
                         } catch (Exception e) {
                             e.printStackTrace();
                             stringBuilder.append("0").append("+");
                         }
-
                     }
                 stringBuilder.append("0");
-
                 totalSizes = round(Double.parseDouble(MathFormulaParser.getInstance().evaluate(stringBuilder.toString())), 2);
-
-
                 AppLogger.i(TAG, "$$$$$$$$$$$$$    TOTAL SIZES " + farmAcre + " AND TOTAL PLOTS SIZES " + totalSizes);
-
 
                 if (totalSizes > farmAcre || totalSizes < farmAcre) {
                     value = false;
                     showMessage(R.string.ensure_farm_acre_equal);
                 }
-
                 return value;
 
             } else {
@@ -618,22 +521,16 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 return false;
             }
         } else {
-
             showMessage(R.string.error_has_occurred);
             return false;
         }
-
     }
     boolean checkIfCocoaProdCorresponds(List<Plot> plots) {
-
         boolean value = true;
-
         Double farmAcre;
-
         Question cocoaProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_production_ly");
 
         if (cocoaProdQuestion != null) {
-
             FormAnswerData answer = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), cocoaProdQuestion.getFormTranslationId());
             if (answer != null) {
                 try {
@@ -643,50 +540,33 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     farmAcre = 0.0;
                 }
 
-
                 StringBuilder stringBuilder = new StringBuilder();
-                // StringBuilder stringUnitBuilder = new StringBuilder();
-
-
-                Double totalSizes = -1.0;
-
+                Double totalSizes;
                 if (plots != null)
                     for (Plot plot : plots) {
-
                         try {
                             AppLogger.i(TAG, "******* PLOT NAME " + plot.getName() + " AND DATA IS " + plot.getAnswersData());
-
-
                             stringBuilder.append(plot.getEstimatedProductionSize()).append("+");
-
-
                         } catch (Exception e) {
                             e.printStackTrace();
                             stringBuilder.append("0").append("+");
                         }
-
                     }
                 stringBuilder.append("0");
 
                 totalSizes = round(Double.parseDouble(MathFormulaParser.getInstance().evaluate(stringBuilder.toString())), 2);
-
-
                 AppLogger.i(TAG, "$$$$$$$$$$$$$    TOTAL FARM PROD " + farmAcre + " AND TOTAL PLOTS PROD SIZES " + totalSizes);
-
 
                 if (totalSizes > farmAcre || totalSizes < farmAcre) {
                     value = false;
                     showMessage(R.string.error_total_plot_estimated_production);
                 }
-
                 return value;
-
             } else {
                 showMessage(R.string.error_missing_estimated_production);
                 return false;
             }
         } else {
-
             showMessage(R.string.error_has_occurred);
             return false;
         }
@@ -694,47 +574,36 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
     boolean haveAllPlotsBeenAssessed(List<Plot> plots){
         MONITORING_DATA_JSON = new JSONObject();
-
-
         checkIfAllPlotsHaveSameNumberOfMonitoring(plots);
-
 
         //Get the plot assessment question from the DB
         Question plotAssessmentQuestion = getAppDataManager().getDatabaseManager().questionDao().get("monitoring_plot_assessment_");
         Question passPlotsQuestion = getAppDataManager().getDatabaseManager().questionDao().get("pass_plots_");
 
-
         if(plotAssessmentQuestion != null){
             boolean useLastMonitoring = passPlotsQuestion != null && passPlotsQuestion.getFormulaC().contains("_Last");
 
             for(Plot p : plots){
-
                 Monitoring monitoring = (useLastMonitoring)
                         ? getAppDataManager().getDatabaseManager().monitoringsDao().getLastMonitoringForSelectedYear(p.getExternalId(), currentMonitoringYear)
                         : getAppDataManager().getDatabaseManager().monitoringsDao().getFirstMonitoringForSelectedYear(p.getExternalId(),  currentMonitoringYear);
-
                 AppLogger.e(TAG, "MONITORING >>> " + getGson().toJson(monitoring));
 
                 try {
                     String assessment = AppConstants.NO_MONITORING_PLACE_HOLDER;
-
                     if(monitoring != null)
                         assessment = monitoring.getMonitoringAOJsonData().getString(plotAssessmentQuestion.getLabelC());
-
                     if(assessment.contains(AppConstants.NO_MONITORING_PLACE_HOLDER)){
                         showMessage(p.getName() + "\n" + getStringResources(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getStringResources(R.string.incomplete_monitoring_suffix));
                         return false;
                     }
-
                     PLOT_ASSESSMENTS.add(new PlotAssessment(p.getName(), assessment));
                     PLOT_ASSESSMENT_VALUES.add(assessment.trim());
 
                     //Save the monitoring assessment data per plot for later use in the parsers
                     MONITORING_DATA_JSON.put(p.getExternalId(), assessment.trim());
-
-
-                } catch (JSONException ignore) {
-                    ignore.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                     showMessage(p.getName() + "\n" + getStringResources(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getStringResources(R.string.incomplete_monitoring_suffix));
                     break;
                 }
@@ -742,7 +611,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             return true;
         }else
             showMessage("Could no obtain Plot Assessment Question");
-
         return false;
     }
 
@@ -750,7 +618,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         List<Integer> numberOfMonitoringsPerPlot = new ArrayList<>();
         int noOfPlots;
-
         int maxValueOfMonitoring;
         try {
             currentMonitoringYear =  Integer.parseInt(getAppDataManager().getStringValue(FARMER.getCode()));
@@ -759,9 +626,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         AppLogger.e(TAG, "CURRENT MONITORING YEAR == " + currentMonitoringYear);
 
         if(plots != null && plots.size() > 0){
-
             noOfPlots = plots.size();
-
             for(Plot plot : plots){
                 //Check number of monitorngs for each plot for the currrent monitoring year
                 numberOfMonitoringsPerPlot.add(getAppDataManager().getDatabaseManager().monitoringsDao()
@@ -778,7 +643,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 showMessage(getStringResources(R.string.monitoring_for_year) + currentMonitoringYear + getStringResources(R.string.for_) + FARMER.getFarmerName() + getResources() + getStringResources(R.string.incorrect_no_plots_suffix));
                 return;
             }
-
             //Check to make sure a plot has at least 1 monitoring for selected year
             for(int j = 0; j < numberOfMonitoringsPerPlot.size(); j++){
                 if(numberOfMonitoringsPerPlot.get(j) == 0){
@@ -786,7 +650,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     return;
                 }
             }
-
         }else
             showMessage(getStringResources(R.string.farmer) + FARMER.getFarmerName() + getStringResources(R.string.no_plots_added_suffix));
 
@@ -794,18 +657,14 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     String parseCollectionsFormula(String formula, List<String> plotAssessmentValues){
         int value;
-
         try {
             String parsedEquation = formula.split(",")[1];
             parsedEquation = parsedEquation.split(Pattern.quote(")"))[0];
             parsedEquation = parsedEquation.replace("\"", "");
-
             value = Collections.frequency(plotAssessmentValues, parsedEquation.trim());
-
             return String.valueOf(value);
         }catch(Exception ignored){
             return "0";
         }
-
     }
 }

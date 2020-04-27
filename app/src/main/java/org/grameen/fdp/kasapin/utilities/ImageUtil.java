@@ -1,10 +1,5 @@
 package org.grameen.fdp.kasapin.utilities;
 
-/**
- * Created by aangjnr on 02/03/2018.
- */
-
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,31 +40,25 @@ public class ImageUtil {
 
     public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
             throws IOException {
-
         context.getContentResolver().notifyChange(selectedImage, null);
-        ContentResolver cr = context.getContentResolver();
-        //bitmap =  android.provider.MediaStore.Images.Media.getBitmap(cr, URI);
-
-
         int MAX_HEIGHT = 640;
         int MAX_WIDTH = 480;
 
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        InputStream imageStream = cr.openInputStream(selectedImage);
-        BitmapFactory.decodeStream(imageStream, null, options);
-        imageStream.close();
-
         // Calculate inSampleSize
         options.inSampleSize = calculateInSampleSize(options, MAX_WIDTH, MAX_HEIGHT);
-
-        // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        imageStream = context.getContentResolver().openInputStream(selectedImage);
-        Bitmap img = BitmapFactory.decodeStream(imageStream, null, options);
+        // Decode bitmap with inSampleSize set
 
+        InputStream imageStream = context.getContentResolver().openInputStream(selectedImage);
+        Bitmap img = BitmapFactory.decodeStream(imageStream, null, options);
         img = rotateImageIfRequired(context, img, selectedImage);
+
+        if (imageStream != null)
+            imageStream.close();
+
         return img;
     }
 

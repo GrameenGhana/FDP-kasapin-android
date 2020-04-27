@@ -2,33 +2,25 @@ package org.grameen.fdp.kasapin.data.db.entity;
 
 import androidx.room.Entity;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by aangjnr on 30/01/2018.
  */
 
 @Entity(tableName = "communities", indices = {@Index(value = "countryId"), @Index(value = "parentId"), @Index(value = "id", unique = true)})
 public class Community extends BaseModel{
-
-
     @SerializedName("country_id")
+    private
     int countryId;
-
     @SerializedName("name")
     String name;
-
     @SerializedName("type")
+    private
     String type;
-
-
     @SerializedName("parent_id")
+    private
     int parentId;
-
-
 
     public Community() {
     }
@@ -41,7 +33,6 @@ public class Community extends BaseModel{
         this.countryId = countryId;
     }
 
-
     public String getName() {
         return name;
     }
@@ -49,8 +40,6 @@ public class Community extends BaseModel{
     public void setName(String name) {
         this.name = name;
     }
-
-
 
     public void setParentId(int parentId) {
         this.parentId = parentId;

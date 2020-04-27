@@ -7,6 +7,7 @@ import androidx.room.TypeConverters;
 import org.grameen.fdp.kasapin.data.db.dao.ActivitiesDao;
 import org.grameen.fdp.kasapin.data.db.dao.ActivitiesPlusInputsDao;
 import org.grameen.fdp.kasapin.data.db.dao.CalculationsDao;
+import org.grameen.fdp.kasapin.data.db.dao.CommunitiesDao;
 import org.grameen.fdp.kasapin.data.db.dao.CommunityAndFarmersDao;
 import org.grameen.fdp.kasapin.data.db.dao.ComplexCalculationDao;
 import org.grameen.fdp.kasapin.data.db.dao.CountryDao;
@@ -31,10 +32,10 @@ import org.grameen.fdp.kasapin.data.db.dao.ServerUrlsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SkipLogicsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SubmissionsDao;
 import org.grameen.fdp.kasapin.data.db.dao.SuppliesCostsDao;
-import org.grameen.fdp.kasapin.data.db.dao.CommunitiesDao;
 import org.grameen.fdp.kasapin.data.db.entity.ActivitiesPlusInput;
 import org.grameen.fdp.kasapin.data.db.entity.Activity;
 import org.grameen.fdp.kasapin.data.db.entity.Calculation;
+import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.ComplexCalculation;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.District;
@@ -56,11 +57,8 @@ import org.grameen.fdp.kasapin.data.db.entity.ServerUrl;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.SuppliesCost;
-import org.grameen.fdp.kasapin.data.db.entity.Community;
 
 import javax.inject.Singleton;
-
-
 /**
  * Created by AangJnr on 18, September, 2018 @ 2:46 PM
  * Work Mail cibrahim@grameenfoundation.org
@@ -130,6 +128,4 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract FormAndQuestionsDao formAndQuestionsDao();
 
     public abstract ServerUrlsDao serverUrlsDao();
-
-
 }
