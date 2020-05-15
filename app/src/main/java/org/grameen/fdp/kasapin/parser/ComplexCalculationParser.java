@@ -11,15 +11,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-
-/**
- * Created by AangJnr on 12, October, 2018 @ 10:57 AM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
-
-
 /*
 
 ^: Matches the beginning position of the string

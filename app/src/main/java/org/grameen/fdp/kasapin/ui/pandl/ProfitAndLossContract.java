@@ -16,7 +16,9 @@ public class ProfitAndLossContract {
 
     public interface View extends BaseContract.View {
 
-        void issuePrint();
+        void enablePrint();
+
+        void issuePrinting();
 
         void setUpViews();
 

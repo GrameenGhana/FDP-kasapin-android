@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +49,7 @@ import org.grameen.fdp.kasapin.ui.familyMembers.FamilyMembersActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
@@ -56,10 +60,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
 import butterknife.Unbinder;
+import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.listeners.OnScrollListener;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -376,28 +383,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
         finish();
     }
 
-    protected String captureScreenshot(View v, String activityName) {
-        String fileLocation = null;
-        String dir = ROOT_DIR + "/screenCaptures/";
-        File file = new File(dir);
-        if (!file.exists()) file.mkdirs();
-        try {
-            fileLocation = dir + activityName + ".jpg";
-            v.setDrawingCacheEnabled(true);
-            Bitmap bitmap = Bitmap.createBitmap(v.getDrawingCache());
-            v.setDrawingCacheEnabled(false);
-            File imageFile = new File(fileLocation);
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
-            int quality = 100;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-            outputStream.flush();
-            outputStream.close();
-        } catch (Throwable e) {
-            // Several error may come out with file handling or DOM
-            e.printStackTrace();
-        }
-        return fileLocation;
-    }
 
     public void goToFamilyMembersTable(RealFarmer FARMER){
         Question numberFamilyMembersQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farmer_familycount_");
@@ -407,7 +392,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
             if(answerData != null){
                 int numberFamilyMembers;
                 try {
-                    numberFamilyMembers = Integer.valueOf(answerData.getJsonData().getString(numberFamilyMembersQuestion.getLabelC()));
+                    numberFamilyMembers = Integer.parseInt(answerData.getJsonData().getString(numberFamilyMembersQuestion.getLabelC()));
                 } catch (JSONException ignored) {
                     numberFamilyMembers = 1;
                 }

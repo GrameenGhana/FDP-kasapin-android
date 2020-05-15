@@ -51,8 +51,6 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
         super(context, data, tableView);
         this.context = context;
         this.mAppDatabase = appDatabase;
-
-
     }
 
      void setItemSelectedListener(final MaterialSpinner.OnItemSelectedListener mItemSelectedListener) {
@@ -122,7 +120,6 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
             switch (data.getTag()) {
                 case TAG_TITLE_TEXT_VIEW: {
-
                     TextView textView = new TextView(getContext());
                     textView.setText(data.getLabel());
                     textView.setPadding(20, 10, 20, 10);

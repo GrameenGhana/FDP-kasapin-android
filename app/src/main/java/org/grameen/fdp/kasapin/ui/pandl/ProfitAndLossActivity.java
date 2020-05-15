@@ -1,6 +1,8 @@
 package org.grameen.fdp.kasapin.ui.pandl;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -9,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 
@@ -30,6 +35,7 @@ import org.grameen.fdp.kasapin.ui.fdpStatus.FDPStatusActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
+import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,6 +68,7 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.TYPE_TEXT;
  */
 public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLossContract.View {
     static final int MAX_YEARS = 7;
+    static Question START_YEAR_QUESTION;
     @Inject
     ProfitAndLossPresenter mPresenter;
     @BindView(R.id.name)
@@ -76,7 +83,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     LinearLayout currencyLayout;
     @BindView(R.id.tableView)
     TableView tableView;
-    @BindView(R.id.print)
+    @BindView(R.id.print_button)
     ImageView print;
     @BindView(R.id.fdp_status)
     TextView fdpStatus;
@@ -90,7 +97,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     LinearLayout bottomButtons;
     @BindView(R.id.main_layout)
     RelativeLayout mainLayout;
-
     JSONObject VALUES_JSON_OBJECT;
     List<Data> TABLE_DATA_LIST;
     List<String> TOTAL_LABOR_COST;
@@ -117,7 +123,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     List<String> labourDaysList = new ArrayList<>();
     List<String> pandlist = new ArrayList<>();
     Question CSSV_QUESTION;
-    static Question START_YEAR_QUESTION;
     String START_YEAR_LABEL;
     Question PLOT_SIZE_QUESTION;
     Question PLOT_PROD_QUESTION;
@@ -166,7 +171,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         }
 
         if (BuildConfig.DEBUG)
-            issuePrint();
+            enablePrint();
 
         if (getAppDataManager().isMonitoring()) {
             save.setVisibility(View.GONE);
@@ -174,16 +179,20 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         }
     }
 
+
     @Override
     public void setUpViews() {
+        tableView.setBackground(ContextCompat.getDrawable(this, R.drawable.table_view_border_background));
+        tableView.setSaveEnabled(true);
+
         farmerName.setText(farmer.getFarmerName());
         farmerCode.setText(farmer.getCode());
         tableView.setColumnCount(9);
         String[] TABLE_HEADERS = getResources().getStringArray(R.array.seven_years);
-        MyTableHearderAdapter tableHearderAdapter = new MyTableHearderAdapter(this, TABLE_HEADERS);
-        tableView.setHeaderAdapter(tableHearderAdapter);
+        MyTableHearderAdapter tableHeaderAdapter = new MyTableHearderAdapter(this, TABLE_HEADERS);
+        tableView.setHeaderAdapter(tableHeaderAdapter);
 
-        tableHearderAdapter.setHeaderClickListener(view -> {
+        tableHeaderAdapter.setHeaderClickListener(view -> {
             int position = Integer.parseInt(view.getTag().toString());
             AppLogger.i("P & L ACTIVITY", position + "");
             Intent intent = new Intent(this, DetailedMonthActivity.class);
@@ -243,6 +252,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         mPresenter.getAllAnswers(farmer.getCode());
     }
 
+
     @Override
     protected void onDestroy() {
         mPresenter.dropView();
@@ -251,7 +261,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
     @Override
-    public void openLoginActivityOnTokenExpire() {}
+    public void openLoginActivityOnTokenExpire() {
+    }
 
 
     @OnClick(R.id.fdp_status)
@@ -265,30 +276,27 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
     @Override
-    public void issuePrint() {
-        findViewById(R.id.print).setVisibility(View.VISIBLE);
-        findViewById(R.id.print).setOnClickListener(v -> {
-            findViewById(R.id.bottom_buttons).setVisibility(View.GONE);
-            findViewById(R.id.fdpStatus).setVisibility(View.GONE);
-            findViewById(R.id.currency_layout).setVisibility(View.GONE);
-            showLoading("Initializing print", "Please wait...", false, 0, false);
-            new Handler().postDelayed(() -> {
-                String fileLocation = captureScreenshot(findViewById(R.id.main_layout), "pandl");
-                hideLoading();
-                if (fileLocation != null) {
-                    showMessage("File saved!");
-                       /* Intent intent = new Intent(this, PrintingActivity.class);
-                        intent.putExtra("file_location", fileLocation);
-                        startActivity(intent);
-
-                        findViewById(R.id.bottom_buttons).setVisibility(View.VISIBLE);
-                        findViewById(R.id.fdpStatus).setVisibility(View.VISIBLE);
-                        findViewById(R.id.currency_layout).setVisibility(View.VISIBLE);*/
-                } else
-                    showMessage("Error starting the printer service!");
-            }, 2000);
+    public void enablePrint() {
+        print.setVisibility(View.VISIBLE);
+        print.setOnClickListener(v -> {
+            issuePrinting();
         });
     }
+
+
+    @Override
+    public void issuePrinting() {
+        showLoading("Initializing print", "Please wait...", false, 0, false);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                ImageUtil.captureTableScreenshot(tableView, "pandl");
+                hideLoading();
+                showMessage("Done!");
+            }
+        });
+    }
+
 
     @Override
     public void setAnswerData(JSONObject object) {
@@ -336,7 +344,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
-                    public void onComplete() {}
+                    public void onComplete() {
+                    }
+
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
@@ -346,10 +356,12 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 });
     }
 
+
     @Override
     public boolean checkIfFarmerFdpStatusFormFilled(String code) {
         return false;
     }
+
 
     @Override
     public void populateTableData() {
@@ -378,8 +390,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         }
         PLOT_SIZES_IN_HA_JSON = new JSONObject();
         if (farmer != null) {
-            if(realPlotList != null)
-            realPlotList.clear();
+            if (realPlotList != null)
+                realPlotList.clear();
 
             realPlotList = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmer.getCode()).blockingGet();
             COUNTER = 0;
@@ -487,7 +499,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_GROSS_INCOME_FROM_COCOA.get(i) + "+" + TOTAL_NET_INCOME_FROM_OTHER_CROPS.get(i))));
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
                             TOTAL_FARMING_INCOME = calculationsList;
-                        }else if (q.getLabelC().startsWith("net_income_other_sources_")) {
+                        } else if (q.getLabelC().startsWith("net_income_other_sources_")) {
                             String value = mathFormulaParser.evaluate();
                             calculationsList = new ArrayList<>();
                             for (int i = 0; i < MAX_YEARS + 1; i++) {
@@ -495,7 +507,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                             }
                             TOTAL_NET_INCOME_FROM_OTHER_SOURCES = calculationsList;
                             TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
-                        }else if (q.getLabelC().startsWith("total_income_")) {
+                        } else if (q.getLabelC().startsWith("total_income_")) {
                             calculationsList = new ArrayList<>();
                             for (int i = 0; i < MAX_YEARS + 1; i++)
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_FARMING_INCOME.get(i) + "+" + TOTAL_NET_INCOME_FROM_OTHER_SOURCES.get(i))));
@@ -598,12 +610,12 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                     String plotExtId = view.getTag().toString().split("_")[0];
                     String recoToChangeToName = view.getTag().toString().split("_")[1];
                     Plot plot = null;
-                    for(Plot p : realPlotList)
-                        if(p.getExternalId().equals(plotExtId)) {
+                    for (Plot p : realPlotList)
+                        if (p.getExternalId().equals(plotExtId)) {
                             plot = p;
                             break;
                         }
-                    if(plot != null) {
+                    if (plot != null) {
                         Recommendation NEW_PLOT_RECO = getAppDataManager().getDatabaseManager().recommendationsDao()
                                 .getByRecommendationName(recoToChangeToName).blockingGet();
                         Recommendation GAPS_RECOMMENDATION_FOR_START_YEAR;
@@ -635,6 +647,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         }
     }
 
+
     @Override
     public void reloadTableData() {
         showLoading(getStringResources(R.string.updating_table_data), getStringResources(R.string.please_wait), true, 0, false);
@@ -644,12 +657,14 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                     @Override
                     public void onComplete() {
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showMessage(R.string.error_has_occurred_loading_data);
                     }
                 });
     }
+
 
     void loadYearData(Plot PLOT, int CONTROLLING_YEAR) {
         System.out.println("################################ \n CALCULATING INCOME \n ###################################");
@@ -791,6 +806,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         }
         TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
     }
+
 
     void loadYearDataForInterventionMade(Plot PLOT, int CONTROLLING_YEAR) {
         AppLogger.i(TAG, "loadYearData " + CONTROLLING_YEAR);
@@ -944,6 +960,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         }
     }
 
+
     void computePlotResults() {
         for (int i = 0; i < MAX_YEARS + 1; i++)
             pandlist.add(mathFormulaParser.evaluate(plotIncomes.get(i) + "-" + "(" + maintenanceCostList.get(i) + "+" + labourCostList.get(i) + ")"));
@@ -985,6 +1002,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         }
     }
 
+
     String computeCost(List<RecommendationActivity> recommendationActivities, String which, boolean seasonal) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("0").append("+");
@@ -1000,8 +1018,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                             stringBuilder.append(recommendationActivity.getLaborDays()).append("+");
                     } else
                         stringBuilder.append(recommendationActivity.getLaborDays()).append("+");
-
-
                 }
 
                 stringBuilder.append("0");

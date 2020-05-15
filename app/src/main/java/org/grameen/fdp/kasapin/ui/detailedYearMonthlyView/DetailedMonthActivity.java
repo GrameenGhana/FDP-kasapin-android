@@ -124,28 +124,18 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
 
 
         if (BuildConfig.DEBUG) {
-
-
             findViewById(R.id.print).setVisibility(View.VISIBLE);
-
             findViewById(R.id.print).setOnClickListener(v -> {
-
                 findViewById(R.id.bottom_buttons).setVisibility(View.GONE);
                 findViewById(R.id.currency_layout).setVisibility(View.GONE);
                 findViewById(R.id.print).setVisibility(View.GONE);
-
-
                 showLoading("Initializing", "Please wait...", false, 0, false);
 
 
                 new Handler().postDelayed(() -> {
-
-                    String fileLocation = captureScreenshot(findViewById(R.id.main_layout), "monthly_activities");
-
+                    //String fileLocation = captureScreenshot(findViewById(R.id.main_layout), "monthly_activities");
                     hideLoading();
-
                    /* if (fileLocation != null) {
-
                         Intent intent = new Intent(this, PrintingActivity.class);
                         intent.putExtra("file_location", fileLocation);
                         startActivity(intent);
@@ -153,26 +143,16 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
                         findViewById(R.id.bottom_buttons).setVisibility(View.VISIBLE);
                         findViewById(R.id.currency_layout).setVisibility(View.VISIBLE);
                         findViewById(R.id.print).setVisibility(View.VISIBLE);
-
-
                     } else
                         showMessage("Error starting the printer service!")
                         ;*/
 
 
-                    showMessage("File location is " + fileLocation);
-
-
+                    //showMessage("File location is " + fileLocation);
                 }, 2000);
-
             });
-
-
         }
-
         onBackClicked();
-
-
     }
 
 

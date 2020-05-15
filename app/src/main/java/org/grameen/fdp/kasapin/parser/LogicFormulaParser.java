@@ -57,14 +57,12 @@ $: Matches the ending position of the string
 
 public class LogicFormulaParser extends Tokenizer {
 
-    String TAG = this.getClass().getSimpleName();
-    String FORMULA = null;
-    JSONObject jsonObject = null;
-    JSONObject allValuesJson = null;
-    boolean isComplexFormula = false;
-
-    Tokenizer TOKENIZER;
-    ScriptEngine _engine = new ScriptEngineManager().getEngineByName("rhino");
+    private String TAG = this.getClass().getSimpleName();
+    private String FORMULA = null;
+    private JSONObject jsonObject = null;
+    private JSONObject allValuesJson = null;
+    private Tokenizer TOKENIZER;
+    private ScriptEngine _engine = new ScriptEngineManager().getEngineByName("rhino");
 
 
     private LogicFormulaParser() {
@@ -87,13 +85,9 @@ public class LogicFormulaParser extends Tokenizer {
         tokenizer.add(">=", AppConstants.TOKEN_OPERATOR_LESS_THAN_EQUALS);
         tokenizer.add("<", AppConstants.TOKEN_OPERATOR_GREATER_THAN);
         tokenizer.add(">", AppConstants.TOKEN_OPERATOR_LESS_THAN);
-
         tokenizer.add("||", AppConstants.TOKEN_OPERATOR_OR);
         tokenizer.add("&&", AppConstants.TOKEN_OPERATOR_AND);
-
         tokenizer.add("\"", AppConstants.TOKEN_QUOTATION);
-
-
         tokenizer.add("[0-9]+|[a-zA-Z][a-zA-Z0-9_]*[[*/]-?[0-9]*\\.\\[0-9]+]*", AppConstants.TOKEN_VARIABLE); // variable
         return tokenizer;
     }
@@ -127,10 +121,6 @@ public class LogicFormulaParser extends Tokenizer {
                 String returnValue = "";
                 boolean isNestedIfFormula = false;
 
-                //FORMULA = FORMULA.replace(" ", "");
-
-                System.out.println();
-
                 AppLogger.e(TAG, "**** UN PARSED EQUATION " + FORMULA);
                 String[] nestedFormulas = FORMULA.split("else");
 
@@ -145,14 +135,11 @@ public class LogicFormulaParser extends Tokenizer {
                     System.out.println("NESTED FORMULA PART " + count + " >>>> " + nestedFormula);
 
                     //BREAK DOWN INTO SECTIONS AND EVALUATE
-
                     String rawFormula = nestedFormula
                             .replace("I", "")
                             .replace("F(", "");
 
-
                     String[] sections = rawFormula.split(",");
-
 
                     String formulaToEvaluate = "(" + sections[0].replace(" ", "") + ")";
 
@@ -164,14 +151,12 @@ public class LogicFormulaParser extends Tokenizer {
                     } catch (Exception ignored) {
                     }
 
-
                     Iterator iterator = jsonObject.keys();
                     while (iterator.hasNext()) {
                         String tmp_key = (String) iterator.next();
 
                         if (formulaToEvaluate.contains(tmp_key))
                             formulaToEvaluate = formulaToEvaluate.replace(tmp_key, getValue(tmp_key));
-
                     }
 
                     if (allValuesJson != null) {
@@ -181,38 +166,21 @@ public class LogicFormulaParser extends Tokenizer {
 
                             if (formulaToEvaluate.contains(tmp_key))
                                 formulaToEvaluate = formulaToEvaluate.replace(tmp_key, getValue(tmp_key));
-
                         }
                     }
-
 
                     String[] subSections = formulaToEvaluate.split("&&|\\|\\|");
 
                     String evaluatedFormula = formulaToEvaluate;
-
                     for (int i = 0; i < subSections.length; i++) {
                         String v = subSections[i].replace("(", "").replace(")", "").replace(" ", "");
-
-
                         Boolean answerValue = ComputationUtils.parseEquation(v.replace("\"", ""), _engine);
-
                         AppLogger.e(TAG, "SECTION " + (i + 1) + " =>>> " + v + " Answer >>>  " + answerValue);
-
                         evaluatedFormula = evaluatedFormula.replace(v, String.valueOf(answerValue));
-
                         AppLogger.i(TAG, "### Replacing " + v + " with Answer >>>  " + answerValue);
                     }
 
-                    System.out.println("EQUATION BEFORE REPLACEMENT >>> " + formulaToEvaluate);
-                    System.out.println("EQUATION AFTER REPLACEMENT >>> " + evaluatedFormula);
-
-
                     Boolean valueAfterParsing = ComputationUtils.parseLogicalEquation(evaluatedFormula.replace("))", ")"));
-
-
-                    AppLogger.e(TAG, "TRUE VALUE = " + trueValue);
-                    AppLogger.e(TAG, "FALSE VALUE = " + falseValue);
-
 
                     if (valueAfterParsing != null && valueAfterParsing) {
                         returnValue = trueValue.replace("\"", "");
@@ -247,14 +215,11 @@ public class LogicFormulaParser extends Tokenizer {
                         } catch (JSONException ignored) {}
 
                     return returnValue;
-
     }
 
 
 
     public String evaluateComplexFormula(String complexFormula){
-        this.isComplexFormula = true;
-
         AppLogger.e(TAG, "********************  FORMULA IS A COMPLEX FORMULA  ********************");
         AppLogger.e(TAG,"********************  Evaluating the logic part/sections of the complex formula  ********************");
 
@@ -276,12 +241,9 @@ public class LogicFormulaParser extends Tokenizer {
             MathFormulaParser mathFormulaParser = MathFormulaParser.getInstance();
             mathFormulaParser.setJsonObject(jsonObject);
             mathFormulaParser.setMathFormula(complexFormula);
-
             return mathFormulaParser.evaluate();
-
         } else
         return complexFormula;
-
     }
 
 
@@ -299,7 +261,6 @@ public class LogicFormulaParser extends Tokenizer {
         }
     }
 
-
     public void setAllValuesJsonObject(JSONObject jsonObject) {
         this.allValuesJson = jsonObject;
     }
@@ -310,11 +271,8 @@ public class LogicFormulaParser extends Tokenizer {
         this.jsonObject = jsonObject;
 
     }
-
     public void setFormula(String formula) {
         this.FORMULA = formula;
     }
-
-
 }
 
