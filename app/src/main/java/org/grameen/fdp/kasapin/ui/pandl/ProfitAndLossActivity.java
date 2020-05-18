@@ -37,6 +37,7 @@ import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
+import org.grameen.fdp.kasapin.utilities.PDFCreator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -287,14 +288,21 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @Override
     public void issuePrinting() {
         showLoading("Initializing print", "Please wait...", false, 0, false);
-        new Handler().post(new Runnable() {
+
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ImageUtil.captureTableScreenshot(tableView, "pandl");
+                PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl");
                 hideLoading();
                 showMessage("Done!");
+
+                try {
+                    pdfCreator.print();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
-        });
+        }, 200);
     }
 
 

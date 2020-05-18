@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -209,6 +210,8 @@ public class ImageUtil {
 
             bigBitmap.recycle();
 
+            AppLogger.e("ImageUtil", "Width == " + bigBitmap.getWidth() + " Height == " + bigBitmap.getHeight());
+
             return imageFile.getAbsolutePath();
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM
@@ -222,5 +225,6 @@ public class ImageUtil {
         }
         return null;
     }
+
 
 }
