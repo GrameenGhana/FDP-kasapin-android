@@ -177,7 +177,6 @@
                                     android:layout_weight="3"
                                     android:background="@drawable/border_background"
                                     android:enabled="false"
-                                    android:maxLength="10"
                                     android:maxLines="1"
                                     android:textSize="@dimen/text_size_normal"
                                     android:paddingLeft="@dimen/spacing_normal"

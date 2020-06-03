@@ -393,7 +393,6 @@ public class Question {
         else return null;
     }
 
-
     public List<SkipLogic> getSkipLogics() {
         return skipLogics;
     }

@@ -187,7 +187,7 @@ public class DynamicPlotFormFragment extends FormFragment {
                         break;
 
                     case AppConstants.TYPE_MULTI_SELECTABLE:
-                        formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED, validation));
+                        formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), storedValue, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED, validation));
                         break;
 
                     case AppConstants.TYPE_TIMEPICKER:
@@ -237,12 +237,12 @@ public class DynamicPlotFormFragment extends FormFragment {
 
 
     private void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogic) {
-        getComputationUtils().setUpPropertyChangeListeners2(q.getLabelC(), skipLogic);
+        getComputationUtils().setUpPropertyChangeListeners(q.getLabelC(), skipLogic);
     }
 
 
     private void applySkipLogicAndHideViews(Question question, List<SkipLogic> skipLogic) {
-        getComputationUtils().initiateSkipLogicsAndHideViews(question.getLabelC(), skipLogic);
+        getComputationUtils().initiateSkipLogicAndHideViews(question.getLabelC(), skipLogic);
     }
 
     @Override

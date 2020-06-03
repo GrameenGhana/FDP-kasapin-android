@@ -81,6 +81,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
     private List<Monitoring> monitoringList;
     int SELECTED_YEAR;
     public static boolean newMonitoringAdded = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +111,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         String name_of_plot = PLOT.getName() + " Year " + SELECTED_YEAR;
         plotName.setText(name_of_plot);
 
-        if (PLOT.getAnswersData() != null && !PLOT.getAnswersData().contains("--") && PLOT.getRecommendationId() > 0)
+        if (PLOT.getAnswersData() != null && PLOT.getRecommendationId() > 0)
             mPresenter.getAOQuestions();
         else
             toggleNoDataPlaceholder(true, "No data!\n\nPlease ensure that all Adoption Observations were completed for " + PLOT.getName());

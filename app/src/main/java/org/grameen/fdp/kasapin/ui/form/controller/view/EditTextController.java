@@ -87,7 +87,6 @@ public class EditTextController extends MyLabeledFieldController {
         this.inputType = inputType;
         IS_ENABLED = true;
         this.IS_ENABLED = isEnabled;
-
     }
 
     /**

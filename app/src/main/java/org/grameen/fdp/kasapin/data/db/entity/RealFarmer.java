@@ -18,7 +18,6 @@ import java.util.Date;
 public class RealFarmer {
 
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     int id;
 
     @SerializedName("full_name_c")

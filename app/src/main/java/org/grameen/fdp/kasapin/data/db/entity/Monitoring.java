@@ -18,7 +18,6 @@ import org.json.JSONObject;
 @Entity(tableName = "monitorings", indices = {@Index("plotExternalId"), @Index("year")}, foreignKeys = @ForeignKey(entity = Plot.class, parentColumns = "externalId", childColumns = "plotExternalId"))
 public class Monitoring {
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     int id;
     @SerializedName("external_id")
     String externalId;

@@ -20,7 +20,7 @@ import org.grameen.fdp.kasapin.data.db.dao.FormsDao;
 import org.grameen.fdp.kasapin.data.db.dao.InputsDao;
 import org.grameen.fdp.kasapin.data.db.dao.LogicsDao;
 import org.grameen.fdp.kasapin.data.db.dao.MappingsDao;
-import org.grameen.fdp.kasapin.data.db.dao.MonitoringsDao;
+import org.grameen.fdp.kasapin.data.db.dao.MonitoringDao;
 import org.grameen.fdp.kasapin.data.db.dao.PlotAndAssessmentsDao;
 import org.grameen.fdp.kasapin.data.db.dao.PlotAssessmentDao;
 import org.grameen.fdp.kasapin.data.db.dao.PlotsDao;
@@ -111,7 +111,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract PlotsDao plotsDao();
 
-    public abstract MonitoringsDao monitoringsDao();
+    public abstract MonitoringDao monitoringsDao();
 
     public abstract PlotAssessmentDao plotAssessmentDao();
 

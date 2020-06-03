@@ -20,8 +20,7 @@ import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.OnScrollListener;
 
 public class PDFCreator {
-    int leftMargin = 24;
-    private int a4Height = 1754;
+    private int leftMargin = 24;
     private boolean isEndOfTable = false;
     private boolean isPdfCreated = false;
     private TableView tableView;
@@ -181,10 +180,11 @@ public class PDFCreator {
         int beginHeight = 0;
         int totalHeight = bitmap.getHeight();
 
+        int a4Height = 1754;
         while(totalHeight > a4Height) {
             index = index + 1;
             //Creates pages and adds to the pdf document
-            createPage(bitmap, index,  a4Height,  beginHeight);
+            createPage(bitmap, index, a4Height,  beginHeight);
 
             totalHeight -= a4Height;
             beginHeight += a4Height;

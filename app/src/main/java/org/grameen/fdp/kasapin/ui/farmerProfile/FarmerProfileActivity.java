@@ -630,7 +630,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             for(Plot plot : plots){
                 //Check number of monitorngs for each plot for the currrent monitoring year
                 numberOfMonitoringsPerPlot.add(getAppDataManager().getDatabaseManager().monitoringsDao()
-                        .countMonitoringsForSelectedYear(plot.getExternalId(), currentMonitoringYear)
+                        .countMonitoringForSelectedYear(plot.getExternalId(), currentMonitoringYear)
                         .blockingGet(0));
             }
 

@@ -19,25 +19,19 @@ import io.reactivex.Single;
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */
-
-
 @Dao
-public interface MonitoringsDao {
-
-
+public interface MonitoringDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<Monitoring> objects);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMonitoring(Monitoring monitoring);
 
-
     @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId")
     Maybe<List<Monitoring>> getAllMonitoringForPlot(String plotExternalId);
 
     @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year")
-    Single<List<Monitoring>> getAllMonitoringsForSelectedYear(String plotExternalId, int year);
-
+    Single<List<Monitoring>> getAllMonitoringForSelectedYear(String plotExternalId, int year);
 
     @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY id ASC LIMIT 1")
     Monitoring getFirstMonitoringForSelectedYear(String plotExternalId, int year);
@@ -46,6 +40,6 @@ public interface MonitoringsDao {
     Monitoring getLastMonitoringForSelectedYear(String plotExternalId, int year);
 
     @Query("SELECT COUNT(id) FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year")
-    Maybe<Integer> countMonitoringsForSelectedYear(String plotExternalId, int year);
+    Maybe<Integer> countMonitoringForSelectedYear(String plotExternalId, int year);
 
 }

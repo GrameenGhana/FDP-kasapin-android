@@ -22,7 +22,7 @@ import java.util.Set;
  */
 
 public abstract class MyLabeledFieldController extends MyFormElementController {
-    private static final RequiredFieldValidator REQUIRED_FIELD_VALIDATOR = new RequiredFieldValidator();
+    //private static final RequiredFieldValidator REQUIRED_FIELD_VALIDATOR = new RequiredFieldValidator();
     private final String labelText;
     private View fieldView;
     private TextView errorView;
@@ -96,9 +96,9 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
      */
     public void setIsRequired(boolean required) {
         if (!required) {
-            validators.remove(REQUIRED_FIELD_VALIDATOR);
-        } else if (!isRequired()) {
-            validators.add(REQUIRED_FIELD_VALIDATOR);
+            validators.clear();
+        } else if (validators.size() <= 0) {
+            setValidators(validators);
         }
     }
 
@@ -122,7 +122,7 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
      * @return true if this field is required to have input, otherwise false
      */
     public boolean isRequired() {
-        return validators.contains(REQUIRED_FIELD_VALIDATOR);
+        return !validators.isEmpty();
     }
 
     /**
@@ -142,20 +142,15 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
      */
     public List<ValidationError> validateInput() {
         List<ValidationError> errors = new ArrayList<>();
-       /* if(isHidden()) {
-            AppLogger.e("LabeledFieldController", getLabel() + " removing validations because isHidden is " + isHidden());
-            return errors;
-        }else {*/
             Object value = getModel().getValue(getName());
             ValidationError error;
             for (InputValidator validator : validators) {
-                error = validator.validate(value, getName(), getLabel());
+                error = validator.validate(value, getName(), getName());
                 if (error != null) {
                     errors.add(error);
                 }
             }
             return errors;
-
     }
 
 

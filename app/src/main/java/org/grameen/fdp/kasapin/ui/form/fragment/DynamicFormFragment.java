@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
@@ -139,7 +137,7 @@ public class DynamicFormFragment extends FormFragment {
         computationUtils = ComputationUtils.newInstance(controller);
         if (QUESTIONS != null) {
             MyFormSectionController formSectionController = new MyFormSectionController(getContext(), FORM_AND_QUESTIONS.getForm().getTranslation());
-            loadQuestionsValues(context, QUESTIONS, formSectionController);
+            loadQuestions(context, QUESTIONS, formSectionController);
             controller.addSection(formSectionController);
         }
     }
@@ -175,7 +173,7 @@ public class DynamicFormFragment extends FormFragment {
     }
 
 
-    private void loadQuestionsValues(Context context, List<Question> questions, MyFormSectionController formSectionController) {
+    private void loadQuestions(Context context, List<Question> questions, MyFormSectionController formSectionController) {
         for (final Question q : questions) {
             HashSet<InputValidator> validation = new HashSet<>();
             validation.add(new FieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
@@ -211,7 +209,7 @@ public class DynamicFormFragment extends FormFragment {
 
                     case AppConstants.TYPE_MULTI_SELECTABLE:
                         formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
-                                q.isRequired(), q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED && q.caEdit(), validation));
+                                q.isRequired(), storedValue, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED && q.caEdit(), validation));
                         break;
                     case AppConstants.TYPE_TIMEPICKER:
                         formSectionController.addElement(new TimePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),q.isRequired(),  validation));
@@ -261,12 +259,12 @@ public class DynamicFormFragment extends FormFragment {
     }
 
     private void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogic) {
-        getComputationUtils().setUpPropertyChangeListeners2(q.getLabelC(), skipLogic);
+        getComputationUtils().setUpPropertyChangeListeners(q.getLabelC(), skipLogic);
     }
 
 
     private void applySkipLogicAndHideViews(Question question, List<SkipLogic> skipLogic) {
-        getComputationUtils().initiateSkipLogicsAndHideViews(question.getLabelC(), skipLogic);
+        getComputationUtils().initiateSkipLogicAndHideViews(question.getLabelC(), skipLogic);
     }
 
 

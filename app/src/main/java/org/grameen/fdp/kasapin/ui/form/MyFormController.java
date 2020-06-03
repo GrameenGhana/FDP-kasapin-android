@@ -14,6 +14,7 @@ import org.grameen.fdp.kasapin.ui.form.controller.MyFormSectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
 import org.grameen.fdp.kasapin.ui.form.model.MapFormModel;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -176,14 +177,18 @@ public class MyFormController {
      *
      * @return a list of validation errors of the form's input
      */
-    public List<ValidationError> validateInput() {
-        List<ValidationError> errors = new ArrayList<ValidationError>();
+    private List<ValidationError> validateInput() {
+        List<ValidationError> errors = new ArrayList<>();
         for (MyFormSectionController section : getSections()) {
             for (MyFormElementController element : section.getElements()) {
                 if (element instanceof MyLabeledFieldController) {
                     MyLabeledFieldController field = (MyLabeledFieldController) element;
-                    if(!field.isHidden())
-                    errors.addAll(field.validateInput());
+
+                    if(field.isRequired() && !field.isHidden()) {
+                        List<ValidationError> validationErrors = field.validateInput();
+                        AppLogger.e("MyFormController", "Field |name = " + field.getName() + " # isRequired = " + field.isRequired() + " # isHidden = " + field.isHidden() + " errors size is " + validationErrors.size() +"|");
+                        errors.addAll(validationErrors);
+                    }
                 }
             }
         }

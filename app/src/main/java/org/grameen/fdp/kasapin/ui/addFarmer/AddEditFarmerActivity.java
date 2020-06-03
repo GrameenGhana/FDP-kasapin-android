@@ -260,12 +260,13 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setFirstVisitDate(new Date(System.currentTimeMillis()));
         }
 
+        dynamicFormFragment.getFormController().resetValidationErrors();
         //Validate inputs
         if(!dynamicFormFragment.getFormController().isValidInput()) {
-            dynamicFormFragment.getFormController().resetValidationErrors();
             dynamicFormFragment.getFormController().showValidationErrors();
-            return;
-        }
+            AppLogger.i(TAG, "Validations did not pass.");
+        } else {
+            AppLogger.i(TAG, "Validations passed.");
 
             FARMER.setFarmerName(farmerName.getText().toString().trim());
             FARMER.setBirthYear(birthYearEdittext.getText().toString().trim());
@@ -278,6 +279,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setImageUrl(BASE64_STRING);
 
             mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
+        }
     }
 
     @Override
@@ -307,6 +309,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         takePhoto.setVisibility(View.GONE);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @OnClick(R.id.takeImage)
     @Override
     public void startCameraIntent() {
@@ -346,7 +349,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     "Which community are you looking for?", null, villageItems,
                     (dialog, item, position) -> {
                         dialog.dismiss();
-                        villageId = Integer.valueOf(item.getmExtId());
+                        villageId = Integer.parseInt(item.getmExtId());
                         villageName = item.getTitle();
                         villageTextView.setText(villageName);
                     });

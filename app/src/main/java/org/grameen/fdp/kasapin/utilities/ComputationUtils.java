@@ -135,24 +135,8 @@ public class ComputationUtils {
         return formController;
     }
 
-    public boolean validate() throws JSONException {
-        formController.resetValidationErrors();
-        if (formController.isValidInput()) {
 
-            //Send data to server here after getting JSON string
-
-            //Toast.makeText(getContext(), getAllAnswersInJSON(), Toast.LENGTH_LONG).show();
-
-
-        } else {
-
-            // Whoaaaaaaa! There were some invalid inputs
-            formController.showValidationErrors();
-        }
-        return true;
-    }
-
-    public void setUpPropertyChangeListeners2(String questiontoHide, List<SkipLogic> skipLogics) {
+    public void setUpPropertyChangeListeners(String questionToHide, List<SkipLogic> skipLogics) {
         if (skipLogics != null && skipLogics.size() > 0) {
             for (SkipLogic sl : skipLogics) {
                 String[] values = sl.getFormula().replace("\"", "").split(" ");
@@ -162,17 +146,7 @@ public class ComputationUtils {
                 getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
                     AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue());
                     try {
-                        if (compareValues(sl, String.valueOf(event.getNewValue()))) {
-                            getFormController().getElement(questiontoHide).getView().setVisibility((sl.shouldHide()) ? View.GONE : View.VISIBLE);
-                            getFormController().getElement(questiontoHide).setHidden(sl.shouldHide());
-                        }
-                        else {
-                            getFormController().getElement(questiontoHide).getView().setVisibility((sl.shouldHide()) ? View.VISIBLE : View.GONE);
-                            getFormController().getElement(questiontoHide).setHidden(!sl.shouldHide());
-                        }
-
-                        AppLogger.e(TAG, questiontoHide + " state is  --->> " + getFormController().getElement(questiontoHide).isHidden());
-
+                        showOrHideView(compareValues(sl, String.valueOf(event.getNewValue())), questionToHide);
                     } catch (Exception ignored) {
                     }
                 });
@@ -180,7 +154,7 @@ public class ComputationUtils {
         }
     }
 
-    public void initiateSkipLogicsAndHideViews(String label, List<SkipLogic> skipLogics) {
+    public void initiateSkipLogicAndHideViews(String label, List<SkipLogic> skipLogics) {
         if (skipLogics != null && skipLogics.size() > 0) {
             for (final SkipLogic sl : skipLogics) {
                 String[] values = sl.getFormula().replace("\"", "").split(" ");
@@ -188,25 +162,19 @@ public class ComputationUtils {
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
                 try {
-                    AppLogger.i("SKIP LOGIC view to hide = ", label);
-                    if (compareValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString())) {
-                        AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + true);
-                        formController.getElement(label).getView().setVisibility((sl.shouldHide()) ? View.GONE : View.VISIBLE);
-                        formController.getElement(label).setHidden((sl.shouldHide()));
-                    } else {
-                        AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + false);
-                        formController.getElement(label).getView().setVisibility((sl.shouldHide()) ? View.VISIBLE : View.GONE);
-                        formController.getElement(label).setHidden(!sl.shouldHide());
-                    }
-
-                    AppLogger.e(TAG, label + " state is  --->> " + getFormController().getElement(label).isHidden());
-
+                    showOrHideView(compareValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString()), label);
                 } catch (Exception ignored) {
                 }
             }
         }
     }
 
+    private void showOrHideView(Boolean shouldHide, String labelToHide) {
+        AppLogger.i(getClass().getSimpleName(), "COMPARING VALUES EVALUATED TO " + shouldHide);
+        formController.getElement(labelToHide).setHidden(shouldHide);
+        AppLogger.e(TAG, labelToHide + " is hidden? == " + getFormController().getElement(labelToHide).isHidden());
+
+    }
     public void applyFormulas(Question question) {
         if (!question.getFormulaC().isEmpty() && !question.getFormulaC().equalsIgnoreCase("null")) {
             AppLogger.e("Computation Utils", "Question = " + question.getLabelC() + " Formula = " + question.getFormulaC());
@@ -245,7 +213,7 @@ public class ComputationUtils {
         return (formatter.format(value));
     }
 
-    private Boolean compareValues(SkipLogic sl, String newValue){
+    private Boolean compareValues(SkipLogic sl, String newValue) {
         String equation = sl.getAnswerValue() + sl.getLogicalOperator() + newValue;
         boolean value = false;
         try {

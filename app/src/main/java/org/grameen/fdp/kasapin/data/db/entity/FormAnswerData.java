@@ -1,7 +1,7 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 
-/**
+/*
  * Created by AangJnr on 05, December, 2018 @ 12:44 PM
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
@@ -36,12 +36,11 @@ public class FormAnswerData extends BaseModel {
     public FormAnswerData() {
     }
 
-    @NonNull
-    public int getId() {
+     public int getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -16,13 +16,12 @@ public class FieldValidator implements InputValidator {
 
     @Override
     public ValidationError validate(Object value, String fieldName, String fieldLabel) {
-        AppLogger.e("FieldValidator", "Validation --->  " + fieldName + " |" + value + "==" + defaultValue + "|");
 
         if (value == null ||  value.toString().trim().isEmpty()
                 || Objects.equals(value.toString(), "-select-")
                 || Objects.equals(value.toString(), "--")
                 || Objects.equals(value.toString(), "-")) {
-            AppLogger.e("FieldValidator", "Validation didn't pass.");
+            AppLogger.e("FieldValidator", "Validation for " + fieldName + " >>> |" + value + " == " + defaultValue + "|  Validation didn't pass.");
             return new RequiredField(fieldName, fieldLabel, message);
         }
         return null;
@@ -30,7 +29,6 @@ public class FieldValidator implements InputValidator {
 
     /**
      * Makes every instances of {@link FieldValidator} equal.
-     *
      * @param o The object to compare.
      * @return true if o is also an instance of RequiredFieldValidator, false otherwise.
      */
@@ -41,7 +39,6 @@ public class FieldValidator implements InputValidator {
 
     /**
      * Every instance of {{@link FieldValidator}} share the same hashcode.
-     *
      * @return 0
      */
     @Override

@@ -21,6 +21,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +39,7 @@ public class CheckBoxController extends MyLabeledFieldController {
     private final List<String> items;
     private final List<?> values;
     private boolean IS_ENABLED;
-    String oldValues;
+    String defaultValue;
 
     /**
      * Constructs a new instance of a checkboxes field.
@@ -102,9 +103,10 @@ public class CheckBoxController extends MyLabeledFieldController {
         Log.i("CHECK BOX CONTROLLER", oldValues);
 
     }*/
-    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, List<String> items, boolean useItemsAsValues, boolean isEnabled,  Set<InputValidator> validators) {
+    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String defaultValue, List<String> items, boolean useItemsAsValues, boolean isEnabled,  Set<InputValidator> validators) {
         this(ctx, name, content_desc, labelText, isRequired, items, useItemsAsValues ? items : null, isEnabled);
 
+        this.defaultValue = defaultValue;
         if(isRequired)
             this.setValidators(validators);
     }
@@ -144,7 +146,7 @@ public class CheckBoxController extends MyLabeledFieldController {
             editText.setPaddings(20, 0, 0, 0);
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
             editText.setKeyListener(null);
-            refresh(editText);
+
             editText.setOnClickListener(v -> showCheckboxDialog(editText));
 
             editText.setOnFocusChangeListener((v, hasFocus) -> {
@@ -154,7 +156,8 @@ public class CheckBoxController extends MyLabeledFieldController {
             });
 
             editText.setEnabled(IS_ENABLED);
-            getModel().setValue(getName(), "");
+
+            refresh(editText);
             return editText;
         } else {
 
@@ -184,14 +187,11 @@ public class CheckBoxController extends MyLabeledFieldController {
                     textView.setText(items.get(index).trim());
                     textView.setId(CHECKBOX_ID + index);
                     checkboxContainer.addView(textView, params);
-                    //refresh(textView, index);
-                    // checkBox.setEnabled(IS_ENABLED);
                 }
             }
         }
+
         return checkboxContainer;
-
-
     }
 
     public void refresh(CheckBox checkbox, int index) {
@@ -222,7 +222,7 @@ public class CheckBoxController extends MyLabeledFieldController {
      * @return true if values entry can be used. false otherwise.
      */
     private boolean areValuesDefined() {
-        return values != null;
+        return values != null && !values.isEmpty();
     }
 
     /**
@@ -257,10 +257,14 @@ public class CheckBoxController extends MyLabeledFieldController {
 
 
     private void showCheckboxDialog(EditText editText) {
+
         Set<Object> modelValues = retrieveModelValues();
+        AppLogger.e("CheckBoxCont", "modelValues == " + modelValues);
         final boolean[] checked = new boolean[items.size()];
-        for (int index = 0; index < checked.length; index++)
-            checked[index] = modelValues.contains(areValuesDefined() ? values.get(index) : index);
+        for (int index = 0; index < checked.length; index++) {
+            checked[index] = modelValues.contains(items.get(index));
+            AppLogger.e("CheckBoxCont", "checking for " + items.get(index));
+        }
 
         String[] arr = new String[items.size()];
         items.toArray(arr);
@@ -305,6 +309,9 @@ public class CheckBoxController extends MyLabeledFieldController {
         String value = null;
         if (getModel().getValue(getName()) != null) {
             value = getModel().getValue(getName()).toString();
+        }else {
+            value = defaultValue;
+            getModel().setValue(getName(), value);
         }
         editText.setHint(value != null ? value : "Click to select");
     }

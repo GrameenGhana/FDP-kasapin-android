@@ -89,6 +89,7 @@ public abstract class MyFormElementController {
     }
     public void setHidden(boolean hidden){
         isHidden = hidden;
+        getView().setVisibility(hidden ? View.GONE : View.VISIBLE);
     }
 
     /**

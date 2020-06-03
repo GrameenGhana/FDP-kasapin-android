@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.ui.plotMonitoringActivity;
 
 
-import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
@@ -19,7 +18,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -75,7 +73,7 @@ public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContrac
 
         AppLogger.e(TAG, "###########  Getting monitoring for year " + selectedYear + " with external id " + plot.getExternalId());
 
-        getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringsForSelectedYear(plot.getExternalId(), selectedYear)
+        getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringForSelectedYear(plot.getExternalId(), selectedYear)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableSingleObserver<List<Monitoring>>() {
