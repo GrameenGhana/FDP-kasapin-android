@@ -18,8 +18,6 @@ import io.reactivex.Single;
 
 @Dao
 public interface FormAnswersDao extends BaseDao<FormAnswerData> {
-
-
    /* @Insert
     long insertOne(FormAnswerData answerData);
 

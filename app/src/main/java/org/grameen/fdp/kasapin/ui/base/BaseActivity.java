@@ -5,11 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,7 +45,6 @@ import org.grameen.fdp.kasapin.ui.familyMembers.FamilyMembersActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
@@ -57,16 +52,12 @@ import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 import org.json.JSONException;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
 import butterknife.Unbinder;
-import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.listeners.OnScrollListener;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -126,6 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         TAG = getClass().getSimpleName();
         //Sets theme for if Diagnostic or Monitoring mode
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(AppPreferencesHelper.PREF_KEY_IS_MONITORING_MODE, true))
@@ -215,7 +207,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     @Override
     public void showMessage(String message) {
         runOnUiThread(() ->
-                CustomToast.makeText(BaseActivity.this, (message != null) ? message : getString(R.string.some_error),
+                CustomToast.makeText(this, (message != null) ? message : getString(R.string.some_error),
                         Toast.LENGTH_LONG).show());
     }
 
@@ -386,7 +378,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
 
     public void goToFamilyMembersTable(RealFarmer FARMER){
         Question numberFamilyMembersQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farmer_familycount_");
-        int farmerProfileFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.FARMER_PROFILE).blockingGet(0);
+        int farmerProfileFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.FARMER_PROFILE).blockingGet(0);
         FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmerProfileFormId);
         if(numberFamilyMembersQuestion != null) {
             if(answerData != null){

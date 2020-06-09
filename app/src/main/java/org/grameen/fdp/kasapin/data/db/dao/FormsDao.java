@@ -42,6 +42,9 @@ public interface FormsDao {
 
 
     @Query("SELECT translationId FROM forms WHERE formNameC COLLATE NOCASE = :label")
+    Maybe<Integer> getTranslationId(String label);
+
+    @Query("SELECT id FROM forms WHERE formNameC COLLATE NOCASE = :label")
     Maybe<Integer> getId(String label);
 
 

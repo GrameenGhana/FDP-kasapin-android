@@ -19,17 +19,14 @@ import org.json.JSONObject;
 
 @Entity(tableName = "form_answers", indices = @Index("farmerCode"))
 public class FormAnswerData extends BaseModel {
-
     @SerializedName("data")
-    String data;
+    private String data;
 
     @SerializedName("form_translation_id")
-    int formId;
+    private int formId;
 
     @SerializedName("farmer_code")
-    String farmerCode;
-
-
+    private String farmerCode;
     /**
      * No args constructor for use in serialization
      */

@@ -36,7 +36,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity"
+     >
 
         <activity
             android:name=".ui.preferences.SettingsActivity"
@@ -73,7 +74,8 @@
         <activity android:name=".ui.plotDetails.PlotDetailsActivity" />
         <activity
             android:name=".ui.plotMonitoringActivity.PlotMonitoringActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            />
         <activity android:name=".ui.monitoringYearSelection.MonitoringYearSelectionActivity" />
         <activity android:name=".ui.gpsPicker.MapActivity" />
         <activity
@@ -94,6 +96,8 @@
         <service android:name=".services.SyncService" />
 
         <activity android:name=".ui.serverUrl.AddEditServerUrlActivity"/>
+        <activity android:name=".ui.fdpStatus.FDPStatusDialogActivity"
+            android:theme="@style/Theme.Translucent"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

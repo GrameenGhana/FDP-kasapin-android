@@ -284,7 +284,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         */
         StringBuilder familyMembersIncomeStringBuilder = new StringBuilder();
 
-        int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
+        int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
         FormAnswerData socioEconomicProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), socioEconomicFormId);
 
         if(socioEconomicProfileFormAnswerData == null){

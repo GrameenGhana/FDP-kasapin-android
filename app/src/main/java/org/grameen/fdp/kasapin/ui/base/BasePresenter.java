@@ -50,13 +50,9 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
  */
 
 public class BasePresenter<V extends BaseContract.View> implements BaseContract.Presenter<V> {
-
-
-
     public AppDataManager mAppDataManager;
     protected String TAG = "";
     private V mView;
-
 
     @Inject
     public BasePresenter(AppDataManager appDataManager) {
@@ -65,10 +61,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     @Override
     public void takeView(V view) {
-        TAG = view.getClass().getSimpleName() + "\t";
+        TAG = "Presenter";
         mView = view;
-
-
     }
 
 

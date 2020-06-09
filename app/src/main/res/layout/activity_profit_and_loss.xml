@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
@@ -7,128 +8,147 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:id="@+id/nameLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/spacing_normal"
-        android:paddingTop="@dimen/spacing_normal"
-        android:paddingRight="@dimen/spacing_normal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/spacing_normal">
-
-            <TextView
+        android:padding="@dimen/spacing_normal"
+        android:layout_toStartOf="@+id/currency_text">
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/spacing_half"
+                android:layout_marginEnd="@dimen/spacing_half"
                 android:text="@string/farmer_name"
                 android:textColor="@color/text_black_87" />
-
-            <TextView
+        <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="Aang Junior"
                 android:textColor="@color/text_black_87"
                 android:textStyle="bold" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_quarter">
-
-            <TextView
+        <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/spacing_half"
+                android:layout_marginEnd="@dimen/spacing_half"
                 android:text="@string/farmer_code"
-
+                android:layout_marginStart="@dimen/spacing_2"
                 />
-
-            <TextView
+        <TextView
                 android:id="@+id/code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="23445"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
-
-
+                tools:text="23445"
+                android:textStyle="bold"/>
     </LinearLayout>
 
-
-    <LinearLayout
-        android:id="@+id/currency_layout"
+    <TextView
+        android:id="@+id/currency_text"
+        android:layout_toStartOf="@+id/currency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:paddingLeft="@dimen/spacing_normal"
+        android:layout_marginStart="@dimen/spacing_2"
+        android:layout_marginEnd="@dimen/spacing_half"
+        android:text="@string/currency"
         android:paddingTop="@dimen/spacing_normal"
-        android:paddingRight="@dimen/spacing_normal">
+        android:paddingBottom="@dimen/spacing_normal"
+        android:textColor="@color/text_black_87" />
 
+    <TextView
+        android:id="@+id/currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        tools:text="GHS"
+        android:paddingTop="@dimen/spacing_normal"
+        android:paddingBottom="@dimen/spacing_normal"
+        android:textAllCaps="true"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:layout_gravity="end"
+        />
+
+    <LinearLayout
+        android:id="@+id/did_labor_layout"
+        android:layout_below="@+id/nameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/spacing_normal"
+        android:paddingEnd="@dimen/spacing_normal">
         <TextView
+            android:id="@+id/farmer_hire_labour_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/spacing_half"
-            android:text="@string/currency"
-            android:textColor="@color/text_black_87" />
+            android:text="@string/hire_labour"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            />
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/farmer_hire_labour_spinner"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/currency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GHS"
-            android:textAllCaps="true"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold" />
+    <LinearLayout
+        android:id="@+id/labor_type_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/did_labor_layout"
+        android:paddingStart="@dimen/spacing_normal"
+        android:paddingEnd="@dimen/spacing_normal"
+        android:gravity="center_vertical"
+        android:layout_below="@id/nameLayout"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/labour_type_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hire_labour_type"
+                android:layout_marginEnd="@dimen/spacing_normal"/>
 
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/labour_type_spinner"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-    <RelativeLayout
+    <de.codecrafters.tableview.TableView
+        xmlns:table="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/tableView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_buttons"
-        android:layout_below="@id/nameLayout"
-        android:padding="@dimen/spacing_normal">
+        android:layout_below="@id/did_labor_layout"
+        android:dividerHeight="0.5dip"
+        android:layout_margin="@dimen/spacing_normal"
+        table:tableView_headerColor="@color/divider"
+        table:tableView_headerElevation="2"/>
 
-
-
-        <de.codecrafters.tableview.TableView
-            xmlns:table="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/tableView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:dividerHeight="0.5dip"
-            table:tableView_headerColor="@color/divider"
-            table:tableView_headerElevation="2"
-            />
-
-    </RelativeLayout>
-
+    <TextView
+        android:id="@+id/choose_labour_rational_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_buttons"
+        android:layout_below="@id/did_labor_layout"
+        android:background="@color/grey"
+        android:text="@string/choose_labor_option_rationale"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_margin="@dimen/spacing_normal"
+        />
 
     <LinearLayout
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="@dimen/spacing_normal"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_half"
-
-        >
-
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:paddingBottom="@dimen/spacing_half">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -136,8 +156,8 @@
             android:layout_marginBottom="@dimen/spacing_normal"
             android:gravity="center_vertical">
 
-
             <ImageView
+                android:contentDescription="@string/print"
                 android:id="@+id/print_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -146,29 +166,28 @@
                 android:src="@drawable/ic_print_black_24dp"
                 android:tint="@color/colorAccent"
                 android:visibility="gone" />
-
-
             <TextView
                 android:id="@+id/fdp_status"
                 style="@style/TextAppearance.AppCompat.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/spacing_half"
                 android:text="@string/fdp_status"
+                android:enabled="false"
                 android:textColor="?attr/colorAccent" />
 
         </RelativeLayout>
 
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="ButtonStyle">
 
             <Button
                 android:id="@+id/back"
@@ -177,32 +196,27 @@
                 android:layout_weight="2"
                 android:padding="@dimen/spacing_normal"
                 android:text="@string/back"
-                android:theme="@style/PrimaryButtonGrey" />
-
+                android:theme="@style/PrimaryButtonGrey"
+                />
 
             <Button
                 android:id="@+id/save"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_normal"
                 android:layout_weight="2"
                 android:padding="@dimen/spacing_normal"
                 android:text="@string/save" />
-
 
             <Button
                 android:id="@+id/submitAgreement"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_normal"
                 android:layout_weight="3"
                 android:padding="@dimen/spacing_normal"
                 android:text="@string/submit"
-
                 />
-
         </LinearLayout>
-    </LinearLayout>
-
-
+    </LinearLayout >
 </RelativeLayout>

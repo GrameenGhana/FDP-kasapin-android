@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.base;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -30,7 +31,6 @@ import butterknife.Unbinder;
 
 
 public abstract class BaseDialog extends DialogFragment implements DialogView {
-
     private BaseActivity mActivity;
     private Unbinder mUnBinder;
 
@@ -105,6 +105,33 @@ public abstract class BaseDialog extends DialogFragment implements DialogView {
         if (mActivity != null) {
             mActivity.hideKeyboard();
         }
+    }
+
+    @Override
+    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
+        mActivity.showLoading(title, message, indeterminate, icon, cancelableOnTouchOutside);
+    }
+
+    @Override
+    public void openLoginActivityOnTokenExpire() {
+
+    }
+
+    @Override
+    public void onSuccess(String message) {
+
+        mActivity.onSuccess(message);
+    }
+
+    @Override
+    public void toggleFullScreen(Boolean hideNavBar, Window W) {
+mActivity.toggleFullScreen(hideNavBar, W);
+    }
+
+    @Override
+    public void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable) {
+
+        mActivity.showDialog(cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener, negativeText, icon_drawable);
     }
 
 

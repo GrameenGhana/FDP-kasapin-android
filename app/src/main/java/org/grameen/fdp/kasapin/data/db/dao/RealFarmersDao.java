@@ -43,7 +43,6 @@ public interface RealFarmersDao extends BaseDao<RealFarmer> {
     @Query("DELETE FROM farmers WHERE id = :id")
     int deleteFarmerById(int id);
 
-
     @Query("SELECT COUNT(syncStatus) FROM farmers")
     Maybe<Integer> checkIfUnsyncedAvailable();
 

@@ -64,20 +64,10 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
     LinearLayout ll5;
     @BindView(R.id.ll1)
     LinearLayout ll1;
-    @BindView(R.id.farmer_hire_labour_text)
-    TextView farmerHireLabourText;
-    @BindView(R.id.farmer_hire_labour_spinner)
-    MaterialSpinner labourSpinner;
-    @BindView(R.id.labour_type_text)
-    TextView labourTypeText;
-    @BindView(R.id.labour_type_spinner)
-    MaterialSpinner labourTypeSpinner;
     @BindView(R.id.back)
     Button back;
     @BindView(R.id.sync)
     Button sync;
-    @BindView(R.id.save)
-    Button save;
     @BindView(R.id.bottom_buttons)
     LinearLayout bottomButtons;
     ReviewTablePagerAdapter plotMonitoringTablePagerAdapter;
@@ -138,20 +128,14 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
             viewPager.setAdapter(plotMonitoringTablePagerAdapter);
             findViewById(R.id.noData).setVisibility(View.GONE);
         } else findViewById(R.id.noData).setVisibility(View.VISIBLE);
-        setupLaborTypeAndSpinner();
         onBackClicked();
     }
 
     void updateTableData() {
-
         if (PLOTS_LIST != null && PLOTS_LIST.size() > 0) {
-
             findViewById(R.id.noData).setVisibility(View.GONE);
-
             for (Plot plot : PLOTS_LIST) {
-
                 List<HistoricalTableViewData> historicalTableViewDataList = new ArrayList<>();
-
                 JSONObject jsonObject;
                 try {
                     jsonObject = plot.getAOJsonData();
@@ -159,6 +143,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                     e.printStackTrace();
                     jsonObject = new JSONObject();
                 }
+
                 Question plotSizeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_");
                 if (plotSizeQuestion != null)
                     historicalTableViewDataList.add(new HistoricalTableViewData(plotSizeQuestion.getCaptionC(), plot.getArea(), "", "", null));
@@ -194,7 +179,6 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                         e.printStackTrace();
                         recName = "--";
                     }
-
                     historicalTableViewDataList.add(new HistoricalTableViewData(plotRec.getCaptionC(), recName, "", "", null));
                 }
 
@@ -203,99 +187,11 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
                         historicalTableViewDataList.add(new HistoricalTableViewData(q.getCaptionC(), ComputationUtils.getDataValue(q, jsonObject), "", "", null));
                 }
 
-
                 PlotMonitoringTableData p = new PlotMonitoringTableData(plot.getName(), historicalTableViewDataList);
                 plotMonitoringTableDataList.add(p);
-
             }
-
         } else
             findViewById(R.id.noData).setVisibility(View.VISIBLE);
-
-
-    }
-
-    void setupLaborTypeAndSpinner() {
-        Integer labourFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.LABOUR_FORM).blockingGet();
-        if (labourFormId != null) {
-            laborFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), labourFormId);
-
-            if (laborFormAnswerData != null)
-                LABOUR_FORM_ANSWER_JSON = laborFormAnswerData.getJsonData();
-
-            else {
-                laborFormAnswerData = new FormAnswerData();
-                laborFormAnswerData.setFormId(labourFormId);
-                laborFormAnswerData.setFarmerCode(FARMER.getCode());
-            }
-                labourSpinner.setItems("-select-", "Yes", "No");
-                labourSpinner.setSelectedIndex(0);
-                MaterialSpinner labourType = findViewById(R.id.labour_type_spinner);
-                labourType.setItems("-select-", "Full", "Seasonal");
-                labourType.setSelectedIndex(0);
-
-
-                final Question labourQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour");
-                final Question labourTypeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour_type");
-
-
-                if (labourQuestion != null) {
-                    if (LABOUR_FORM_ANSWER_JSON.has(labourQuestion.getLabelC()))
-                        try {
-                            labourSpinner.setText(LABOUR_FORM_ANSWER_JSON.getString(labourQuestion.getLabelC()));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    labourSpinner.setOnItemSelectedListener((view, position, id, item) -> {
-
-                        if (LABOUR_FORM_ANSWER_JSON.has(labourQuestion.getLabelC()))
-                            LABOUR_FORM_ANSWER_JSON.remove(labourQuestion.getLabelC());
-                        try {
-                            LABOUR_FORM_ANSWER_JSON.put(labourQuestion.getLabelC(), item.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    });
-
-                } else
-                    showMessage("Labour Question is missing. Labour value won't be saved.");
-
-
-                if (labourTypeQuestion != null) {
-                    if (LABOUR_FORM_ANSWER_JSON.has(labourTypeQuestion.getLabelC()))
-                        try {
-                            labourType.setText(LABOUR_FORM_ANSWER_JSON.getString(labourTypeQuestion.getLabelC()));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    labourType.setOnItemSelectedListener((view, position, id, item) -> {
-
-                        if (LABOUR_FORM_ANSWER_JSON.has(labourTypeQuestion.getLabelC()))
-                            LABOUR_FORM_ANSWER_JSON.remove(labourTypeQuestion.getLabelC());
-                        try {
-                            LABOUR_FORM_ANSWER_JSON.put(labourTypeQuestion.getLabelC(), item.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                } else
-                    CustomToast.makeToast(this, "Labour Question is missing. Labour value won't be saved.", Toast.LENGTH_LONG).show();
-                if (FARMER.getHasSubmitted().equalsIgnoreCase(AppConstants.YES) && FARMER.getSyncStatus() == 1) {
-                    findViewById(R.id.save).setVisibility(View.GONE);
-                    labourSpinner.setEnabled(false);
-                    labourType.setEnabled(false);
-                }
-        }
-
-        save.setOnClickListener(v -> {
-
-                laborFormAnswerData.setData(LABOUR_FORM_ANSWER_JSON.toString());
-                getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(laborFormAnswerData);
-                mPresenter.setFarmerAsUnsynced(FARMER);
-                getAppDataManager().setBooleanValue("reload", true);
-                finish();
-        });
     }
 
     @Override

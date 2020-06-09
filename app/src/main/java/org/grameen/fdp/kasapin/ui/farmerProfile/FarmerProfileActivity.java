@@ -378,7 +378,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                             }
                         }
                         intent = new Intent(this, ProfitAndLossActivity.class);
-                        intent.putExtra("farmer", new Gson().toJson(FARMER));
+                        intent.putExtra("farmerCode",  FARMER.getCode());
                         startActivity(intent);
                     }
                 } else

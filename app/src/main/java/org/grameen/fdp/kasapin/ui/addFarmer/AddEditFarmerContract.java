@@ -28,7 +28,6 @@ public class AddEditFarmerContract {
 
         void setUpViews();
 
-
         void finishActivity();
     }
 

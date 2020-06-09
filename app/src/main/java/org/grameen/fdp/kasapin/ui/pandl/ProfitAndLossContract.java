@@ -1,7 +1,9 @@
 package org.grameen.fdp.kasapin.ui.pandl;
 
 
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.json.JSONObject;
 
@@ -16,8 +18,6 @@ public class ProfitAndLossContract {
 
     public interface View extends BaseContract.View {
 
-        void enablePrint();
-
         void issuePrinting();
 
         void setUpViews();
@@ -30,7 +30,7 @@ public class ProfitAndLossContract {
 
         void populateTableData();
 
-        void reloadTableData();
+        void loadTableData();
 
     }
 
@@ -40,7 +40,7 @@ public class ProfitAndLossContract {
 
         void updatePlotData(Plot plot, boolean reloadTable);
 
+        void saveLabourValues(FormAnswerData formAnswerData, RealFarmer farmer);
     }
-
 
 }

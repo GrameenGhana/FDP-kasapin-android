@@ -114,7 +114,7 @@ public class ComputationUtils {
         try {
             if (ANSWERS_JSON.has(q.getLabelC())) {
                 defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
-                if (defVal.isEmpty() ||  defVal.equalsIgnoreCase("null"))
+                if (defVal.trim().isEmpty() ||  defVal.equalsIgnoreCase("null"))
                     defVal = q.getDefaultValueC();
                 if (getModel() != null)
                     getModel().setValue(q.getLabelC(), defVal);

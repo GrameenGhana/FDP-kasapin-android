@@ -200,7 +200,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:textColorPrimary">@color/text_black_87</item>
         <item name="android:backgroundDimEnabled">true</item>
-
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 

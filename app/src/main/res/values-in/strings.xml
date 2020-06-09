@@ -439,5 +439,9 @@
     <!-- Preferences Keys-->
     <string name="server_url_key">server_url</string>
     <string name="http">http://</string>
+    <string name="print">print</string>
+    <string name="plot_1_year_1">Plot 1 Year 1</string>
+    <string name="choose_labor_option_rationale">Untuk menampilkan data tabel, silakan pilih opsi Tenaga Kerja di atas.</string>
+    <string name="no_changes_after_sybmission_rational">Please note that if you complete this form and sync your data, you will not be able to make any changes to this farmers data.</string>
 
 </resources>

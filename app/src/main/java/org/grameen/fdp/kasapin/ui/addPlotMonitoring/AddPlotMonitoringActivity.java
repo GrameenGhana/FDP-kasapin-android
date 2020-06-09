@@ -544,8 +544,8 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             try {
                 if (MONITORING_ANSWERS_JSON.has(q.getLabelC()))
                     MONITORING_ANSWERS_JSON.remove(q.getLabelC());
-                if(dynamicFormFragment.getAnswersData().has(q.getLabelC()))
-                MONITORING_ANSWERS_JSON.put(q.getLabelC(), dynamicFormFragment.getAnswersData().get(q.getLabelC()));
+                if(dynamicFormFragment.getDataJson().has(q.getLabelC()))
+                MONITORING_ANSWERS_JSON.put(q.getLabelC(), dynamicFormFragment.getDataJson().get(q.getLabelC()));
             } catch (JSONException ignore) {}
 
         Question monitoringYearQuestion = getAppDataManager().getDatabaseManager().questionDao().get("monitoring_year_");

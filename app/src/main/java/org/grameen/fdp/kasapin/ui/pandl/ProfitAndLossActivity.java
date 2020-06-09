@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.pandl;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -11,15 +9,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Calculation;
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
@@ -31,11 +29,10 @@ import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.Data;
 import org.grameen.fdp.kasapin.ui.detailedYearMonthlyView.DetailedMonthActivity;
-import org.grameen.fdp.kasapin.ui.fdpStatus.FDPStatusActivity;
+import org.grameen.fdp.kasapin.ui.fdpStatus.FDPStatusDialogActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
-import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.PDFCreator;
 import org.json.JSONException;
@@ -43,6 +40,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
@@ -65,8 +63,14 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TYPE_TEXT;
 
 /**
- * A login screen that offers login via email/password.
+ * P & L page
  */
+
+
+enum LabourType {
+    FULL, SEASONAL
+}
+
 public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLossContract.View {
     static final int MAX_YEARS = 7;
     static Question START_YEAR_QUESTION;
@@ -75,13 +79,11 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @BindView(R.id.name)
     TextView farmerName;
     @BindView(R.id.code)
-    TextView farmerCode;
+    TextView farmerCodeTextView;
     @BindView(R.id.nameLayout)
     LinearLayout nameLayout;
     @BindView(R.id.currency)
     TextView currency;
-    @BindView(R.id.currency_layout)
-    LinearLayout currencyLayout;
     @BindView(R.id.tableView)
     TableView tableView;
     @BindView(R.id.print_button)
@@ -98,6 +100,14 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     LinearLayout bottomButtons;
     @BindView(R.id.main_layout)
     RelativeLayout mainLayout;
+    @BindView(R.id.farmer_hire_labour_text)
+    TextView labourText;
+    @BindView(R.id.farmer_hire_labour_spinner)
+    MaterialSpinner labourSpinner;
+    @BindView(R.id.labour_type_text)
+    TextView labourTypeText;
+    @BindView(R.id.labour_type_spinner)
+    MaterialSpinner labourTypeSpinner;
     JSONObject VALUES_JSON_OBJECT;
     List<Data> TABLE_DATA_LIST;
     List<String> TOTAL_LABOR_COST;
@@ -131,8 +141,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     String FARM_AREA_UNITS_LABEL;
     String FARM_WEIGHT_UNITS_LABEL;
     String CSSV_VALUE = "--";
-    Boolean DID_LABOUR = false;
-    String LABOUR_TYPE;
+    Boolean DID_LABOUR = null;
+    String LABOUR_TYPE = "";
     Boolean shouldHideStartYear = null;
     int COUNTER = 0;
     MyTableViewAdapter myTableViewAdapter;
@@ -155,7 +165,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         mPresenter.takeView(this);
         setUnBinder(ButterKnife.bind(this));
         engine = new ScriptEngineManager().getEngineByName("rhino");
-        farmer = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+        farmer =  getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent().getStringExtra("farmerCode")).blockingGet();
         START_YEAR_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("start_year_");
         START_YEAR_LABEL = START_YEAR_QUESTION.getLabelC();
         CSSV_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("ao_disease_");
@@ -170,24 +180,17 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             finish();
             showMessage(getStringResources(R.string.error_has_occurred));
         }
-
-        if (BuildConfig.DEBUG)
-            enablePrint();
-
-        if (getAppDataManager().isMonitoring()) {
-            save.setVisibility(View.GONE);
-            submitAgreement.setVisibility(View.GONE);
-        }
     }
 
 
     @Override
     public void setUpViews() {
+
+        AppLogger.e(TAG, "Farmer = " + farmer.getCode());
         tableView.setBackground(ContextCompat.getDrawable(this, R.drawable.table_view_border_background));
         tableView.setSaveEnabled(true);
-
         farmerName.setText(farmer.getFarmerName());
-        farmerCode.setText(farmer.getCode());
+        farmerCodeTextView.setText(farmer.getCode());
         tableView.setColumnCount(9);
         String[] TABLE_HEADERS = getResources().getStringArray(R.array.seven_years);
         MyTableHearderAdapter tableHeaderAdapter = new MyTableHearderAdapter(this, TABLE_HEADERS);
@@ -206,10 +209,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         });
 
         tableView.setSaveEnabled(true);
-        if (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.YES) && farmer.getSyncStatus() == 1) {
-            submitAgreement.setVisibility(View.GONE);
-            findViewById(R.id.save).setVisibility(View.GONE);
-        }
 
         submitAgreement.setOnClickListener(v -> {
             if (farmer.getHasSubmitted() == null || farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.NO)) {
@@ -232,10 +231,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 } else {
                     showDialog(true, getStringResources(R.string.fdp_status_incomplete), getStringResources(R.string.fill_out_fdp_status) + farmer.getFarmerName(),
                             (d, w) -> d.dismiss(), getStringResources(R.string.ok), (d, w1) -> {
-
                                 d.dismiss();
                                 moveToFdpStatusActivity();
-
                             }, getStringResources(R.string.go_to_fdp_status_form), 0);
                 }
             } else if (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.YES)) {
@@ -243,16 +240,30 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                                 + getStringResources(R.string.apostrophe_s) + getStringResources(R.string.data),
                         (d, w) -> {
                             d.dismiss();
-                            submitAgreement.setVisibility(View.GONE);
-
+                            disableButtons();
                         }, getStringResources(R.string.ok), null, "", 0);
             }
         });
+
+        print.setOnClickListener(v -> issuePrinting());
+
         onBackClicked();
-        showLoading(getStringResources(R.string.populating_data), getStringResources(R.string.please_wait), true, 0, false);
+
         mPresenter.getAllAnswers(farmer.getCode());
+
+        if (getAppDataManager().isMonitoring() || (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.YES) && farmer.getSyncStatus() == 1))
+            disableButtons();
+
     }
 
+    void disableButtons() {
+        submitAgreement.setVisibility(View.GONE);
+        save.setVisibility(View.GONE);
+
+        //Disable labour spinners if farmer has already submitted agreement and data has been synced.
+        labourSpinner.setEnabled(false);
+        labourTypeSpinner.setEnabled(false);
+    }
 
     @Override
     protected void onDestroy() {
@@ -269,19 +280,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @OnClick(R.id.fdp_status)
     @Override
     public void moveToFdpStatusActivity() {
-
-        Intent intent = new Intent(this, FDPStatusActivity.class);
+        Intent intent = new Intent(this, FDPStatusDialogActivity.class);
         intent.putExtra("farmer", getGson().toJson(farmer));
         startActivity(intent);
-    }
-
-
-    @Override
-    public void enablePrint() {
-        print.setVisibility(View.VISIBLE);
-        print.setOnClickListener(v -> {
-            issuePrinting();
-        });
     }
 
 
@@ -309,61 +310,143 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @Override
     public void setAnswerData(JSONObject object) {
         VALUES_JSON_OBJECT = object;
-        //Todo remove this value
-        try {
+
+        AppLogger.e(TAG, VALUES_JSON_OBJECT.toString());
+
+         try {
             if (!VALUES_JSON_OBJECT.has("total_family_income_ghana"))
                 VALUES_JSON_OBJECT.put("total_family_income_ghana", 0);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        AppLogger.e("P & L ACTIVITY", "ALL VALUES JSON IS " + VALUES_JSON_OBJECT);
-
         logicFormulaParser.setAllValuesJsonObject(VALUES_JSON_OBJECT);
         mathFormulaParser.setAllValuesJsonObject(VALUES_JSON_OBJECT);
-        final Question labourQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour");
-        final Question labourTypeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour_type");
 
 
-        AppLogger.i(TAG, "*********   GETTING VALUE FOR DID LABOR   ***********");
-        try {
-            String val = VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC());
-
-            DID_LABOUR = val.equalsIgnoreCase("Yes");
-
-            AppLogger.e(TAG, "*********   DID LABOUR  == " + DID_LABOUR);
-
-
-            LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
-
-            AppLogger.e(TAG, "*********  LABOUR TYPE  == " + LABOUR_TYPE);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        AppLogger.d("P & L ACTIVITY", "MAIN JSON OBJECT ITERATION COMPLETE. DATA IS \n" + VALUES_JSON_OBJECT);
         PLOT_SIZE_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_ha_");
         PLOT_PROD_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_production_kg_");
         FARM_AREA_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_area_units_").blockingGet();
         FARM_WEIGHT_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_weight_units_").blockingGet();
 
-        Completable.fromAction(this::populateTableData).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableCompletableObserver() {
-                    @Override
-                    public void onComplete() {
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        showMessage(R.string.error_has_occurred_loading_data);
-                        hideLoading();
-                    }
-                });
+
+        //Set the values for the labor views and spinners
+        final Question labourQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour");
+        final Question labourTypeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour_type");
+
+        labourText.setText(labourQuestion.getCaptionC());
+        labourSpinner.setItems(labourQuestion.formatQuestionOptions());
+        labourSpinner.setOnItemSelectedListener((MaterialSpinner view, int position, long id, Object item) -> {
+                    // If value == no or default value (-select-), hide the LaborType spinner and set DID_LABOUR = false
+                    //From the server, default value is at index 0, Yes at index 1 and No at index 2
+                    // else show labor spinner
+                        if(position == 0) {
+                            DID_LABOUR = null;
+                            LABOUR_TYPE = "";
+                        }else {
+                            DID_LABOUR = position == 1;
+
+                            if(!DID_LABOUR) {
+                                LABOUR_TYPE = "";
+                                saveLabourAnswerData(labourQuestion.getFormTranslationId(), labourQuestion.getLabelC(), labourTypeQuestion.getLabelC());
+                            }
+                        }
+
+                        toggleTable();
+                }
+        );
+
+        labourTypeText.setText(labourTypeQuestion.getCaptionC());
+        labourTypeSpinner.setItems(labourTypeQuestion.formatQuestionOptions());
+        labourTypeSpinner.setOnItemSelectedListener((MaterialSpinner view, int position, long id, Object item) -> {
+            //If DID_LABOUR value is default value (-select-) set DID LABOUR to null else
+            // set DID_LABOUR = true if selected option was at index 1 else set to false
+            //From the server, DID_LABOUR options has default value is at index 0, Yes at index 1 and No at index 2
+
+            // Show table
+            // save values in the database
+            //From the server, default value is at index 0, Full at index 1 and Seasonal at index 2
+
+                if(position == 0) {
+                    LABOUR_TYPE = "";
+                }else
+                    LABOUR_TYPE = (position == 1) ? LabourType.FULL.name() : LabourType.SEASONAL.name();
+
+            toggleTable();
+
+            saveLabourAnswerData(labourQuestion.getFormTranslationId(), labourQuestion.getLabelC(), labourTypeQuestion.getLabelC());
+
+        });
+
+        //Check to make sure that the options have been set for the spinners.
+        //Set and update the spinners based on old values in the db if any to reflect ui changes
+
+        if(labourSpinner.getItems().size() >= 3 && labourTypeSpinner.getItems().size() >= 3)
+        try {
+            String val = VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC());
+
+            if(val.equalsIgnoreCase(AppConstants.YES))
+                DID_LABOUR = true;
+            else if(val.equalsIgnoreCase(AppConstants.NO))
+                DID_LABOUR = false;
+
+            LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
+
+            AppLogger.e("labour", "*********  DID LABOUR  == " + val + " | LABOUR TYPE  == " + LABOUR_TYPE);
+
+            labourSpinner.setSelectedIndex(DID_LABOUR ? 1 : 2);
+
+            if(LABOUR_TYPE.equals(LabourType.FULL.name()))
+                labourTypeSpinner.setSelectedIndex(1);
+            else  if(LABOUR_TYPE.equals(LabourType.SEASONAL.name()))
+                labourTypeSpinner.setSelectedIndex(2);
+            else
+                labourTypeSpinner.setSelectedIndex(0);
+
+            toggleTable();
+        } catch (Exception e) {
+            e.printStackTrace();
+            labourSpinner.setSelectedIndex(0);
+            labourTypeSpinner.setSelectedIndex(0);
+        }
+
     }
 
+    private void toggleTable() {
+        findViewById(R.id.labor_type_layout).setVisibility(DID_LABOUR != null && DID_LABOUR ? View.VISIBLE : View.GONE);
+
+        if((DID_LABOUR != null && !DID_LABOUR) || LABOUR_TYPE.equals(LabourType.FULL.name()) || LABOUR_TYPE.equals(LabourType.SEASONAL.name())) {
+            findViewById(R.id.choose_labour_rational_textview).setVisibility(View.GONE);
+
+            if (BuildConfig.DEBUG)
+                print.setVisibility(View.VISIBLE);
+
+            loadTableData();
+
+        }else{
+            findViewById(R.id.choose_labour_rational_textview).setVisibility(View.VISIBLE);
+            print.setVisibility(View.GONE);
+        }
+    }
+
+    private void saveLabourAnswerData(int laborFormId, String didLaborQuestionLabel, String labourTypeQuestionLabel) {
+        FormAnswerData laborFormAnswerData = new FormAnswerData();
+        laborFormAnswerData.setFormId(laborFormId);
+        laborFormAnswerData.setFarmerCode(farmer.getCode());
+        JSONObject data = new JSONObject();
+        try {
+            data.put(didLaborQuestionLabel, (DID_LABOUR) ? "Yes" : "No");
+            data.put(labourTypeQuestionLabel, LABOUR_TYPE);
+
+            laborFormAnswerData.setData(data.toString());
+
+            mPresenter.saveLabourValues(laborFormAnswerData, farmer);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            showMessage("Could not save Labour and labour type data");
+        }
+    }
 
     @Override
     public boolean checkIfFarmerFdpStatusFormFilled(String code) {
@@ -414,7 +497,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 if (START_YEAR_LABEL != null) {
                     AppLogger.e("P & L ACTIVITY", "START YEAR LABEL " + START_YEAR_LABEL);
                     try {
-                        PLOT.setStartYear(Integer.valueOf(PLOT_ANSWERS_JSON_OBJECT.getString(START_YEAR_LABEL)));
+                        PLOT.setStartYear(Integer.parseInt(PLOT_ANSWERS_JSON_OBJECT.getString(START_YEAR_LABEL)));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -483,7 +566,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
             //Get All Aggregate results questions
 
-            Integer aggregateResultsFormId = getAppDataManager().getDatabaseManager().formsDao().getId(AppConstants.AGGREGATE_ECONOMIC_RESULTS).blockingGet();
+            Integer aggregateResultsFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.AGGREGATE_ECONOMIC_RESULTS).blockingGet();
 
             if (aggregateResultsFormId != null) {
                 List<Question> AGGREGATE_ECO_RESULTS_QUESTIONS = getAppDataManager().getDatabaseManager()
@@ -657,18 +740,21 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
 
     @Override
-    public void reloadTableData() {
-        showLoading(getStringResources(R.string.updating_table_data), getStringResources(R.string.please_wait), true, 0, false);
-        Completable.fromAction(this::populateTableData).subscribeOn(Schedulers.io())
+    public void loadTableData() {
+        showLoading();
+
+        Completable.fromAction(this::populateTableData)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(this::hideLoading)
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
-                    public void onComplete() {
-                    }
+                    public void onComplete() {}
 
                     @Override
                     public void onError(Throwable e) {
                         showMessage(R.string.error_has_occurred_loading_data);
+                        e.printStackTrace();
                     }
                 });
     }
@@ -876,7 +962,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         labourCostList = new ArrayList<>();
         labourDaysList = new ArrayList<>();
         pandlist = new ArrayList<>();
-        TEMP = 0;
 
         List<RecommendationActivity> recommendationActivities;
 
@@ -925,21 +1010,15 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             String laborCostValue;
             String laborDaysValue;
 
-            if (LABOUR_TYPE.equalsIgnoreCase("full")) {
-                laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, false);
-                laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, false);
-            } else {
-                laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, true);
-                laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, true);
-            }
+            laborCostValue = computeCost(recommendationActivities, AppConstants.LABOR_COSTS, LABOUR_TYPE.equals(LabourType.SEASONAL.name()));
+            laborDaysValue = computeCost(recommendationActivities, AppConstants.LABOR_DAYS, LABOUR_TYPE.equals(LabourType.SEASONAL.name()));
+
             labourCostList.add(mathFormulaParser.evaluate(laborCostValue + "*" + plotSizeInHaValue));
             labourDaysList.add(mathFormulaParser.evaluate(laborDaysValue + "*" + plotSizeInHaValue));
         } else {
             labourCostList.add("0.0");
             labourDaysList.add("0.0");
         }
-
-
     }
 
 
@@ -985,7 +1064,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         Question plotProfitLossQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_p&l_");
         TABLE_DATA_LIST.add(new Data(plotProfitLossQuestion.getCaptionC(), pandlist, TAG_OTHER_TEXT_VIEW));
 
-        Integer plotResultsFormId = getAppDataManager().getDatabaseManager().formsDao().getId("Plot results").blockingGet();
+        Integer plotResultsFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId("Plot results").blockingGet();
         if (plotResultsFormId != null) {
             List<Question> plotResultsQuestions = getAppDataManager().getDatabaseManager().questionDao().getQuestionsByForm(plotResultsFormId).blockingGet();
             if (plotResultsQuestions != null) {
@@ -1065,5 +1144,10 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 return "0";
 
         }
+    }
+
+    @Override
+    public void showLoading() {
+        super.showLoading(getStringResources(R.string.populating_data), getStringResources(R.string.please_wait), true, 0, false);
     }
 }

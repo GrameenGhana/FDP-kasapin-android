@@ -131,7 +131,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         educationLevelSpinner.setItems(educationLevels);
         educationLevelSpinner.setOnItemSelectedListener((view, position, id, item) -> educationLevel = educationLevels[position]);
 
-
         genderSpinner.setItems(genders);
         genderSpinner.setOnItemSelectedListener((view, position, id, item) -> gender = genders[position]);
 
@@ -278,7 +277,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setLastModifiedDate(TimeUtils.getDateTime());
             FARMER.setImageUrl(BASE64_STRING);
 
-            mPresenter.saveData(FARMER, dynamicFormFragment.getSurveyAnswer(), isNewFarmer);
+            mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer);
         }
     }
 

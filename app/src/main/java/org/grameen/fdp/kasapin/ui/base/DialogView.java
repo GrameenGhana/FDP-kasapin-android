@@ -8,6 +8,5 @@ package org.grameen.fdp.kasapin.ui.base;
  */
 
 public interface DialogView extends BaseContract.View {
-
     void dismissDialog(String tag);
 }

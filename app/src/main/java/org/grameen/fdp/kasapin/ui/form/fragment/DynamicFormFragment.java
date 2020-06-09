@@ -168,8 +168,6 @@ public class DynamicFormFragment extends FormFragment {
                                 .subscribe(this::applyFormulas)))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
-
-
     }
 
 
@@ -180,6 +178,7 @@ public class DynamicFormFragment extends FormFragment {
 
             if (!q.shouldHide()) {
                 String storedValue = (shouldLoadOldValues) ? getComputationUtils().getValue(q, ANSWERS_JSON) : q.getDefaultValueC();
+
                 switch (q.getTypeC().toLowerCase()) {
                     case AppConstants.TYPE_TEXT:
                         //Define validations
@@ -297,7 +296,7 @@ public class DynamicFormFragment extends FormFragment {
     }
 
 
-    public JSONObject getAnswersData() {
+    public JSONObject getDataJson() {
         JSONObject jsonObject = new JSONObject();
         for (Question q : QUESTIONS) {
             try {
@@ -309,8 +308,8 @@ public class DynamicFormFragment extends FormFragment {
         return jsonObject;
     }
 
-    public FormAnswerData getSurveyAnswer() {
-        ANSWER_DATA.setData(getAnswersData().toString());
+    public FormAnswerData getAnswerData() {
+        ANSWER_DATA.setData(getDataJson().toString());
         return ANSWER_DATA;
     }
 }

@@ -4,7 +4,10 @@ package org.grameen.fdp.kasapin.ui.pandl;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,8 +16,12 @@ import java.util.Iterator;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.MaybeObserver;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -25,16 +32,17 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.View> implements ProfitAndLossContract.Presenter {
 
-    private JSONObject ALL_DATA_JSON = new JSONObject();
 
     @Inject
-    public ProfitAndLossPresenter(AppDataManager appDataManager) {
+    ProfitAndLossPresenter(AppDataManager appDataManager) {
         super(appDataManager);
         this.mAppDataManager = appDataManager;
     }
 
     @Override
     public void getAllAnswers(String farmerCode) {
+
+        JSONObject ALL_DATA_JSON = new JSONObject();
         runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getAll(farmerCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -47,11 +55,9 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                             while (iterator.hasNext()) {
                                 String key = (String) iterator.next();
                                 try {
-                                    if (ALL_DATA_JSON.has(key))
-                                        ALL_DATA_JSON.remove(key);
                                     ALL_DATA_JSON.put(key, formAnswerData.getJsonData().get(key));
-                                } catch (JSONException ignored) {
-                                    ignored.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         }
@@ -72,7 +78,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                     public void onComplete() {
                         setFarmerAsUnsynced(mAppDataManager.getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet());
                         getAppDataManager().setBooleanValue("reload", true);
-                        getView().reloadTableData();
+                        getView().loadTableData();
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -80,5 +86,26 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                         getView().showMessage(e.getMessage());
                     }
                 });
+    }
+
+
+    @Override
+    public void saveLabourValues(FormAnswerData formAnswerData, RealFarmer farmer) {
+
+        FormAnswerData oldData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(farmer.getCode(), formAnswerData.getFormId());
+        if(oldData != null)
+            formAnswerData.setId(oldData.getId());
+
+        getAppDataManager().getCompositeDisposable().add(Single.fromCallable(()
+                -> getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(formAnswerData))
+                .subscribeOn(Schedulers.io())
+                .subscribe(longValue -> {
+                    setFarmerAsUnsynced(farmer);
+                    getAppDataManager().setBooleanValue("reload", true);
+                    getView().showMessage("Labour values updated!");
+                }, throwable -> {
+                    getView().showMessage("Could not save Labour and labour type data");
+                }));
+
     }
 }
