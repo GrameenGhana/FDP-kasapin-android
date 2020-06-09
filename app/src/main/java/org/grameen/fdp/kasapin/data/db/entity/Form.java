@@ -1,10 +1,10 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -213,17 +213,16 @@ public class Form {
         this.questionList = questionList;
     }
 
-    public void setHide(int hide) {
-        this.hide = hide;
-    }
-
     public int getHide() {
         return hide;
     }
 
+    public void setHide(int hide) {
+        this.hide = hide;
+    }
 
     @Ignore
-    public boolean shouldHide(){
+    public boolean shouldHide() {
         return hide > 0;
     }
 }

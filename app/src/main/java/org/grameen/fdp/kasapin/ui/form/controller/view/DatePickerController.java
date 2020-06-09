@@ -73,7 +73,7 @@ public class DatePickerController extends MyLabeledFieldController {
      */
     public DatePickerController(Context context, String name, String content_desc, String labelText, boolean enable, Boolean isRequired, Set<InputValidator> validators) {
         this(context, name, content_desc, labelText, false, new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()), enable);
-        if(isRequired)
+        if (isRequired)
             this.setValidators(validators);
     }
 

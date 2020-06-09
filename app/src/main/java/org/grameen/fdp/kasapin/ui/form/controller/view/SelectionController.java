@@ -104,7 +104,7 @@ public class SelectionController extends MyLabeledFieldController {
     public SelectionController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String prompt, List<String> items, boolean useItemsAsValues, boolean isEnabled, String helperText, Set<InputValidator> validators) {
         this(ctx, name, content_desc, labelText, isRequired, prompt, items, useItemsAsValues ? items : null, isEnabled, helperText);
 
-        if(isRequired)
+        if (isRequired)
             this.setValidators(validators);
     }
 

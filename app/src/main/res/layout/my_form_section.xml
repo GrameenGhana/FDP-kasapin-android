@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/spacing_normal"
-    >
+    android:paddingBottom="@dimen/spacing_normal">
 
 
     <TextView
@@ -17,10 +16,10 @@
         android:paddingTop="@dimen/spacing_normal"
         android:paddingEnd="@dimen/spacing_normal"
         android:paddingBottom="@dimen/spacing_normal"
-        tools:text="Title"
         android:textAllCaps="true"
         android:textColor="?attr/colorAccent"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="Title" />
 
     <View
         android:layout_width="match_parent"

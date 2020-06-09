@@ -3,39 +3,24 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.entity.Mapping;
-import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
-import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
-import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
+import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.syncManager.DownloadResources;
-import org.grameen.fdp.kasapin.syncManager.UploadData;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-
-import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
  * Created by AangJnr on 18, September, 2018 @ 9:06 PM
@@ -80,10 +65,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                     getView().showMessage(R.string.error_has_occurred);
                     throwable.printStackTrace();
                 }));
-
-
-
-
 
 
     }
@@ -136,7 +117,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     }
 
 
-
     @Override
     public void downloadFarmersData(boolean showProgress) {
         if (showProgress)
@@ -177,7 +157,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
 
         syncData(this, showProgress, UN_SYNCED_FARMERS);
     }
-
 
 
     @Override

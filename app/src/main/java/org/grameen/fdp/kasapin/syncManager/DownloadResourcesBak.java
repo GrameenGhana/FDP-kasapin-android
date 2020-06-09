@@ -78,7 +78,7 @@ public class DownloadResourcesBak {
             Community v = new Community();
             v.setId(i);
             v.setCountryId(1);
-           // v.setDistrict("District " + i);
+            // v.setDistrict("District " + i);
             v.setName("Village " + i);
             villages.add(v);
         }

@@ -3,17 +3,13 @@ package org.grameen.fdp.kasapin.ui.plotReview;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.jaredrummler.materialspinner.MaterialSpinner;
+import androidx.viewpager.widget.ViewPager;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -24,10 +20,8 @@ import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.PlotMonitoringTableData;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
-import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
-import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +33,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.codecrafters.tableview.TableView;
+
 public class PlotReviewActivity extends BaseActivity implements PlotReviewContract.View {
     @Inject
     PlotReviewPresenter mPresenter;
@@ -104,7 +99,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
         ALL_PLOT_DATA_QUESTIONS = questions;
         PLOTS_LIST = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(FARMER.getCode()).blockingGet();
         AppLogger.e(TAG, getGson().toJson(PLOTS_LIST));
-        
+
         if (ALL_PLOT_DATA_QUESTIONS != null && PLOTS_LIST != null && PLOTS_LIST.size() > 0)
             setUpViewPager();
     }

@@ -10,13 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Window;
@@ -27,7 +20,17 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+
 import org.grameen.fdp.kasapin.FDPKasapin;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
@@ -51,16 +54,20 @@ import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 import org.json.JSONException;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
+
 import butterknife.Unbinder;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
 import static org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity.familyMembersFormPosition;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
@@ -222,10 +229,12 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     }
 
     @Override
-    public void onFragmentAttached() {}
+    public void onFragmentAttached() {
+    }
 
     @Override
-    public void onFragmentDetached(String tag) {}
+    public void onFragmentDetached(String tag) {
+    }
 
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
@@ -302,6 +311,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
                 negativeText, icon_drawable);
 
     }
+
     protected Toolbar setToolbar(String title) {
         Toolbar toolbar = null;
         try {
@@ -376,12 +386,12 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     }
 
 
-    public void goToFamilyMembersTable(RealFarmer FARMER){
+    public void goToFamilyMembersTable(RealFarmer FARMER) {
         Question numberFamilyMembersQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farmer_familycount_");
         int farmerProfileFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.FARMER_PROFILE).blockingGet(0);
         FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmerProfileFormId);
-        if(numberFamilyMembersQuestion != null) {
-            if(answerData != null){
+        if (numberFamilyMembersQuestion != null) {
+            if (answerData != null) {
                 int numberFamilyMembers;
                 try {
                     numberFamilyMembers = Integer.parseInt(answerData.getJsonData().getString(numberFamilyMembersQuestion.getLabelC()));
@@ -393,17 +403,17 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
                 intent.putExtra("farmer", getGson().toJson(FARMER));
                 startActivity(intent);
                 finish();
-            }else
+            } else
                 showDialog(false, getStringResources(R.string.fill_data),
                         getStringResources(R.string.enter_data_rationale) + FARMER.getFarmerName() + getStringResources(R.string.before_proceed_suffux),
                         (dialog, which) -> dialog.dismiss(), getStringResources(R.string.ok), null, "", 0);
-        }else
+        } else
             showMessage(getStringResources(R.string.error_has_occurred));
     }
 
     public void moveToNextForm(RealFarmer FARMER) {
         CURRENT_FORM_POSITION++;
-        if(CURRENT_FORM_POSITION == familyMembersFormPosition) {
+        if (CURRENT_FORM_POSITION == familyMembersFormPosition) {
             goToFamilyMembersTable(FARMER);
             return;
         }
@@ -426,12 +436,12 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     }
 
     public void setStatusBarColor(Window window, int statusBarColor, boolean isLightStatus) {
-        if(isLightStatus)
-                window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    int flags = window.getDecorView().getSystemUiVisibility();
-                    flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                    window.getDecorView().setSystemUiVisibility(flags);
-                }
+        if (isLightStatus)
+            window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int flags = window.getDecorView().getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            window.getDecorView().setSystemUiVisibility(flags);
+        }
     }
 }

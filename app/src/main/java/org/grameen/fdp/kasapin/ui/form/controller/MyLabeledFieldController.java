@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
 import com.rengwuxian.materialedittext.MaterialEditText;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
-import org.grameen.fdp.kasapin.ui.form.RequiredFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.ValidationError;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -112,7 +114,7 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         validators = newValidators;
 
         AppLogger.e("EditTextController", getName() + " is required == true");
-        AppLogger.e(this.getClass().getSimpleName(), "Setting validations for " + getName() );
+        AppLogger.e(this.getClass().getSimpleName(), "Setting validations for " + getName());
         AppLogger.e(this.getClass().getSimpleName(), "Validation size == " + validators.size());
     }
 
@@ -142,19 +144,16 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
      */
     public List<ValidationError> validateInput() {
         List<ValidationError> errors = new ArrayList<>();
-            Object value = getModel().getValue(getName());
-            ValidationError error;
-            for (InputValidator validator : validators) {
-                error = validator.validate(value, getName(), getName());
-                if (error != null) {
-                    errors.add(error);
-                }
+        Object value = getModel().getValue(getName());
+        ValidationError error;
+        for (InputValidator validator : validators) {
+            error = validator.validate(value, getName(), getName());
+            if (error != null) {
+                errors.add(error);
             }
-            return errors;
+        }
+        return errors;
     }
-
-
-
 
 
     /**
@@ -180,7 +179,7 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
     protected View createView() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.form_labeled_element, null);
-        errorView =  view.findViewById(R.id.field_error);
+        errorView = view.findViewById(R.id.field_error);
 
         TextView label = view.findViewById(R.id.field_label);
         if (labelText == null) {

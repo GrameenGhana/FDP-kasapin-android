@@ -21,7 +21,9 @@ public class AddEditServerUrlContract {
 
     public interface Presenter {
         void fetchData();
+
         void deleteUrl(ServerUrl serverUrl);
+
         void saveUrl(ServerUrl serverUrl);
 
     }

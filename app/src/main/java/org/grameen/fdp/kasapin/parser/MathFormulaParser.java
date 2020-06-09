@@ -115,7 +115,7 @@ public class MathFormulaParser extends Tokenizer {
         String newFormula = mathFormula;
 
 
-        if(jsonObject != null) {
+        if (jsonObject != null) {
             Iterator iterator = jsonObject.keys();
             while (iterator.hasNext()) {
                 String tmp_key = (String) iterator.next();
@@ -157,7 +157,7 @@ public class MathFormulaParser extends Tokenizer {
             value = "0";
         }
 
-        AppLogger.e("###  MathFormulaParser >> ",  newFormula + " === " + value);
+        AppLogger.e("###  MathFormulaParser >> ", newFormula + " === " + value);
 
         return value;
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -20,8 +21,8 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
     FDPStatusPresenter mPresenter;
 
     RealFarmer FARMER;
-    private DynamicFormFragment dynamicFormFragment;
     FormAndQuestions formAndQuestions;
+    private DynamicFormFragment dynamicFormFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
         if (getIntent() != null) {
             FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
             if (FARMER != null)
-            setUpViews();
+                setUpViews();
             else {
                 showMessage(R.string.error_has_occurred_loading_data);
                 finish();
@@ -44,14 +45,14 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
 
     @Override
     public void setUpViews() {
-        for(int i = 0; i < FILTERED_FORMS.size(); i++)
-            if(FILTERED_FORMS.get(i).getForm().getFormNameC().equalsIgnoreCase(AppConstants.FDP_STATUS)){
+        for (int i = 0; i < FILTERED_FORMS.size(); i++)
+            if (FILTERED_FORMS.get(i).getForm().getFormNameC().equalsIgnoreCase(AppConstants.FDP_STATUS)) {
                 formAndQuestions = FILTERED_FORMS.get(i);
                 mPresenter.getAnswerData(FARMER.getCode(), formAndQuestions.getForm().getFormTranslationId());
                 break;
             }
 
-        if(getAppDataManager().isMonitoring())
+        if (getAppDataManager().isMonitoring())
             findViewById(R.id.save_button).setVisibility(View.GONE);
 
         findViewById(R.id.cancel_button).setOnClickListener((v) -> finish());
@@ -67,7 +68,7 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
 
     @Override
     public void onDestroy() {
-        if(mPresenter != null)
+        if (mPresenter != null)
             mPresenter.dropView();
         super.onDestroy();
     }
@@ -82,7 +83,7 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
     public void saveData() {
         dynamicFormFragment.getFormController().resetValidationErrors();
         //Validate inputs
-        if(!dynamicFormFragment.getFormController().isValidInput()) {
+        if (!dynamicFormFragment.getFormController().isValidInput()) {
             dynamicFormFragment.getFormController().showValidationErrors();
         } else {
             mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData());

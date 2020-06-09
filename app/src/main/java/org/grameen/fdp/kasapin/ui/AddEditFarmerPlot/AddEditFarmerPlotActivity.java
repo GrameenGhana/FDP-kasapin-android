@@ -4,14 +4,14 @@ package org.grameen.fdp.kasapin.ui.AddEditFarmerPlot;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.cardview.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
 
 import com.google.gson.Gson;
 
@@ -22,7 +22,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
-import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
 import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
@@ -99,10 +98,10 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         if (FARMER != null)
             FARMER_CODE = FARMER.getCode();
-         plotNameQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_name_");
-         soilPhQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_ph_");
-         estProductionQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_estimate_production_");
-         plotAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_");
+        plotNameQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_name_");
+        soilPhQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_ph_");
+        estProductionQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_estimate_production_");
+        plotAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_");
 
         setupViews();
     }
@@ -144,13 +143,13 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             if (estProductionQuestion != null)
                 plotEstProdText.setText(estProductionQuestion.getCaptionC());
 
-             if (soilPhQuestion != null)
+            if (soilPhQuestion != null)
                 plotPhText.setText(soilPhQuestion.getCaptionC());
 
-             if (plotNameQuestion != null)
+            if (plotNameQuestion != null)
                 plotNameText.setText(plotNameQuestion.getCaptionC());
 
-             if (plotAreaQuestion != null)
+            if (plotAreaQuestion != null)
                 plotSizeText.setText(plotAreaQuestion.getCaptionC());
 
         }).subscribeOn(Schedulers.io())
@@ -159,6 +158,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                     @Override
                     public void onComplete() {
                     }
+
                     @Override
                     public void onError(Throwable ignored) {
                     }
@@ -332,33 +332,33 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         }
     }
 
-    private boolean validateFields(){
+    private boolean validateFields() {
         boolean isValid = true;
 
-        if(plotNameEdittext.getText().toString().trim().isEmpty()){
+        if (plotNameEdittext.getText().toString().trim().isEmpty()) {
             plotNameEdittext.setError(plotNameQuestion.getErrorMessage());
             isValid = false;
-        }else
+        } else
             plotNameEdittext.setError(null);
 
-        if(estProductionQuestion.isRequired() && estimatedProductionEdittext.getText().toString().trim().isEmpty()){
+        if (estProductionQuestion.isRequired() && estimatedProductionEdittext.getText().toString().trim().isEmpty()) {
             estimatedProductionEdittext.setError(estProductionQuestion.getErrorMessage());
             isValid = false;
-        }else
+        } else
             estimatedProductionEdittext.setError(null);
 
-        if(plotAreaQuestion.isRequired() && plotSizeEdittext.getText().toString().trim().isEmpty()){
+        if (plotAreaQuestion.isRequired() && plotSizeEdittext.getText().toString().trim().isEmpty()) {
             plotSizeEdittext.setError(plotAreaQuestion.getErrorMessage());
             isValid = false;
-        }else
+        } else
             plotSizeEdittext.setError(null);
-        if(soilPhQuestion.isRequired() && phEdittext.getText().toString().trim().isEmpty()){
+        if (soilPhQuestion.isRequired() && phEdittext.getText().toString().trim().isEmpty()) {
             phEdittext.setError(soilPhQuestion.getErrorMessage());
             isValid = false;
-        }else
+        } else
             phEdittext.setError(null);
 
-        if(!dynamicPlotFormFragment.getFormController().isValidInput()) {
+        if (!dynamicPlotFormFragment.getFormController().isValidInput()) {
             dynamicPlotFormFragment.getFormController().resetValidationErrors();
             dynamicPlotFormFragment.getFormController().showValidationErrors();
             isValid = false;
@@ -391,8 +391,8 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     public void moveToMapActivity(Plot plot) {
         final Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("plot", new Gson().toJson(plot));
-            startActivity(intent);
-            finish();
+        startActivity(intent);
+        finish();
     }
 
     @Override

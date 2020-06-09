@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,16 +29,14 @@
                 android:layout_marginBottom="@dimen/spacing_quarter"
                 android:text="No urls added"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:textSize="@dimen/text_size_medium"
-                />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="To add a new server url, please click on the ADD A NEW URL button below"
                 android:gravity="center"
-                />
+                android:text="To add a new server url, please click on the ADD A NEW URL button below" />
 
         </LinearLayout>
 
@@ -46,8 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_buttons"
-            android:layout_marginTop="@dimen/spacing_half"/>
-
+            android:layout_marginTop="@dimen/spacing_half" />
 
 
         <LinearLayout

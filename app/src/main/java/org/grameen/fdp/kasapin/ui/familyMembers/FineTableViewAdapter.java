@@ -41,6 +41,7 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
      * This is where you create your custom Cell ViewHolder. This method is called when Cell
      * RecyclerView of the TableView needs a new RecyclerView.ViewHolder of the given type to
      * represent an item.
+     *
      * @param viewType : This value comes from "getCellItemViewType" method to support different
      *                 type of viewHolder as a Cell item.
      * @see #getCellItemViewType(int);
@@ -48,7 +49,7 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
     @Override
     public RecyclerView.ViewHolder onCreateCellViewHolder(ViewGroup parent, int viewType) {
         String TYPE = questions.get(viewType).getTypeC().toLowerCase();
-        switch (TYPE){
+        switch (TYPE) {
             case AppConstants.TYPE_SELECTABLE:
                 return new SpinnerViewHolder(getLayoutView(parent, AppConstants.TYPE_SELECTABLE));
 
@@ -60,6 +61,7 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
                 return new CellViewHolder(getLayoutView(parent, AppConstants.TYPE_TEXT));
         }
     }
+
     /**
      * That is where you set Cell View Model data to your custom Cell ViewHolder. This method is
      * Called by Cell RecyclerView of the TableView to display the data at the specified position.
@@ -102,10 +104,12 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
             views.get(rowPosition).add(columnPosition, viewHolder.itemView);
         }
     }
+
     /**
      * This is where you create your custom Column Header ViewHolder. This method is called when
      * Column Header RecyclerView of the TableView needs a new RecyclerView.ViewHolder of the given
      * type to represent an item.
+     *
      * @param viewType : This value comes from "getColumnHeaderItemViewType" method to support
      *                 different type of viewHolder as a Column Header item.
      * @see #getColumnHeaderItemViewType(int);
@@ -116,11 +120,13 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         View layout = LayoutInflater.from(mContext).inflate(R.layout.table_view_column_header_layout, parent, false);
         return new ColumnHeaderViewHolder(layout, getTableView());
     }
+
     /**
      * That is where you set Column Header View Model data to your custom Column Header ViewHolder.
      * This method is Called by ColumnHeader RecyclerView of the TableView to display the data at
      * the specified position. This method gives you everything you need about a column header
      * item.
+     *
      * @param holder                : This is one of your column header ViewHolders that was created
      *                              on ```onCreateColumnHeaderViewHolder``` method. In this example
      *                              we have created "ColumnHeaderViewHolder" holder.
@@ -138,10 +144,12 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         ColumnHeaderViewHolder columnHeaderViewHolder = (ColumnHeaderViewHolder) holder;
         columnHeaderViewHolder.setColumnHeader(columnHeader);
     }
+
     /**
      * This is where you create your custom Row Header ViewHolder. This method is called when
      * Row Header RecyclerView of the TableView needs a new RecyclerView.ViewHolder of the given
      * type to represent an item.
+     *
      * @param viewType : This value comes from "getRowHeaderItemViewType" method to support
      *                 different type of viewHolder as a row Header item.
      * @see #getRowHeaderItemViewType(int);
@@ -154,10 +162,12 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         // Create a Row Header ViewHolder
         return new RowHeaderViewHolder(layout);
     }
+
     /**
      * That is where you set Row Header View Model data to your custom Row Header ViewHolder. This
      * method is Called by RowHeader RecyclerView of the TableView to display the data at the
      * specified position. This method gives you everything you need about a row header item.
+     *
      * @param holder             : This is one of your row header ViewHolders that was created on
      *                           ```onCreateRowHeaderViewHolder``` method. In this example we have
      *                           created "RowHeaderViewHolder" holder.
@@ -234,13 +244,17 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         return view;
     }
 
-     View getCellViews(int rowIndex, int columnIndex){
+    View getCellViews(int rowIndex, int columnIndex) {
         try {
             return views.get(rowIndex).get(columnIndex);
-        }catch(Exception ignore){return null;}
+        } catch (Exception ignore) {
+            return null;
+        }
     }
 
 
-    int getCurrentVisibleColumn(){ return CURRENT_VISIBLE_COLUMN;}
+    int getCurrentVisibleColumn() {
+        return CURRENT_VISIBLE_COLUMN;
+    }
 }
 

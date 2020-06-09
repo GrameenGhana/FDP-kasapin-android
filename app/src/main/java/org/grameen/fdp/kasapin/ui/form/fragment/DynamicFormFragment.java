@@ -3,13 +3,13 @@ package org.grameen.fdp.kasapin.ui.form.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+
+import androidx.annotation.Nullable;
 
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -62,7 +62,8 @@ public class DynamicFormFragment extends FormFragment {
     private String TAG = "MYFORMFRAGMENT";
 
 
-    public DynamicFormFragment() { }
+    public DynamicFormFragment() {
+    }
 
     public static DynamicFormFragment newInstance(FormAndQuestions formAndQuestions, boolean shouldLoadOldValues, @Nullable String farmerId, boolean isMonitoring, @Nullable FormAnswerData answer) {
         DynamicFormFragment formFragment = new DynamicFormFragment();
@@ -211,7 +212,7 @@ public class DynamicFormFragment extends FormFragment {
                                 q.isRequired(), storedValue, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED && q.caEdit(), validation));
                         break;
                     case AppConstants.TYPE_TIMEPICKER:
-                        formSectionController.addElement(new TimePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),q.isRequired(),  validation));
+                        formSectionController.addElement(new TimePickerController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), q.isRequired(), validation));
                         break;
                     case AppConstants.TYPE_DATEPICKER:
                         formSectionController.addElement(new DatePickerController(context, q.getLabelC(), q.getLabelC(),

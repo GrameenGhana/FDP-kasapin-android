@@ -1,16 +1,15 @@
 package org.grameen.fdp.kasapin.ui.plotDetails;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -83,12 +82,10 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     TextView limeNeededText;
 
 
-
     JSONObject PLOT_ANSWERS_JSON;
     Recommendation PLOT_RECOMMENDATION = null;
     Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
     String recNames;
-
 
 
     @Override
@@ -128,17 +125,17 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
             BaseActivity.PLOT_FORM_AND_QUESTIONS = formAndQuestions;
 
-            for(FormAndQuestions formAndQuestions1 : BaseActivity.PLOT_FORM_AND_QUESTIONS){
+            for (FormAndQuestions formAndQuestions1 : BaseActivity.PLOT_FORM_AND_QUESTIONS) {
                 FormAnswerData formAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(PLOT.getFarmerCode(), formAndQuestions1.getForm().getFormTranslationId());
 
-                if(formAnswerData != null){
+                if (formAnswerData != null) {
                     Iterator iterator = formAnswerData.getJsonData().keys();
 
                     while (iterator.hasNext()) {
                         String key = (String) iterator.next();
                         try {
                             if (!plotAnswersDataJson.has(key))
-                            plotAnswersDataJson.put(key, formAnswerData.getJsonData().get(key));
+                                plotAnswersDataJson.put(key, formAnswerData.getJsonData().get(key));
                         } catch (JSONException ignored) {
                         }
                     }
@@ -146,7 +143,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             }
 
             PLOT.setAnswersData(plotAnswersDataJson.toString());
-        } catch (JSONException ignored) {}
+        } catch (JSONException ignored) {
+        }
 
 
         //String limeNeededValue = "--";
@@ -263,7 +261,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
                     }, throwable -> showMessage("Couldn't load plot's recommendation")));
-        }else {
+        } else {
             AppLogger.e(TAG, "********************   RELOAD RECOMMENDATION ******************** ");
 
             recommendedIntervention.setText("");
@@ -349,7 +347,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     }
 
 
-
     @Override
     protected void onDestroy() {
         if (mPresenter != null)
@@ -359,11 +356,13 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @Override
     public void openLoginActivityOnTokenExpire() {
     }
+
     @Override
     public void onBackPressed() {
         finish();

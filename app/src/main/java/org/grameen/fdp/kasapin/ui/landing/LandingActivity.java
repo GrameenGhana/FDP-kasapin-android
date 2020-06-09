@@ -4,9 +4,10 @@ package org.grameen.fdp.kasapin.ui.landing;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.PopupMenu;
+
+import androidx.annotation.Nullable;
 
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
@@ -47,8 +48,7 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
         super.onCreate(savedInstanceState);
 
 
-
-       // toggleFullScreen(false, getWindow());
+        // toggleFullScreen(false, getWindow());
 
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_landing_page);

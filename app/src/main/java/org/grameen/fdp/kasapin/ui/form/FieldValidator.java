@@ -9,7 +9,7 @@ public class FieldValidator implements InputValidator {
     private String message;
     private String defaultValue;
 
-    public FieldValidator(String _defaultValue, String _message){
+    public FieldValidator(String _defaultValue, String _message) {
         this.message = _message;
         this.defaultValue = _defaultValue;
     }
@@ -17,7 +17,7 @@ public class FieldValidator implements InputValidator {
     @Override
     public ValidationError validate(Object value, String fieldName, String fieldLabel) {
 
-        if (value == null ||  value.toString().trim().isEmpty()
+        if (value == null || value.toString().trim().isEmpty()
                 || Objects.equals(value.toString(), "-select-")
                 || Objects.equals(value.toString(), "--")
                 || Objects.equals(value.toString(), "-")) {
@@ -29,6 +29,7 @@ public class FieldValidator implements InputValidator {
 
     /**
      * Makes every instances of {@link FieldValidator} equal.
+     *
      * @param o The object to compare.
      * @return true if o is also an instance of RequiredFieldValidator, false otherwise.
      */
@@ -39,6 +40,7 @@ public class FieldValidator implements InputValidator {
 
     /**
      * Every instance of {{@link FieldValidator}} share the same hashcode.
+     *
      * @return 0
      */
     @Override

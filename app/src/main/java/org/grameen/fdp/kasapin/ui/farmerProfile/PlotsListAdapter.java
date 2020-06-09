@@ -5,12 +5,13 @@ package org.grameen.fdp.kasapin.ui.farmerProfile;
  */
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
@@ -117,8 +118,8 @@ public class PlotsListAdapter extends RecyclerView.Adapter<PlotsListAdapter.View
 
 
             mainLayout.setOnLongClickListener(view -> {
-                if(longClickListener != null)
-                longClickListener.onLongClick(view, getAdapterPosition());
+                if (longClickListener != null)
+                    longClickListener.onLongClick(view, getAdapterPosition());
                 return true;
             });
 

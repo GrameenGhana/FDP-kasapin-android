@@ -3,15 +3,13 @@ package org.grameen.fdp.kasapin.ui.monitoringYearSelection;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
-
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 
@@ -114,24 +112,24 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         name.setText(FARMER.getFarmerName());
         code.setText(FARMER.getCode());
 
-        if(FARMER.getVillageId() > 0){
+        if (FARMER.getVillageId() > 0) {
             Community village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
 
-            if(village != null) {
+            if (village != null) {
                 FARMER.setVillageName(village.getName());
                 villageName.setText(FARMER.getVillageName());
             }
         }
 
         landSize.setText(FARMER.getLandArea());
-            if (FARMER.getSyncStatus() == 0) {
-                syncIndicator.setImageResource(R.drawable.ic_sync_problem_black_24dp);
-                syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.cpb_red));
+        if (FARMER.getSyncStatus() == 0) {
+            syncIndicator.setImageResource(R.drawable.ic_sync_problem_black_24dp);
+            syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.cpb_red));
 
-            } else if (FARMER.getSyncStatus() == 1) {
-                syncIndicator.setImageResource(R.drawable.ic_check_circle_black_24dp);
-                syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent));
-            }
+        } else if (FARMER.getSyncStatus() == 1) {
+            syncIndicator.setImageResource(R.drawable.ic_check_circle_black_24dp);
+            syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.colorAccent));
+        }
         lastSyncDate.setText((FARMER.getLastModifiedDate() != null) ? FARMER.getLastModifiedDate().toString() : "--");
         lastVisitDate.setText((FARMER.getLastVisitDate() != null) ? FARMER.getLastVisitDate().toString() : "--");
 
@@ -158,7 +156,7 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
             drawable.setCornerRadius(1000);
             drawable.setColor(randomColor);
             circleImageView.setBackground(drawable);
-            circleImageView.setOnClickListener( v -> CustomToast.makeToast(MonitoringYearSelectionActivity.this, "No image to display!", Toast.LENGTH_LONG).show());
+            circleImageView.setOnClickListener(v -> CustomToast.makeToast(MonitoringYearSelectionActivity.this, "No image to display!", Toast.LENGTH_LONG).show());
         }
         setupListAdapter();
     }

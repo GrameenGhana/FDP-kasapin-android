@@ -12,31 +12,38 @@ public class PlotGpsPoint {
     @SerializedName("precision")
     private double precision;
 
-    public PlotGpsPoint(){
+    public PlotGpsPoint() {
+    }
+
+    public double getAltitude() {
+        return altitude;
     }
 
     public void setAltitude(double altitude) {
         this.altitude = altitude;
     }
-    public void setPrecision(double precision) {
-        this.precision = precision;
-    }
-    public double getAltitude() {
-        return altitude;
-    }
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
+
     public double getLatitude() {
         return latitude;
     }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
     public double getLongitude() {
         return longitude;
     }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public double getPrecision() {
         return precision;
+    }
+
+    public void setPrecision(double precision) {
+        this.precision = precision;
     }
 }

@@ -1,9 +1,9 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 
 import java.util.List;
 
@@ -35,12 +35,12 @@ public class FarmResult {
         this.plotAssessmentId = plotAssessmentId;
     }
 
-    public void setPlotAssessmentList(List<PlotAssessment> plotAssessmentList) {
-        this.plotAssessmentList = plotAssessmentList;
-    }
-
     public List<PlotAssessment> getPlotAssessmentList() {
         return plotAssessmentList;
+    }
+
+    public void setPlotAssessmentList(List<PlotAssessment> plotAssessmentList) {
+        this.plotAssessmentList = plotAssessmentList;
     }
 
     public String getStatus() {

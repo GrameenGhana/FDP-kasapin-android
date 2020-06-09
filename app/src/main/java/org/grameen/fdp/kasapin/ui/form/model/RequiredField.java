@@ -17,6 +17,7 @@ import org.grameen.fdp.kasapin.ui.form.ValidationError;
 public class RequiredField extends ValidationError {
 
     private String messageToDisplay = null;
+
     /**
      * Creates a new instance with the specified field name.
      *
@@ -37,7 +38,7 @@ public class RequiredField extends ValidationError {
     public String getMessage(Resources resources) {
 
         return (messageToDisplay == null) ?
-            String.format(resources.getString(R.string.required_field_error_msg), getFieldLabel())
-                   : messageToDisplay;
+                String.format(resources.getString(R.string.required_field_error_msg), getFieldLabel())
+                : messageToDisplay;
     }
 }

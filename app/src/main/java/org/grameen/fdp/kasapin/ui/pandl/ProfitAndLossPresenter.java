@@ -6,8 +6,6 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,12 +14,9 @@ import java.util.Iterator;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
-import io.reactivex.MaybeObserver;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
-import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -80,6 +75,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                         getAppDataManager().setBooleanValue("reload", true);
                         getView().loadTableData();
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
@@ -93,7 +89,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
     public void saveLabourValues(FormAnswerData formAnswerData, RealFarmer farmer) {
 
         FormAnswerData oldData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(farmer.getCode(), formAnswerData.getFormId());
-        if(oldData != null)
+        if (oldData != null)
             formAnswerData.setId(oldData.getId());
 
         getAppDataManager().getCompositeDisposable().add(Single.fromCallable(()

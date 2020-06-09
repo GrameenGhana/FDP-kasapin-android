@@ -44,17 +44,16 @@ public class PlotReviewPresenter extends BasePresenter<PlotReviewContract.View> 
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(formsAndQuestions -> {
-                    List<Question> questionList  = new ArrayList<>();
-                    for(FormAndQuestions formAndQuestions : formsAndQuestions)
-                        questionList.addAll(formAndQuestions.getQuestions());
+                            List<Question> questionList = new ArrayList<>();
+                            for (FormAndQuestions formAndQuestions : formsAndQuestions)
+                                questionList.addAll(formAndQuestions.getQuestions());
 
-                        getView().setPlotQuestions(questionList);
-                },
+                            getView().setPlotQuestions(questionList);
+                        },
                         throwable -> {
-                    getView().showMessage(R.string.error_has_occurred);
-                    throwable.printStackTrace();
-                }));
-
+                            getView().showMessage(R.string.error_has_occurred);
+                            throwable.printStackTrace();
+                        }));
 
 
     }

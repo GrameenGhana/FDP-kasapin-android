@@ -4,19 +4,15 @@ package org.grameen.fdp.kasapin.data.network;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
-import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
 import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,7 +56,6 @@ public class FdpApiService {
         return fdpApi.getCommunitiesData(countryId, token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-
 
 
     public Single<FormsDataWrapper> fetchSurveyData(int id, String token) {

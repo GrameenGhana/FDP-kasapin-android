@@ -30,7 +30,6 @@ public class FarmerProfileContract {
         void updateFarmerSyncStatus();
 
 
-
     }
 
     public interface Presenter {
@@ -42,7 +41,6 @@ public class FarmerProfileContract {
         void loadDynamicButtons(List<FormAndQuestions> formAndQuestions);
 
         void syncFarmerData(RealFarmer farmer, boolean showProgress);
-
 
 
     }

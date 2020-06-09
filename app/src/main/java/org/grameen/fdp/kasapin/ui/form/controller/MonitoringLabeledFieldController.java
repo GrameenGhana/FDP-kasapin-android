@@ -173,16 +173,16 @@ public abstract class MonitoringLabeledFieldController extends MyFormElementCont
     protected View createView() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.monitoring_form_labeled_element, null);
-        errorView = (TextView) view.findViewById(R.id.field_error);
+        errorView = view.findViewById(R.id.field_error);
 
-        TextView label = (TextView) view.findViewById(R.id.field_label);
+        TextView label = view.findViewById(R.id.field_label);
         if (labelText == null) {
             label.setVisibility(View.GONE);
         } else {
             label.setText(labelText);
         }
 
-        FrameLayout container = (FrameLayout) view.findViewById(R.id.field_container);
+        FrameLayout container = view.findViewById(R.id.field_container);
         container.addView(getFieldView());
 
         return view;

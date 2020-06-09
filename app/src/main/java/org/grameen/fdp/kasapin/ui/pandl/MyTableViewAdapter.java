@@ -3,12 +3,13 @@ package org.grameen.fdp.kasapin.ui.pandl;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.content.ContextCompat;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
@@ -47,18 +48,18 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
     private AppDatabase mAppDatabase;
 
 
-     MyTableViewAdapter(final Context context, final List<Data> data, final TableView<Data> tableView, AppDatabase appDatabase) {
+    MyTableViewAdapter(final Context context, final List<Data> data, final TableView<Data> tableView, AppDatabase appDatabase) {
         super(context, data, tableView);
         this.context = context;
         this.mAppDatabase = appDatabase;
     }
 
-     void setItemSelectedListener(final MaterialSpinner.OnItemSelectedListener mItemSelectedListener) {
-        this.itemSelectedListener = mItemSelectedListener;
+    void setItemSelectedListener(final MaterialSpinner.OnItemSelectedListener mItemSelectedListener) {
+        itemSelectedListener = mItemSelectedListener;
     }
 
-     void setClickListener(final View.OnClickListener listener) {
-        this.mOnClickListener = listener;
+    void setClickListener(final View.OnClickListener listener) {
+        mOnClickListener = listener;
     }
 
     @Override
@@ -135,7 +136,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     TextView textView = new TextView(getContext());
                     textView.setText(data.getLabel());
                     textView.setPadding(20, 10, 20, 10);
-                     textView.setTextSize(TEXT_SIZE);
+                    textView.setTextSize(TEXT_SIZE);
                     view = textView;
 
 
@@ -199,7 +200,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     textView.setText(data.getLabel());
                     textView.setPadding(20, 10, 20, 10);
                     textView.setTextSize(TITLE_TEXT_SIZE);
-                     textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+                    textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     view = textView;
 

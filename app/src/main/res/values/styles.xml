@@ -219,7 +219,7 @@
         <item name="android:textColorSecondary">@android:color/secondary_text_light</item>
         <item name="android:itemPadding">@dimen/alert_def_padding</item>
         <item name="panelBackground">@color/white</item>
-      <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 
@@ -426,7 +426,6 @@
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
-
 
 
     <style name="AppAlertDialogContent" parent="AppTheme">

@@ -57,8 +57,8 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
                 .subscribe(aLong -> {
 
                     RealFarmer farmer = getAppDataManager().getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet();
-                    if(farmer != null)
-                    setFarmerAsUnsynced(farmer);
+                    if (farmer != null)
+                        setFarmerAsUnsynced(farmer);
 
                     getView().showMessage("Plot data saved!");
                     getAppDataManager().setBooleanValue("reloadRecommendation", true);

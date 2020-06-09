@@ -2,8 +2,6 @@ package org.grameen.fdp.kasapin.ui.monitoringYearSelection;
 
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.DataManager;
-import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 
 import javax.inject.Inject;

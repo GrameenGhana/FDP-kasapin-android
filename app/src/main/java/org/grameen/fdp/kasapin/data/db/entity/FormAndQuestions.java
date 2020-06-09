@@ -14,12 +14,10 @@ import java.util.List;
  */
 
 public class FormAndQuestions {
-    @Embedded
-    Form form;
-
-
     @Relation(parentColumn = "translationId", entityColumn = "formTranslationId", entity = Question.class)
     public List<Question> questions;
+    @Embedded
+    Form form;
 
     private static int compare(Question o1, Question o2) {
         return Integer.compare(o1.getDisplayOrderC(), o2.getDisplayOrderC());

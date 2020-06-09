@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
  * Personal mail aang.jnr@gmail.com
  */
 
-public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContract.View> implements PlotMonitoringContract.Presenter, FdpCallbacks.UploadDataListener  {
+public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContract.View> implements PlotMonitoringContract.Presenter, FdpCallbacks.UploadDataListener {
 
     AppDataManager mAppDataManager;
 
@@ -51,16 +51,17 @@ public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContrac
         Completable.fromAction(() -> {
             aoFormAndQuestions = getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByName(AppConstants.ADOPTION_OBSERVATIONS).blockingGet();
             aoMonitoringFormAndQuestions = getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByName(AppConstants.AO_MONITORING).blockingGet();
-        }) .subscribeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
                         getView().setupAdoptionObservationsTableView(aoFormAndQuestions, aoMonitoringFormAndQuestions);
                     }
+
                     @Override
                     public void onError(Throwable e) {
-                     getView().showMessage("Couldn't obtain Adoption Observation questions");
+                        getView().showMessage("Couldn't obtain Adoption Observation questions");
                         getView().showMessage(e.getMessage());
                     }
                 });
@@ -79,7 +80,7 @@ public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContrac
                 .subscribe(new DisposableSingleObserver<List<Monitoring>>() {
                     @Override
                     public void onSuccess(List<Monitoring> monitorings) {
-                        AppLogger.e(TAG, "########### Monitoring size is " +monitorings.size());
+                        AppLogger.e(TAG, "########### Monitoring size is " + monitorings.size());
 
                         getView().updateTableData(monitorings);
                     }
@@ -98,8 +99,6 @@ public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContrac
     public void syncFarmerData(RealFarmer farmer, boolean showProgress) {
         syncData(this, showProgress, Collections.singletonList(farmer));
     }
-
-
 
 
     //Upload Data Callbacks declared at the global level

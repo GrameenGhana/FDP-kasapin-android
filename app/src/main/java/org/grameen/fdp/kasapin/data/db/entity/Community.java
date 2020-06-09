@@ -4,17 +4,18 @@ import androidx.room.Entity;
 import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by aangjnr on 30/01/2018.
  */
 
 @Entity(tableName = "communities", indices = {@Index(value = "countryId"), @Index(value = "parentId"), @Index(value = "id", unique = true)})
-public class Community extends BaseModel{
+public class Community extends BaseModel {
+    @SerializedName("name")
+    String name;
     @SerializedName("country_id")
     private
     int countryId;
-    @SerializedName("name")
-    String name;
     @SerializedName("type")
     private
     String type;
@@ -41,19 +42,19 @@ public class Community extends BaseModel{
         this.name = name;
     }
 
-    public void setParentId(int parentId) {
-        this.parentId = parentId;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public int getParentId() {
         return parentId;
     }
 
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -69,17 +70,17 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
     }
 
 
-     @Override
+    @Override
     public void openLoginActivityOnTokenExpire() {
     }
 
-    void togglePlaceholder(){
+    void togglePlaceholder() {
         placeHolderView.setVisibility((mAdapter.getUrls().size() > 0) ? View.GONE : View.VISIBLE);
     }
 
 
     @OnClick(R.id.add_url)
-    void showAddUrlDialog(){
+    void showAddUrlDialog() {
         Dialog dialog = new Dialog(this, R.style.Dialog);
         dialog.setContentView(R.layout.custom_dialog_view_add_url);
         dialog.setCancelable(true);
@@ -88,10 +89,10 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
         dialog.findViewById(R.id.cancel).setOnClickListener(v -> dialog.dismiss());
         dialog.findViewById(R.id.ok).setOnClickListener(v -> {
             String url = urlEditText.getText().toString().trim();
-            if(!URLUtil.isValidUrl(url))
+            if (!URLUtil.isValidUrl(url))
                 showMessage("Please enter a valid url");
-            else{
-                if(!url.endsWith("/"))
+            else {
+                if (!url.endsWith("/"))
                     url += "/";
 
                 dialog.dismiss();
@@ -114,7 +115,7 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
         updateCurrentUrl(position);
     }
 
-    void updateCurrentUrl(int position){
+    void updateCurrentUrl(int position) {
         getAppDataManager().setStringValue(AppConstants.SERVER_URL, mAdapter.getUrls().get(position).getUrl());
         mAdapter.setCurrentUrl(mAdapter.getUrls().get(position).getUrl());
 
@@ -125,12 +126,12 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
     public void onDeleteClick(View view, int position) {
         String discardedUrl = mAdapter.getUrls().get(position).getUrl();
         //Confirm delete? Delete if user clicks on ok
-        showDialog(true, "Delete url", "Are you sure you want to delete the selected url?", (d, w)->{
-            mPresenter.deleteUrl(mAdapter.getUrls().get(position));
-            mAdapter.remove(position);
+        showDialog(true, "Delete url", "Are you sure you want to delete the selected url?", (d, w) -> {
+                    mPresenter.deleteUrl(mAdapter.getUrls().get(position));
+                    mAdapter.remove(position);
 
-            if(discardedUrl.equals(getAppDataManager().getStringValue(AppConstants.SERVER_URL)))
-                getAppDataManager().setStringValue(AppConstants.SERVER_URL, null);
+                    if (discardedUrl.equals(getAppDataManager().getStringValue(AppConstants.SERVER_URL)))
+                        getAppDataManager().setStringValue(AppConstants.SERVER_URL, null);
                     togglePlaceholder();
                     wereChangesMade = true;
                 }, getStringResources(R.string.yes),
@@ -140,13 +141,13 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
 
     @Override
     public void onBackPressed() {
-        if(wereChangesMade)
-        restartApp();
+        if (wereChangesMade)
+            restartApp();
         else
-        super.onBackPressed();
+            super.onBackPressed();
     }
 
-    void restartApp(){
+    void restartApp() {
         new Handler().post(() -> {
             System.exit(0);
             android.os.Process.killProcess(android.os.Process.myPid());

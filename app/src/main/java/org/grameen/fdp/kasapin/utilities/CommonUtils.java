@@ -9,6 +9,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -158,7 +160,7 @@ public final class CommonUtils {
         is.read(buffer);
         is.close();
 
-        return new String(buffer, "UTF-8");
+        return new String(buffer, StandardCharsets.UTF_8);
     }
 
     public static String getTimeStamp() {
@@ -177,7 +179,6 @@ public final class CommonUtils {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-
 
 
 }

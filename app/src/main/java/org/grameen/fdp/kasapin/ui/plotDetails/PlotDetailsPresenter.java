@@ -3,18 +3,12 @@ package org.grameen.fdp.kasapin.ui.plotDetails;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -127,11 +121,11 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
 
     @Override
     public void saveData(Plot plot) {
-       runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
+        runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
                 .subscribeOn(Schedulers.io())
-               .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
-                    if(aLong > 0) {
+                    if (aLong > 0) {
 
                         getAppDataManager().setBooleanValue("reload", true);
                         getAppDataManager().setBooleanValue("reloadPlotsData", true);
@@ -145,13 +139,14 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                         AppLogger.e(TAG, "PRESENTER PLOT DATA FROM DB " + getGson().toJson(getAppDataManager().getDatabaseManager().plotsDao().getPlotById(String.valueOf(plot.getId()))));
 
 
-                    }else
+                    } else
                         getView().showMessage("Error occurred updating Plot data!");
 
                 }, throwable -> {
                     getView().showMessage("An error occurred loading recommendation. Please try again.");
                     throwable.printStackTrace();
-                })); }
+                }));
+    }
 
 
 }

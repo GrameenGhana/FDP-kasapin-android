@@ -4,11 +4,12 @@ package org.grameen.fdp.kasapin.ui.plotMonitoringActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.gson.Gson;
 
@@ -46,6 +47,7 @@ import io.reactivex.functions.Action;
 
 
 public class PlotMonitoringActivity extends BaseActivity implements PlotMonitoringContract.View {
+    public static boolean newMonitoringAdded = false;
     @Inject
     PlotMonitoringPresenter mPresenter;
     @BindView(R.id.plotName)
@@ -78,9 +80,8 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
     List<Question> MONITORING_AO_QUESTIONS;
     List<PlotMonitoringTableData> plotMonitoringTableDataList;
     int MONITORING_POSITION = 0;
-    private List<Monitoring> monitoringList;
     int SELECTED_YEAR;
-    public static boolean newMonitoringAdded = false;
+    private List<Monitoring> monitoringList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         generalAoTableView.setHeaderAdapter(headerAdapter);
         //Set the table view data
         List<HistoricalTableViewData> ADOPTION_OBSERVATIONS_TABLE_VIEW_DATA = new ArrayList<>();
-        for(Question q : AO_QUESTIONS){
+        for (Question q : AO_QUESTIONS) {
             //Todo get results
             ADOPTION_OBSERVATIONS_TABLE_VIEW_DATA.add(new HistoricalTableViewData(q.getCaptionC(), ComputationUtils.getValue(q.getLabelC(), AO_JSON_OBJECT), "--", "--", null));
         }
@@ -151,11 +152,12 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         generalAoTableView.setDataAdapter(plotMonitoringTableViewAdapter);
         mPresenter.getMonitoringForSelectedYear(PLOT, SELECTED_YEAR);
     }
+
     @Override
     public void updateTableData(List<Monitoring> _monitoringList) {
         plotMonitoringTableDataList = new ArrayList<>();
         monitoringList = _monitoringList;
-        for(Monitoring monitoring : monitoringList) {
+        for (Monitoring monitoring : monitoringList) {
             List<HistoricalTableViewData> historicalTableViewDataList = new ArrayList<>();
 
             JSONObject jsonObject;
@@ -175,16 +177,16 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
                     Question failureQuestion = getAppDataManager().getDatabaseManager().questionDao().get(questionIds[1]);
 
                     //Todo get results
-                    if(competenceQuestion != null && failureQuestion != null)
-                    historicalTableViewDataList.add(new HistoricalTableViewData("", ComputationUtils.getDataValue(q, jsonObject), ComputationUtils.getDataValue(competenceQuestion, jsonObject), ComputationUtils.getDataValue(failureQuestion, jsonObject), null));
+                    if (competenceQuestion != null && failureQuestion != null)
+                        historicalTableViewDataList.add(new HistoricalTableViewData("", ComputationUtils.getDataValue(q, jsonObject), ComputationUtils.getDataValue(competenceQuestion, jsonObject), ComputationUtils.getDataValue(failureQuestion, jsonObject), null));
                     else
                         historicalTableViewDataList.add(new HistoricalTableViewData("", ComputationUtils.getDataValue(q, jsonObject), "--", "--", null));
-                }else
+                } else
                     historicalTableViewDataList.add(new HistoricalTableViewData("", ComputationUtils.getDataValue(q, jsonObject), "--", "--", null));
             }
 
             Question monitoringPlotDate = getAppDataManager().getDatabaseManager().questionDao().get("monitoring_plot_date_");
-            if(monitoringPlotDate != null) {
+            if (monitoringPlotDate != null) {
                 String dateValue = ComputationUtils.getValue(monitoringPlotDate.getLabelC(), jsonObject);
                 try {
                     if (dateValue.length() > 20) {
@@ -223,23 +225,27 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
                 @Override
                 public void onPageSelected(int position) {
                     AppLogger.e(TAG, "ON PAGE SELECTED >> " + position + " >>> TITLE = " + plotMonitoringTableDataList.get(position).getTitle());
                     MONITORING_POSITION = position;
                     titleView.setText(plotMonitoringTableDataList.get(position).getTitle());
                 }
+
                 @Override
-                public void onPageScrollStateChanged(int state) {}
+                public void onPageScrollStateChanged(int state) {
+                }
             });
             toggleNoDataPlaceholder(false, null);
             AppLogger.e(TAG, "****************** NEW MONITORING ADDED? >>>> " + newMonitoringAdded);
-            if(newMonitoringAdded)
-            new Handler().postDelayed(() -> {
-                viewPager.setCurrentItem(plotMonitoringTablePagerAdapter.getCount() - 1, true);
-                newMonitoringAdded = false;
-            }, 1000);
+            if (newMonitoringAdded)
+                new Handler().postDelayed(() -> {
+                    viewPager.setCurrentItem(plotMonitoringTablePagerAdapter.getCount() - 1, true);
+                    newMonitoringAdded = false;
+                }, 1000);
         } else
             toggleNoDataPlaceholder(true, getString(R.string.no_monitoring_data));
     }
@@ -252,17 +258,19 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         editMonitoring.setVisibility((shouldShow) ? View.GONE : View.VISIBLE);
         noDataTextView.setText(noDataText);
     }
+
     @Override
     protected void onDestroy() {
         mPresenter.dropView();
         super.onDestroy();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         try {
             Action action = () -> {
-                if(getAppDataManager().getBooleanValue("refreshViewPager")){
+                if (getAppDataManager().getBooleanValue("refreshViewPager")) {
                     mPresenter.getMonitoringForSelectedYear(PLOT, SELECTED_YEAR);
                     getAppDataManager().setBooleanValue("refreshViewPager", false);
                 }
@@ -272,8 +280,10 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
             e.printStackTrace();
         }
     }
+
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @OnClick({R.id.edit_monitoring, R.id.add_monitoring})
     public void onViewClicked(View view) {
@@ -290,7 +300,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
                     showMessage(R.string.no_internet_connection_available);
                 break;
             case R.id.edit_monitoring:
-         intent = new Intent(PlotMonitoringActivity.this, AddPlotMonitoringActivity.class);
+                intent = new Intent(PlotMonitoringActivity.this, AddPlotMonitoringActivity.class);
                 intent.putExtra("plot", new Gson().toJson(PLOT));
                 intent.putExtra("farmer", new Gson().toJson(FARMER));
                 intent.putExtra("year", SELECTED_YEAR);
@@ -300,7 +310,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
                 break;
 
             case R.id.add_monitoring:
-                 intent = new Intent(PlotMonitoringActivity.this, AddPlotMonitoringActivity.class);
+                intent = new Intent(PlotMonitoringActivity.this, AddPlotMonitoringActivity.class);
                 intent.putExtra("plot", new Gson().toJson(PLOT));
                 intent.putExtra("year", SELECTED_YEAR);
                 intent.putExtra("farmer", new Gson().toJson(FARMER));

@@ -18,6 +18,6 @@ public class RowHeaderViewHolder extends AbstractViewHolder {
 
     public RowHeaderViewHolder(View itemView) {
         super(itemView);
-        row_header_textview =  itemView.findViewById(R.id.row_header_textview);
+        row_header_textview = itemView.findViewById(R.id.row_header_textview);
     }
 }

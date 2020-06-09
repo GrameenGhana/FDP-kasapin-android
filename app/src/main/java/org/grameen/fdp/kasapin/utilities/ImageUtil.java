@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.pdf.PdfDocument;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -29,6 +28,8 @@ import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.OnScrollListener;
 
 public class ImageUtil {
+
+    private static boolean isEndOfTable = false;
 
     public static Bitmap base64ToScaledBitmap(String base64Str) throws IllegalArgumentException {
         byte[] decodedBytes = Base64.decode(base64Str.getBytes(), Base64.DEFAULT);
@@ -94,7 +95,6 @@ public class ImageUtil {
         }
     }
 
-
     private static Bitmap rotateImage(Bitmap img, int degree) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
@@ -102,7 +102,6 @@ public class ImageUtil {
         img.recycle();
         return rotatedImg;
     }
-
 
     private static int calculateInSampleSize(BitmapFactory.Options options,
                                              int reqWidth, int reqHeight) {
@@ -139,9 +138,6 @@ public class ImageUtil {
         return inSampleSize;
     }
 
-
-
-    private static boolean isEndOfTable = false;
     public static String captureTableScreenshot(TableView tableView, String activityName) {
         tableView.getBackground().setAlpha(0);
         tableView.setVerticalScrollBarEnabled(false);
@@ -149,22 +145,23 @@ public class ImageUtil {
         ListView tableDataListView = tableView.findViewById(R.id.table_data_view);
         int measuredHeight = tableDataListView.getMeasuredHeight();
         //Scroll tableView to the first item or position if the first item is not visible
-        while(tableDataListView.getFirstVisiblePosition() != 0){
+        while (tableDataListView.getFirstVisiblePosition() != 0) {
             tableDataListView.scrollListBy(-measuredHeight);
         }
 
         View headerView = tableView.findViewById(R.id.table_header_view);
         List<Bitmap> bitmaps = new ArrayList<>();
 
-        int allitemsheight   = 0;
+        int allitemsheight = 0;
 
         File imageFile = FileUtils.createFolder("screenCaptures", activityName + "_view.jpg");
 
-        OnScrollListener scrollListener = new OnScrollListener(){
+        OnScrollListener scrollListener = new OnScrollListener() {
             @Override
             public void onScroll(ListView tableDataView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 isEndOfTable = (firstVisibleItem + visibleItemCount) == totalItemCount;
             }
+
             @Override
             public void onScrollStateChanged(ListView tableDateView, ScrollState scrollState) {
             }
@@ -183,12 +180,12 @@ public class ImageUtil {
                 allitemsheight += measuredHeight;
 
                 tableDataListView.scrollListBy(measuredHeight);
-            } while(!isEndOfTable);
+            } while (!isEndOfTable);
 
             tableDataListView.setDrawingCacheEnabled(false);
 
-            Bitmap bigBitmap    = Bitmap.createBitmap(tableDataListView.getMeasuredWidth(), allitemsheight + (headerView.getMeasuredHeight() * 2), Bitmap.Config.ARGB_8888);
-            Canvas bitCanvas    = new Canvas(bigBitmap);
+            Bitmap bigBitmap = Bitmap.createBitmap(tableDataListView.getMeasuredWidth(), allitemsheight + (headerView.getMeasuredHeight() * 2), Bitmap.Config.ARGB_8888);
+            Canvas bitCanvas = new Canvas(bigBitmap);
             bitCanvas.drawColor(Color.WHITE);
 
             Paint paint = new Paint();
@@ -202,7 +199,7 @@ public class ImageUtil {
                 bitmap = null;
             }
 
-             FileOutputStream outputStream = new FileOutputStream(imageFile);
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
             int quality = 100;
             bigBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
             outputStream.flush();
@@ -216,7 +213,7 @@ public class ImageUtil {
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM
             e.printStackTrace();
-        }finally {
+        } finally {
             tableView.removeOnScrollListener(scrollListener);
             tableView.getBackground().setAlpha(1);
             tableView.setVerticalScrollBarEnabled(true);

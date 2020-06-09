@@ -176,7 +176,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         mPresenter.getVillagesDataFromDbAndUpdateUI();
 
 
-       //AppLogger.e(TAG, "FARMERS >>> " + getGson().toJson(getAppDataManager().getDatabaseManager().realFarmersDao().getAll().blockingGet()));
+        //AppLogger.e(TAG, "FARMERS >>> " + getGson().toJson(getAppDataManager().getDatabaseManager().realFarmersDao().getAll().blockingGet()));
 
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
@@ -195,7 +195,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             versionNumberTV.setText(pInfo.versionName);
-        } catch (PackageManager.NameNotFoundException ignore) {}
+        } catch (PackageManager.NameNotFoundException ignore) {
+        }
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -232,7 +233,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
-                    public void onPageScrolled(int i, float v, int i1) {}
+                    public void onPageScrolled(int i, float v, int i1) {
+                    }
 
                     @Override
                     public void onPageSelected(int i) {
@@ -241,7 +243,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                     }
 
                     @Override
-                    public void onPageScrollStateChanged(int i) {}
+                    public void onPageScrollStateChanged(int i) {
+                    }
                 });
 
                 SELECTED_VILLAGE = fragmentPagerItems.get(0).getTitle().toString();
@@ -371,7 +374,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
                     //Todo Sync data down
                     new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 1000);
-                    else
+                else
                     showMessage(R.string.no_internet_connection_available);
                 break;
 
@@ -393,7 +396,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 //Todo Sync down new data from server
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
 
-                new Handler().postDelayed(() -> mPresenter.downloadFarmersData(true), 1000);
+                    new Handler().postDelayed(() -> mPresenter.downloadFarmersData(true), 1000);
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;
@@ -403,7 +406,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
-
 
 
         }
@@ -423,26 +425,24 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
 
-
-
-  @Override
+    @Override
     protected void onResume() {
 
         AppLogger.e(TAG, "On Resume...");
 
-        if(getAppDataManager().getBooleanValue("reload")){
+        if (getAppDataManager().getBooleanValue("reload")) {
             AppLogger.e(TAG, "Reload data!");
 
             restartUI();
             getAppDataManager().setBooleanValue("reload", false);
         }
 
-      super.onResume();
+        super.onResume();
     }
 
 
     @Override
-    public void restartUI(){
+    public void restartUI() {
         startActivity(new Intent(new Intent(this, MainActivity.class)));
         overridePendingTransition(0, 0);
         finish();

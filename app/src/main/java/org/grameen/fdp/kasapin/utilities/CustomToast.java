@@ -18,6 +18,7 @@ import org.grameen.fdp.kasapin.R;
 
 public class CustomToast extends Toast {
     static Toast toast;
+
     public CustomToast(Context context) {
         super(context);
     }
@@ -29,7 +30,7 @@ public class CustomToast extends Toast {
         TextView text = layout.findViewById(R.id.toast_text);
         text.setText(message);
         toast = new Toast(c);
-        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0,(ScreenUtils.getScreenHeight(c) / 3));
+        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, (ScreenUtils.getScreenHeight(c) / 3));
         toast.setDuration(duration);
         toast.setView(layout);
         return toast;

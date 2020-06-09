@@ -125,10 +125,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="2"
                                     android:text="Farmer Name:"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:textColor="@color/textColorTertiaryLight"
-                                    android:textStyle="bold"
-                                    />
+                                    android:textSize="@dimen/text_size_normal"
+                                    android:textStyle="bold" />
 
 
                                 <EditText
@@ -140,10 +139,10 @@
                                     android:background="@drawable/border_background"
                                     android:inputType="textPersonName"
                                     android:maxLines="1"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:paddingLeft="@dimen/spacing_normal"
                                     android:paddingRight="@dimen/spacing_normal"
                                     android:textColor="@color/text_black_87"
+                                    android:textSize="@dimen/text_size_normal"
 
                                     />
 
@@ -165,9 +164,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="2"
                                     android:text="Farmer Code:"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:textColor="@color/textColorTertiaryLight"
-                                    android:textStyle="bold"/>
+                                    android:textSize="@dimen/text_size_normal"
+                                    android:textStyle="bold" />
 
 
                                 <EditText
@@ -178,10 +177,9 @@
                                     android:background="@drawable/border_background"
                                     android:enabled="false"
                                     android:maxLines="1"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:paddingLeft="@dimen/spacing_normal"
                                     android:paddingRight="@dimen/spacing_normal"
-                                    />
+                                    android:textSize="@dimen/text_size_normal" />
 
                             </LinearLayout>
 
@@ -199,8 +197,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="2"
                                     android:text="Village:"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:textColor="@color/textColorTertiaryLight"
+                                    android:textSize="@dimen/text_size_normal"
                                     android:textStyle="bold" />
 
 
@@ -210,13 +208,12 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="3"
                                     android:background="@drawable/border_background"
-                                    android:hint="@string/click_to_select"
                                     android:gravity="center_vertical"
+                                    android:hint="@string/click_to_select"
                                     android:paddingLeft="@dimen/spacing_normal"
                                     android:paddingRight="@dimen/spacing_normal"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:textColor="@color/text_black_87"
-                                    />
+                                    android:textSize="@dimen/text_size_normal" />
 
 
                             </LinearLayout>
@@ -225,8 +222,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_half"
-                                android:gravity="center"
-                                >
+                                android:gravity="center">
 
 
                                 <TextView
@@ -235,8 +231,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="2"
                                     android:text="Birthday Year:"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:textColor="@color/textColorTertiaryLight"
+                                    android:textSize="@dimen/text_size_normal"
                                     android:textStyle="bold" />
 
 
@@ -250,8 +246,8 @@
                                     android:maxLength="4"
                                     android:maxLines="1"
                                     android:paddingLeft="@dimen/spacing_normal"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:textColor="@color/text_black_87"
+                                    android:textSize="@dimen/text_size_normal"
 
                                     />
 
@@ -272,8 +268,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="2"
                                     android:text="Education Level:"
-                                    android:textSize="@dimen/text_size_normal"
                                     android:textColor="@color/textColorTertiaryLight"
+                                    android:textSize="@dimen/text_size_normal"
                                     android:textStyle="bold" />
 
 
@@ -291,34 +287,33 @@
                             </LinearLayout>
 
 
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_half"
-                                android:gravity="center"                                >
+                                android:gravity="center">
 
-                                    <TextView
-                                        android:id="@+id/gender_text"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="2"
-                                        android:text="Gender:"
-                                        android:textSize="@dimen/text_size_normal"
-                                        android:textColor="@color/textColorTertiaryLight"
-                                        android:textStyle="bold" />
+                                <TextView
+                                    android:id="@+id/gender_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:text="Gender:"
+                                    android:textColor="@color/textColorTertiaryLight"
+                                    android:textSize="@dimen/text_size_normal"
+                                    android:textStyle="bold" />
 
 
-                                    <com.jaredrummler.materialspinner.MaterialSpinner
-                                        android:id="@+id/genderSpinner"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="3"
-                                        android:ellipsize="end"
-                                        android:maxLines="1"
-                                        android:textColor="@color/text_black_87"
-                                        app:ms_arrow_tint="@color/colorPrimary"
-                                        app:ms_background_color="@color/background" />
+                                <com.jaredrummler.materialspinner.MaterialSpinner
+                                    android:id="@+id/genderSpinner"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="3"
+                                    android:ellipsize="end"
+                                    android:maxLines="1"
+                                    android:textColor="@color/text_black_87"
+                                    app:ms_arrow_tint="@color/colorPrimary"
+                                    app:ms_background_color="@color/background" />
 
                             </LinearLayout>
 
@@ -328,11 +323,11 @@
                     </LinearLayout>
 
 
-
                 </LinearLayout>
 
 
             </androidx.cardview.widget.CardView>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -373,6 +368,7 @@
             android:padding="@dimen/spacing_normal"
             android:text="@string/back"
             android:theme="@style/PrimaryButtonGrey" />
+
         <Button
             android:id="@+id/save"
             android:layout_width="0dp"
@@ -380,8 +376,7 @@
             android:layout_marginLeft="@dimen/spacing_normal"
             android:layout_weight="3"
             android:padding="@dimen/spacing_normal"
-            android:text="@string/save_and_continue"
-            />
+            android:text="@string/save_and_continue" />
     </LinearLayout>
 
 

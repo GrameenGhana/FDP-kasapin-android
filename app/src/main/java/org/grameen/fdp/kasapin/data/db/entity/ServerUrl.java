@@ -1,32 +1,31 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 
 @Entity(tableName = "urls")
-public class ServerUrl extends BaseModel{
+public class ServerUrl extends BaseModel {
 
     String name;
     String url;
 
 
-    public ServerUrl(){}
-
-
-    public void setName(String name) {
-        this.name = name;
+    public ServerUrl() {
     }
 
     public String getName() {
         return name;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
 }

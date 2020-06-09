@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.base.model;
 /*
  * Created by aangjnr on 22/02/2018.
  */
+
 import com.evrencoskun.tableview.filter.IFilterableModel;
 import com.evrencoskun.tableview.sort.ISortableModel;
 
@@ -10,6 +11,7 @@ public class Cell implements ISortableModel, IFilterableModel {
     private String mId;
     private Object mData;
     private String mFilterKeyword;
+
     public Cell(String id) {
         this.mId = id;
     }

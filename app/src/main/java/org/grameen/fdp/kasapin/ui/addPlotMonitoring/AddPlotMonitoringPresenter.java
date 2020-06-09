@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.addPlotMonitoring;
 
 
-import androidx.core.content.ContextCompat;
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -83,13 +81,14 @@ public class AddPlotMonitoringPresenter extends BasePresenter<AddPlotMonitoringC
         Completable.fromAction(() -> {
             monitotingPlotInformationFormAndQuestions = getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByName(AppConstants.MONITORING_PLOT_INFORMATION).blockingGet();
             aoMonitoringFormAndQuestions = getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByName(AppConstants.AO_MONITORING).blockingGet();
-        }) .subscribeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
                         getView().loadDynamicFragmentAndViews(monitotingPlotInformationFormAndQuestions, aoMonitoringFormAndQuestions);
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         getView().showMessage("Couldn't obtain Adoption Observation questions");

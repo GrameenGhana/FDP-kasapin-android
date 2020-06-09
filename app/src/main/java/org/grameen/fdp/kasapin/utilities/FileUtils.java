@@ -9,9 +9,9 @@ public class FileUtils {
     public static void createNoMediaFile() {
         FileOutputStream out;
         try {
-          createFolder( ".thumbnails", null);
+            createFolder(".thumbnails", null);
 
-          File file = new File(AppConstants.ROOT_DIR + File.separator + ".nomedia");
+            File file = new File(AppConstants.ROOT_DIR + File.separator + ".nomedia");
             if (!file.exists()) {
                 out = new FileOutputStream(file);
                 out.write(0);
@@ -23,12 +23,12 @@ public class FileUtils {
         }
     }
 
-     static File createFolder(String directoryName, String fileName) {
+    static File createFolder(String directoryName, String fileName) {
         String dir = ROOT_DIR + "/" + directoryName + "/";
         File file = new File(dir);
         if (!file.exists())
             file.mkdirs();
-        if(fileName == null)
+        if (fileName == null)
             return file;
         return new File(dir, fileName);
     }

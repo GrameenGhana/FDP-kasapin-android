@@ -10,7 +10,6 @@ package org.grameen.fdp.kasapin.data.db.entity;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
-import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -27,13 +26,14 @@ public class FormAnswerData extends BaseModel {
 
     @SerializedName("farmer_code")
     private String farmerCode;
+
     /**
      * No args constructor for use in serialization
      */
     public FormAnswerData() {
     }
 
-     public int getId() {
+    public int getId() {
         return id;
     }
 

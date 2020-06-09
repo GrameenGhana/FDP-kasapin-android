@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.grameen.fdp.kasapin.data.db.entity.District;
-import org.grameen.fdp.kasapin.data.db.entity.FormTranslation;
 
 import java.util.List;
 

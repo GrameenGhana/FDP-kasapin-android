@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.ui.form.controller;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
@@ -144,7 +145,7 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 if (position == getCount()) {
-                    TextView itemView = ((TextView) view.findViewById(android.R.id.text1));
+                    TextView itemView = view.findViewById(android.R.id.text1);
                     itemView.setText("");
                     itemView.setHint(getItem(getCount()));
                 }
@@ -209,7 +210,7 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 if (position == getCount()) {
-                    TextView itemView = ((TextView) view.findViewById(android.R.id.text1));
+                    TextView itemView = view.findViewById(android.R.id.text1);
                     itemView.setText("");
                     itemView.setHint(getItem(getCount()));
                 }
@@ -273,7 +274,7 @@ public class MonitoringCustomController extends MonitoringLabeledFieldController
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 if (position == getCount()) {
-                    TextView itemView = ((TextView) view.findViewById(android.R.id.text1));
+                    TextView itemView = view.findViewById(android.R.id.text1);
                     itemView.setText("");
                     itemView.setHint(getItem(getCount()));
                 }

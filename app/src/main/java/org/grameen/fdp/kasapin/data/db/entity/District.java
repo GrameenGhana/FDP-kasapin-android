@@ -1,10 +1,10 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -29,9 +29,8 @@ public class District {
     List<Community> communities;
 
 
-    public District(){
+    public District() {
     }
-
 
 
     @NonNull
@@ -51,12 +50,11 @@ public class District {
         this.district = district;
     }
 
+    public List<Community> getCommunities() {
+        return communities;
+    }
 
     public void setCommunities(List<Community> communities) {
         this.communities = communities;
-    }
-
-    public List<Community> getCommunities() {
-        return communities;
     }
 }

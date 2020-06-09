@@ -1,7 +1,5 @@
 package org.grameen.fdp.kasapin.utilities;
 
-import android.view.View;
-
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
@@ -25,7 +23,7 @@ public class ComputationUtils {
 
     static String TAG = "ComputationUtilities";
     private MyFormController formController;
-    private  ScriptEngine engine;
+    private ScriptEngine engine;
 
 
     private ComputationUtils(@Nullable MyFormController controller) {
@@ -87,7 +85,7 @@ public class ComputationUtils {
                 value = !disposableValues[0].equalsIgnoreCase(disposableValues[1]);
             }
         } finally {
-            System.out.println( "FORMULA  >>>>>  " + equation  + " ---> " + value);
+            System.out.println("FORMULA  >>>>>  " + equation + " ---> " + value);
             System.out.println("---------------------------------------------------");
 
         }
@@ -104,9 +102,23 @@ public class ComputationUtils {
         }
 
         System.out.println("---------------------------------------------------");
-        System.out.println( "FORMULA  >>>>>  " + equation  + " ---> " + answer);
+        System.out.println("FORMULA  >>>>>  " + equation + " ---> " + answer);
         System.out.println("---------------------------------------------------");
         return answer;
+    }
+
+    public static Boolean compareValues(SkipLogic sl, String newValue, ScriptEngine _engine) {
+        String equation = sl.getAnswerValue() + sl.getLogicalOperator() + newValue;
+        boolean value = false;
+        try {
+            value = (Boolean) _engine.eval(equation.trim());
+        } catch (ScriptException | NumberFormatException e) {
+            System.out.println("******* EXCEPTION ****** " + e.getMessage());
+            value = sl.getAnswerValue().equalsIgnoreCase(newValue);
+        } finally {
+            System.out.println(equation + " --> " + value);
+        }
+        return value;
     }
 
     public String getValue(Question q, JSONObject ANSWERS_JSON) {
@@ -114,7 +126,7 @@ public class ComputationUtils {
         try {
             if (ANSWERS_JSON.has(q.getLabelC())) {
                 defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
-                if (defVal.trim().isEmpty() ||  defVal.equalsIgnoreCase("null"))
+                if (defVal.trim().isEmpty() || defVal.equalsIgnoreCase("null"))
                     defVal = q.getDefaultValueC();
                 if (getModel() != null)
                     getModel().setValue(q.getLabelC(), defVal);
@@ -134,7 +146,6 @@ public class ComputationUtils {
     private MyFormController getFormController() {
         return formController;
     }
-
 
     public void setUpPropertyChangeListeners(String questionToHide, List<SkipLogic> skipLogics) {
         if (skipLogics != null && skipLogics.size() > 0) {
@@ -175,6 +186,7 @@ public class ComputationUtils {
         AppLogger.e(TAG, labelToHide + " is hidden? == " + getFormController().getElement(labelToHide).isHidden());
 
     }
+
     public void applyFormulas(Question question) {
         if (!question.getFormulaC().isEmpty() && !question.getFormulaC().equalsIgnoreCase("null")) {
             AppLogger.e("Computation Utils", "Question = " + question.getLabelC() + " Formula = " + question.getFormulaC());
@@ -226,21 +238,6 @@ public class ComputationUtils {
         }
         return value;
     }
-
-    public static Boolean compareValues(SkipLogic sl, String newValue, ScriptEngine _engine) {
-        String equation = sl.getAnswerValue() + sl.getLogicalOperator() + newValue;
-        boolean value = false;
-        try {
-            value = (Boolean) _engine.eval(equation.trim());
-        } catch (ScriptException | NumberFormatException e) {
-            System.out.println("******* EXCEPTION ****** " + e.getMessage());
-            value = sl.getAnswerValue().equalsIgnoreCase(newValue);
-        } finally {
-            System.out.println(equation + " --> " + value);
-        }
-        return value;
-    }
-
 
     private List<String> getOperands(String formula) {
         List<String> operandList = new ArrayList<>();

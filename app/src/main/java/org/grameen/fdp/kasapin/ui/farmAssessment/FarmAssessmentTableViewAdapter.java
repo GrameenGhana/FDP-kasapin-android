@@ -2,10 +2,11 @@ package org.grameen.fdp.kasapin.ui.farmAssessment;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
@@ -23,12 +24,11 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 public class FarmAssessmentTableViewAdapter extends LongPressAwareTableDataAdapter<HistoricalTableViewData> {
 
-    String TAG = FarmAssessmentTableViewAdapter.class.getSimpleName();
     private static final int TEXT_SIZE = 10;
     private static final int TITLE_TEXT_SIZE = 11;
     static MaterialSpinner.OnItemSelectedListener itemSelectedListener;
     static View.OnClickListener mOnClickListener;
-
+    String TAG = FarmAssessmentTableViewAdapter.class.getSimpleName();
     Context context;
 
     Integer dataSize;
@@ -43,11 +43,11 @@ public class FarmAssessmentTableViewAdapter extends LongPressAwareTableDataAdapt
     }
 
     public void setItemSelectedListener(final MaterialSpinner.OnItemSelectedListener mItemSelectedListener) {
-        this.itemSelectedListener = mItemSelectedListener;
+        itemSelectedListener = mItemSelectedListener;
     }
 
     public void setClickistener(final View.OnClickListener listener) {
-        this.mOnClickListener = listener;
+        mOnClickListener = listener;
     }
 
     @Override
@@ -57,21 +57,19 @@ public class FarmAssessmentTableViewAdapter extends LongPressAwareTableDataAdapt
         View renderedView = new View(context);
 
 
-           //// Log.i(TAG, "COLUMN COUNT LESS THAN 3 " +  getColumnModel().getColumnCount());
+        //// Log.i(TAG, "COLUMN COUNT LESS THAN 3 " +  getColumnModel().getColumnCount());
 
 
-            if (i1 == 0) {
-                //Todo set questions here
+        if (i1 == 0) {
+            //Todo set questions here
 
-                renderedView = renderColumnLabelValues(myTableData);
+            renderedView = renderColumnLabelValues(myTableData);
 
-            } else if (i1 == 1) {
-                //Todo set Answer Values here
-                renderedView = renderColumnSingleValues(myTableData);
+        } else if (i1 == 1) {
+            //Todo set Answer Values here
+            renderedView = renderColumnSingleValues(myTableData);
 
-            }
-
-
+        }
 
 
         return renderedView;
@@ -88,13 +86,13 @@ public class FarmAssessmentTableViewAdapter extends LongPressAwareTableDataAdapt
         View view = null;
 
 
-            TextView textView = new TextView(getContext());
-            textView.setText(data.getLabel());
-            textView.setPadding(20, 10, 20, 10);
-            textView.setTextSize(TITLE_TEXT_SIZE);
-            textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_black_87));
-            view = textView;
+        TextView textView = new TextView(getContext());
+        textView.setText(data.getLabel());
+        textView.setPadding(20, 10, 20, 10);
+        textView.setTextSize(TITLE_TEXT_SIZE);
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.text_black_87));
+        view = textView;
 
         return view;
 
@@ -105,25 +103,24 @@ public class FarmAssessmentTableViewAdapter extends LongPressAwareTableDataAdapt
 
         View view = null;
 
-            TextView textView = new TextView(getContext());
-            String text = "\n"+data.getSingleValue()+"\n";
-            textView.setText(text);
-            textView.setPadding(20, 10, 20, 10);
-            textView.setTextSize(TITLE_TEXT_SIZE);
-            textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-            textView.setBackgroundColor(ContextCompat.getColor(getContext(),getBackgroundColor(data.getSingleValue())));
-            view = textView;
+        TextView textView = new TextView(getContext());
+        String text = "\n" + data.getSingleValue() + "\n";
+        textView.setText(text);
+        textView.setPadding(20, 10, 20, 10);
+        textView.setTextSize(TITLE_TEXT_SIZE);
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        textView.setBackgroundColor(ContextCompat.getColor(getContext(), getBackgroundColor(data.getSingleValue())));
+        view = textView;
 
         return view;
 
     }
 
 
+    int getBackgroundColor(final String result) {
 
-    int getBackgroundColor(final String result){
-
-        switch(result.toLowerCase().trim()){
+        switch (result.toLowerCase().trim()) {
 
             case "fail":
 
@@ -140,7 +137,6 @@ public class FarmAssessmentTableViewAdapter extends LongPressAwareTableDataAdapt
         }
 
     }
-
 
 
 }

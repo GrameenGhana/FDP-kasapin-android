@@ -43,7 +43,7 @@ public class DetailedYearTableHearderAdapter extends TableHeaderAdapter {
     }
 
     public void setHeaderClickListener(final View.OnClickListener mItemSelectedListener) {
-        this.mHeaderClickListener = mItemSelectedListener;
+        mHeaderClickListener = mItemSelectedListener;
     }
 
     public void setPaddings(int left, int top, int right, int bottom) {

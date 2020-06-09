@@ -46,13 +46,12 @@ public class Recommendation extends BaseModel {
     public Recommendation() {
     }
 
+    public String getRecommendationName() {
+        return recommendationName;
+    }
 
     public void setRecommendationName(String recommendationName) {
         this.recommendationName = recommendationName;
-    }
-
-    public String getRecommendationName() {
-        return recommendationName;
     }
 
     public int getCropId() {

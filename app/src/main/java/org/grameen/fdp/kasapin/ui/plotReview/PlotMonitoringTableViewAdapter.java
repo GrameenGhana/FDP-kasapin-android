@@ -3,14 +3,15 @@ package org.grameen.fdp.kasapin.ui.plotReview;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.content.ContextCompat;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
@@ -54,11 +55,11 @@ public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapt
     }
 
     public void setItemSelectedListener(final MaterialSpinner.OnItemSelectedListener mItemSelectedListener) {
-        this.itemSelectedListener = mItemSelectedListener;
+        itemSelectedListener = mItemSelectedListener;
     }
 
     public void setClickistener(final View.OnClickListener listener) {
-        this.mOnClickListener = listener;
+        mOnClickListener = listener;
     }
 
     @Override

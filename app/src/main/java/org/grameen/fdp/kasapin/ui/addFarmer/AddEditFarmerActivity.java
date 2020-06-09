@@ -86,11 +86,11 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     ArrayList<MySearchItem> villageItems = new ArrayList<>();
     String[] educationLevels;
     String[] genders = {"Male", "Female"};
+    String gender, educationLevel, villageName = null;
+    int villageId;
     private FormAndQuestions CURRENT_FORM_QUESTION;
     private DynamicFormFragment dynamicFormFragment;
     private SimpleSearchDialogCompat communitySearchDialog;
-    String gender, educationLevel, villageName = null;
-    int villageId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     public void setUpViews() {
         List<Community> villages = getAppDataManager().getDatabaseManager().villagesDao().getAll().blockingGet();
         villageItems.clear();
-        for(Community v : villages){
+        for (Community v : villages) {
             villageItems.add(new MySearchItem(String.valueOf(v.getId()), v.getName()));
         }
         educationLevels = getAppDataManager().getDatabaseManager().questionDao().get("education_level_").formatQuestionOptions().toArray(new String[0]);
@@ -145,27 +145,27 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             farmerCode.setText(FARMER.getCode());
             birthYearEdittext.setText(FARMER.getBirthYear());
 
-            if(FARMER.getVillageId() > 0){
+            if (FARMER.getVillageId() > 0) {
                 Community village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
-                if(village != null) {
+                if (village != null) {
                     villageName = village.getName();
                     villageId = FARMER.getVillageId();
                     villageTextView.setText(village.getName());
                 }
             }
-            if(FARMER.getEducationLevel() != null) {
+            if (FARMER.getEducationLevel() != null) {
                 educationLevel = FARMER.getEducationLevel();
-                for(int i  = 0; i < educationLevels.length; i++)
-                    if(educationLevel.equalsIgnoreCase(educationLevels[i])) {
+                for (int i = 0; i < educationLevels.length; i++)
+                    if (educationLevel.equalsIgnoreCase(educationLevels[i])) {
                         educationLevelSpinner.setSelectedIndex(i);
                         break;
                     }
             }
 
-            if(FARMER.getGender() != null) {
+            if (FARMER.getGender() != null) {
                 gender = FARMER.getGender();
-                for(int i  = 0; i < genders.length; i++)
-                    if(gender.equalsIgnoreCase(genders[i])) {
+                for (int i = 0; i < genders.length; i++)
+                    if (gender.equalsIgnoreCase(genders[i])) {
                         genderSpinner.setSelectedIndex(i);
                         break;
                     }
@@ -261,7 +261,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
         dynamicFormFragment.getFormController().resetValidationErrors();
         //Validate inputs
-        if(!dynamicFormFragment.getFormController().isValidInput()) {
+        if (!dynamicFormFragment.getFormController().isValidInput()) {
             dynamicFormFragment.getFormController().showValidationErrors();
             AppLogger.i(TAG, "Validations did not pass.");
         } else {
@@ -342,7 +342,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     }
 
     @OnClick(R.id.village)
-    public void chooseVillage(){
+    public void chooseVillage() {
         if (communitySearchDialog == null)
             communitySearchDialog = new SimpleSearchDialogCompat<>(this, "Search Community",
                     "Which community are you looking for?", null, villageItems,

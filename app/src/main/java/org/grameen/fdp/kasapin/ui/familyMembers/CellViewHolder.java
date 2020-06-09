@@ -25,20 +25,21 @@ public class CellViewHolder extends AbstractViewHolder {
     private static FdpCallbacks.UpdateJsonArray updateJsonArrayListener;
     private MaterialEditText editText;
 
-    static void UpdateJsonArrayListener(FdpCallbacks.UpdateJsonArray listener){
-        updateJsonArrayListener = listener;
-    }
     CellViewHolder(View itemView) {
         super(itemView);
         editText = itemView.findViewById(R.id.cell_data);
     }
 
+    static void UpdateJsonArrayListener(FdpCallbacks.UpdateJsonArray listener) {
+        updateJsonArrayListener = listener;
+    }
+
     public void setData(int rowPosition, Question data) {
-        if(editText != null)
+        if (editText != null)
             bindEditTextView(editText, data, rowPosition);
     }
 
-    private  void bindEditTextView(final MaterialEditText editText, final Question q, final int rowPosition) {
+    private void bindEditTextView(final MaterialEditText editText, final Question q, final int rowPosition) {
         if (q.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER))
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         else if (q.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)) {
@@ -49,9 +50,13 @@ public class CellViewHolder extends AbstractViewHolder {
         editText.setTextSize(12);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 if (updateJsonArrayListener != null)

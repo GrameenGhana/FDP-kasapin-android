@@ -6,15 +6,16 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
@@ -174,12 +175,12 @@ public class FarmerListRecyclerViewAdapter extends RecyclerView.Adapter<FarmerLi
         ViewHolder(final View itemView) {
             super(itemView);
 
-            mainLayout = (RelativeLayout) itemView.findViewById(R.id.mainLayout);
-            rl1 = (RelativeLayout) itemView.findViewById(R.id.rl1);
+            mainLayout = itemView.findViewById(R.id.mainLayout);
+            rl1 = itemView.findViewById(R.id.rl1);
 
-            name = (TextView) itemView.findViewById(R.id.name);
-            code = (TextView) itemView.findViewById(R.id.code);
-            initials = (TextView) itemView.findViewById(R.id.initials);
+            name = itemView.findViewById(R.id.name);
+            code = itemView.findViewById(R.id.code);
+            initials = itemView.findViewById(R.id.initials);
             photo = itemView.findViewById(R.id.photo);
             imageView = itemView.findViewById(R.id.image_view1);
 

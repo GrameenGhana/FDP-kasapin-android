@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.form.controller.view;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
-import android.location.Location;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +23,7 @@ import java.util.Set;
 public class ButtonController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     private final OnClickListener onClickListener;
-    private  String placeholder;
+    private String placeholder;
     private boolean isEnabled;
 
     /**
@@ -68,7 +66,7 @@ public class ButtonController extends MyLabeledFieldController {
     public ButtonController(Context context, String name, String content_desc, String labelText, String _defaultValue, OnClickListener onClickListener,
                             boolean enabled, boolean isRequired, Set<InputValidator> validators) {
         this(context, name, content_desc, labelText, isRequired, onClickListener, enabled);
-        if(isRequired)
+        if (isRequired)
             this.setValidators(validators);
         placeholder = _defaultValue;
     }

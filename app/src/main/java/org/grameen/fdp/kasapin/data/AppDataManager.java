@@ -32,7 +32,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.prefs.Preferences;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

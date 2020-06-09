@@ -10,10 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.ServerUrl;
+
 import java.util.List;
 
 public class ServerUrlListAdapter extends RecyclerView.Adapter<ServerUrlListAdapter.ViewHolder> {
@@ -57,8 +60,8 @@ public class ServerUrlListAdapter extends RecyclerView.Adapter<ServerUrlListAdap
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         ServerUrl url = urls.get(position);
         viewHolder.radioButton.setChecked(url.getUrl().equals(currentUrl));
-        if(!TextUtils.isEmpty(url.getName()))
-        viewHolder.name.setText(url.getName());
+        if (!TextUtils.isEmpty(url.getName()))
+            viewHolder.name.setText(url.getName());
         else
             viewHolder.name.setVisibility(View.GONE);
         viewHolder.url.setText(url.getUrl());
@@ -88,12 +91,12 @@ public class ServerUrlListAdapter extends RecyclerView.Adapter<ServerUrlListAdap
         notifyDataSetChanged();
     }
 
-     void setCurrentUrl(String url) {
-       currentUrl = url;
-       notifyDataSetChanged();
+    void setCurrentUrl(String url) {
+        currentUrl = url;
+        notifyDataSetChanged();
     }
 
-     List<ServerUrl> getUrls() {
+    List<ServerUrl> getUrls() {
         return urls;
     }
 

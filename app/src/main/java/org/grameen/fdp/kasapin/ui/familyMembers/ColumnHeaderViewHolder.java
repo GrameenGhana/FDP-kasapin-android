@@ -18,21 +18,19 @@ import org.grameen.fdp.kasapin.ui.base.model.ColumnHeader;
 public class ColumnHeaderViewHolder extends AbstractSorterViewHolder {
 
     private static final String LOG_TAG = ColumnHeaderViewHolder.class.getSimpleName();
-
+    public final ITableView tableView;
     private final LinearLayout column_header_container;
     private final TextView column_header_textview;
     private final TextView helper;
 
-    public final ITableView tableView;
 
-
-     ColumnHeaderViewHolder(View itemView, ITableView tableView) {
+    ColumnHeaderViewHolder(View itemView, ITableView tableView) {
         super(itemView);
         this.tableView = tableView;
-        column_header_textview =   itemView.findViewById(R.id.column_header_textView);
+        column_header_textview = itemView.findViewById(R.id.column_header_textView);
         helper = itemView.findViewById(R.id.helper);
 
-        column_header_container =   itemView.findViewById(R.id.column_header_container);
+        column_header_container = itemView.findViewById(R.id.column_header_container);
         // Set click listener to the sort button
         //column_header_sortButton.setOnClickListener(mSortButtonClickListener);
     }

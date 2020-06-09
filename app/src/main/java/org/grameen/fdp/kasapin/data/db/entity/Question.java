@@ -89,7 +89,6 @@ public class Question {
     private String validationId = null;
 
 
-
     /**
      * No args constructor for use in serialization
      */
@@ -378,17 +377,17 @@ public class Question {
         this.relatedQuestions = relatedQuestions;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }
 
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
     @Ignore
-    public String[] splitRelatedQuestions(){
-        if(relatedQuestions!=null)
+    public String[] splitRelatedQuestions() {
+        if (relatedQuestions != null)
             return relatedQuestions.split(",");
         else return null;
     }
@@ -401,7 +400,7 @@ public class Question {
         this.skipLogics = skipLogics;
     }
 
-    public boolean isRequired(){
+    public boolean isRequired() {
         return requiredC == 1;
     }
 }

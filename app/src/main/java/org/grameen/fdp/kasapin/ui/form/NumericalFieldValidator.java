@@ -1,29 +1,30 @@
 package org.grameen.fdp.kasapin.ui.form;
 
 import org.grameen.fdp.kasapin.ui.form.model.RequiredField;
+
 public class NumericalFieldValidator implements InputValidator {
     private String message;
     private String minimum;
     private String maximum;
 
-    public NumericalFieldValidator(String _min, String _max, String _message){
+    public NumericalFieldValidator(String _min, String _max, String _message) {
         this.message = _message;
-        this.maximum =  _max;
+        this.maximum = _max;
         this.minimum = _min;
     }
 
     @Override
     public ValidationError validate(Object value, String fieldName, String fieldLabel) {
-        if(minimum == null || minimum.isEmpty() || maximum == null || maximum.isEmpty())
+        if (minimum == null || minimum.isEmpty() || maximum == null || maximum.isEmpty())
             return null;
 
         double min, max, actual;
-        try{
+        try {
             actual = Double.parseDouble(value.toString());
             min = Double.parseDouble(minimum);
             max = Double.parseDouble(maximum);
 
-            if((actual >= min && actual <= max))
+            if ((actual >= min && actual <= max))
                 return null;
         } catch (Exception ignore) {
             return new RequiredField(fieldName, fieldLabel, message);

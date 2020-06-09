@@ -1,20 +1,12 @@
 package org.grameen.fdp.kasapin.ui.form;
 
-import android.os.PatternMatcher;
-
 import org.grameen.fdp.kasapin.ui.form.model.RequiredField;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
-
-import java.util.Objects;
-import java.util.regex.Pattern;
-
-import javax.annotation.RegEx;
 
 public class TextFieldValidator implements InputValidator {
     private String message;
     private String defaultValue;
 
-    public TextFieldValidator(String _defaultValue, String _message){
+    public TextFieldValidator(String _defaultValue, String _message) {
         this.message = _message;
         this.defaultValue = _defaultValue;
     }

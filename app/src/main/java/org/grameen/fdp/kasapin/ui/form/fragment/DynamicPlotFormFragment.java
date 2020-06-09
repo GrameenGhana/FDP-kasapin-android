@@ -3,21 +3,22 @@ package org.grameen.fdp.kasapin.ui.form.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.annotation.Nullable;
+
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
+import org.grameen.fdp.kasapin.ui.form.FieldValidator;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
-import org.grameen.fdp.kasapin.ui.form.FieldValidator;
 import org.grameen.fdp.kasapin.ui.form.NumericalFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.TextFieldValidator;
 import org.grameen.fdp.kasapin.ui.form.controller.MyFormSectionController;
@@ -203,7 +204,7 @@ public class DynamicPlotFormFragment extends FormFragment {
                         break;
 
                     case AppConstants.TYPE_LOCATION:
-                        formSectionController.addElement(new ButtonController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),storedValue, v -> {
+                        formSectionController.addElement(new ButtonController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, v -> {
                             if (hasPermissions(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION))
                                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
                             else {

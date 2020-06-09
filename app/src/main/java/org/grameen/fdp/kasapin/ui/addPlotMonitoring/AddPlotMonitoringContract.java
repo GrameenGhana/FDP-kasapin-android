@@ -1,9 +1,9 @@
 package org.grameen.fdp.kasapin.ui.addPlotMonitoring;
 
 
-import androidx.annotation.Nullable;
-
 import android.widget.Spinner;
+
+import androidx.annotation.Nullable;
 
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
@@ -23,15 +23,23 @@ public class AddPlotMonitoringContract {
 
     public interface View extends BaseContract.View {
         void setUpViews();
+
         void setAreaUnits(String unit);
+
         void setProductionUnit(String unit);
+
         void refresh(Spinner spinner, @Nullable String defValue, List<String> items);
 
         void addViewsDynamically(Question q);
+
         android.view.View getLabelView(Question q);
+
         android.view.View getAOView(final Question q);
+
         android.view.View getCompetenceView(final Question q);
+
         android.view.View getReasonForFailureView(final Question q);
+
         void loadDynamicFragmentAndViews(FormAndQuestions monitoringPlotInfoQuestions, FormAndQuestions aoMonitoringQuestions);
 
         void openNextActivity();
@@ -39,7 +47,9 @@ public class AddPlotMonitoringContract {
 
     public interface Presenter {
         void getAreaUnits(String farmerCode);
+
         void getMonitoringQuestions();
+
         void saveMonitoringData(Monitoring monitoring, RealFarmer farmer);
 
 

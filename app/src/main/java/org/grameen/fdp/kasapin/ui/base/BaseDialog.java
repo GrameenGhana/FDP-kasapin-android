@@ -7,6 +7,11 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.RelativeLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -14,10 +19,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.RelativeLayout;
 
 import org.grameen.fdp.kasapin.di.component.ActivityComponent;
 
@@ -125,7 +126,7 @@ public abstract class BaseDialog extends DialogFragment implements DialogView {
 
     @Override
     public void toggleFullScreen(Boolean hideNavBar, Window W) {
-mActivity.toggleFullScreen(hideNavBar, W);
+        mActivity.toggleFullScreen(hideNavBar, W);
     }
 
     @Override

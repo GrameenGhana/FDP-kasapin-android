@@ -77,7 +77,7 @@ public class AppLogger {
     }
 
     public static void e(String tag, String message) {
-        Timber.e("%s%s  -> %s", " ******** ",tag, message);
+        Timber.e("%s%s  -> %s", " ******** ", tag, message);
         //largeLog(tag, message);
     }
 

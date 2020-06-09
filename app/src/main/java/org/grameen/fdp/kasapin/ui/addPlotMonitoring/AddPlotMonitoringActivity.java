@@ -63,6 +63,7 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
+
 public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMonitoringContract.View, FdpCallbacks.AnItemSelectedListener {
     @Inject
     AddPlotMonitoringPresenter mPresenter;
@@ -133,7 +134,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             e.printStackTrace();
             PLOT_AO_ANSWERS_JSON = new JSONObject();
         }
-        
+
         plotName.setText(PLOT.getName());
         ph.setText(PLOT.getPh());
         i1 = PLOT_AO_ANSWERS_JSON.keys();
@@ -144,7 +145,8 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     limeNeeded.setText(PLOT_AO_ANSWERS_JSON.getString(tmp_key));
                     limeNeeded.setTextColor(ContextCompat.getColor(this, R.color.cpb_red));
                     break;
-                } catch (JSONException ignored) { }
+                } catch (JSONException ignored) {
+                }
             }
         }
 
@@ -169,6 +171,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     @Override
                     public void onComplete() {
                     }
+
                     @Override
                     public void onError(Throwable ignored) {
                     }
@@ -179,7 +182,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(s -> recommendedIntervention.setText(s), throwable -> showMessage("Couldn't load plot's recommendation")));
         }
-        if(IS_NEW_MONITORING){
+        if (IS_NEW_MONITORING) {
             setToolbar(getStringResources(R.string.add_plot_monitoring));
             MONITORING_ANSWERS_JSON = new JSONObject();
             MONITORING = new Monitoring();
@@ -189,7 +192,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             MONITORING.setYear(SELECTED_YEAR);
 
             mPresenter.getMonitoringQuestions();
-        }else {
+        } else {
             setToolbar(getStringResources(R.string.edit_plot_monitoring) + " " + MONITORING.getName());
             try {
                 MONITORING_ANSWERS_JSON = MONITORING.getMonitoringAOJsonData();
@@ -216,9 +219,9 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         AppLogger.e(TAG, "AO MONITORING QUESTIONS >>> " + getGson().toJson(aoMonitoringQuestions.questions));
         AppLogger.e(TAG, "ANSWER DATA >>> " + MONITORING_ANSWERS_JSON.toString());
 
-        if(IS_NEW_MONITORING)
-        dynamicFormFragment = DynamicFormFragment.newInstance(monitoringPlotInfoQuestions, false, null, false, null);
-        else{
+        if (IS_NEW_MONITORING)
+            dynamicFormFragment = DynamicFormFragment.newInstance(monitoringPlotInfoQuestions, false, null, false, null);
+        else {
             FormAnswerData formAnswerData = new FormAnswerData();
             formAnswerData.setFarmerCode(PLOT.getFarmerCode());
             formAnswerData.setFormId(monitoringPlotInfoQuestions.getForm().getId());
@@ -229,22 +232,22 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicFormFragment, monitoringPlotInfoQuestions.getForm().getFormNameC());
 
         new Handler().postDelayed(() -> {
-            for(Question q : aoMonitoringQuestions.getQuestions()){
+            for (Question q : aoMonitoringQuestions.getQuestions()) {
                 addViewsDynamically(q);
-                if(!IS_NEW_MONITORING)
+                if (!IS_NEW_MONITORING)
                     setUpPropertyChangeListeners(q, ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON));
             }
             monitoringAOLayout.animate().alpha(1f).setDuration(200).start();
             Question monitoringObservationByQuestion = getAppDataManager().getDatabaseManager().questionDao().get("monitoring_plot_observationby_");
-            if(monitoringObservationByQuestion != null)
+            if (monitoringObservationByQuestion != null)
                 dynamicFormFragment.getModel().addPropertyChangeListener(monitoringObservationByQuestion.getLabelC(), evt -> {
                     String newValue = (String) evt.getNewValue();
 
-                    if(newValue.equalsIgnoreCase("manager"))
-                        for(int i = 0; i < COMPETENCE_VIEWS.size(); i++)
+                    if (newValue.equalsIgnoreCase("manager"))
+                        for (int i = 0; i < COMPETENCE_VIEWS.size(); i++)
                             COMPETENCE_VIEWS.get(i).setEnabled(true);
-                  else
-                        for(int i = 0; i < COMPETENCE_VIEWS.size(); i++)
+                    else
+                        for (int i = 0; i < COMPETENCE_VIEWS.size(); i++)
                             COMPETENCE_VIEWS.get(i).setEnabled(false);
                 });
         }, 500);
@@ -254,10 +257,10 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
     public void addViewsDynamically(Question q) {
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            linearLayout.setBackgroundColor( (counter % 2 == 0)
-                    ? ContextCompat.getColor(this, R.color.light_grey)
-                    : ContextCompat.getColor(this, R.color.white));
-            counter++;
+        linearLayout.setBackgroundColor((counter % 2 == 0)
+                ? ContextCompat.getColor(this, R.color.light_grey)
+                : ContextCompat.getColor(this, R.color.white));
+        counter++;
 
         LinearLayout.LayoutParams labelParams = getParas();
         labelParams.weight = 4;
@@ -323,7 +326,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @Override
     public View getAOView(Question q) {
-        if(q.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER)){
+        if (q.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER)) {
             View layout = LayoutInflater.from(this).inflate(R.layout.layout_edittext, null, false);
             layout.setTag(q);
             EditText editText = layout.findViewById(R.id.cell_data);
@@ -332,16 +335,20 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             editText.setTag(q);
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
                 @Override
                 public void afterTextChanged(Editable s) {
                     try {
-                        if(MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
+                        if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
                             MONITORING_ANSWERS_JSON.remove(q.getLabelC());
                         }
-                            MONITORING_ANSWERS_JSON.put(q.getLabelC(), s.toString());
+                        MONITORING_ANSWERS_JSON.put(q.getLabelC(), s.toString());
                         setUpPropertyChangeListeners(q, s.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -379,7 +386,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     void setSpinnerAdapter(Spinner spinner, Question q) {
         spinner.setPrompt(q.getDefaultValueC());
-        final List<String>items = q.formatQuestionOptions();
+        final List<String> items = q.formatQuestionOptions();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(AddPlotMonitoringActivity.this, android.R.layout.simple_spinner_item, items) {
             @NonNull
             @Override
@@ -392,6 +399,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 }
                 return view;
             }
+
             @Override
             public int getCount() {
                 return super.getCount(); // don't display last item (it's used for the prompt)
@@ -414,6 +422,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -432,23 +441,25 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         int year = Integer.parseInt(SELECTED_YEAR);
         int oldYear = 1;
         try {
-             oldYear = Integer.parseInt(getAppDataManager().getStringValue(PLOT.getFarmerCode()));
-        }catch(Exception ignored){
+            oldYear = Integer.parseInt(getAppDataManager().getStringValue(PLOT.getFarmerCode()));
+        } catch (Exception ignored) {
         }
-             if (year >= oldYear)
-                getAppDataManager().setStringValue(PLOT.getFarmerCode(), String.valueOf(year));
-             //Todo go to plot activity, reload viewpager
-             PlotMonitoringActivity.newMonitoringAdded = IS_NEW_MONITORING;
+        if (year >= oldYear)
+            getAppDataManager().setStringValue(PLOT.getFarmerCode(), String.valueOf(year));
+        //Todo go to plot activity, reload viewpager
+        PlotMonitoringActivity.newMonitoringAdded = IS_NEW_MONITORING;
         getAppDataManager().setBooleanValue("refreshViewPager", true);
         finish();
     }
+
     @Override
-    public void onItemSelected(String item) {}
+    public void onItemSelected(String item) {
+    }
 
     @Override
     public void refresh(Spinner spinner, @Nullable String defValue, List<String> items) {
         int selectionIndex = items.size() - 1;    // index of last item shows the 'prompt'
-        if(defValue != null)
+        if (defValue != null)
             for (int i = 0; i < items.size(); i++) {
                 if (items.get(i).equals(defValue)) {
                     selectionIndex = i;
@@ -467,32 +478,20 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
                 try {
-                        if (ComputationUtils.compareValues(sl, value, scriptEngine)) {
-                            if (sl.shouldHide()) {
-                                for(int i = 0; i < ALL_VIEWS_LIST.size(); i++){
-                                    if (ALL_VIEWS_LIST.get(i).getTag() != null) {
-                                        Question q = (Question) ALL_VIEWS_LIST.get(i).getTag();
-                                        if (q.getLabelC().equals(sl.getComparingQuestion())) {
-                                            ALL_VIEWS_LIST.get(i).setVisibility(View.INVISIBLE);
-                                            ALL_VIEWS_LIST.get(i).setEnabled(false);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }else{
-                                for (int i = 0; i < ALL_VIEWS_LIST.size(); i++) {
-                                    if (ALL_VIEWS_LIST.get(i).getTag() != null) {
-                                        Question q = (Question) ALL_VIEWS_LIST.get(i).getTag();
-                                        if (q.getLabelC().equals(sl.getComparingQuestion())) {
-                                            ALL_VIEWS_LIST.get(i).setVisibility(View.VISIBLE);
-                                            ALL_VIEWS_LIST.get(i).setEnabled(true);
-                                            break;
-                                        }
+                    if (ComputationUtils.compareValues(sl, value, scriptEngine)) {
+                        if (sl.shouldHide()) {
+                            for (int i = 0; i < ALL_VIEWS_LIST.size(); i++) {
+                                if (ALL_VIEWS_LIST.get(i).getTag() != null) {
+                                    Question q = (Question) ALL_VIEWS_LIST.get(i).getTag();
+                                    if (q.getLabelC().equals(sl.getComparingQuestion())) {
+                                        ALL_VIEWS_LIST.get(i).setVisibility(View.INVISIBLE);
+                                        ALL_VIEWS_LIST.get(i).setEnabled(false);
+                                        break;
                                     }
                                 }
                             }
-                        } else
-                            for(int i = 0; i < ALL_VIEWS_LIST.size(); i++){
+                        } else {
+                            for (int i = 0; i < ALL_VIEWS_LIST.size(); i++) {
                                 if (ALL_VIEWS_LIST.get(i).getTag() != null) {
                                     Question q = (Question) ALL_VIEWS_LIST.get(i).getTag();
                                     if (q.getLabelC().equals(sl.getComparingQuestion())) {
@@ -502,6 +501,18 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                                     }
                                 }
                             }
+                        }
+                    } else
+                        for (int i = 0; i < ALL_VIEWS_LIST.size(); i++) {
+                            if (ALL_VIEWS_LIST.get(i).getTag() != null) {
+                                Question q = (Question) ALL_VIEWS_LIST.get(i).getTag();
+                                if (q.getLabelC().equals(sl.getComparingQuestion())) {
+                                    ALL_VIEWS_LIST.get(i).setVisibility(View.VISIBLE);
+                                    ALL_VIEWS_LIST.get(i).setEnabled(true);
+                                    break;
+                                }
+                            }
+                        }
                 } catch (Exception ignored) {
                 }
             }
@@ -509,8 +520,8 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
     }
 
     @OnClick(R.id.saveButton)
-    void saveData(){
-        if(!dynamicFormFragment.getFormController().isValidInput()) {
+    void saveData() {
+        if (!dynamicFormFragment.getFormController().isValidInput()) {
             dynamicFormFragment.getFormController().resetValidationErrors();
             dynamicFormFragment.getFormController().showValidationErrors();
             return;
@@ -518,7 +529,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         if (!validate())
             return;
 
-         /* Merge AO/AOR values generated in diagnostic into one JSON. This is needed to get values from a single JSON to parse the formulas instead of having 2 separate JSONs
+        /* Merge AO/AOR values generated in diagnostic into one JSON. This is needed to get values from a single JSON to parse the formulas instead of having 2 separate JSONs
          * where we obtain values from
          * Start year (start_year_COUNTRY) key:value is not added to the merged json because when the Logic formula parser is iterating through the JSONObject and replacing
          * the question labels with their values, it might conflict with (plot_intervention_start_year_COUNTRY).
@@ -526,16 +537,16 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
          * Eg.When iterating through the JSONObject, start_year_COUNTRY comes before plot_intervention_start_year_COUNTRY. If the value for start_year_COUNTRY = 3
          * in the formula string, plot_intervention_start_year_COUNTRY becomes plot_intervention_3 because
          * start_year_COUNTRY in plot_intervention_start_year_COUNTRY was replaced by 3 and that's not what we want.
-          */
+         */
 
         i1 = PLOT_AO_ANSWERS_JSON.keys();
         while (i1.hasNext()) {
             tmp_key = (String) i1.next();
             try {
-                if(MONITORING_ANSWERS_JSON.has(tmp_key))
+                if (MONITORING_ANSWERS_JSON.has(tmp_key))
                     MONITORING_ANSWERS_JSON.remove(tmp_key);
-                if(!tmp_key.equals(startYearLabel))
-                MONITORING_ANSWERS_JSON.put(tmp_key, PLOT_AO_ANSWERS_JSON.get(tmp_key));
+                if (!tmp_key.equals(startYearLabel))
+                    MONITORING_ANSWERS_JSON.put(tmp_key, PLOT_AO_ANSWERS_JSON.get(tmp_key));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -544,9 +555,10 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             try {
                 if (MONITORING_ANSWERS_JSON.has(q.getLabelC()))
                     MONITORING_ANSWERS_JSON.remove(q.getLabelC());
-                if(dynamicFormFragment.getDataJson().has(q.getLabelC()))
-                MONITORING_ANSWERS_JSON.put(q.getLabelC(), dynamicFormFragment.getDataJson().get(q.getLabelC()));
-            } catch (JSONException ignore) {}
+                if (dynamicFormFragment.getDataJson().has(q.getLabelC()))
+                    MONITORING_ANSWERS_JSON.put(q.getLabelC(), dynamicFormFragment.getDataJson().get(q.getLabelC()));
+            } catch (JSONException ignore) {
+            }
 
         Question monitoringYearQuestion = getAppDataManager().getDatabaseManager().questionDao().get("monitoring_year_");
         try {
@@ -557,44 +569,44 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             e.printStackTrace();
         }
 
-         try {
+        try {
             if (MONITORING_ANSWERS_JSON.has(recommendationQuestion.getLabelC()))
                 MONITORING_ANSWERS_JSON.remove(recommendationQuestion.getLabelC());
             MONITORING_ANSWERS_JSON.put(recommendationQuestion.getLabelC(), PLOT.getRecommendationId());
         } catch (JSONException e) {
-             e.printStackTrace();
-         }
+            e.printStackTrace();
+        }
         //Get monitoring results question and apply logic
         FormAndQuestions aoMonitoringResultsFormAndQuestions = getAppDataManager().getDatabaseManager().formAndQuestionsDao().maybeGetFormAndQuestionsByName(AppConstants.AO_MONITORING_RESULT)
                 .blockingGet();
 
-            if(aoMonitoringResultsFormAndQuestions != null && aoMonitoringResultsFormAndQuestions.getQuestions().size() > 0){
-                LogicFormulaParser logicFormulaParser =  LogicFormulaParser.getInstance();
-                logicFormulaParser.setJsonObject(MONITORING_ANSWERS_JSON);
-                AppLogger.e(TAG, "LOOPING THROUGH  " + aoMonitoringResultsFormAndQuestions.getForm().getFormNameC() + " QUESTIONS AND PARSING THEIR FORMULAS");
-                System.out.println();
+        if (aoMonitoringResultsFormAndQuestions != null && aoMonitoringResultsFormAndQuestions.getQuestions().size() > 0) {
+            LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
+            logicFormulaParser.setJsonObject(MONITORING_ANSWERS_JSON);
+            AppLogger.e(TAG, "LOOPING THROUGH  " + aoMonitoringResultsFormAndQuestions.getForm().getFormNameC() + " QUESTIONS AND PARSING THEIR FORMULAS");
+            System.out.println();
 
-                for(Question q : aoMonitoringResultsFormAndQuestions.getQuestions()) {
-                    String value;
-                    if(q.getTypeC().equalsIgnoreCase(AppConstants.FORMULA_TYPE_COMPLEX_FORMULA))
-                        value = logicFormulaParser.evaluateComplexFormula(q.getFormulaC());
-                    else
-                        value = logicFormulaParser.evaluate(q.getFormulaC());
-                    try {
-                        if (MONITORING_ANSWERS_JSON.has(q.getLabelC()))
-                            MONITORING_ANSWERS_JSON.remove(q.getLabelC());
-                        MONITORING_ANSWERS_JSON.put(q.getLabelC(), value);
-                        logicFormulaParser.setJsonObject(MONITORING_ANSWERS_JSON);
+            for (Question q : aoMonitoringResultsFormAndQuestions.getQuestions()) {
+                String value;
+                if (q.getTypeC().equalsIgnoreCase(AppConstants.FORMULA_TYPE_COMPLEX_FORMULA))
+                    value = logicFormulaParser.evaluateComplexFormula(q.getFormulaC());
+                else
+                    value = logicFormulaParser.evaluate(q.getFormulaC());
+                try {
+                    if (MONITORING_ANSWERS_JSON.has(q.getLabelC()))
+                        MONITORING_ANSWERS_JSON.remove(q.getLabelC());
+                    MONITORING_ANSWERS_JSON.put(q.getLabelC(), value);
+                    logicFormulaParser.setJsonObject(MONITORING_ANSWERS_JSON);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("--------------------------------------------------------clear------------------------------------------------\n\n");
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                System.out.println("--------------------------------------------------------clear------------------------------------------------\n\n");
             }
+        }
         System.out.println("##########################################  LOOP END   ###############################################################");
 
-         MONITORING.setJson(MONITORING_ANSWERS_JSON.toString());
+        MONITORING.setJson(MONITORING_ANSWERS_JSON.toString());
         mPresenter.saveMonitoringData(MONITORING, FARMER);
     }
 

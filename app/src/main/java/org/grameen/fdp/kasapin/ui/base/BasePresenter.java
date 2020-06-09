@@ -225,19 +225,19 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                         if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS_TABLE)) {
 
-                                                            if(familyMembersFormAndQuestions != null) {
+                                                            if (familyMembersFormAndQuestions != null) {
 
                                                                 FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao()
                                                                         .getFormAnswerData(farmer.getCode(), familyMembersFormAndQuestions
                                                                                 .getForm().getFormTranslationId());
 
-                                                                if(answerData != null) {
+                                                                if (answerData != null) {
 
                                                                     JSONArray familyMembersJsonArrayData = new JSONArray(answerData.getData());
 
                                                                     JSONArray payloadArray = new JSONArray();
 
-                                                                    for(int j = 0; j < familyMembersJsonArrayData.length(); j++) {
+                                                                    for (int j = 0; j < familyMembersJsonArrayData.length(); j++) {
 
                                                                         JSONObject answerJsonData = familyMembersJsonArrayData.getJSONObject(j);
                                                                         JSONArray jsonArray = new JSONArray();
@@ -265,7 +265,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                                     //For decimal values, add answer to payload as a decimal instead of as a string
                                                                                     answerJson.put("answer", (question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ||
-                                                                                            question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)) ? Double.parseDouble(answer.trim().replace(",", "")) :answer);
+                                                                                            question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)) ? Double.parseDouble(answer.trim().replace(",", "")) : answer);
 
                                                                                     jsonArray.put(answerJson);
                                                                                 }
@@ -278,7 +278,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                             }
 
 
-                                                        }else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)) {
+                                                        } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.PLOT_TABLE)) {
 
                                                             for (Plot plot : farmersPlots) {
                                                                 JSONArray plotArray = new JSONArray();
@@ -398,8 +398,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                             //Generate Observations JSON payload for Diagnostic Module
 
 
-
-
                                                             for (Plot plot : farmersPlots) {
 
                                                                 JSONArray diagnosticAndMonitoringObservationsArray = new JSONArray();
@@ -516,7 +514,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                         answerJson.put("answer", answer);
 
                                                                         answerJson.put("answer", (question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ||
-                                                                                question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)) ? Double.parseDouble(answer.trim().replace(",", "")) :answer);
+                                                                                question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)) ? Double.parseDouble(answer.trim().replace(",", "")) : answer);
 
                                                                         answerJson.put("field_name", mapping.getFieldName());
 

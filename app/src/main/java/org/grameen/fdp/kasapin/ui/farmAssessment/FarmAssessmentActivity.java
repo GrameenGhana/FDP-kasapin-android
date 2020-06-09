@@ -67,11 +67,8 @@ public class FarmAssessmentActivity extends BaseActivity implements FarmAssessme
         FARM_RESULT = getGson().fromJson(getIntent().getStringExtra("farmResults"), FarmResult.class);
 
 
-
-
         setUpViews();
         onBackClicked();
-
 
 
     }
@@ -87,8 +84,7 @@ public class FarmAssessmentActivity extends BaseActivity implements FarmAssessme
         }
 
 
-
-        if(FARM_RESULT != null){
+        if (FARM_RESULT != null) {
             PLOT_ASESSMENTS = FARM_RESULT.getPlotAssessmentList();
 
 
@@ -107,7 +103,7 @@ public class FarmAssessmentActivity extends BaseActivity implements FarmAssessme
 
             List<HistoricalTableViewData> dataList = new ArrayList<>();
 
-            for(PlotAssessment plotAssessment : FARM_RESULT.getPlotAssessmentList()){
+            for (PlotAssessment plotAssessment : FARM_RESULT.getPlotAssessmentList()) {
 
                 dataList.add(new HistoricalTableViewData(plotAssessment.getPlotName(), plotAssessment.getResults()));
 
@@ -122,7 +118,6 @@ public class FarmAssessmentActivity extends BaseActivity implements FarmAssessme
         onBackClicked();
 
     }
-
 
 
     @Override

@@ -4,6 +4,7 @@ package org.grameen.fdp.kasapin.ui.test;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.balsikandar.crashreporter.CrashReporter;
@@ -47,7 +48,7 @@ public class CrashTestingActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.arrayStoreException).setOnClickListener(v -> {
-            Object x[] = new String[3];
+            Object[] x = new String[3];
             x[0] = new Integer(0);
 
         });

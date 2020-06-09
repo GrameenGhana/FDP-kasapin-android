@@ -38,8 +38,8 @@ public class CheckBoxController extends MyLabeledFieldController {
     private final int CHECKBOX_ID = MyFormController.generateViewId();
     private final List<String> items;
     private final List<?> values;
-    private boolean IS_ENABLED;
     String defaultValue;
+    private boolean IS_ENABLED;
 
     /**
      * Constructs a new instance of a checkboxes field.
@@ -103,11 +103,11 @@ public class CheckBoxController extends MyLabeledFieldController {
         Log.i("CHECK BOX CONTROLLER", oldValues);
 
     }*/
-    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String defaultValue, List<String> items, boolean useItemsAsValues, boolean isEnabled,  Set<InputValidator> validators) {
+    public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String defaultValue, List<String> items, boolean useItemsAsValues, boolean isEnabled, Set<InputValidator> validators) {
         this(ctx, name, content_desc, labelText, isRequired, items, useItemsAsValues ? items : null, isEnabled);
 
         this.defaultValue = defaultValue;
-        if(isRequired)
+        if (isRequired)
             this.setValidators(validators);
     }
 
@@ -309,7 +309,7 @@ public class CheckBoxController extends MyLabeledFieldController {
         String value = null;
         if (getModel().getValue(getName()) != null) {
             value = getModel().getValue(getName()).toString();
-        }else {
+        } else {
             value = defaultValue;
             getModel().setValue(getName(), value);
         }

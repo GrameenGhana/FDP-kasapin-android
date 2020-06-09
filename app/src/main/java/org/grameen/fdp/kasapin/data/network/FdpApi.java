@@ -3,19 +3,15 @@ package org.grameen.fdp.kasapin.data.network;
 
 import com.google.gson.JsonObject;
 
-import org.grameen.fdp.kasapin.data.db.entity.District;
 import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
-import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
 import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-
-import java.util.List;
 
 import io.reactivex.Single;
 import retrofit2.http.Body;
@@ -57,10 +53,6 @@ public interface FdpApi {
     @POST(AppConstants.API + "syncdowndata")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     Single<SyncDownData> getSyncDownData(@Query("token") String token, @Body JsonObject body);
-
-
-
-
 
 
 }

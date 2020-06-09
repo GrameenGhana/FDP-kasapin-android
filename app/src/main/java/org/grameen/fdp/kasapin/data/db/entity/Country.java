@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 @Entity(tableName = "countries")
-public class Country extends BaseModel{
+public class Country extends BaseModel {
 
     String name;
 

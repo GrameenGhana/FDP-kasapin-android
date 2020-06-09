@@ -8,8 +8,11 @@ import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ListView;
+
 import androidx.print.PrintHelper;
+
 import org.grameen.fdp.kasapin.R;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,11 +27,11 @@ public class PDFCreator {
     private boolean isEndOfTable = false;
     private boolean isPdfCreated = false;
     private TableView tableView;
-    private PdfDocument document =  new PdfDocument();
+    private PdfDocument document = new PdfDocument();
     private File pdfDocFile;
 
 
-    private PDFCreator(TableView _tableView, String _activityName){
+    private PDFCreator(TableView _tableView, String _activityName) {
         tableView = _tableView;
         pdfDocFile = FileUtils.createFolder("screenCaptures", _activityName + "_document.pdf");
         AppLogger.e("PDFCreator ===> File location will be " + pdfDocFile.getAbsolutePath());
@@ -36,9 +39,9 @@ public class PDFCreator {
 
 
     public static PDFCreator createPdf(TableView _tableView, String _activityName) {
-       PDFCreator pdfCreator = new  PDFCreator(_tableView, _activityName);
-      pdfCreator.initialize();
-      return pdfCreator;
+        PDFCreator pdfCreator = new PDFCreator(_tableView, _activityName);
+        pdfCreator.initialize();
+        return pdfCreator;
     }
 
     private void initialize() {
@@ -48,19 +51,20 @@ public class PDFCreator {
         ListView tableDataListView = tableView.findViewById(R.id.table_data_view);
         int measuredHeight = tableDataListView.getMeasuredHeight();
         //Scroll tableView to the first item or position if the first item is not visible
-        while(tableDataListView.getFirstVisiblePosition() != 0)
+        while (tableDataListView.getFirstVisiblePosition() != 0)
             tableDataListView.scrollListBy(-measuredHeight);
 
         View headerView = tableView.findViewById(R.id.table_header_view);
         List<Bitmap> bitmaps = new ArrayList<>();
 
-        int allitemsheight   = 0;
+        int allitemsheight = 0;
 
-        OnScrollListener scrollListener = new OnScrollListener(){
+        OnScrollListener scrollListener = new OnScrollListener() {
             @Override
             public void onScroll(ListView tableDataView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 isEndOfTable = (firstVisibleItem + visibleItemCount) == totalItemCount;
             }
+
             @Override
             public void onScrollStateChanged(ListView tableDateView, ScrollState scrollState) {
             }
@@ -83,7 +87,7 @@ public class PDFCreator {
                 bitmaps.add(getBitmapFromView(tableDataListView));
                 allitemsheight += measuredHeight;
                 tableDataListView.scrollListBy(measuredHeight);
-            } while(!isEndOfTable);
+            } while (!isEndOfTable);
 
             //Combine all bitmaps into a single bitmap image
             int totalHeightOfAllBitmaps = allitemsheight + farmerNameBitmap.getHeight() + (headerView.getMeasuredHeight() * 3);
@@ -132,7 +136,7 @@ public class PDFCreator {
 
 
     public void print() throws Throwable {
-        if(!isPdfCreated)
+        if (!isPdfCreated)
             throw new Throwable("Pdf document has not been created. Did you forget to call PDFCreator.createPdf()?");
 
         PrintHelper photoPrinter = new PrintHelper(tableView.getContext());
@@ -141,9 +145,9 @@ public class PDFCreator {
     }
 
 
-   private  Bitmap combineBitmaps(List<Bitmap> bitmaps, int totalWidth, int totalHeight) {
-        Bitmap bigBitmap    = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888);
-        Canvas bitCanvas    = new Canvas(bigBitmap);
+    private Bitmap combineBitmaps(List<Bitmap> bitmaps, int totalWidth, int totalHeight) {
+        Bitmap bigBitmap = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888);
+        Canvas bitCanvas = new Canvas(bigBitmap);
         bitCanvas.drawColor(Color.WHITE);
 
         int iHeight = 0;
@@ -181,10 +185,10 @@ public class PDFCreator {
         int totalHeight = bitmap.getHeight();
 
         int a4Height = 1754;
-        while(totalHeight > a4Height) {
+        while (totalHeight > a4Height) {
             index = index + 1;
             //Creates pages and adds to the pdf document
-            createPage(bitmap, index, a4Height,  beginHeight);
+            createPage(bitmap, index, a4Height, beginHeight);
 
             totalHeight -= a4Height;
             beginHeight += a4Height;
@@ -192,13 +196,13 @@ public class PDFCreator {
 
         //Copy last bits of bitmap
         //Sometimes pixels left is just shite spaces. Ignore if that's the case
-        if(totalHeight > a4Height / 6)
-        createPage(bitmap, index,  totalHeight,  beginHeight);
+        if (totalHeight > a4Height / 6)
+            createPage(bitmap, index, totalHeight, beginHeight);
 
         try {
             document.writeTo(new FileOutputStream(pdfDocFile));
             isPdfCreated = true;
-            AppLogger.e("ImageUtil", "Size of pages == " + document.getPages().size() );
+            AppLogger.e("ImageUtil", "Size of pages == " + document.getPages().size());
             return pdfDocFile.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
@@ -208,7 +212,6 @@ public class PDFCreator {
             bitmap.recycle();
         }
     }
-
 
 
 }

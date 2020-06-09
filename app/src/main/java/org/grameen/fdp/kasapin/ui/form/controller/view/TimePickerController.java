@@ -2,11 +2,9 @@ package org.grameen.fdp.kasapin.ui.form.controller.view;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TimePicker;
 
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
@@ -71,9 +69,9 @@ public class TimePickerController extends MyLabeledFieldController {
      * @param name      the name of the field
      * @param labelText the label to display beside the field
      */
-    public TimePickerController(Context context, String name, String content_desc, String labelText, Boolean isRequired,  Set<InputValidator> validators) {
+    public TimePickerController(Context context, String name, String content_desc, String labelText, Boolean isRequired, Set<InputValidator> validators) {
         this(context, name, content_desc, labelText, false, new SimpleDateFormat("hh:mm a", Locale.getDefault()), false);
-        if(isRequired)
+        if (isRequired)
             this.setValidators(validators);
     }
 

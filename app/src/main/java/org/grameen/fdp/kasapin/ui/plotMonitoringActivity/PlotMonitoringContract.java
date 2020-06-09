@@ -20,14 +20,18 @@ public class PlotMonitoringContract {
 
     public interface View extends BaseContract.View {
         void setUpViews();
+
         void setupAdoptionObservationsTableView(FormAndQuestions aoFormQuestions, FormAndQuestions monitoringAOFormAndQuestions);
+
         //void setupTableViewPager();
         void updateTableData(List<Monitoring> monitorings);
     }
 
     public interface Presenter {
         void getAOQuestions();
+
         void syncFarmerData(RealFarmer farmer, boolean showProgress);
+
         void getMonitoringForSelectedYear(Plot plot, int selectedYear);
 
     }

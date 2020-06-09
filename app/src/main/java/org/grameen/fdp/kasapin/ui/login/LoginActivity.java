@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -17,6 +16,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.karan.churi.PermissionManager.PermissionManager;
 
@@ -66,7 +67,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
 
         super.onCreate(savedInstanceState);
         setTheme(R.style.AppTheme);
-       // toggleFullScreen(false, getWindow());
+        // toggleFullScreen(false, getWindow());
 
         setContentView(R.layout.activity_login);
 
@@ -76,13 +77,9 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         mPresenter.takeView(this);
 
 
-
-
-
         serverUrlTextView.setText((!TextUtils.isEmpty(getAppDataManager().getStringValue(AppConstants.SERVER_URL))
                 ? getAppDataManager().getStringValue(AppConstants.SERVER_URL)
                 : "N/A"));
-
 
 
         mPasswordView.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -142,7 +139,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         };
 
 
-
         new Handler().postDelayed(() -> showDialog(false, getString(R.string.hello),
                 getString(R.string.provide_all_permissions_rationale), (dialogInterface, i) -> {
                     permissionManager.checkAndRequestPermissions(LoginActivity.this);
@@ -186,11 +182,12 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
 
 
     @OnClick(R.id.url_text)
-    void goToAddServerActivity(){
+    void goToAddServerActivity() {
         startActivity(new Intent(this, AddEditServerUrlActivity.class));
     }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //To get Granted Permission and Denied Permission
         ArrayList<String> granted = permissionManager.getStatus().get(0).granted;
         ArrayList<String> denied = permissionManager.getStatus().get(0).denied;

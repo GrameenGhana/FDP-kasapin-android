@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.ui.familyMembers;
 
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -26,12 +25,6 @@ public class TextViewHolder extends AbstractViewHolder {
     TextView editText = null;
 
 
-    public static void UpdateJsonArrayListener(FdpCallbacks.UpdateJsonArray listener) {
-        updateJsonArrayListener = listener;
-
-    }
-
-
     public TextViewHolder(View itemView, String type) {
         super(itemView);
         Log.i("CELL VIEW HOLDER TAG", itemView.getTag().toString());
@@ -42,6 +35,11 @@ public class TextViewHolder extends AbstractViewHolder {
 
         editText = itemView.findViewById(R.id.cell_data);
 
+
+    }
+
+    public static void UpdateJsonArrayListener(FdpCallbacks.UpdateJsonArray listener) {
+        updateJsonArrayListener = listener;
 
     }
 

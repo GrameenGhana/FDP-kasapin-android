@@ -2,13 +2,14 @@ package org.grameen.fdp.kasapin.ui.plotReview;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import org.grameen.fdp.kasapin.R;
 
@@ -47,7 +48,7 @@ public class HistoricalTableHeaderAdapter extends TableHeaderAdapter {
     }
 
     public void setHeaderClickListener(final View.OnClickListener mItemSelectedListener) {
-        this.mHeaderClickListener = mItemSelectedListener;
+        mHeaderClickListener = mItemSelectedListener;
     }
 
     public void setPaddings(int left, int top, int right, int bottom) {

@@ -19,20 +19,20 @@ public class CommunitiesAndFarmers {
     @Relation(parentColumn = "id", entityColumn = "villageId", entity = RealFarmer.class)
     public List<RealFarmer> farmerList;
 
-    public void setFarmerList(List<RealFarmer> farmerList) {
-        this.farmerList = farmerList;
-    }
-
-    public void setVillage(Community village) {
-        this.village = village;
-    }
-
     public List<RealFarmer> getFarmerList() {
         return farmerList;
     }
 
+    public void setFarmerList(List<RealFarmer> farmerList) {
+        this.farmerList = farmerList;
+    }
+
     public Community getVillage() {
         return village;
+    }
+
+    public void setVillage(Community village) {
+        this.village = village;
     }
 
 

@@ -172,10 +172,10 @@
                             android:id="@+id/soil_ph_caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/spacing_half"
                             android:text="Soil pH: "
                             android:textColor="@android:color/primary_text_light"
                             android:textSize="@dimen/text_size_normal"
-                            android:layout_marginEnd="@dimen/spacing_half"
 
                             />
 
@@ -202,10 +202,10 @@
                             android:id="@+id/lime_needed_caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/spacing_half"
                             android:text="Lime needed: "
                             android:textColor="@android:color/primary_text_light"
                             android:textSize="@dimen/text_size_normal"
-                            android:layout_marginEnd="@dimen/spacing_half"
 
 
                             />
@@ -284,6 +284,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/dynamicLayout"
                     android:padding="@dimen/spacing_normal">
+
                     <include layout="@layout/monitoring_form_section" />
                 </LinearLayout>
 

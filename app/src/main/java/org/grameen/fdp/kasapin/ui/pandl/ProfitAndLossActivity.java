@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
@@ -40,7 +41,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
@@ -165,7 +165,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         mPresenter.takeView(this);
         setUnBinder(ButterKnife.bind(this));
         engine = new ScriptEngineManager().getEngineByName("rhino");
-        farmer =  getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent().getStringExtra("farmerCode")).blockingGet();
+        farmer = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent().getStringExtra("farmerCode")).blockingGet();
         START_YEAR_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("start_year_");
         START_YEAR_LABEL = START_YEAR_QUESTION.getLabelC();
         CSSV_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("ao_disease_");
@@ -313,7 +313,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         AppLogger.e(TAG, VALUES_JSON_OBJECT.toString());
 
-         try {
+        try {
             if (!VALUES_JSON_OBJECT.has("total_family_income_ghana"))
                 VALUES_JSON_OBJECT.put("total_family_income_ghana", 0);
         } catch (JSONException e) {
@@ -330,7 +330,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         FARM_WEIGHT_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_weight_units_").blockingGet();
 
 
-
         //Set the values for the labor views and spinners
         final Question labourQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour");
         final Question labourTypeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour_type");
@@ -341,19 +340,19 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                     // If value == no or default value (-select-), hide the LaborType spinner and set DID_LABOUR = false
                     //From the server, default value is at index 0, Yes at index 1 and No at index 2
                     // else show labor spinner
-                        if(position == 0) {
-                            DID_LABOUR = null;
+                    if (position == 0) {
+                        DID_LABOUR = null;
+                        LABOUR_TYPE = "";
+                    } else {
+                        DID_LABOUR = position == 1;
+
+                        if (!DID_LABOUR) {
                             LABOUR_TYPE = "";
-                        }else {
-                            DID_LABOUR = position == 1;
-
-                            if(!DID_LABOUR) {
-                                LABOUR_TYPE = "";
-                                saveLabourAnswerData(labourQuestion.getFormTranslationId(), labourQuestion.getLabelC(), labourTypeQuestion.getLabelC());
-                            }
+                            saveLabourAnswerData(labourQuestion.getFormTranslationId(), labourQuestion.getLabelC(), labourTypeQuestion.getLabelC());
                         }
+                    }
 
-                        toggleTable();
+                    toggleTable();
                 }
         );
 
@@ -368,10 +367,10 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             // save values in the database
             //From the server, default value is at index 0, Full at index 1 and Seasonal at index 2
 
-                if(position == 0) {
-                    LABOUR_TYPE = "";
-                }else
-                    LABOUR_TYPE = (position == 1) ? LabourType.FULL.name() : LabourType.SEASONAL.name();
+            if (position == 0) {
+                LABOUR_TYPE = "";
+            } else
+                LABOUR_TYPE = (position == 1) ? LabourType.FULL.name() : LabourType.SEASONAL.name();
 
             toggleTable();
 
@@ -382,41 +381,41 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         //Check to make sure that the options have been set for the spinners.
         //Set and update the spinners based on old values in the db if any to reflect ui changes
 
-        if(labourSpinner.getItems().size() >= 3 && labourTypeSpinner.getItems().size() >= 3)
-        try {
-            String val = VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC());
+        if (labourSpinner.getItems().size() >= 3 && labourTypeSpinner.getItems().size() >= 3)
+            try {
+                String val = VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC());
 
-            if(val.equalsIgnoreCase(AppConstants.YES))
-                DID_LABOUR = true;
-            else if(val.equalsIgnoreCase(AppConstants.NO))
-                DID_LABOUR = false;
+                if (val.equalsIgnoreCase(AppConstants.YES))
+                    DID_LABOUR = true;
+                else if (val.equalsIgnoreCase(AppConstants.NO))
+                    DID_LABOUR = false;
 
-            LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
+                LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
 
-            AppLogger.e("labour", "*********  DID LABOUR  == " + val + " | LABOUR TYPE  == " + LABOUR_TYPE);
+                AppLogger.e("labour", "*********  DID LABOUR  == " + val + " | LABOUR TYPE  == " + LABOUR_TYPE);
 
-            labourSpinner.setSelectedIndex(DID_LABOUR ? 1 : 2);
+                labourSpinner.setSelectedIndex(DID_LABOUR ? 1 : 2);
 
-            if(LABOUR_TYPE.equals(LabourType.FULL.name()))
-                labourTypeSpinner.setSelectedIndex(1);
-            else  if(LABOUR_TYPE.equals(LabourType.SEASONAL.name()))
-                labourTypeSpinner.setSelectedIndex(2);
-            else
+                if (LABOUR_TYPE.equals(LabourType.FULL.name()))
+                    labourTypeSpinner.setSelectedIndex(1);
+                else if (LABOUR_TYPE.equals(LabourType.SEASONAL.name()))
+                    labourTypeSpinner.setSelectedIndex(2);
+                else
+                    labourTypeSpinner.setSelectedIndex(0);
+
+                toggleTable();
+            } catch (Exception e) {
+                e.printStackTrace();
+                labourSpinner.setSelectedIndex(0);
                 labourTypeSpinner.setSelectedIndex(0);
-
-            toggleTable();
-        } catch (Exception e) {
-            e.printStackTrace();
-            labourSpinner.setSelectedIndex(0);
-            labourTypeSpinner.setSelectedIndex(0);
-        }
+            }
 
     }
 
     private void toggleTable() {
         findViewById(R.id.labor_type_layout).setVisibility(DID_LABOUR != null && DID_LABOUR ? View.VISIBLE : View.GONE);
 
-        if((DID_LABOUR != null && !DID_LABOUR) || LABOUR_TYPE.equals(LabourType.FULL.name()) || LABOUR_TYPE.equals(LabourType.SEASONAL.name())) {
+        if ((DID_LABOUR != null && !DID_LABOUR) || LABOUR_TYPE.equals(LabourType.FULL.name()) || LABOUR_TYPE.equals(LabourType.SEASONAL.name())) {
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.GONE);
 
             if (BuildConfig.DEBUG)
@@ -424,7 +423,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
             loadTableData();
 
-        }else{
+        } else {
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.VISIBLE);
             print.setVisibility(View.GONE);
         }
@@ -749,7 +748,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 .doFinally(this::hideLoading)
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
-                    public void onComplete() {}
+                    public void onComplete() {
+                    }
 
                     @Override
                     public void onError(Throwable e) {

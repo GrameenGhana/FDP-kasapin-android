@@ -16,17 +16,17 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
@@ -51,11 +51,11 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 public abstract class FormFragment extends BaseFragment {
 
     private static int CAMERA_INTENT = 506;
+    ImageView imageView;
     private String ID;
     private Uri URI;
     private String TAG = "FormFragment";
     private SharedPreferences preferences;
-    ImageView imageView;
     private FormModelFragment formModelFragment;
     private MyFormController formController;
 
@@ -119,7 +119,7 @@ public abstract class FormFragment extends BaseFragment {
      * removed
      */
     private void recreateViews() {
-        ViewGroup containerView =  getActivity().findViewById(R.id.form_elements_container);
+        ViewGroup containerView = getActivity().findViewById(R.id.form_elements_container);
         formController.recreateViews(containerView);
     }
 
@@ -200,7 +200,7 @@ public abstract class FormFragment extends BaseFragment {
         return new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                 getModel().setValue(q.getLabelC(), location.getLatitude() + ", " + location.getLongitude());
+                getModel().setValue(q.getLabelC(), location.getLatitude() + ", " + location.getLongitude());
             }
 
             @Override

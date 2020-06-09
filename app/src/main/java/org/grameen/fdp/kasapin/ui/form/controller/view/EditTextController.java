@@ -66,8 +66,8 @@ public class EditTextController extends MyLabeledFieldController {
         this(context, id, content_desc, caption__c, default_value__c, isRequired, typeClassText, isEnabled);
         this.helperText = help_text__c;
 
-        if(isRequired)
-        this.setValidators(validators);
+        if (isRequired)
+            this.setValidators(validators);
     }
 
     /**
@@ -200,7 +200,7 @@ public class EditTextController extends MyLabeledFieldController {
             editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_NONE);
             editText.setContentDescription(getContentDesc());
             editText.setTextSize(15f);
-           //editText.setPaddings(10, 0, 10, 0);
+            //editText.setPaddings(10, 0, 10, 0);
             editText.setSingleLine(!isMultiLine());
             editText.setInputType(inputType);
 

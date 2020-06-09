@@ -17,10 +17,10 @@ public class Validator {
 
     public void addValidation(Question question) {
         HashSet<InputValidator> validation = new HashSet<>();
-        if(question.isRequired()) {
+        if (question.isRequired()) {
             validation.add(new FieldValidator(question.getDefaultValueC(), question.getErrorMessage()));
-            if(question.getTypeC().toLowerCase().equals(AppConstants.TYPE_NUMBER_DECIMAL)
-                    || question.getTypeC().toLowerCase().equals(AppConstants.TYPE_NUMBER)){
+            if (question.getTypeC().toLowerCase().equals(AppConstants.TYPE_NUMBER_DECIMAL)
+                    || question.getTypeC().toLowerCase().equals(AppConstants.TYPE_NUMBER)) {
                 validation.add(new NumericalFieldValidator(question.getMinValue(), question.getMaxValue(), question.getErrorMessage()));
             }
             try {
@@ -41,11 +41,11 @@ public class Validator {
         addValidation(question);
     }
 
-    void removeValidation(String label){
+    void removeValidation(String label) {
         VALIDATIONS.remove(label);
     }
 
-    public HashSet<InputValidator> getValidators(String key){
+    public HashSet<InputValidator> getValidators(String key) {
         try {
             return (HashSet<InputValidator>) VALIDATIONS.get(key);
         } catch (JSONException ignore) {

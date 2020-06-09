@@ -4,7 +4,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
@@ -54,11 +53,13 @@ public class Plot {
     @SerializedName("monitoring_list")
     private List<Monitoring> monitoringList;
 
-    public Plot() {}
+    public Plot() {
+    }
 
     @Ignore
-    public List<PlotGpsPoint> getGpsPoints(){
-        return getGson().fromJson(plotPoints, new TypeToken<List<PlotGpsPoint>>(){}.getType());
+    public List<PlotGpsPoint> getGpsPoints() {
+        return getGson().fromJson(plotPoints, new TypeToken<List<PlotGpsPoint>>() {
+        }.getType());
     }
 
     public String getExternalId() {
@@ -125,7 +126,7 @@ public class Plot {
         this.plotPoints = plotPoints;
     }
 
-     public int getId() {
+    public int getId() {
         return id;
     }
 
@@ -202,11 +203,11 @@ public class Plot {
         this.startYear = startYear;
     }
 
-    public void setMonitoringList(List<Monitoring> monitoringList) {
-        this.monitoringList = monitoringList;
-    }
-
     public List<Monitoring> getMonitoringList() {
         return monitoringList;
+    }
+
+    public void setMonitoringList(List<Monitoring> monitoringList) {
+        this.monitoringList = monitoringList;
     }
 }

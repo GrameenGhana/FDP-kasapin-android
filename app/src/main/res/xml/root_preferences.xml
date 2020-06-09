@@ -19,10 +19,9 @@
     <PreferenceCategory app:title="@string/settings_general">
 
         <EditTextPreference
-            app:key="@string/server_url_key"
-            app:title="@string/server_url_title"
             app:dialogMessage="@string/server_url_rational"
-            />
+            app:key="@string/server_url_key"
+            app:title="@string/server_url_title" />
 
     </PreferenceCategory>
 

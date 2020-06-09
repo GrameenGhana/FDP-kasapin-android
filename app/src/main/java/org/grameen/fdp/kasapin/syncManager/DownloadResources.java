@@ -14,7 +14,6 @@ import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.List;
@@ -26,6 +25,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
+
 public class DownloadResources {
     private int TOTAL_COUNT = 0;
     private int INDEX = 0;
@@ -66,31 +66,35 @@ public class DownloadResources {
                     @Override
                     public void onSuccess(CountryAdminLevelDataWrapper dataWrapper) {
 
-                        if(dataWrapper.getData() != null)
-                        Observable.fromIterable(dataWrapper.getData())
-                                .subscribeOn(Schedulers.io())
-                                .doOnNext(district -> {
-                                    getAppDataManager().getDatabaseManager().districtsDao().insertOne(district);
+                        if (dataWrapper.getData() != null)
+                            Observable.fromIterable(dataWrapper.getData())
+                                    .subscribeOn(Schedulers.io())
+                                    .doOnNext(district -> {
+                                        getAppDataManager().getDatabaseManager().districtsDao().insertOne(district);
 
-                                    if(district.getCommunities() != null)
-                                    getAppDataManager().getDatabaseManager().villagesDao().insertAll(district.getCommunities());
-                                })
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new DisposableObserver<District>() {
-                                    @Override
-                                    public void onNext(District district) {}
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        showError(e);
-                                    }
-                                    @Override
-                                    public void onComplete() {
-                                        getSurveyData();
-                                    }
-                                });
+                                        if (district.getCommunities() != null)
+                                            getAppDataManager().getDatabaseManager().villagesDao().insertAll(district.getCommunities());
+                                    })
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new DisposableObserver<District>() {
+                                        @Override
+                                        public void onNext(District district) {
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            showError(e);
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+                                            getSurveyData();
+                                        }
+                                    });
                         else
                             getSurveyData();
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -195,8 +199,7 @@ public class DownloadResources {
                                     public void onComplete() {
                                         getFarmersData();
 
-                                       // showSuccess("Data download completed!");
-
+                                        // showSuccess("Data download completed!");
 
 
                                     }
@@ -221,10 +224,10 @@ public class DownloadResources {
                 .subscribe(new DisposableSingleObserver<SyncDownData>() {
                     @Override
                     public void onSuccess(SyncDownData syncDownData) {
-                        if(syncDownData.getSuccess() != null && syncDownData.getSuccess().trim().equalsIgnoreCase("true")) {
+                        if (syncDownData.getSuccess() != null && syncDownData.getSuccess().trim().equalsIgnoreCase("true")) {
                             TOTAL_COUNT = syncDownData.getTotal_count();
                             //check for total count here against pageDown/pageEnd and loop method getFarmersData
-                            if(syncDownData.getData() != null && syncDownData.getData().size() > 0) {
+                            if (syncDownData.getData() != null && syncDownData.getData().size() > 0) {
                                 INDEX += syncDownData.getData().size();
                                 for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
                                     if (getAppDataManager().getDatabaseManager().realFarmersDao().checkIfFarmerExists(farmerAndAnswers1.getFarmer().getCode()) == 0) {
@@ -242,15 +245,16 @@ public class DownloadResources {
                                             }
                                     }
                                 }
-                                if(TOTAL_COUNT != (INDEX - 1)) {
+                                if (TOTAL_COUNT != (INDEX - 1)) {
                                     showProgress = false;
-                                    getView().setLoadingMessage("Downloading next batch (" + INDEX + "/" + TOTAL_COUNT  + ") of farmer and answers data...\nNB: This will not replace already existing farmer data!");
+                                    getView().setLoadingMessage("Downloading next batch (" + INDEX + "/" + TOTAL_COUNT + ") of farmer and answers data...\nNB: This will not replace already existing farmer data!");
                                     getFarmersData();
                                 }
                             }
                             showSuccess("Data download completed!");
-                        }else onError(new Throwable("The download could not complete!"));
+                        } else onError(new Throwable("The download could not complete!"));
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);

@@ -34,6 +34,7 @@ public class MyFormController {
     private FormModel model;
     private ValidationErrorDisplay validationErrorDisplay;
     private PropertyChangeListener modelListener = event -> getElement(event.getPropertyName()).refresh();
+
     /**
      * Constructs a new FormController.
      *
@@ -184,9 +185,9 @@ public class MyFormController {
                 if (element instanceof MyLabeledFieldController) {
                     MyLabeledFieldController field = (MyLabeledFieldController) element;
 
-                    if(field.isRequired() && !field.isHidden()) {
+                    if (field.isRequired() && !field.isHidden()) {
                         List<ValidationError> validationErrors = field.validateInput();
-                        AppLogger.e("MyFormController", "Field |name = " + field.getName() + " # isRequired = " + field.isRequired() + " # isHidden = " + field.isHidden() + " errors size is " + validationErrors.size() +"|");
+                        AppLogger.e("MyFormController", "Field |name = " + field.getName() + " # isRequired = " + field.isRequired() + " # isHidden = " + field.isHidden() + " errors size is " + validationErrors.size() + "|");
                         errors.addAll(validationErrors);
                     }
                 }
@@ -236,7 +237,8 @@ public class MyFormController {
      */
     public void recreateViews(ViewGroup containerView) {
         containerView.removeAllViews();
-        for (MyFormSectionController section : getSections()) { section.setModel(getModel());
+        for (MyFormSectionController section : getSections()) {
+            section.setModel(getModel());
             containerView.addView(section.getView());
 
             for (MyFormElementController element : section.getElements()) {

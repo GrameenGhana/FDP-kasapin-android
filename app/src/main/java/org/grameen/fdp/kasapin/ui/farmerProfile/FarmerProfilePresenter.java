@@ -65,13 +65,13 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
 
     public void loadDynamicButtons(List<FormAndQuestions> formAndQuestions) {
         count = 0;
-        if (getAppDataManager().isMonitoring()){
+        if (getAppDataManager().isMonitoring()) {
             runSingleCall(Observable.fromIterable(formAndQuestions)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
                     .filter(formAndQuestions1 -> formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM)
-                    ||  formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_TABLE)
-                    || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_HISTORICAL))
+                            || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_TABLE)
+                            || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_HISTORICAL))
                     .filter(formAndQuestions1 -> (!formAndQuestions1.getForm().shouldHide()))
                     .map(formAndQuestions1 -> {
                         FILTERED_FORMS.add(formAndQuestions1);
@@ -81,7 +81,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
                         btn.setContentDescription(formAndQuestions1.getForm().getTranslation());
 
                         //Temporary save the position of the family members Form and Questions in the array for later.
-                        if(formAndQuestions1.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS))
+                        if (formAndQuestions1.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS))
                             FarmerProfileActivity.familyMembersFormPosition = count;
 
                         count += 1;
@@ -89,15 +89,15 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
 
                     }).toList().subscribe(buttons -> getView().addButtons(buttons)
                     ));
-        }else {
+        } else {
 
             runSingleCall(Observable.fromIterable(formAndQuestions)
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
                     .filter(formAndQuestions1 -> formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM)
-                            ||  formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_TABLE) || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_HISTORICAL))
+                            || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_TABLE) || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_HISTORICAL))
                     .filter(formAndQuestions1 -> (!formAndQuestions1.getForm().shouldHide() &&
-                                    (formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC) || formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC_MONITORING))))
+                            (formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC) || formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC_MONITORING))))
                     .map(formAndQuestions1 -> {
 
                         FILTERED_FORMS.add(formAndQuestions1);
@@ -108,7 +108,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
                         btn.setContentDescription(formAndQuestions1.getForm().getTranslation());
 
                         //Temporary save the position of the family members Form and Questions in the array for later.
-                        if(formAndQuestions1.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS))
+                        if (formAndQuestions1.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS))
                             FarmerProfileActivity.familyMembersFormPosition = count;
                         count += 1;
                         return btn;

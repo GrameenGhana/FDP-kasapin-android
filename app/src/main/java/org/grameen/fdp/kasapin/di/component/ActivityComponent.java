@@ -12,11 +12,11 @@ import org.grameen.fdp.kasapin.ui.farmAssessment.FarmAssessmentActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.fdpStatus.FDPStatusDialogActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
+import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.ui.main.FarmerListFragment;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
-import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
 import org.grameen.fdp.kasapin.ui.monitoringYearSelection.MonitoringYearSelectionActivity;
 import org.grameen.fdp.kasapin.ui.pandl.ProfitAndLossActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
@@ -37,24 +37,44 @@ import dagger.Component;
 @Component(modules = {ViewModule.class}, dependencies = {ApplicationComponent.class})
 public interface ActivityComponent {
     void inject(SplashActivity view);
+
     void inject(LoginActivity view);
+
     void inject(LandingActivity view);
+
     void inject(MainActivity view);
+
     void inject(FarmerListFragment view);
+
     void inject(AddEditFarmerActivity view);
+
     void inject(FarmerProfileActivity view);
+
     void inject(DynamicFormFragment view);
+
     void inject(AddEditFarmerPlotActivity view);
+
     void inject(PlotDetailsActivity view);
+
     void inject(MapActivity view);
+
     void inject(ProfitAndLossActivity view);
+
     void inject(FDPStatusDialogActivity view);
+
     void inject(DetailedMonthActivity view);
+
     void inject(PlotReviewActivity view);
+
     void inject(MonitoringYearSelectionActivity view);
+
     void inject(PlotMonitoringActivity view);
+
     void inject(AddPlotMonitoringActivity view);
+
     void inject(FamilyMembersActivity view);
+
     void inject(FarmAssessmentActivity view);
+
     void inject(AddEditServerUrlActivity view);
 }

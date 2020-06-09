@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.splash.SplashActivity">
 
-    <include layout="@layout/background_view"/>
+    <include layout="@layout/background_view" />
 
 
     <LinearLayout
@@ -25,8 +25,8 @@
             style="@style/TextAppearance.AppCompat.Display1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="@string/fdp" />
+            android:text="@string/fdp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -36,9 +36,8 @@
         android:layout_width="@dimen/imageview_two_height"
         android:layout_height="@dimen/imageview_two_height"
         android:layout_centerInParent="true"
-        android:scaleType="fitCenter"
         android:padding="@dimen/spacing_normal"
-        android:src="@drawable/organic_food1"
-        />
+        android:scaleType="fitCenter"
+        android:src="@drawable/organic_food1" />
 
 </RelativeLayout>

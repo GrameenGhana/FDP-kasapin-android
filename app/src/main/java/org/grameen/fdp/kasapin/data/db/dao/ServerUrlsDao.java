@@ -17,5 +17,4 @@ public interface ServerUrlsDao extends BaseDao<ServerUrl> {
     Single<List<ServerUrl>> getAllUrls();
 
 
-
 }

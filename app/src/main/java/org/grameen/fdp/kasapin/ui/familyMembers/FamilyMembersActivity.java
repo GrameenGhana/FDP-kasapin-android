@@ -45,14 +45,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FamilyMembersActivity extends BaseActivity implements FamilyMembersContract.View,  FdpCallbacks.UpdateJsonArray {
+public class FamilyMembersActivity extends BaseActivity implements FamilyMembersContract.View, FdpCallbacks.UpdateJsonArray {
+    static JSONArray oldValuesArray;
+    static int COLUMN_SIZE;
+    static int ROW_SIZE = 1;
     @Inject
     FamilyMembersPresenter mPresenter;
     RealFarmer FARMER;
     FormAndQuestions familyMembersFormAndQuestions;
-    private List<RowHeader> mRowHeaderList;
-    private List<ColumnHeader> mColumnHeaderList;
-    private List<List<Cell>> mCellList;
     List<List<Question>> mQuestionsList;
     @BindView(R.id.table_view)
     TableView tableView;
@@ -62,16 +62,25 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     TextView nameTextView;
     @BindView(R.id.code)
     TextView codeTextView;
-    static JSONArray oldValuesArray;
-    static int COLUMN_SIZE;
-    static int ROW_SIZE = 1;
     int SCROLL_POSITION;
     int lastVisibleItemPosition;
     int noFamilyMembers;
     FormAnswerData answerData;
     FineTableViewAdapter mTableViewAdapter;
     Validator validator = new Validator();
+    private List<RowHeader> mRowHeaderList;
+    private List<ColumnHeader> mColumnHeaderList;
+    private List<List<Cell>> mCellList;
 
+    public static String getValue(int index, String uid) {
+        String value = "";
+        try {
+            if (oldValuesArray.getJSONObject(index).has(uid))
+                return oldValuesArray.getJSONObject(index).getString(uid);
+        } catch (JSONException ignored) {
+        }
+        return value;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,19 +98,9 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         familyMembersFormAndQuestions = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
         COLUMN_SIZE = familyMembersFormAndQuestions.getQuestions().size();
 
-        if(FARMER != null)
-        setUpViews();
+        if (FARMER != null)
+            setUpViews();
         onBackClicked();
-    }
-
-    public static String getValue(int index, String uid) {
-        String value = "";
-        try {
-            if (oldValuesArray.getJSONObject(index).has(uid))
-                return oldValuesArray.getJSONObject(index).getString(uid);
-        } catch (JSONException ignored) {
-        }
-        return value;
     }
 
     @Override
@@ -111,7 +110,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         nameTextView.setText(FARMER.getFarmerName());
         codeTextView.setText(FARMER.getCode());
 
-        if(getAppDataManager().isMonitoring())
+        if (getAppDataManager().isMonitoring())
             save.setVisibility(View.GONE);
 
         mRowHeaderList = new ArrayList<>();
@@ -120,7 +119,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         mQuestionsList = new ArrayList<>();
 
         answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getFormTranslationId());
-        if(answerData == null) {
+        if (answerData == null) {
             answerData = new FormAnswerData();
             answerData.setFormId(familyMembersFormAndQuestions.getForm().getFormTranslationId());
             answerData.setFarmerCode(FARMER.getCode());
@@ -140,10 +139,10 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         for (int i = 0; i < ROW_SIZE; i++) {
             JSONObject jsonObject = new JSONObject();
             try {
-                if(i < oldValuesArray.length()) {
+                if (i < oldValuesArray.length()) {
                     if (oldValuesArray.get(i) == null)
                         oldValuesArray.put(i, jsonObject);
-                }else
+                } else
                     oldValuesArray.put(i, jsonObject);
                 //allFamilyMembersArrayData.put(i, jsonObject);
             } catch (JSONException e) {
@@ -167,7 +166,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         List<RowHeader> rowHeaders = getRowHeaderList();
         List<ColumnHeader> columnHeaders = getColumnHeaderList();
-        List<List<Cell>> cellList =  getCellList();
+        List<List<Cell>> cellList = getCellList();
 
         mRowHeaderList.addAll(rowHeaders);
         mColumnHeaderList.addAll(columnHeaders);
@@ -183,49 +182,51 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         try {
             new Handler().postDelayed(() -> {
-                if(tableView != null) {
+                if (tableView != null) {
                     LinearLayoutManager linearLayoutManager = tableView.getRowHeaderLayoutManager();
                     if (linearLayoutManager != null)
                         lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
                     SCROLL_POSITION = lastVisibleItemPosition;
                 }
             }, 2000);
-        }catch(Exception ignore){}
+        } catch (Exception ignore) {
+        }
     }
 
     @SuppressLint("CutPasteId")
-    boolean validate(){
+    boolean validate() {
         List<ValidationError> errors = new ArrayList<>();
         for (int i = 0; i < ROW_SIZE; i++) {
             for (int j = 0; j < COLUMN_SIZE; j++) {
                 View view = mTableViewAdapter.getCellViews(i, j);
-                if(view != null){
-                String name = mTableViewAdapter.getCellItem(j, i).getId();
-                HashSet<InputValidator> validators = validator.getValidators(name + i);
-                if(validators != null) {
-                    ValidationError error;
-                    for (InputValidator inputVal : validators) {
-                        error = inputVal.validate(getValue(i, name), name, "");
-                        if (error != null) {
-                            errors.add(error);
-                            try {
-                                if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
-                                    EditText edittext = view.findViewById(R.id.cell_data);
-                                    edittext.setError(error.getMessage(getResources()));
-                                } else if (view.getTag().toString().equals("spinner")) {
-                                    Spinner spinner = view.findViewById(R.id.cell_data);
-                                    TextView itemView = spinner.findViewById(android.R.id.text1);
-                                    itemView.setError((error.getMessage(getResources())));
+                if (view != null) {
+                    String name = mTableViewAdapter.getCellItem(j, i).getId();
+                    HashSet<InputValidator> validators = validator.getValidators(name + i);
+                    if (validators != null) {
+                        ValidationError error;
+                        for (InputValidator inputVal : validators) {
+                            error = inputVal.validate(getValue(i, name), name, "");
+                            if (error != null) {
+                                errors.add(error);
+                                try {
+                                    if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
+                                        EditText edittext = view.findViewById(R.id.cell_data);
+                                        edittext.setError(error.getMessage(getResources()));
+                                    } else if (view.getTag().toString().equals("spinner")) {
+                                        Spinner spinner = view.findViewById(R.id.cell_data);
+                                        TextView itemView = spinner.findViewById(android.R.id.text1);
+                                        itemView.setError((error.getMessage(getResources())));
+                                    }
+                                } catch (Exception ignore) {
                                 }
-                            }catch(Exception ignore){}
+                            }
                         }
                     }
-                }
                 }
             }
         }
         AppLogger.e(TAG, "ERRORS SIZE IS " + errors.size());
-       return  errors.isEmpty();
+        return errors.isEmpty();
     }
 
 
@@ -270,24 +271,24 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     }
 
     @OnClick(R.id.save)
-    void saveData(){
+    void saveData() {
 
         AppLogger.e(oldValuesArray.toString());
-       // check validations here
+        // check validations here
 
-        if(!validate()){
+        if (!validate()) {
             return;
         }
 
         /*
-        ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
-        */
+         ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
+         */
         StringBuilder familyMembersIncomeStringBuilder = new StringBuilder();
 
         int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
         FormAnswerData socioEconomicProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), socioEconomicFormId);
 
-        if(socioEconomicProfileFormAnswerData == null){
+        if (socioEconomicProfileFormAnswerData == null) {
             socioEconomicProfileFormAnswerData = new FormAnswerData();
             socioEconomicProfileFormAnswerData.setFarmerCode(FARMER.getCode());
             socioEconomicProfileFormAnswerData.setFormId(socioEconomicFormId);
@@ -297,8 +298,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         Question familyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("family_income_");
         Question totalFamilyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("total_family_income_");
 
-        if(familyIncomeQuestion != null && totalFamilyIncomeQuestion != null){
-            for (int i = 0; i < ROW_SIZE; i++){
+        if (familyIncomeQuestion != null && totalFamilyIncomeQuestion != null) {
+            for (int i = 0; i < ROW_SIZE; i++) {
                 String value;
                 try {
                     value = oldValuesArray.getJSONObject(i).getString(familyIncomeQuestion.getLabelC());
@@ -311,7 +312,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
             JSONObject data = socioEconomicProfileFormAnswerData.getJsonData();
 
-            if(data.has(totalFamilyIncomeQuestion.getLabelC()))
+            if (data.has(totalFamilyIncomeQuestion.getLabelC()))
                 data.remove(totalFamilyIncomeQuestion.getLabelC());
             try {
                 data.put(totalFamilyIncomeQuestion.getLabelC(), MathFormulaParser.getInstance().evaluate(familyMembersIncomeStringBuilder.toString()));

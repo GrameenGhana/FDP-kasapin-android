@@ -30,7 +30,7 @@ public class FDPStatusPresenter extends BasePresenter<FDPStatusContract.View> im
                 .subscribe(formAnswerData ->
                                 getView().showFormFragment(formAnswerData)
                         , throwable ->
-                            getView().showFormFragment(null)
+                                getView().showFormFragment(null)
                 ));
 
     }

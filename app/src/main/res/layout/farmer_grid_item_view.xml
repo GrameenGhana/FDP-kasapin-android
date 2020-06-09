@@ -74,8 +74,8 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/spacing_half"
                 android:ellipsize="end"
-                android:minLines="2"
                 android:maxLines="2"
+                android:minLines="2"
                 android:text="Farmer Name"
                 android:textColor="@android:color/primary_text_light"
                 android:textSize="@dimen/text_size_normal" />

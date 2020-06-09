@@ -19,7 +19,8 @@ public class JsonTypeConverter {
         } catch (Exception e) {
             e.printStackTrace();
             return new JsonObject();
-        } }
+        }
+    }
 
     @TypeConverter
     public static String fromJSONToString(JsonObject data) {
