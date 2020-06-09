@@ -91,7 +91,7 @@ public class SettingsActivity extends BaseActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.settings);
+        toolbar.setTitle(R.string.action_settings);
 
         oldUrl = PreferenceManager.getDefaultSharedPreferences(this).getString(AppConstants.SERVER_URL, BuildConfig.END_POINT);
 
