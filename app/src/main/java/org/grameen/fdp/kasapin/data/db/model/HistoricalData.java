@@ -3,22 +3,13 @@ package org.grameen.fdp.kasapin.data.db.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-/**
- * Created by AangJnr on 23, November, 2018 @ 11:13 AM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class HistoricalData {
-
     String id;
     String dateTime;
     String lastModifiedDate;
     String answersJson = "{}";
     String formId;
     String name;
-
 
     public HistoricalData() {
     }
@@ -72,16 +63,12 @@ public class HistoricalData {
     }
 
     public JSONObject getAnswersJsonObject() {
-
         JSONObject jsonObject;
-
         try {
             jsonObject = new JSONObject(getAnswersJson());
         } catch (JSONException ignored) {
             jsonObject = new JSONObject();
         }
-
-
         return jsonObject;
     }
 }

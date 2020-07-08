@@ -9,9 +9,7 @@ import androidx.fragment.app.Fragment;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
 
 public class FormModelFragment extends Fragment {
-
     public static final String TAG = "nd_model";
-
     private FormModel model;
 
     @Override

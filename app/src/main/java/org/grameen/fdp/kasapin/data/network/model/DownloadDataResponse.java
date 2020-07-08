@@ -2,15 +2,13 @@ package org.grameen.fdp.kasapin.data.network.model;
 
 import java.util.List;
 
-public class SyncDownData {
-
+public class DownloadDataResponse {
     String success;
     int total_count;
 
     List<FarmerAndAnswers> data;
 
-
-    public SyncDownData() {
+    public DownloadDataResponse() {
     }
 
     public int getTotal_count() {

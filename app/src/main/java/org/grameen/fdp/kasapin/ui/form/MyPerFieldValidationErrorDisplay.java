@@ -1,9 +1,5 @@
 package org.grameen.fdp.kasapin.ui.form;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
 import android.content.Context;
 import android.content.res.Resources;
 

@@ -8,13 +8,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by aangjnr on 08/01/2018.
- */
-
 @Entity(tableName = "recommendations", indices = {@Index(value = "id", unique = true), @Index(value = "country"), @Index(value = "cropId")})
 public class Recommendation extends BaseModel {
-
     @SerializedName("crop_id")
     int cropId;
 
@@ -41,7 +36,6 @@ public class Recommendation extends BaseModel {
     @Ignore
     @SerializedName("recommendation_activity")
     List<RecommendationActivity> recommendationActivities;
-
 
     public Recommendation() {
     }
@@ -125,6 +119,4 @@ public class Recommendation extends BaseModel {
     public void setRecommendationActivities(List<RecommendationActivity> recommendationActivities) {
         this.recommendationActivities = recommendationActivities;
     }
-
-
 }

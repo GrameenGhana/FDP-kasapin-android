@@ -4,7 +4,7 @@ package org.grameen.fdp.kasapin.ui.pandl;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,15 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 9:06 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.View> implements ProfitAndLossContract.Presenter {
-
-
     @Inject
     ProfitAndLossPresenter(AppDataManager appDataManager) {
         super(appDataManager);
@@ -46,7 +38,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                         for (FormAnswerData formAnswerData : formAnswerDatas) {
 
                             JSONObject object = formAnswerData.getJsonData();
-                            Iterator iterator = object.keys();
+                            Iterator<String> iterator = object.keys();
                             while (iterator.hasNext()) {
                                 String key = (String) iterator.next();
                                 try {
@@ -60,7 +52,6 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                     }
                 }, throwable -> getView().showMessage("Couldn't obtain data!")));
     }
-
 
     @Override
     public void updatePlotData(Plot plot, boolean reloadTable) {
@@ -86,7 +77,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
 
 
     @Override
-    public void saveLabourValues(FormAnswerData formAnswerData, RealFarmer farmer) {
+    public void saveLabourValues(FormAnswerData formAnswerData, Farmer farmer) {
 
         FormAnswerData oldData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(farmer.getCode(), formAnswerData.getFormId());
         if (oldData != null)

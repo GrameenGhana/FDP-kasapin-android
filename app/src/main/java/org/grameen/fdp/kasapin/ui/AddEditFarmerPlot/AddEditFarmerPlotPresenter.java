@@ -4,7 +4,7 @@ package org.grameen.fdp.kasapin.ui.AddEditFarmerPlot;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
@@ -56,7 +56,7 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
 
-                    RealFarmer farmer = getAppDataManager().getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet();
+                    Farmer farmer = getAppDataManager().getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet();
                     if (farmer != null)
                         setFarmerAsUnsynced(farmer);
 

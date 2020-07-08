@@ -10,7 +10,7 @@ import org.grameen.fdp.kasapin.data.db.model.User;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
-import org.grameen.fdp.kasapin.data.network.model.SyncDownData;
+import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import io.reactivex.Single;
@@ -20,15 +20,12 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-
 /**
- * Created by AangJnr on 05, December, 2018 @ 4:13 PM
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */
 
 public interface FdpApi {
-
     @POST(AppConstants.API_VERSION + "auth/user/login")
     Single<LoginResponse> makeLoginCall(@Body LoginRequest.ServerLoginRequest loginRequest);
 
@@ -38,21 +35,17 @@ public interface FdpApi {
     @GET(AppConstants.API_VERSION + "auth/user/countryadmin/{id}")
     Single<CountryAdminLevelDataWrapper> getCommunitiesData(@Path("id") int countryId, @Query("token") String token);
 
-
     @GET(AppConstants.API_VERSION + "auth/user/survey/{id}")
     Single<FormsDataWrapper> getSurveyData(@Path("id") int countryId, @Query("token") String token);
-
 
     @GET(AppConstants.API_VERSION + "auth/user/recommendation/{crop_id}/{country_id}")
     Single<RecommendationsDataWrapper> getRecommendations(@Path("crop_id") int cropId, @Path("country_id") int countryId, @Query("token") String token);
 
     @POST(AppConstants.API + "synchupdata")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
-    Single<Response> postFarmers(@Query("token") String token, @Body JsonObject farmersData);
+    Single<Response> uploadFarmersData(@Query("token") String token, @Body JsonObject farmersData);
 
     @POST(AppConstants.API + "syncdowndata")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
-    Single<SyncDownData> getSyncDownData(@Query("token") String token, @Body JsonObject body);
-
-
+    Single<DownloadDataResponse> downloadFarmerData(@Query("token") String token, @Body JsonObject body);
 }

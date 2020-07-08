@@ -26,37 +26,26 @@ import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 
 public class SettingsActivity extends BaseActivity {
-
+    //Todo change static reference
     static AlertDialog.Builder mAlertDialogBuilder;
     static String oldUrl;
+
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, newValue) -> {
         String stringValue = newValue.toString().trim().replace(" ", "");
-
         AppLogger.e("Settings Activity", "VALUE IS >>>>>> " + stringValue);
-
 
         if (preference instanceof EditTextPreference) {
             if (preference.getKey().equals(AppConstants.SERVER_URL)) {
-                // update the changed url to summary filed
-
                 if (!URLUtil.isValidUrl(stringValue)) {
-
                     PreferenceManager.getDefaultSharedPreferences(preference.getContext()).edit().putString(preference.getKey(), BuildConfig.END_POINT).apply();
-
                     preference.setSummary(PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), BuildConfig.END_POINT));
                     CustomToast.makeText(preference.getContext(), R.string.enter_valid_url, Toast.LENGTH_LONG).show();
-
                 } else {
-
-                    //PreferenceManager.getDefaultSharedPreferences(preference.getContext()).edit().putString(preference.getKey(), stringValue).apply();
                     preference.setSummary(stringValue);
-
                     if (!oldUrl.equals(stringValue))
                         CommonUtils.showAlertDialog(mAlertDialogBuilder, false, "Restart App", "Server url has changed. Please restart the app to take effect.",
                                 (d, w) -> {
-
                                     d.dismiss();
-
                                     new Handler().post(() -> {
                                         System.exit(0);
                                         android.os.Process.killProcess(android.os.Process.myPid());
@@ -69,7 +58,6 @@ public class SettingsActivity extends BaseActivity {
                                         }, 2000);
                                     });
                                 }, preference.getContext().getString(R.string.ok), null, "", 0);
-
                 }
             }
         }
@@ -77,17 +65,14 @@ public class SettingsActivity extends BaseActivity {
     };
 
     private static void bindPreferenceSummaryToValue(Preference preference) {
-
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference, oldUrl);
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -98,16 +83,12 @@ public class SettingsActivity extends BaseActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.settings, new SettingsFragment())
                 .commit();
 
-
         mAlertDialogBuilder = new AlertDialog.Builder(this, R.style.AppDialog);
-
-
         onBackClicked();
     }
 
@@ -115,19 +96,12 @@ public class SettingsActivity extends BaseActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-
         }
-
 
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             bindPreferenceSummaryToValue(findPreference(getString(R.string.server_url_key)));
-
         }
-
-
     }
-
-
 }

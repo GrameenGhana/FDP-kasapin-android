@@ -1,12 +1,5 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-
-/**
- * Created by AangJnr on 05, December, 2018 @ 12:44 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
@@ -31,19 +24,13 @@ public class FormTranslation extends BaseModel {
 
     @Ignore
     @SerializedName("questions")
-    private List<QuestionsAndSkipLogic> questionsAndSkipLogics = null;
+    private List<QuestionsAndSkipLogic> questionsAndSkipLogic = null;
 
     /**
      * No args constructor for use in serialization
      */
     public FormTranslation() {
     }
-
-    /**
-     * @param id
-     * @param name
-     * @param formId
-     */
 
     @Ignore
     public FormTranslation(int id, String name, String formId) {
@@ -87,11 +74,11 @@ public class FormTranslation extends BaseModel {
         this.form = form;
     }
 
-    public List<QuestionsAndSkipLogic> getQuestionsAndSkipLogics() {
-        return questionsAndSkipLogics;
+    public List<QuestionsAndSkipLogic> getQuestionsAndSkipLogic() {
+        return questionsAndSkipLogic;
     }
 
-    public void setQuestionsAndSkipLogics(List<QuestionsAndSkipLogic> questionsAndSkipLogics) {
-        this.questionsAndSkipLogics = questionsAndSkipLogics;
+    public void setQuestionsAndSkipLogic(List<QuestionsAndSkipLogic> questionsAndSkipLogic) {
+        this.questionsAndSkipLogic = questionsAndSkipLogic;
     }
 }

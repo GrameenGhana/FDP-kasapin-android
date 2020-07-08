@@ -27,54 +27,28 @@ import org.grameen.fdp.kasapin.ui.splash.SplashActivity;
 
 import dagger.Component;
 
-/**
- * Created by AangJnr on 20, September, 2018 @ 2:12 AM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 @PerActivity
 @Component(modules = {ViewModule.class}, dependencies = {ApplicationComponent.class})
 public interface ActivityComponent {
     void inject(SplashActivity view);
-
     void inject(LoginActivity view);
-
     void inject(LandingActivity view);
-
     void inject(MainActivity view);
-
     void inject(FarmerListFragment view);
-
     void inject(AddEditFarmerActivity view);
-
     void inject(FarmerProfileActivity view);
-
     void inject(DynamicFormFragment view);
-
     void inject(AddEditFarmerPlotActivity view);
-
     void inject(PlotDetailsActivity view);
-
     void inject(MapActivity view);
-
     void inject(ProfitAndLossActivity view);
-
     void inject(FDPStatusDialogActivity view);
-
     void inject(DetailedMonthActivity view);
-
     void inject(PlotReviewActivity view);
-
     void inject(MonitoringYearSelectionActivity view);
-
     void inject(PlotMonitoringActivity view);
-
     void inject(AddPlotMonitoringActivity view);
-
     void inject(FamilyMembersActivity view);
-
     void inject(FarmAssessmentActivity view);
-
     void inject(AddEditServerUrlActivity view);
 }

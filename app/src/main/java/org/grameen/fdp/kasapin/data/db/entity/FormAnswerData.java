@@ -1,12 +1,5 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-
-/*
- * Created by AangJnr on 05, December, 2018 @ 12:44 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;

@@ -15,9 +15,6 @@ import java.util.List;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
-/**
- * Created by aangjnr on 08/11/2017.far
- */
 @Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
 public class Plot {
     @PrimaryKey(autoGenerate = true)

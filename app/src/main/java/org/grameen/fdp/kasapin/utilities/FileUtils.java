@@ -3,6 +3,8 @@ package org.grameen.fdp.kasapin.utilities;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import timber.log.Timber;
+
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
 public class FileUtils {
@@ -10,7 +12,6 @@ public class FileUtils {
         FileOutputStream out;
         try {
             createFolder(".thumbnails", null);
-
             File file = new File(AppConstants.ROOT_DIR + File.separator + ".nomedia");
             if (!file.exists()) {
                 out = new FileOutputStream(file);
@@ -31,5 +32,11 @@ public class FileUtils {
         if (fileName == null)
             return file;
         return new File(dir, fileName);
+    }
+
+    public static File createTemporaryFile(String part, String ext) throws Exception {
+        File dir = new File(ROOT_DIR + File.separator + ".temp/");
+        if (!dir.exists()) Timber.i("Is DIR created?  %s", dir.mkdirs());
+        return File.createTempFile(part, ext, dir);
     }
 }

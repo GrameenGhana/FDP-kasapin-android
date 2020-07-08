@@ -5,7 +5,7 @@ import android.widget.Button;
 
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class FarmerProfileContract {
 
         void loadDynamicButtons(List<FormAndQuestions> formAndQuestions);
 
-        void syncFarmerData(RealFarmer farmer, boolean showProgress);
+        void syncFarmerData(Farmer farmer, boolean showProgress);
 
 
     }

@@ -41,14 +41,11 @@ public class ScreenUtils {
     }
 
     public static boolean isTablet(AppCompatActivity context) {
-
         DisplayMetrics metrics = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
         float yInches = metrics.heightPixels / metrics.ydpi;
         float xInches = metrics.widthPixels / metrics.xdpi;
         double diagonalInches = Math.sqrt(xInches * xInches + yInches * yInches);
-
         return diagonalInches >= 7;
     }
 }

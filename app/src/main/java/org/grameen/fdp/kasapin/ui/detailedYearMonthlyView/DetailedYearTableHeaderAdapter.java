@@ -10,11 +10,7 @@ import android.widget.TextView;
 
 import de.codecrafters.tableview.TableHeaderAdapter;
 
-/**
- * Created by aangjnr on 27/01/2018.
- */
-
-public class DetailedYearTableHearderAdapter extends TableHeaderAdapter {
+public class DetailedYearTableHeaderAdapter extends TableHeaderAdapter {
     static View.OnClickListener mHeaderClickListener;
     private final String[] headers;
     private int paddingLeft = 20;
@@ -25,28 +21,24 @@ public class DetailedYearTableHearderAdapter extends TableHeaderAdapter {
     private int typeface = Typeface.NORMAL;
     private int textColor = -1728053248;
 
-
-    public DetailedYearTableHearderAdapter(Context context, String... headers) {
+    public DetailedYearTableHeaderAdapter(Context context, String... headers) {
         super(context);
         this.headers = headers;
     }
 
-
-    public DetailedYearTableHearderAdapter(Context context, int... headerStringResources) {
+    public DetailedYearTableHeaderAdapter(Context context, int... headerStringResources) {
         super(context);
         this.headers = new String[headerStringResources.length];
-
         for (int i = 0; i < headerStringResources.length; ++i) {
             this.headers[i] = context.getString(headerStringResources[i]);
         }
-
     }
 
     public void setHeaderClickListener(final View.OnClickListener mItemSelectedListener) {
         mHeaderClickListener = mItemSelectedListener;
     }
 
-    public void setPaddings(int left, int top, int right, int bottom) {
+    public void setPadding(int left, int top, int right, int bottom) {
         this.paddingLeft = left;
         this.paddingTop = top;
         this.paddingRight = right;
@@ -94,30 +86,6 @@ public class DetailedYearTableHearderAdapter extends TableHeaderAdapter {
         textView.setTextColor(this.textColor);
         textView.setSingleLine();
         textView.setEllipsize(TextUtils.TruncateAt.END);
-
-        /*if (columnIndex > 1) {
-
-            getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-            textView.setBackgroundResource(outValue.resourceId);
-            textView.setClickable(true);
-            textView.setFocusable(true);
-
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.i("MY TABLE HEADER ADAPTER", textView.getText().toString());
-
-                    view.setTag(columnIndex);
-
-                    if (mHeaderClickListener != null)
-                        mHeaderClickListener.onClick(view);
-
-
-                }
-            });
-
-        } */
-
         return textView;
     }
 }

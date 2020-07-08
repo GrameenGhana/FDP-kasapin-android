@@ -97,9 +97,7 @@ public class ButtonController extends MyLabeledFieldController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return editText;
-
         } else
             return inflateViewOnlyView();
     }
@@ -107,7 +105,6 @@ public class ButtonController extends MyLabeledFieldController {
     @Override
     public void setError(String message) {
         super.setError(message);
-        //getEditText().setError(message);
     }
 
 
@@ -128,8 +125,6 @@ public class ButtonController extends MyLabeledFieldController {
     public void refresh() {
         refresh(getEditText());
     }
-
-
 }
 
 

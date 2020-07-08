@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 import java.util.List;
@@ -50,7 +50,7 @@ public class AddPlotMonitoringContract {
 
         void getMonitoringQuestions();
 
-        void saveMonitoringData(Monitoring monitoring, RealFarmer farmer);
+        void saveMonitoringData(Monitoring monitoring, Farmer farmer);
 
 
     }

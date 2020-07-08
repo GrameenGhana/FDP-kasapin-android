@@ -12,18 +12,8 @@ import java.util.List;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 1:48 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 @Dao
 public interface CommunitiesDao extends BaseDao<Community> {
-
-    @Query("SELECT * FROM communities")
-    Single<List<Community>> getAllSingle();
-
     @Query("SELECT * FROM communities")
     Maybe<List<Community>> getAll();
 

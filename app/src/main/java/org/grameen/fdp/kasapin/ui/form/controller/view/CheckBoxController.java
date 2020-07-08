@@ -81,28 +81,6 @@ public class CheckBoxController extends MyLabeledFieldController {
         }
     }
 
-
-    /**
-     * Constructs a new instance of a checkboxes field.
-     *
-     * @param ctx              the Android context
-     * @param name             the name of the field
-     * @param labelText        the label to display beside the field. Set to {@code null} to not show a label
-     * @param isRequired       indicates if the field is required or not
-     * @param items            a list of Strings defining the selection items to show
-     * @param useItemsAsValues if true, {@code CheckBoxController} expects the associated form model to use
-     *                         the same string of the selected item when getting or setting the field; otherwise,
-     *                         {@code CheckBoxController} expects the form model to use index (as an Integer) to
-     *                         represent the selected item
-     */
-    /*public CheckBoxController(Context ctx, String name, String labelText, boolean isRequired, List<String> items, boolean useItemsAsValues, boolean isEnabled, String oldValues) {
-        this(ctx, name, labelText, isRequired, items, useItemsAsValues ? items : null, isEnabled);
-
-        this.oldValues = oldValues;
-
-        Log.i("CHECK BOX CONTROLLER", oldValues);
-
-    }*/
     public CheckBoxController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, String defaultValue, List<String> items, boolean useItemsAsValues, boolean isEnabled, Set<InputValidator> validators) {
         this(ctx, name, content_desc, labelText, isRequired, items, useItemsAsValues ? items : null, isEnabled);
 
@@ -110,7 +88,6 @@ public class CheckBoxController extends MyLabeledFieldController {
         if (isRequired)
             this.setValidators(validators);
     }
-
     /**
      * Constructs a new instance of a checkboxes field.
      *
@@ -146,9 +123,7 @@ public class CheckBoxController extends MyLabeledFieldController {
             editText.setPaddings(20, 0, 0, 0);
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
             editText.setKeyListener(null);
-
             editText.setOnClickListener(v -> showCheckboxDialog(editText));
-
             editText.setOnFocusChangeListener((v, hasFocus) -> {
                 if (hasFocus) {
                     showCheckboxDialog(editText);
@@ -156,7 +131,6 @@ public class CheckBoxController extends MyLabeledFieldController {
             });
 
             editText.setEnabled(IS_ENABLED);
-
             refresh(editText);
             return editText;
         } else {
@@ -174,7 +148,6 @@ public class CheckBoxController extends MyLabeledFieldController {
             int nbItem = items.size();
             Set<Object> modelValues = retrieveModelValues();
 
-
             for (int index = 0; index < nbItem; index++) {
                 if (modelValues.contains(areValuesDefined() ? values.get(index) : index)) {
                     textView = new TextView(getContext());
@@ -190,7 +163,6 @@ public class CheckBoxController extends MyLabeledFieldController {
                 }
             }
         }
-
         return checkboxContainer;
     }
 
@@ -203,17 +175,9 @@ public class CheckBoxController extends MyLabeledFieldController {
         );
     }
 
-
     @Override
     public void refresh() {
-        ViewGroup layout = getContainer();
-
-       /* CheckBox checkbox;
-        int nbItem = items.size();
-        for (int index = 0; index < nbItem; index++) {
-            checkbox = (CheckBox) layout.findViewById(CHECKBOX_ID + index);
-            refresh(checkbox, index);
-        }*/
+        getContainer();
     }
 
     /**
@@ -257,7 +221,6 @@ public class CheckBoxController extends MyLabeledFieldController {
 
 
     private void showCheckboxDialog(EditText editText) {
-
         Set<Object> modelValues = retrieveModelValues();
         AppLogger.e("CheckBoxCont", "modelValues == " + modelValues);
         final boolean[] checked = new boolean[items.size()];
@@ -271,14 +234,12 @@ public class CheckBoxController extends MyLabeledFieldController {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppDialog);
         builder.setMultiChoiceItems(arr, checked, (dialog, which, isChecked) -> {
-
         });
 
         builder.setCancelable(false);
         builder.setTitle("Select options");
         builder.setPositiveButton("OK", (dialog, which) -> {
             Set<Object> newValues = new HashSet<>(retrieveModelValues());
-
             for (int i = 0; i < checked.length; i++) {
                 boolean isChecked = checked[i];
                 if (isChecked) {
@@ -304,7 +265,6 @@ public class CheckBoxController extends MyLabeledFieldController {
         dialog1.show();
     }
 
-
     private void refresh(EditText editText) {
         String value = null;
         if (getModel().getValue(getName()) != null) {
@@ -315,6 +275,4 @@ public class CheckBoxController extends MyLabeledFieldController {
         }
         editText.setHint(value != null ? value : "Click to select");
     }
-
-
 }

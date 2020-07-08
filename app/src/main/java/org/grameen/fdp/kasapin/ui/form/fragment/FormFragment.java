@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,6 +35,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseFragment;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
+import org.grameen.fdp.kasapin.utilities.FileUtils;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.io.File;
@@ -44,35 +46,26 @@ import static android.app.Activity.RESULT_OK;
 import static org.grameen.fdp.kasapin.utilities.ActivityUtils.getFormModelFragment;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
 public abstract class FormFragment extends BaseFragment {
 
     private static int CAMERA_INTENT = 506;
-    ImageView imageView;
     private String ID;
     private Uri URI;
     private String TAG = "FormFragment";
-    private SharedPreferences preferences;
     private FormModelFragment formModelFragment;
     private MyFormController formController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         return inflater.inflate(R.layout.form_activity, null);
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
         this.formModelFragment = getFormModelFragment(this.getActivity());
         this.formController = new MyFormController(context, formModelFragment.getModel());
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -80,7 +73,7 @@ public abstract class FormFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recreateViews();
     }
@@ -136,7 +129,7 @@ public abstract class FormFragment extends BaseFragment {
             takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             try {
                 // place where to store camera taken picture
-                photo = this.createTemporaryFile("picture", ".jpg");
+                photo = FileUtils.createTemporaryFile("picture", ".jpg");
                 photo.delete();
                 URI = FileProvider.getUriForFile(getActivity(),
                         getActivity().getApplicationContext().getPackageName() + ".org.grameen.fdp.provider", photo);
@@ -153,18 +146,13 @@ public abstract class FormFragment extends BaseFragment {
     }
 
     void getCurrentLocation(final Context context, Question q) {
-
         getModel().setValue(q.getLabelC(), "Getting location...");
-
-
         boolean GpsStatus;
         LocationManager locationManager;
-
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         GpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
         if (GpsStatus) {
-
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
             criteria.setPowerRequirement(Criteria.POWER_LOW);
@@ -174,11 +162,8 @@ public abstract class FormFragment extends BaseFragment {
             criteria.setCostAllowed(true);
             criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
             criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
-
-
             // This is the Best And IMPORTANT part
             final Looper looper = null;
-
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(context,
@@ -186,45 +171,28 @@ public abstract class FormFragment extends BaseFragment {
                     == PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 locationManager.requestSingleUpdate(criteria, getLocationListener(q), looper);
-
             }
-        } else {
-
+        } else
             CustomToast.makeToast(context, "Please Enable GPS First", Toast.LENGTH_LONG).show();
-
-        }
     }
 
     private LocationListener getLocationListener(Question q) {
-
         return new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 getModel().setValue(q.getLabelC(), location.getLatitude() + ", " + location.getLongitude());
             }
-
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
             }
-
             @Override
             public void onProviderEnabled(String s) {
             }
-
             @Override
             public void onProviderDisabled(String s) {
             }
         };
     }
-
-
-    private File createTemporaryFile(String part, String ext) throws Exception {
-
-        File dir = new File(ROOT_DIR + File.separator + ".temp/");
-        if (!dir.exists()) Timber.i("Is DIR created?  %s", dir.mkdirs());
-        return File.createTempFile(part, ext, dir);
-    }
-
 
     boolean hasPermissions(Context context, String permission) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
@@ -236,7 +204,6 @@ public abstract class FormFragment extends BaseFragment {
         return false;
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -245,7 +212,6 @@ public abstract class FormFragment extends BaseFragment {
                 if (requestCode == CAMERA_INTENT) {
                     try {
                         String BASE64_STRING;
-
                         Bitmap bitmap = ImageUtil.handleSamplingAndRotationBitmap(getActivity(), URI);
                         BASE64_STRING = ImageUtil.bitmapToBase64(bitmap);
                         getModel().setValue(ID, BASE64_STRING);
@@ -257,7 +223,6 @@ public abstract class FormFragment extends BaseFragment {
                 }
             } else
                 CustomToast.makeToast(getActivity(), getResources().getString(R.string.no_image_taken), Toast.LENGTH_LONG).show();
-
         } catch (Exception e) {
             e.printStackTrace();
             CustomToast.makeToast(getActivity(), getResources().getString(R.string.something_went_wrong), Toast.LENGTH_LONG)

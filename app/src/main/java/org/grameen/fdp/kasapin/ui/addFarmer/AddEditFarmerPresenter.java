@@ -2,7 +2,7 @@ package org.grameen.fdp.kasapin.ui.addFarmer;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 
@@ -14,25 +14,15 @@ import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 9:06 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.View> implements AddEditFarmerContract.Presenter {
-
     @Inject
     public AddEditFarmerPresenter(AppDataManager appDataManager) {
         super(appDataManager);
         this.mAppDataManager = appDataManager;
     }
-
-
     @Override
     public void openNextActivity() {
     }
-
 
     @Override
     public void loadFormFragment(String farmerCode, int formTranslationId) {
@@ -42,15 +32,12 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(formAnswerData ->
                                 getView().showFormFragment(formAnswerData)
-                        , throwable -> {
-                            getView().showFormFragment(null);
-                        }
+                        , throwable -> getView().showFormFragment(null)
                 ));
     }
 
     @Override
-    public void saveData(RealFarmer farmer, FormAnswerData answerData, boolean exit) {
-        AppLogger.e(TAG, "UPDATED ANSWER DATA >>>> " + getGson().toJson(answerData));
+    public void saveData(Farmer farmer, FormAnswerData answerData, boolean exit) {
         answerData.setFarmerCode(farmer.getCode());
 
         getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmer))
@@ -82,6 +69,4 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
                     throwable.printStackTrace();
                 }));
     }
-
-
 }

@@ -1,9 +1,5 @@
 package org.grameen.fdp.kasapin.ui.gpsPicker;
 
-/*
- * Created by aangjnr on 09/11/2017.
- */
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -51,7 +47,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
 public class MapActivity extends BaseActivity implements MapContract.View, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final long UPDATE_INTERVAL = 5000, FASTEST_INTERVAL = 5000; // = 5 seconds
@@ -82,7 +77,6 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         public void onLocationChanged(Location location) {
 
             hideProgress();
-
             altitude = location.getAltitude();
             accuracy = CommonUtils.round(location.getAccuracy(), 2);
             AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
@@ -178,14 +172,11 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     void computeAreaInSquareMeters() {
         hideProgress();
         AREA_OF_PLOT = SphericalUtil.computeArea(latLngs);
-        AppLogger.d(TAG, "computeAreaInSquareMeters " + AREA_OF_PLOT);
-
         Double inHectares = convertToHectares(AREA_OF_PLOT);
         Double inAcres = convertToAcres(AREA_OF_PLOT);
         String message = "Area in Hectares is " + new DecimalFormat("0.00").format(inHectares) +
                 "\nArea in Acres is " + new DecimalFormat("0.00").format(inAcres) +
                 "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
-
         showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) ->
                         dialogInterface.dismiss(),
                 getStringResources(R.string.ok), null, null, 0);
@@ -217,7 +208,6 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
 
     void startLocationListener() {
         CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
-
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL);
@@ -230,9 +220,7 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
             showMessage("You need to enable permissions to display location!");
             return;
         }
-
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
-
         //fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
@@ -347,11 +335,7 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        AppLogger.e(TAG, "GOOGLE API CLIENT FAILED");
-        AppLogger.e(TAG, connectionResult.getErrorMessage());
-
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 
     private void hideProgress() {
         if (progressDialog.isShowing())

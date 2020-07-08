@@ -18,17 +18,12 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Set;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
 public class EditTextController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     private final String placeholder;
     private boolean IS_ENABLED;
     private String helperText;
     private int inputType;
-
     /**
      * Constructs a new instance of an edit text field.
      *
@@ -45,7 +40,6 @@ public class EditTextController extends MyLabeledFieldController {
         this.placeholder = placeholder;
         this.inputType = inputType;
         this.IS_ENABLED = isEnabled;
-
     }
 
     /**
@@ -117,7 +111,6 @@ public class EditTextController extends MyLabeledFieldController {
 
     /**
      * Constructs a new instance of an edit text field.
-     *
      * @param ctx       the Android context
      * @param name      the name of the field
      * @param labelText the label to display beside the field
@@ -160,6 +153,7 @@ public class EditTextController extends MyLabeledFieldController {
      *
      * @return true if this text box has multi-line enabled, or false otherwise
      */
+    @SuppressWarnings("IncompatibleBitwiseMaskOperation")
     public boolean isMultiLine() {
         return (inputType | InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0;
     }
@@ -178,6 +172,7 @@ public class EditTextController extends MyLabeledFieldController {
      *
      * @return true if this text field hides the input text, or false otherwise
      */
+    @SuppressWarnings("IncompatibleBitwiseMaskOperation")
     public boolean isSecureEntry() {
         return (inputType | InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0;
     }
@@ -200,10 +195,8 @@ public class EditTextController extends MyLabeledFieldController {
             editText.setFloatingLabel(MaterialEditText.FLOATING_LABEL_NONE);
             editText.setContentDescription(getContentDesc());
             editText.setTextSize(15f);
-            //editText.setPaddings(10, 0, 10, 0);
             editText.setSingleLine(!isMultiLine());
             editText.setInputType(inputType);
-
 
             if (placeholder != null) {
                 if (getModel().getValue(getName()) == null || getModel().getValue(getName()).toString().equalsIgnoreCase(""))
@@ -233,19 +226,15 @@ public class EditTextController extends MyLabeledFieldController {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-
                     if (inputType == InputType.TYPE_NUMBER_FLAG_DECIMAL) {
-
                         double doubleValue = 0;
                         if (editText.getText() != null) {
                             try {
-
                                 NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
                                 DecimalFormat formatter = (DecimalFormat) nf;
                                 formatter.applyPattern("#,###,###.##");
                                 doubleValue = Double.parseDouble(editText.getText().toString().replace(",", ""));
                                 getModel().setValue(getName(), formatter.format(doubleValue));
-
                             } catch (NumberFormatException e) {
                                 e.printStackTrace();
                                 getModel().setValue(getName(), editText.getText().toString());
@@ -254,7 +243,6 @@ public class EditTextController extends MyLabeledFieldController {
                     } else
                         getModel().setValue(getName(), editText.getText().toString());
                 }
-
             });
             editText.setOnFocusChangeListener((v, hasFocus) -> {
                 if (!hasFocus) {

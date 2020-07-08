@@ -5,10 +5,6 @@ import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by aangjnr on 30/01/2018.
- */
-
 @Entity(tableName = "communities", indices = {@Index(value = "countryId"), @Index(value = "parentId"), @Index(value = "id", unique = true)})
 public class Community extends BaseModel {
     @SerializedName("name")

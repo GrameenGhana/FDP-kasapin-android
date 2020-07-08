@@ -11,14 +11,9 @@ import com.google.gson.annotations.SerializedName;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by aangjnr on 08/02/2018.
- */
-
 @Entity(tableName = "monitorings", indices = {@Index("plotExternalId"), @Index("year")}, foreignKeys = @ForeignKey(entity = Plot.class, parentColumns = "externalId", childColumns = "plotExternalId"))
-public class Monitoring {
-    @PrimaryKey(autoGenerate = true)
-    int id;
+public class Monitoring extends BaseModel{
+
     @SerializedName("external_id")
     String externalId;
     String year;

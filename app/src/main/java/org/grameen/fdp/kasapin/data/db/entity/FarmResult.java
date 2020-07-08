@@ -7,26 +7,19 @@ import androidx.room.PrimaryKey;
 
 import java.util.List;
 
-/**
- * Created by aangjnr on 15/02/2018.
- */
-
 @Entity(tableName = "farm_results")
 public class FarmResult {
     @PrimaryKey
     @NonNull
-    String id;
+    String id = "";
     String caption;
     String status;
     String plotAssessmentId;
 
     @Ignore
     List<PlotAssessment> plotAssessmentList;
-
-
     public FarmResult() {
     }
-
     public String getPlotAssessmentId() {
         return plotAssessmentId;
     }

@@ -4,17 +4,10 @@ import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 
 import java.util.List;
 
-/**
- * Created by aangjnr on 08/02/2018.
- */
-
 public class PlotMonitoringTableData {
-
     Integer position;
     String title;
     List<HistoricalTableViewData> tableData;
-
-
     public PlotMonitoringTableData(String title, List<HistoricalTableViewData> tableData) {
         this.title = title;
         this.tableData = tableData;

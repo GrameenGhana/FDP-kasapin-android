@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.form;
 
-
 import java.util.List;
-
 /**
  * Defines methods to display the validation errors.
  */

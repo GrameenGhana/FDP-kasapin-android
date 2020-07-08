@@ -9,17 +9,10 @@ import androidx.room.Update;
 
 import java.util.List;
 
-/**
- * Created by AangJnr on 20, September, 2018 @ 5:14 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public interface BaseDao<T> {
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<T> objects);
-
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertOne(T object);
@@ -28,7 +21,5 @@ public interface BaseDao<T> {
     int updateOne(T object);
 
     @Delete
-    int deleteOne(T object);
-
-
+    void deleteOne(T object);
 }

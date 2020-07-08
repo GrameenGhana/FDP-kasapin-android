@@ -14,7 +14,7 @@ public class LoginResponse {
     }
 
     /**
-     * @param token
+     * @param token token value obtained from the server
      */
     public LoginResponse(String token) {
         super();
@@ -33,6 +33,4 @@ public class LoginResponse {
         this.token = token;
         return this;
     }
-
-
 }

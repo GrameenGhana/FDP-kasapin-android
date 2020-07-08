@@ -4,17 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-/**
- * Created by aangjnr on 27/01/2018.
- */
-
 @Entity(tableName = "activities")
 public class Activity {
-
-
     @PrimaryKey
     @NonNull
-    String Id;
+    String Id = "";
     String Name;
 
     public Activity() {
@@ -28,11 +22,12 @@ public class Activity {
         this.Name = name;
     }
 
+    @NonNull
     public String getId() {
         return Id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         Id = id;
     }
 

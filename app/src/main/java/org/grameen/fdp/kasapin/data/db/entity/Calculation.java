@@ -8,15 +8,9 @@ import com.google.gson.annotations.SerializedName;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-/**
- * Created by aangjnr on 04/01/2018.
- */
-
-
 @Entity(tableName = "calculations", indices = {@Index(value = "id", unique = true), @Index(value = "recommendationId")},
         foreignKeys = {@ForeignKey(entity = Recommendation.class, parentColumns = "id", childColumns = "recommendationId", onDelete = CASCADE)})
 public class Calculation extends BaseModel {
-
     @SerializedName("recommendation_id")
     int recommendationId;
     @SerializedName("year_c")
@@ -26,10 +20,8 @@ public class Calculation extends BaseModel {
     @SerializedName("formula_c")
     String formula;
 
-
     public Calculation() {
     }
-
 
     public int getRecommendationId() {
         return recommendationId;

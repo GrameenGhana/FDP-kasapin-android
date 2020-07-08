@@ -28,7 +28,6 @@ import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.OnScrollListener;
 
 public class ImageUtil {
-
     private static boolean isEndOfTable = false;
 
     public static Bitmap base64ToScaledBitmap(String base64Str) throws IllegalArgumentException {
@@ -39,14 +38,12 @@ public class ImageUtil {
 
     public static Bitmap base64ToBitmap(String base64Str) throws IllegalArgumentException {
         byte[] decodedBytes = Base64.decode(base64Str.getBytes(), Base64.DEFAULT);
-
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
     public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
-
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
     }
 
@@ -62,14 +59,12 @@ public class ImageUtil {
         options.inSampleSize = calculateInSampleSize(options, MAX_WIDTH, MAX_HEIGHT);
         options.inJustDecodeBounds = false;
         // Decode bitmap with inSampleSize set
-
         InputStream imageStream = context.getContentResolver().openInputStream(selectedImage);
         Bitmap img = BitmapFactory.decodeStream(imageStream, null, options);
         img = rotateImageIfRequired(context, img, selectedImage);
 
         if (imageStream != null)
             imageStream.close();
-
         return img;
     }
 
@@ -82,7 +77,6 @@ public class ImageUtil {
             ei = new ExifInterface(selectedImage.getPath());
 
         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
         switch (orientation) {
             case ExifInterface.ORIENTATION_ROTATE_90:
                 return rotateImage(img, 90);
@@ -118,8 +112,7 @@ public class ImageUtil {
 
             // Choose the smallest ratio as inSampleSize value, this will guarantee a final image
             // with both dimensions larger than or equal to the requested height and width.
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-
+            inSampleSize = Math.min(heightRatio, widthRatio);
             // This offers some additional logic in case the image has a strange
             // aspect ratio. For example, a panorama may have a much larger
             // width than height. In these cases the total pixels might still
@@ -127,7 +120,6 @@ public class ImageUtil {
             // be more aggressive with sample down the image (=larger inSampleSize).
 
             final float totalPixels = width * height;
-
             // Anything more than 2x the requested pixels we'll sample down further
             final float totalReqPixelsCap = reqWidth * reqHeight * 2;
 
@@ -137,91 +129,4 @@ public class ImageUtil {
         }
         return inSampleSize;
     }
-
-    public static String captureTableScreenshot(TableView tableView, String activityName) {
-        tableView.getBackground().setAlpha(0);
-        tableView.setVerticalScrollBarEnabled(false);
-
-        ListView tableDataListView = tableView.findViewById(R.id.table_data_view);
-        int measuredHeight = tableDataListView.getMeasuredHeight();
-        //Scroll tableView to the first item or position if the first item is not visible
-        while (tableDataListView.getFirstVisiblePosition() != 0) {
-            tableDataListView.scrollListBy(-measuredHeight);
-        }
-
-        View headerView = tableView.findViewById(R.id.table_header_view);
-        List<Bitmap> bitmaps = new ArrayList<>();
-
-        int allitemsheight = 0;
-
-        File imageFile = FileUtils.createFolder("screenCaptures", activityName + "_view.jpg");
-
-        OnScrollListener scrollListener = new OnScrollListener() {
-            @Override
-            public void onScroll(ListView tableDataView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                isEndOfTable = (firstVisibleItem + visibleItemCount) == totalItemCount;
-            }
-
-            @Override
-            public void onScrollStateChanged(ListView tableDateView, ScrollState scrollState) {
-            }
-        };
-        tableView.addOnScrollListener(scrollListener);
-
-        try {
-            //Add header view first
-            headerView.setDrawingCacheEnabled(true);
-            bitmaps.add(Bitmap.createBitmap(headerView.getDrawingCache()));
-            headerView.setDrawingCacheEnabled(false);
-
-            tableDataListView.setDrawingCacheEnabled(true);
-            do {
-                bitmaps.add(Bitmap.createBitmap(tableDataListView.getDrawingCache()));
-                allitemsheight += measuredHeight;
-
-                tableDataListView.scrollListBy(measuredHeight);
-            } while (!isEndOfTable);
-
-            tableDataListView.setDrawingCacheEnabled(false);
-
-            Bitmap bigBitmap = Bitmap.createBitmap(tableDataListView.getMeasuredWidth(), allitemsheight + (headerView.getMeasuredHeight() * 2), Bitmap.Config.ARGB_8888);
-            Canvas bitCanvas = new Canvas(bigBitmap);
-            bitCanvas.drawColor(Color.WHITE);
-
-            Paint paint = new Paint();
-            int iHeight = 0;
-
-            for (int i = 0; i < bitmaps.size(); i++) {
-                Bitmap bitmap = bitmaps.get(i);
-                bitCanvas.drawBitmap(bitmap, 0, iHeight, paint);
-                iHeight += bitmap.getHeight();
-                bitmap.recycle();
-                bitmap = null;
-            }
-
-            FileOutputStream outputStream = new FileOutputStream(imageFile);
-            int quality = 100;
-            bigBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-            bigBitmap.recycle();
-
-            AppLogger.e("ImageUtil", "Width == " + bigBitmap.getWidth() + " Height == " + bigBitmap.getHeight());
-
-            return imageFile.getAbsolutePath();
-        } catch (Throwable e) {
-            // Several error may come out with file handling or DOM
-            e.printStackTrace();
-        } finally {
-            tableView.removeOnScrollListener(scrollListener);
-            tableView.getBackground().setAlpha(1);
-            tableView.setVerticalScrollBarEnabled(true);
-
-            tableDataListView.smoothScrollToPosition(0);
-        }
-        return null;
-    }
-
-
 }

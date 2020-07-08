@@ -10,17 +10,11 @@ import com.google.gson.annotations.SerializedName;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-/**
- * Created by aangjnr on 15/02/2018.
- */
-
 @Entity(tableName = "complex_calculations", indices = @Index("questionId"), foreignKeys = @ForeignKey(entity = Question.class, parentColumns = "id", childColumns = "questionId", onDelete = CASCADE))
 public class ComplexCalculation {
-
     @PrimaryKey
     @NonNull
-    String id;
-
+    String id = "";
     @SerializedName("LastModifiedDate")
     String lastModifiedDate;
     String name;
@@ -28,7 +22,6 @@ public class ComplexCalculation {
     String questionId;
     @SerializedName("Condition__c")
     String condition;
-
 
     public ComplexCalculation() {
     }

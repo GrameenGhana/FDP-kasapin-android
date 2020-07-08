@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import org.grameen.fdp.kasapin.ui.form.model.RequiredField;
 
 public class RequiredFieldValidator implements InputValidator {
-
     @Override
     public ValidationError validate(Object value, String fieldName, String fieldLabel) {
         if (value == null || (value instanceof String && TextUtils.isEmpty((String) value))) {

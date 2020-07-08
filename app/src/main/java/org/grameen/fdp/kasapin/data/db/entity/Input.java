@@ -6,21 +6,16 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by aangjnr on 04/02/2018.
- */
-
 @Entity(tableName = "inputs")
 public class Input {
 
     @PrimaryKey
     @NonNull
-    String id;
+    String id = "";
     String name;
 
     @SerializedName("LastModifiedDate")
     String lastModifiedDate;
-
 
     @SerializedName("cost__c")
     String cost;

@@ -4,11 +4,8 @@ import androidx.room.Entity;
 
 @Entity(tableName = "urls")
 public class ServerUrl extends BaseModel {
-
     String name;
     String url;
-
-
     public ServerUrl() {
     }
 
@@ -27,5 +24,4 @@ public class ServerUrl extends BaseModel {
     public void setUrl(String url) {
         this.url = url;
     }
-
 }

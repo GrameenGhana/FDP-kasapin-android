@@ -13,7 +13,6 @@ import io.reactivex.schedulers.Schedulers;
 
 
 public class UploadData {
-
     String TAG = "Upload data";
     private FdpCallbacks.UploadDataListener uploadDataListener;
     private BaseContract.View mView;
@@ -47,23 +46,16 @@ public class UploadData {
         if (showProgress)
             getView().setLoadingMessage("Syncing farmers data...");
         getAppDataManager().getFdpApiService()
-                .pushFarmersData(token, farmersJsonObject)
+                .uploadFarmersData(token, farmersJsonObject)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableSingleObserver<Response>() {
                     @Override
                     public void onSuccess(Response response) {
-
-                        //Do other network calls or complete
-
-
                         if (uploadDataListener != null)
                             uploadDataListener.onUploadComplete("Data upload successful.");
                         uploadDataListener = null;
-
-
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -78,5 +70,4 @@ public class UploadData {
             uploadDataListener = null;
         }
     }
-
 }

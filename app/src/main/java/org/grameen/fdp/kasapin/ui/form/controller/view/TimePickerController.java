@@ -17,10 +17,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
 public class TimePickerController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     private final SimpleDateFormat displayFormat;
@@ -44,7 +40,6 @@ public class TimePickerController extends MyLabeledFieldController {
         this.timeZone = displayFormat.getTimeZone();
         this.is24HourView = is24HourView;
     }
-
 
     /**
      * Constructs a new instance of a time picker field.
@@ -85,13 +80,11 @@ public class TimePickerController extends MyLabeledFieldController {
         editText.setKeyListener(null);
         refresh(editText);
         editText.setOnClickListener(v -> showTimePickerDialog(getContext(), editText));
-
         editText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 showTimePickerDialog(getContext(), editText);
             }
         });
-
         return editText;
     }
 
@@ -116,7 +109,6 @@ public class TimePickerController extends MyLabeledFieldController {
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), is24HourView);
 
             timePickerDialog.setOnDismissListener(dialog -> timePickerDialog = null);
-
             timePickerDialog.show();
         }
     }

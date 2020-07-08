@@ -19,7 +19,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.Cell;
@@ -51,7 +51,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     static int ROW_SIZE = 1;
     @Inject
     FamilyMembersPresenter mPresenter;
-    RealFarmer FARMER;
+    Farmer FARMER;
     FormAndQuestions familyMembersFormAndQuestions;
     List<List<Question>> mQuestionsList;
     @BindView(R.id.table_view)
@@ -91,7 +91,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         mPresenter.takeView(this);
 
-        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
         noFamilyMembers = getIntent().getIntExtra("noFamilyMembers", 1);
         ROW_SIZE = noFamilyMembers;
 

@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.ui.base.model.Data;
+import org.grameen.fdp.kasapin.ui.base.model.TableData;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.text.DecimalFormat;
@@ -29,14 +29,14 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.BUTTON_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_SPINNER_VIEW;
 
 
 /**
  * Created by aangjnr on 17/01/2018.
  */
 
-public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
+public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter<TableData> {
 
     private static final int TEXT_SIZE = 10;
     private static final int TITLE_TEXT_SIZE = 14;
@@ -47,7 +47,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
     String[] YEARS = {"YEAR 1", "YEAR 2", "YEAR 3", "YEAR 4", "YEAR 5"};
 
 
-    public DetailedYearTableViewAdapter(final Context context, final List<Data> data, final TableView<Data> tableView) {
+    public DetailedYearTableViewAdapter(final Context context, final List<TableData> data, final TableView<TableData> tableView) {
         super(context, data, tableView);
 
         this.context = context;
@@ -66,7 +66,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
     @Override
     public View getDefaultCellView(int i, int i1, ViewGroup viewGroup) {
 
-        final Data myTableData = getRowData(i);
+        final TableData myTableData = getRowData(i);
         View renderedView;
 
 
@@ -86,7 +86,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
     }
 
 
-    private View renderCalculatedValuesForYear(final Data data, int year) {
+    private View renderCalculatedValuesForYear(final TableData data, int year) {
 
         TextView textView = null;
         List<String> calculationsForTheYears = data.getYearsDataFormula();
@@ -136,7 +136,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
     }
 
 
-    private View renderColumn0Values(final Data data) {
+    private View renderColumn0Values(final TableData data) {
 
         View view = null;
 
@@ -182,7 +182,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
                 view = button;
 
 
-            } else if (data.getTag().equals(TAG_VIEW)) {
+            } else if (data.getTag().equals(TAG_SPINNER_VIEW)) {
                 final MaterialSpinner spinner = new MaterialSpinner(getContext());
                 spinner.setItems(YEARS);
                 spinner.setTag(data.getLabel());

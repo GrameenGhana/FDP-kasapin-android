@@ -6,24 +6,18 @@ import androidx.room.Relation;
 
 import java.util.List;
 
-/**
- * Created by AangJnr on 26, September, 2018 @ 12:29 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class CommunitiesAndFarmers {
     @Embedded
     public Community village;
 
-    @Relation(parentColumn = "id", entityColumn = "villageId", entity = RealFarmer.class)
-    public List<RealFarmer> farmerList;
+    @Relation(parentColumn = "id", entityColumn = "villageId", entity = Farmer.class)
+    public List<Farmer> farmerList;
 
-    public List<RealFarmer> getFarmerList() {
+    public List<Farmer> getFarmerList() {
         return farmerList;
     }
 
-    public void setFarmerList(List<RealFarmer> farmerList) {
+    public void setFarmerList(List<Farmer> farmerList) {
         this.farmerList = farmerList;
     }
 
@@ -34,6 +28,5 @@ public class CommunitiesAndFarmers {
     public void setVillage(Community village) {
         this.village = village;
     }
-
 
 }

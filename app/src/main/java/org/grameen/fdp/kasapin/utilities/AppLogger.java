@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.utilities;
 
-
 import android.app.Application;
 import android.util.Log;
 
@@ -19,14 +18,12 @@ import timber.log.Timber;
 import static android.util.Log.INFO;
 
 public class AppLogger {
-
     public static void init(Application applicationContext) {
         if (!BuildConfig.ENABLE_CRASHLYTICS) {
             Timber.plant(new Timber.DebugTree());
         } else {
             String crashReporterPath = AppConstants.ROOT_DIR + File.separator + "crashReports";
             CrashReporter.initialize(applicationContext, crashReporterPath);
-
             //Todo Initialize Crashytics here
             Fabric.with(applicationContext, new Crashlytics());
         }
@@ -91,21 +88,16 @@ public class AppLogger {
     }
 
     private static final class CrashReportingTree extends Timber.Tree {
-
-
         @Override
         protected boolean isLoggable(@Nullable String tag, int priority) {
             return priority >= INFO;
         }
 
-
         @Override
         protected void log(int priority, @Nullable String tag, @NotNull String message, @Nullable Throwable t) {
-
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
             }
-
             MyCrashReporter.log(priority, tag, message);
 
             if (t != null) {
@@ -117,5 +109,4 @@ public class AppLogger {
             }
         }
     }
-
 }

@@ -1,9 +1,5 @@
 package org.grameen.fdp.kasapin.ui.base.model;
 
-/*
- * Created by aangjnr on 22/02/2018.
- */
-
 import com.evrencoskun.tableview.filter.IFilterableModel;
 import com.evrencoskun.tableview.sort.ISortableModel;
 

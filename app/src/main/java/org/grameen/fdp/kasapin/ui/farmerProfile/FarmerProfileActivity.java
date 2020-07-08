@@ -25,7 +25,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.PlotAssessment;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
@@ -108,7 +108,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     List<PlotAssessment> PLOT_ASSESSMENTS;
     List<String> PLOT_ASSESSMENT_VALUES;
     JSONObject MONITORING_DATA_JSON;
-    RealFarmer FARMER;
+    Farmer FARMER;
     int plotsSize = 0;
     int currentMonitoringYear = -1;
     private PlotsListAdapter plotsListAdapter;
@@ -132,7 +132,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         } else
             farmAssessmentLayout.setVisibility(View.GONE);
 
-        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
         if (FARMER != null)
             initializeViews(true);
         else
@@ -587,8 +587,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
             for (Plot p : plots) {
                 Monitoring monitoring = (useLastMonitoring)
-                        ? getAppDataManager().getDatabaseManager().monitoringsDao().getLastMonitoringForSelectedYear(p.getExternalId(), currentMonitoringYear)
-                        : getAppDataManager().getDatabaseManager().monitoringsDao().getFirstMonitoringForSelectedYear(p.getExternalId(), currentMonitoringYear);
+                        ? getAppDataManager().getDatabaseManager().monitoringDao().getLastMonitoringForSelectedYear(p.getExternalId(), currentMonitoringYear)
+                        : getAppDataManager().getDatabaseManager().monitoringDao().getFirstMonitoringForSelectedYear(p.getExternalId(), currentMonitoringYear);
                 AppLogger.e(TAG, "MONITORING >>> " + getGson().toJson(monitoring));
 
                 try {
@@ -632,7 +632,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             noOfPlots = plots.size();
             for (Plot plot : plots) {
                 //Check number of monitorngs for each plot for the currrent monitoring year
-                numberOfMonitoringsPerPlot.add(getAppDataManager().getDatabaseManager().monitoringsDao()
+                numberOfMonitoringsPerPlot.add(getAppDataManager().getDatabaseManager().monitoringDao()
                         .countMonitoringForSelectedYear(plot.getExternalId(), currentMonitoringYear)
                         .blockingGet(0));
             }

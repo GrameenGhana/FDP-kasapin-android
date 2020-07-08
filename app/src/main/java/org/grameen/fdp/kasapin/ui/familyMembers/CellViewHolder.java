@@ -17,10 +17,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * Created by aangjnr on 22/02/2018.
- */
-
 public class CellViewHolder extends AbstractViewHolder {
     private static FdpCallbacks.UpdateJsonArray updateJsonArrayListener;
     private MaterialEditText editText;

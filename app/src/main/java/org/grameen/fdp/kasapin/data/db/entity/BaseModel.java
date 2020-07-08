@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
 public class BaseModel {
     @PrimaryKey(autoGenerate = true)
     int id;

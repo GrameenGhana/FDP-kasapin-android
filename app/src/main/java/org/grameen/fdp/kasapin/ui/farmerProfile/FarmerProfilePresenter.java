@@ -8,7 +8,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -118,7 +118,7 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     }
 
     @Override
-    public void syncFarmerData(RealFarmer farmer, boolean showProgress) {
+    public void syncFarmerData(Farmer farmer, boolean showProgress) {
         syncData(this, showProgress, Collections.singletonList(farmer));
     }
 

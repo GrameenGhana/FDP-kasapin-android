@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.ui.login;
 
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -39,51 +38,32 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends BaseActivity implements LoginContract.View, FdpCallbacks.UrlSelectedListener {
-
     @Inject
     LoginPresenter mPresenter;
-
     @BindView(R.id.email)
     EditText mEmailView;
-
     @BindView(R.id.password)
     EditText mPasswordView;
-
     @BindView(R.id.url_text)
     TextView serverUrlTextView;
-
     PermissionManager permissionManager;
-
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setStatusBarColor(getWindow(), R.color.colorPrimary, true);
-
         super.onCreate(savedInstanceState);
         setTheme(R.style.AppTheme);
-        // toggleFullScreen(false, getWindow());
-
         setContentView(R.layout.activity_login);
-
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
-
         mPresenter.takeView(this);
-
 
         serverUrlTextView.setText((!TextUtils.isEmpty(getAppDataManager().getStringValue(AppConstants.SERVER_URL))
                 ? getAppDataManager().getStringValue(AppConstants.SERVER_URL)
                 : "N/A"));
 
-
         mPasswordView.setOnEditorActionListener((textView, i, keyEvent) -> {
-
             if (i == EditorInfo.IME_ACTION_DONE) {
                 onServerLoginClick();
                 return true;
@@ -91,61 +71,44 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
             return false;
         });
 
-
         mPasswordView.setOnTouchListener((v, motionEvent) -> {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mPasswordView.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     mPasswordView.requestFocus();
                     Selection.setSelection(mPasswordView.getText(), (mPasswordView.getText().toString().isEmpty()) ? 0 : mPasswordView.getText().length());
-
                     break;
                 case MotionEvent.ACTION_UP:
                     mPasswordView.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     mPasswordView.requestFocus();
                     Selection.setSelection(mPasswordView.getText(), (mPasswordView.getText().toString().isEmpty()) ? 0 : mPasswordView.getText().length());
-
                     break;
             }
-
             return true;
         });
-
 
         permissionManager = new PermissionManager() {
             @Override
             public void ifCancelledAndCanRequest(Activity activity) {
-
-                AppLogger.i("****** Can request");
-
                 showDialog(false, getString(R.string.permissions_needed),
                         getString(R.string.permissions_needed_rationale), (dialogInterface, i) ->
                                 permissionManager.checkAndRequestPermissions(LoginActivity.this),
                         getString(R.string.grant_permissions), (dialogInterface, i) -> supportFinishAfterTransition(),
                         getString(R.string.quit), 0);
-
             }
-
             @Override
             public void ifCancelledAndCannotRequest(Activity activity) {
-                AppLogger.i("****** Cannot request");
-
                 showDialog(false, getString(R.string.permissions_not_provided),
                         "Please provide the permission in Settings.", null,
                         "", (dialogInterface, i) -> supportFinishAfterTransition(), getString(R.string.quit), 0);
-
             }
-
         };
-
 
         new Handler().postDelayed(() -> showDialog(false, getString(R.string.hello),
                 getString(R.string.provide_all_permissions_rationale), (dialogInterface, i) -> {
                     permissionManager.checkAndRequestPermissions(LoginActivity.this);
                 }, getString(R.string.grant_permissions), (dialogInterface, i) -> finishAfterTransition(),
                 getString(R.string.quit), 0), 500);
-
-
     }
 
     @OnClick(R.id.sign_in_button)
@@ -156,30 +119,20 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
             onError(R.string.no_internet_connection_available);
     }
 
-
     @Override
     protected void onDestroy() {
         mPresenter.dropView();
         super.onDestroy();
     }
 
-
     @Override
     public void openNextActivity() {
-
-        AppLogger.i(TAG, "Opening Landing Page activity");
-
         startActivity(new Intent(this, LandingActivity.class));
         finish();
-
-
     }
 
     @Override
-    public void openLoginActivityOnTokenExpire() {
-
-    }
-
+    public void openLoginActivityOnTokenExpire() {}
 
     @OnClick(R.id.url_text)
     void goToAddServerActivity() {
@@ -191,15 +144,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         //To get Granted Permission and Denied Permission
         ArrayList<String> granted = permissionManager.getStatus().get(0).granted;
         ArrayList<String> denied = permissionManager.getStatus().get(0).denied;
-
         if (granted.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             FDPKasapin.createNoMediaFile();
         }
-
         permissionManager.checkResult(requestCode, permissions, grantResults);
-
     }
-
 
     private void validateData() {
         // Reset errors.
@@ -212,7 +161,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
 
         boolean cancel = false;
         View focusView = null;
-
 
         // Check for a server url, if the user entered one.
         if (TextUtils.isEmpty(mAppDataManager.getStringValue(AppConstants.SERVER_URL))) {
@@ -242,10 +190,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {  //Todo Perform login
+        } else //Todo Perform login
             mPresenter.makeLoginApiCall(mEmailView.getText().toString(), mPasswordView.getText().toString());
-        }
-
     }
 
     private boolean isEmailValid(String email) {
@@ -259,22 +205,5 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
     }
 
     @Override
-    public void onUrlSelected(String url) {
-        //On url selected, save the url in cache, quit the app and restart the login screen
-        //This is to allow all cached data by dagger to be reloaded from the application resources
-/*
-        getAppDataManager().setStringValue(AppConstants.SERVER_URL, url);
-
-        new Handler().post(() -> {
-            System.exit(0);
-            android.os.Process.killProcess(android.os.Process.myPid());
-
-            new Handler().postDelayed(() -> {
-                Intent i = new Intent(this, LoginActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-              startActivity(i);
-            }, 1000);
-        });*/
-
-    }
+    public void onUrlSelected(String url) {}
 }

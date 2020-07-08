@@ -26,7 +26,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
@@ -54,7 +54,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
 
 public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmerContract.View {
-
     @Inject
     AddEditFarmerPresenter mPresenter;
     Uri URI;
@@ -73,13 +72,12 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     @BindView(R.id.genderSpinner)
     MaterialSpinner genderSpinner;
     @BindView(R.id.birthdayYearEdittext)
-    EditText birthYearEdittext;
+    EditText birthYearEditText;
     @BindView(R.id.photo)
     CircleImageView circleImageView;
     @BindView(R.id.initials)
     TextView initials;
-    RealFarmer FARMER;
-    boolean isEditMode = false;
+    Farmer FARMER;
     boolean isNewFarmer = true;
     boolean shouldSaveData = true;
     String BASE64_STRING = "";
@@ -90,7 +88,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     int villageId;
     private FormAndQuestions CURRENT_FORM_QUESTION;
     private DynamicFormFragment dynamicFormFragment;
-    private SimpleSearchDialogCompat communitySearchDialog;
+    private SimpleSearchDialogCompat<MySearchItem> communitySearchDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +99,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         mPresenter.takeView(this);
 
         if (getIntent() != null) {
-            FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
-            AppLogger.e(TAG, "CURRENT FORM IS >>> " + getGson().toJson(CURRENT_FORM_QUESTION));
+            FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
             if (FARMER != null)
                 isNewFarmer = false;
             setUpViews();
@@ -143,7 +140,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
             farmerName.setText(FARMER.getFarmerName());
             farmerCode.setText(FARMER.getCode());
-            birthYearEdittext.setText(FARMER.getBirthYear());
+            birthYearEditText.setText(FARMER.getBirthYear());
 
             if (FARMER.getVillageId() > 0) {
                 Community village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
@@ -197,7 +194,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
             mPresenter.loadFormFragment(FARMER.getCode(), CURRENT_FORM_QUESTION.getForm().getFormTranslationId());
         } else {
-            FARMER = new RealFarmer();
+            FARMER = new Farmer();
             FARMER.setExternalId(UUID.randomUUID().toString());
             FARMER.setCode(FARMER.getExternalId());
             farmerCode.setText(FARMER.getCode());
@@ -210,13 +207,11 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             villageName = null;
 
             for (FormAndQuestions formAndQuestions : FORM_AND_QUESTIONS) {
-                AppLogger.e("FORM NAME IS " + formAndQuestions.getForm().getFormNameC());
                 if (formAndQuestions.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FARMER_PROFILE)) {
                     CURRENT_FORM_QUESTION = formAndQuestions;
                     break;
                 }
             }
-
             showFormFragment(null);
         }
     }
@@ -234,7 +229,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             return;
         }
 
-        if (birthYearEdittext.getText().toString().isEmpty()) {
+        if (birthYearEditText.getText().toString().isEmpty()) {
             showMessage("Please enter birth year of farmer");
             return;
         }
@@ -255,7 +250,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         }
 
         if (isNewFarmer) {
-            FARMER = new RealFarmer();
+            FARMER = new Farmer();
             FARMER.setFirstVisitDate(new Date(System.currentTimeMillis()));
         }
 
@@ -268,7 +263,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             AppLogger.i(TAG, "Validations passed.");
 
             FARMER.setFarmerName(farmerName.getText().toString().trim());
-            FARMER.setBirthYear(birthYearEdittext.getText().toString().trim());
+            FARMER.setBirthYear(birthYearEditText.getText().toString().trim());
             FARMER.setCode(farmerCode.getText().toString().trim());
             FARMER.setGender(gender);
             FARMER.setEducationLevel(educationLevel);
@@ -285,7 +280,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     public void moveToNextForm() {
         moveToNextForm(FARMER);
     }
-
 
     @Override
     public void finishActivity() {
@@ -304,7 +298,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         villageTextView.setEnabled(false);
         educationLevelSpinner.setEnabled(false);
         genderSpinner.setEnabled(false);
-        birthYearEdittext.setEnabled(false);
+        birthYearEditText.setEnabled(false);
         takePhoto.setVisibility(View.GONE);
     }
 
@@ -348,7 +342,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     "Which community are you looking for?", null, villageItems,
                     (dialog, item, position) -> {
                         dialog.dismiss();
-                        villageId = Integer.parseInt(item.getmExtId());
+                        villageId = Integer.parseInt(item.getExtId());
                         villageName = item.getTitle();
                         villageTextView.setText(villageName);
                     });
@@ -379,7 +373,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     }
                 } catch (Exception e) {
                     Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT).show();
-                    AppLogger.d(TAG, "Failed to load", e);
                 }
             }
         } else CustomToast.makeToast(this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -391,7 +384,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (requestCode == AppConstants.PERMISSION_CAMERA)
                 startCameraIntent();
-
         } else {
             showDialog(true, getString(R.string.permission_required), getString(R.string.camera_permission_rationale),
                     (dialogInterface, i) -> {

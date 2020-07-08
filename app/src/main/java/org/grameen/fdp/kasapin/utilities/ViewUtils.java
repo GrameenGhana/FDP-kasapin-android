@@ -32,6 +32,4 @@ public final class ViewUtils {
                     .getColor(context, R.color.textColorTertiaryLightInverted), PorterDuff.Mode.SRC_ATOP);
         }
     }
-
-
 }

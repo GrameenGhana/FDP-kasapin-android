@@ -39,11 +39,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * A login screen that offers login via email/password.
- */
 public class PlotDetailsActivity extends BaseActivity implements PlotDetailsContract.View {
-
     @Inject
     PlotDetailsPresenter mPresenter;
     Plot PLOT;
@@ -67,7 +63,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     TextView plotPhText;
     @BindView(R.id.ph)
     TextView ph;
-
     @BindView(R.id.lime_needed)
     TextView limeNeeded;
     @BindView(R.id.aos)
@@ -80,26 +75,19 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     Button editButton;
     @BindView(R.id.lime_needed_text)
     TextView limeNeededText;
-
-
     JSONObject PLOT_ANSWERS_JSON;
     Recommendation PLOT_RECOMMENDATION = null;
     Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
     String recNames;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_edit_plot_v2);
         setUnBinder(ButterKnife.bind(this));
-
-
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
         mAppDataManager = mPresenter.getAppDataManager();
-
 
         PLOT = getGson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
         if (PLOT != null) {
@@ -114,7 +102,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     @Override
     public void showForm(List<FormAndQuestions> formAndQuestions) {
-
         //Usually, all answers pertaining to Form of type *Plot Form* are bundled as a JSON and saved in a the answerData field on the Plot object
         //So when obtaining the answers for the plot form questions, they're all obtained from the answerData of Plot object
         // On sync down from the server, some of the answers to the Plot Form questions are separated as FormAnswerData object and saved in the DB with their corresponding form_translation_ids
@@ -122,14 +109,11 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         //If the Plot hasn't been synced yet, FormAnswerData will be null for all forms of type Plot Form.
         try {
             JSONObject plotAnswersDataJson = PLOT.getAOJsonData();
-
             BaseActivity.PLOT_FORM_AND_QUESTIONS = formAndQuestions;
-
             for (FormAndQuestions formAndQuestions1 : BaseActivity.PLOT_FORM_AND_QUESTIONS) {
                 FormAnswerData formAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(PLOT.getFarmerCode(), formAndQuestions1.getForm().getFormTranslationId());
-
                 if (formAnswerData != null) {
-                    Iterator iterator = formAnswerData.getJsonData().keys();
+                    Iterator<String> iterator = formAnswerData.getJsonData().keys();
 
                     while (iterator.hasNext()) {
                         String key = (String) iterator.next();
@@ -146,30 +130,19 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         } catch (JSONException ignored) {
         }
 
-
-        //String limeNeededValue = "--";
         DynamicPlotFormFragment dynamicPlotFormFragment = DynamicPlotFormFragment.newInstance(true, PLOT.getFarmerCode(),
                 true, PLOT.getAnswersData());
-
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicPlotFormFragment, PLOT.getFarmerCode());
-
-        //mPresenter.getAreaUnits(PLOT.getFarmerCode());
         checkRecommendation();
-        //
-
-
     }
 
     void setupViews() {
         //Todo get units and apply
         setToolbar(getStringResources(R.string.plot_info));
-
         plotName.setText(PLOT.getName());
         ph.setText(PLOT.getPh());
 
-
         //Get values
-
         try {
             PLOT_ANSWERS_JSON = PLOT.getAOJsonData();
         } catch (JSONException e) {
@@ -177,8 +150,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             PLOT_ANSWERS_JSON = new JSONObject();
         }
 
-
-        Iterator iterator = PLOT_ANSWERS_JSON.keys();
+        Iterator<String> iterator = PLOT_ANSWERS_JSON.keys();
         while (iterator.hasNext()) {
             String tmp_key = (String) iterator.next();
             if (tmp_key.toLowerCase().contains("lime")) {
@@ -191,7 +163,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             }
         }
 
-
         if (getAppDataManager().isMonitoring())
             editButton.setVisibility(View.GONE);
 
@@ -199,7 +170,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         //SetCaptionLabels
         Completable.fromAction(() -> {
-
             String estimatedProductionSizeCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_estimate_production_");
             if (!TextUtils.isEmpty(estimatedProductionSizeCaption))
                 plotEstProdText.setText(estimatedProductionSizeCaption);
@@ -208,16 +178,13 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             if (!TextUtils.isEmpty(recommendedInterventionCaption))
                 recommendedInterventionText.setText(recommendedInterventionCaption);
 
-
             String soilPhCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("plot_ph_");
             if (!TextUtils.isEmpty(soilPhCaption))
                 plotPhText.setText(soilPhCaption);
 
-
             String limeNeededCaption = getAppDataManager().getDatabaseManager().questionDao().getCaption("lime_");
             if (!TextUtils.isEmpty(limeNeededCaption))
                 limeNeededText.setText(limeNeededCaption);
-
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
@@ -225,19 +192,15 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                     public void onComplete() {
                         mPresenter.getAreaUnits(PLOT.getFarmerCode());
                     }
-
                     @Override
                     public void onError(Throwable ignored) {
                     }
                 });
-
-
     }
 
 
     @Override
     public void setAreaUnits(String unit) {
-
         landSize.setText(String.format("%s %s", PLOT.getArea(), unit));
     }
 
@@ -247,9 +210,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     }
 
     void checkRecommendation() {
-        AppLogger.e(TAG, "#########   RECOMMENDATION ID IS " + PLOT.getRecommendationId());
         if (!getAppDataManager().getBooleanValue("reloadRecommendation")) {
-
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationId(PLOT.getRecommendationId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -258,80 +219,51 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                         recommendedIntervention.setTextColor((s.equalsIgnoreCase(AppConstants.RECOMMENDATION_NO_FDP)
                                 ? ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red)
                                 : ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent)));
-
-
                     }, throwable -> showMessage("Couldn't load plot's recommendation")));
         } else {
-            AppLogger.e(TAG, "********************   RELOAD RECOMMENDATION ******************** ");
-
             recommendedIntervention.setText("");
             recommendationProgress.setVisibility(View.VISIBLE);
             mPresenter.getRecommendations(1);
         }
     }
 
-
     @Override
     public void loadRecommendation(List<Recommendation> recommendations) {
         LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
         logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON);
 
-
-        AppLogger.i("" + TAG, "############    REAPPLYING LOGIC TO RECOMMENDATION    ##################");
-
         for (Recommendation recommendation : recommendations) {
-            AppLogger.e(TAG, "---------   RECOMMENDATION NAME IN ENGLISH >>  " + recommendation.getRecommendationName() + "   ---------");
-            AppLogger.e(TAG, "---------   HIERARCHY >>  " + recommendation.getHierarchy() + "   ---------");
-
-
             if (recommendation.getHierarchy() != 0 && recommendation.getCondition() != null && !recommendation.getCondition().equalsIgnoreCase("null")) {
-
                 try {
                     String value = logicFormulaParser.evaluate(recommendation.getCondition());
                     if (value.trim().equalsIgnoreCase("true")) {
-
                         if (recommendation.getRecommendationName().equalsIgnoreCase("replant") || recommendation.getRecommendationName().equalsIgnoreCase("replant + extra soil"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                     .getByRecommendationName("Minimal GAPs").blockingGet();
-
                         else if (recommendation.getRecommendationName().equalsIgnoreCase("grafting") || recommendation.getRecommendationName().equalsIgnoreCase("grafting + extra soil"))
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                     .getByRecommendationName("Modest GAPs").blockingGet();
                         else
                             GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                     .getByRecommendationName("Maintenance (GAPs)").blockingGet();
-
                         PLOT_RECOMMENDATION = recommendation;
-
                         break;
                     } else
                         GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                 .getByRecommendationName("Maintenance (GAPs)").blockingGet();
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
-            AppLogger.e(TAG, "---------------------------------------------------------------------------");
-            AppLogger.e(TAG, "---------------------------------------------------------------------------");
-
         }
-
         if (PLOT_RECOMMENDATION == null)
             PLOT_RECOMMENDATION = GAPS_RECOMENDATION_FOR_START_YEAR;
-
         if (PLOT_RECOMMENDATION != null) {
             recNames = PLOT_RECOMMENDATION.getLabel();
-
             if (GAPS_RECOMENDATION_FOR_START_YEAR != null)
                 PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
-
             PLOT.setRecommendationId(PLOT_RECOMMENDATION.getId());
-
             mPresenter.saveData(PLOT);
-
         }
     }
 
@@ -339,11 +271,9 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     public void showRecommendation() {
         recommendationProgress.setVisibility(View.GONE);
         recommendedIntervention.setText(recNames);
-
         recommendedIntervention.setTextColor((recNames.equalsIgnoreCase(AppConstants.RECOMMENDATION_NO_FDP)
                 ? ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red)
                 : ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent)));
-
     }
 
 
@@ -356,12 +286,10 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
     @Override
-    public void openNextActivity() {
-    }
+    public void openNextActivity() {}
 
     @Override
-    public void openLoginActivityOnTokenExpire() {
-    }
+    public void openLoginActivityOnTokenExpire() {}
 
     @Override
     public void onBackPressed() {

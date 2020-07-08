@@ -36,7 +36,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,LockedOrientationActivity"
      >
 
         <activity
@@ -68,7 +68,6 @@
             android:excludeFromRecents="true"
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".ui.test.CrashTestingActivity" />
         <activity android:name=".ui.farmerProfile.FarmerProfileActivity" />
         <activity android:name=".ui.AddEditFarmerPlot.AddEditFarmerPlotActivity" />
         <activity android:name=".ui.plotDetails.PlotDetailsActivity" />
@@ -116,5 +115,4 @@
                 android:resource="@xml/provider_paths" />
         </provider>
     </application>
-
 </manifest>

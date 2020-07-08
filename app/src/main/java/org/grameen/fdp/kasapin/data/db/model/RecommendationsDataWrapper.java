@@ -9,7 +9,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import java.util.List;
 
 /**
- * Created by AangJnr on 09, December, 2018 @ 11:42 PM
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */
@@ -27,9 +26,9 @@ public class RecommendationsDataWrapper {
     }
 
     /**
-     * @param data
+     * @param recommendations Recommendation data from the server
      */
-    public RecommendationsDataWrapper(List<Recommendation> data) {
+    public RecommendationsDataWrapper(List<Recommendation> recommendations) {
         super();
         this.data = data;
     }
@@ -41,6 +40,4 @@ public class RecommendationsDataWrapper {
     public void setData(List<Recommendation> data) {
         this.data = data;
     }
-
-
 }

@@ -10,35 +10,23 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by aangjnr on 30/01/2018.
- */
-
 @Entity(tableName = "districts", indices = {@Index(value = "id", unique = true)})
 public class District {
-
     @PrimaryKey
-    @NonNull
     int id;
-
     @SerializedName("district")
     String district;
-
-
     @Ignore
     List<Community> communities;
-
 
     public District() {
     }
 
-
-    @NonNull
     public int getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

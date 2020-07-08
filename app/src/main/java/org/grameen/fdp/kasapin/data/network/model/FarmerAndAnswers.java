@@ -4,21 +4,19 @@ import com.google.gson.annotations.SerializedName;
 
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 
 import java.util.List;
 
 public class FarmerAndAnswers {
-
     @SerializedName("farmer")
-    RealFarmer farmer;
-
+   private Farmer farmer;
 
     @SerializedName("forms")
-    List<FormAnswerData> answers;
+    private List<FormAnswerData> answers;
 
     @SerializedName("plot_details")
-    List<List<Plot>> plotDetails;
+   private List<List<Plot>> plotDetails;
 
 
     public FarmerAndAnswers() {
@@ -32,11 +30,11 @@ public class FarmerAndAnswers {
         this.answers = answers;
     }
 
-    public RealFarmer getFarmer() {
+    public Farmer getFarmer() {
         return farmer;
     }
 
-    public void setFarmer(RealFarmer farmer) {
+    public void setFarmer(Farmer farmer) {
         this.farmer = farmer;
     }
 

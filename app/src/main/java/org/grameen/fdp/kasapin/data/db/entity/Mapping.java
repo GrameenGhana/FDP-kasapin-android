@@ -5,15 +5,8 @@ import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
 
-
-/**
- * Created by aangjnr on 29/11/2017.
- */
-
 @Entity(tableName = "mappings", indices = {@Index(value = "id", unique = true), @Index(value = "questionId", unique = true)})
 public class Mapping extends BaseModel {
-
-
     @SerializedName("question_id")
     private int questionId;
     @SerializedName("object_c")
@@ -21,24 +14,18 @@ public class Mapping extends BaseModel {
     @SerializedName("field_c")
     private String fieldName;
 
-
     /**
      * No args constructor for use in serialization
      */
     public Mapping() {
-
     }
-
-
     public int getQuestionId() {
-
         return questionId;
     }
 
     public void setQuestionId(int questionId) {
         this.questionId = questionId;
     }
-
 
     public String getObjectName() {
         return objectName;

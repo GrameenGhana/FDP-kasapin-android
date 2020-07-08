@@ -18,7 +18,7 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.addPlotMonitoring.AddPlotMonitoringActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
@@ -45,7 +45,6 @@ import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.model.TableColumnWeightModel;
 import io.reactivex.functions.Action;
 
-
 public class PlotMonitoringActivity extends BaseActivity implements PlotMonitoringContract.View {
     public static boolean newMonitoringAdded = false;
     @Inject
@@ -63,7 +62,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
     @BindView(R.id.currencyLayout)
     RelativeLayout currencyLayout;
     @BindView(R.id.general_ao_tableView)
-    TableView generalAoTableView;
+    TableView<HistoricalTableViewData> generalAoTableView;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.edit_monitoring)
@@ -72,7 +71,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
     Button addMonitoring;
     @BindView(R.id.sync)
     Button sync;
-    RealFarmer FARMER;
+    Farmer FARMER;
     Plot PLOT;
     JSONObject AO_JSON_OBJECT;
     PlotMonitoringTablePagerAdapter plotMonitoringTablePagerAdapter;
@@ -89,10 +88,8 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         setContentView(R.layout.activity_plot_monitoring_view);
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
-
         mPresenter.takeView(this);
-
-        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
         PLOT = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
         SELECTED_YEAR = getIntent().getIntExtra("selectedYear", 1);
 
@@ -103,7 +100,6 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
     @Override
     public void setUpViews() {
-        //setToolbar(getStringResources(R.string.plot_monitoring));
         viewPager.setClipToPadding(false);
         viewPager.setPadding(100, 0, 100, 0);
         viewPager.setPageMargin(40);
@@ -146,7 +142,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         List<HistoricalTableViewData> ADOPTION_OBSERVATIONS_TABLE_VIEW_DATA = new ArrayList<>();
         for (Question q : AO_QUESTIONS) {
             //Todo get results
-            ADOPTION_OBSERVATIONS_TABLE_VIEW_DATA.add(new HistoricalTableViewData(q.getCaptionC(), ComputationUtils.getValue(q.getLabelC(), AO_JSON_OBJECT), "--", "--", null));
+            ADOPTION_OBSERVATIONS_TABLE_VIEW_DATA.add(new HistoricalTableViewData(q.getCaptionC(), ComputationUtils.getDataValue(q, AO_JSON_OBJECT), "--", "--", null));
         }
         PlotMonitoringTableViewAdapter plotMonitoringTableViewAdapter = new PlotMonitoringTableViewAdapter(this, ADOPTION_OBSERVATIONS_TABLE_VIEW_DATA, generalAoTableView);
         generalAoTableView.setDataAdapter(plotMonitoringTableViewAdapter);
@@ -159,7 +155,6 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         monitoringList = _monitoringList;
         for (Monitoring monitoring : monitoringList) {
             List<HistoricalTableViewData> historicalTableViewDataList = new ArrayList<>();
-
             JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(monitoring.getJson());
@@ -168,14 +163,11 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
                 jsonObject = new JSONObject();
             }
 
-            AppLogger.e(TAG, jsonObject.toString());
-
             for (Question q : MONITORING_AO_QUESTIONS) {
                 String[] questionIds = q.splitRelatedQuestions();
                 if (questionIds != null) {
                     Question competenceQuestion = getAppDataManager().getDatabaseManager().questionDao().get(questionIds[0]);
                     Question failureQuestion = getAppDataManager().getDatabaseManager().questionDao().get(questionIds[1]);
-
                     //Todo get results
                     if (competenceQuestion != null && failureQuestion != null)
                         historicalTableViewDataList.add(new HistoricalTableViewData("", ComputationUtils.getDataValue(q, jsonObject), ComputationUtils.getDataValue(competenceQuestion, jsonObject), ComputationUtils.getDataValue(failureQuestion, jsonObject), null));
@@ -187,14 +179,12 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
             Question monitoringPlotDate = getAppDataManager().getDatabaseManager().questionDao().get("monitoring_plot_date_");
             if (monitoringPlotDate != null) {
-                String dateValue = ComputationUtils.getValue(monitoringPlotDate.getLabelC(), jsonObject);
+                String dateValue = ComputationUtils.getDataValue(monitoringPlotDate, jsonObject);
                 try {
                     if (dateValue.length() > 20) {
-
                         historicalTableViewDataList.add(new HistoricalTableViewData("", "", getStringResources(R.string.date), dateValue.substring(0, 19), AppConstants.TAG_RESULTS));
                     } else
                         historicalTableViewDataList.add(new HistoricalTableViewData("", "", getStringResources(R.string.date), dateValue, AppConstants.TAG_RESULTS));
-
                 } catch (Exception e) {
                     historicalTableViewDataList.add(new HistoricalTableViewData("", "", getStringResources(R.string.date), dateValue.substring(0, 19), AppConstants.TAG_RESULTS));
                     e.printStackTrace();
@@ -209,14 +199,11 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
             if (monitoringPlotResultsFormAndQuestions != null && monitoringPlotResultsFormAndQuestions.getQuestions().size() > 0)
                 for (Question q : monitoringPlotResultsFormAndQuestions.getQuestions())
-                    historicalTableViewDataList.add(new HistoricalTableViewData("", "", q.getCaptionC(), ComputationUtils.getValue(q.getLabelC(), jsonObject), AppConstants.TAG_RESULTS));
-
+                    historicalTableViewDataList.add(new HistoricalTableViewData("", "", q.getCaptionC(), ComputationUtils.getDataValue(q, jsonObject), AppConstants.TAG_RESULTS));
 
             PlotMonitoringTableData p = new PlotMonitoringTableData(monitoring.getName(), historicalTableViewDataList);
-
             plotMonitoringTableDataList.add(p);
         }
-
 
         plotMonitoringTablePagerAdapter = new PlotMonitoringTablePagerAdapter(this, plotMonitoringTableDataList);
         if (plotMonitoringTableDataList.size() > 0) {
@@ -225,22 +212,17 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
-
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
                 @Override
                 public void onPageSelected(int position) {
-                    AppLogger.e(TAG, "ON PAGE SELECTED >> " + position + " >>> TITLE = " + plotMonitoringTableDataList.get(position).getTitle());
                     MONITORING_POSITION = position;
                     titleView.setText(plotMonitoringTableDataList.get(position).getTitle());
                 }
-
                 @Override
                 public void onPageScrollStateChanged(int state) {
                 }
             });
             toggleNoDataPlaceholder(false, null);
-            AppLogger.e(TAG, "****************** NEW MONITORING ADDED? >>>> " + newMonitoringAdded);
             if (newMonitoringAdded)
                 new Handler().postDelayed(() -> {
                     viewPager.setCurrentItem(plotMonitoringTablePagerAdapter.getCount() - 1, true);
@@ -253,8 +235,6 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
     void toggleNoDataPlaceholder(boolean shouldShow, String noDataText) {
         noDataTextView.setVisibility((shouldShow) ? View.VISIBLE : View.GONE);
         sync.setEnabled(!shouldShow);
-        //addMonitoring.setVisibility((shouldShow) ? View.VISIBLE : View.GONE);
-
         editMonitoring.setVisibility((shouldShow) ? View.GONE : View.VISIBLE);
         noDataTextView.setText(noDataText);
     }
@@ -282,8 +262,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
     }
 
     @Override
-    public void openNextActivity() {
-    }
+    public void openNextActivity() {}
 
     @OnClick({R.id.edit_monitoring, R.id.add_monitoring})
     public void onViewClicked(View view) {

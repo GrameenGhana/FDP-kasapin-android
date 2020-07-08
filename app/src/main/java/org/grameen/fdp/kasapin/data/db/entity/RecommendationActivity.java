@@ -5,16 +5,10 @@ import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by aangjnr on 17/01/2018.
- */
-
 @Entity(tableName = "recommendation_activities",
         indices = {@Index("recommendationId"), @Index("activityId")})
 
 public class RecommendationActivity extends BaseModel {
-
-
     @SerializedName("recommendation_id")
     int recommendationId;
 
@@ -33,7 +27,6 @@ public class RecommendationActivity extends BaseModel {
     @SerializedName("seasonal_c")
     int seasonal;
 
-
     @SerializedName("labor_days_c")
     double laborDays;
 
@@ -42,7 +35,6 @@ public class RecommendationActivity extends BaseModel {
 
     @SerializedName("supplies_cost_c")
     double suppliesCost;
-
 
     public RecommendationActivity() {
     }

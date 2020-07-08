@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
 import org.grameen.fdp.kasapin.utilities.ActivityUtils;
@@ -19,8 +19,7 @@ import javax.inject.Inject;
 public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusContract.View {
     @Inject
     FDPStatusPresenter mPresenter;
-
-    RealFarmer FARMER;
+    Farmer FARMER;
     FormAndQuestions formAndQuestions;
     private DynamicFormFragment dynamicFormFragment;
 
@@ -30,9 +29,8 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
         setContentView(R.layout.activity_fdp_status);
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
-
         if (getIntent() != null) {
-            FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+            FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
             if (FARMER != null)
                 setUpViews();
             else {
@@ -54,9 +52,7 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
 
         if (getAppDataManager().isMonitoring())
             findViewById(R.id.save_button).setVisibility(View.GONE);
-
         findViewById(R.id.cancel_button).setOnClickListener((v) -> finish());
-
         findViewById(R.id.save_button).setOnClickListener((v) -> saveData());
     }
 

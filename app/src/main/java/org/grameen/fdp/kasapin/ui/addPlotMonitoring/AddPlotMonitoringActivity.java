@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
@@ -30,7 +29,7 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
@@ -67,11 +66,9 @@ import io.reactivex.schedulers.Schedulers;
 public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMonitoringContract.View, FdpCallbacks.AnItemSelectedListener {
     @Inject
     AddPlotMonitoringPresenter mPresenter;
-    RealFarmer FARMER;
+    Farmer FARMER;
     Plot PLOT;
     DynamicFormFragment dynamicFormFragment;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.plotName)
     TextView plotName;
     @BindView(R.id.landSize)
@@ -100,7 +97,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
     JSONObject PLOT_AO_ANSWERS_JSON;
     Monitoring MONITORING;
     ScriptEngine scriptEngine;
-    Iterator i1;
+    Iterator<String> i1;
     String tmp_key;
     String startYearLabel;
     int counter = 0;
@@ -113,7 +110,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
         mPresenter.takeView(this);
-        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
         PLOT = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
         MONITORING_POSITION = getIntent().getIntExtra("monitoringPosition", 1);
         MONITORING = getGson().fromJson(getIntent().getStringExtra("monitoring"), Monitoring.class);
@@ -169,12 +166,9 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
-                    public void onComplete() {
-                    }
-
+                    public void onComplete() {}
                     @Override
-                    public void onError(Throwable ignored) {
-                    }
+                    public void onError(Throwable ignored) {}
                 });
         if (PLOT.getRecommendationId() > 0) {
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationId(PLOT.getRecommendationId())
@@ -191,7 +185,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             MONITORING.setPlotExternalId(PLOT.getExternalId());
             MONITORING.setYear(SELECTED_YEAR);
 
-            mPresenter.getMonitoringQuestions();
         } else {
             setToolbar(getStringResources(R.string.edit_plot_monitoring) + " " + MONITORING.getName());
             try {
@@ -199,8 +192,8 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            mPresenter.getMonitoringQuestions();
         }
+        mPresenter.getMonitoringQuestions();
     }
 
     @Override
@@ -216,9 +209,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @Override
     public void loadDynamicFragmentAndViews(FormAndQuestions monitoringPlotInfoQuestions, FormAndQuestions aoMonitoringQuestions) {
-        AppLogger.e(TAG, "AO MONITORING QUESTIONS >>> " + getGson().toJson(aoMonitoringQuestions.questions));
-        AppLogger.e(TAG, "ANSWER DATA >>> " + MONITORING_ANSWERS_JSON.toString());
-
         if (IS_NEW_MONITORING)
             dynamicFormFragment = DynamicFormFragment.newInstance(monitoringPlotInfoQuestions, false, null, false, null);
         else {
@@ -235,14 +225,13 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             for (Question q : aoMonitoringQuestions.getQuestions()) {
                 addViewsDynamically(q);
                 if (!IS_NEW_MONITORING)
-                    setUpPropertyChangeListeners(q, ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON));
+                    setUpPropertyChangeListeners(q, ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON));
             }
             monitoringAOLayout.animate().alpha(1f).setDuration(200).start();
             Question monitoringObservationByQuestion = getAppDataManager().getDatabaseManager().questionDao().get("monitoring_plot_observationby_");
             if (monitoringObservationByQuestion != null)
                 dynamicFormFragment.getModel().addPropertyChangeListener(monitoringObservationByQuestion.getLabelC(), evt -> {
                     String newValue = (String) evt.getNewValue();
-
                     if (newValue.equalsIgnoreCase("manager"))
                         for (int i = 0; i < COMPETENCE_VIEWS.size(); i++)
                             COMPETENCE_VIEWS.get(i).setEnabled(true);
@@ -260,16 +249,16 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         linearLayout.setBackgroundColor((counter % 2 == 0)
                 ? ContextCompat.getColor(this, R.color.light_grey)
                 : ContextCompat.getColor(this, R.color.white));
-        counter++;
+        counter += 1;
 
-        LinearLayout.LayoutParams labelParams = getParas();
+        LinearLayout.LayoutParams labelParams = getLayoutParameters();
         labelParams.weight = 4;
 
         View labelView = getLabelView(q);
         linearLayout.addView(labelView, labelParams);
         ALL_VIEWS_LIST.add(labelView);
 
-        LinearLayout.LayoutParams aoParam = getParas();
+        LinearLayout.LayoutParams aoParam = getLayoutParameters();
         aoParam.weight = 2;
 
         View AOView = getAOView(q);
@@ -280,7 +269,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         if (relatedQuestions != null) {
             String competenceName = relatedQuestions[0];
             String reasonForFailureName = relatedQuestions[1];
-            LinearLayout.LayoutParams competenceParams = getParas();
+            LinearLayout.LayoutParams competenceParams = getLayoutParameters();
             competenceParams.weight = 2;
 
             Question competenceQuestion = getAppDataManager().getDatabaseManager().questionDao().get(competenceName);
@@ -288,7 +277,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             linearLayout.addView(competenceView, competenceParams);
 
             ALL_VIEWS_LIST.add(competenceView);
-            LinearLayout.LayoutParams reasonForFailureParam = getParas();
+            LinearLayout.LayoutParams reasonForFailureParam = getLayoutParameters();
             reasonForFailureParam.weight = 3;
 
             Question reasonForFailureQuestion = getAppDataManager().getDatabaseManager().questionDao().get(reasonForFailureName);
@@ -300,7 +289,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         validator.addValidation(q);
     }
 
-    LinearLayout.LayoutParams getParas() {
+    LinearLayout.LayoutParams getLayoutParameters() {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -330,7 +319,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             View layout = LayoutInflater.from(this).inflate(R.layout.layout_edittext, null, false);
             layout.setTag(q);
             EditText editText = layout.findViewById(R.id.cell_data);
-            editText.setHint(ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON));
+            editText.setHint(ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON));
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
             editText.setTag(q);
             editText.addTextChangedListener(new TextWatcher() {
@@ -358,7 +347,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             return layout;
         } else {
             View layout = LayoutInflater.from(this).inflate(R.layout.layout_spinner, null, false);
-            //final Spinner spinner = new Spinner(this);
             layout.setTag(q);
             setSpinnerAdapter(layout.findViewById(R.id.cell_data), q);
             return layout;
@@ -383,7 +371,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         return layout;
     }
 
-
     void setSpinnerAdapter(Spinner spinner, Question q) {
         spinner.setPrompt(q.getDefaultValueC());
         final List<String> items = q.formatQuestionOptions();
@@ -399,7 +386,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 }
                 return view;
             }
-
             @Override
             public int getCount() {
                 return super.getCount(); // don't display last item (it's used for the prompt)
@@ -414,9 +400,8 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 try {
                     if (MONITORING_ANSWERS_JSON.has(q.getLabelC())) {
                         MONITORING_ANSWERS_JSON.remove(q.getLabelC());
-                        MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
-                    } else
-                        MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
+                    }
+                    MONITORING_ANSWERS_JSON.put(q.getLabelC(), parent.getSelectedItem().toString());
                     setUpPropertyChangeListeners(q, parent.getSelectedItem().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -478,7 +463,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
                 try {
-                    if (ComputationUtils.compareValues(sl, value, scriptEngine)) {
+                    if (ComputationUtils.compareSkipLogicValues(sl, value, scriptEngine)) {
                         if (sl.shouldHide()) {
                             for (int i = 0; i < ALL_VIEWS_LIST.size(); i++) {
                                 if (ALL_VIEWS_LIST.get(i).getTag() != null) {
@@ -604,8 +589,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 System.out.println("--------------------------------------------------------clear------------------------------------------------\n\n");
             }
         }
-        System.out.println("##########################################  LOOP END   ###############################################################");
-
         MONITORING.setJson(MONITORING_ANSWERS_JSON.toString());
         mPresenter.saveMonitoringData(MONITORING, FARMER);
     }
@@ -624,7 +607,6 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 }, getStringResources(R.string.no), 0);
     }
 
-
     boolean validate() {
         List<ValidationError> errors = new ArrayList<>();
         for (View view : ALL_VIEWS_LIST) {
@@ -634,7 +616,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 if (set != null) {
                     ValidationError error;
                     for (InputValidator inputVal : set) {
-                        error = inputVal.validate(ComputationUtils.getValue(q.getLabelC(), MONITORING_ANSWERS_JSON), q.getLabelC(), q.getLabelC());
+                        error = inputVal.validate(ComputationUtils.getDataValue(q, MONITORING_ANSWERS_JSON), q.getLabelC(), q.getLabelC());
                         if (error != null) {
                             errors.add(error);
                             try {

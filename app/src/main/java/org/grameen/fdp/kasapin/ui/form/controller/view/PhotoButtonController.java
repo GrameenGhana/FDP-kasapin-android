@@ -34,14 +34,10 @@ import java.util.Set;
  */
 public class PhotoButtonController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
-    Location location;
-    boolean GpsStatus = false;
     OnClickListener onClickListener;
     Context context;
     ImageView IMAGE_VIEW;
     boolean isEnabled = true;
-    private DatePickerDialog datePickerDialog = null;
-
 
     /**
      * Constructs a new instance of a date picker field.
@@ -71,7 +67,6 @@ public class PhotoButtonController extends MyLabeledFieldController {
         super(ctx, name, content_desc, labelText, isRequired);
         this.onClickListener = displayFormat;
         this.context = ctx;
-
     }
 
     /**
@@ -84,17 +79,14 @@ public class PhotoButtonController extends MyLabeledFieldController {
         this(context, name, content_desc, labelText, false, locationListener);
         this.context = context;
         this.isEnabled = enabled;
-
     }
 
     @Override
     protected View createFieldView() {
-
         final LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         linearLayout.setLayoutParams(params);
-
 
         @SuppressLint("RestrictedApi") ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PrimaryButton);
         final Button button = new Button(newContext);
@@ -105,48 +97,36 @@ public class PhotoButtonController extends MyLabeledFieldController {
         button.setId(editTextId);
         button.setOnClickListener(onClickListener);
 
-
         final ImageView imageView = new ImageView(context);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
 
         this.IMAGE_VIEW = imageView;
 
         getModel().addPropertyChangeListener(getName(), evt -> {
-            AppLogger.i("PHOTO BUTTON", evt.getNewValue().toString());
-
             if (evt.getNewValue() != null && !evt.getNewValue().toString().equalsIgnoreCase(""))
                 try {
-
                     imageView.setAdjustViewBounds(true);
                     imageView.setMaxHeight(300);
                     imageView.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
                     linearLayout.addView(imageView);
                     linearLayout.requestLayout();
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
         });
 
         imageView.setOnClickListener(v -> {
-
             final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppDialog);
             builder.setMessage(R.string.image_options);
             builder.setCancelable(true);
             builder.setPositiveButton(R.string.view, (dialog, which) -> {
-
                 Intent intent = new Intent(context, ImageViewActivity.class);
                 intent.putExtra("image_string", getModel().getValue(getName()).toString());
                 context.startActivity(intent);
-
-
             });
+
             builder.setNegativeButton(R.string.delete, (dialog, which) -> {
-
                 imageView.setImageBitmap(null);
-
                 getModel().setValue(getName(), "");
                 dialog.dismiss();
                 linearLayout.removeView(imageView);
@@ -154,7 +134,6 @@ public class PhotoButtonController extends MyLabeledFieldController {
             });
             builder.show();
         });
-
 
         try {
             button.setEnabled(isEnabled);
@@ -164,26 +143,18 @@ public class PhotoButtonController extends MyLabeledFieldController {
         }
 
         refresh(imageView);
-
         linearLayout.addView(button);
-
         linearLayout.addView(imageView);
-
-
         linearLayout.requestLayout();
-
         return linearLayout;
     }
-
 
     private Button getButton() {
         return (Button) getView().findViewById(editTextId);
     }
 
-
     private ImageView getImageView() {
         return IMAGE_VIEW;
-
     }
 
     private void refresh(ImageView imageView) {
@@ -199,6 +170,4 @@ public class PhotoButtonController extends MyLabeledFieldController {
     public void refresh() {
         refresh(getImageView());
     }
-
-
 }

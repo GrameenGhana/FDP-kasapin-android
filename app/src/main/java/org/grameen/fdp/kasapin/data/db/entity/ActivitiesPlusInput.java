@@ -6,20 +6,15 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by aangjnr on 22/01/2018.
- */
-
 @Entity(tableName = "activities_plus_inputs")
 public class ActivitiesPlusInput {
-
     @SerializedName("LastModifiedDate")
     String lastModifiedDate;
 
     @PrimaryKey
     @NonNull
     @SerializedName("Id")
-    String id;
+    String id = "";
 
     @SerializedName("Name")
     String name;
@@ -41,7 +36,6 @@ public class ActivitiesPlusInput {
 
     @SerializedName("reco__c")
     String recommendationName;
-
 
     public ActivitiesPlusInput() {
     }
@@ -117,6 +111,4 @@ public class ActivitiesPlusInput {
     public void setTotalCost(String totalCost) {
         this.totalCost = totalCost;
     }
-
-
 }

@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
-
 /**
  * Represents a field that allows selecting a specific date via a date picker.
  * <p/>
@@ -79,7 +78,6 @@ public class DatePickerController extends MyLabeledFieldController {
 
     @Override
     protected View createFieldView() {
-
         if (isEnabled) {
             final MaterialEditText editText = new MaterialEditText(getContext());
             editText.setId(editTextId);
@@ -115,16 +113,11 @@ public class DatePickerController extends MyLabeledFieldController {
 
             datePickerDialog = new DatePickerDialog(context, R.style.DatePickerSpinner, (view, year, monthOfYear, dayOfMonth) -> {
                 calendar.set(year, monthOfYear, dayOfMonth);
-
-
                 String date1 = displayFormat.format(calendar.getTime());
                 getModel().setValue(getName(), date1);
                 editText.setText(date1);
-
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-
             datePickerDialog.setOnDismissListener(dialog -> datePickerDialog = null);
-
             datePickerDialog.show();
         }
     }
@@ -135,13 +128,10 @@ public class DatePickerController extends MyLabeledFieldController {
 
     private void refresh(EditText editText) {
         String value = null;
-
         if (getModel().getValue(getName()) != null) {
             value = getModel().getValue(getName()).toString();
         }
         editText.setHint(value != null ? value : "Click to add date");
-
-
     }
 
     public void refresh() {

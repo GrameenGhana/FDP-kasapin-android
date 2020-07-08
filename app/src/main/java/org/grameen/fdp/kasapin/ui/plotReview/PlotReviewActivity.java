@@ -15,7 +15,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.PlotMonitoringTableData;
@@ -50,7 +50,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
     @BindView(R.id.currencyLayout)
     RelativeLayout currencyLayout;
     @BindView(R.id.general_ao_tableView)
-    TableView generalAoTableView;
+    TableView<HistoricalTableViewData> generalAoTableView;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
     @BindView(R.id.noData)
@@ -67,16 +67,9 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
     LinearLayout bottomButtons;
     ReviewTablePagerAdapter plotMonitoringTablePagerAdapter;
     List<PlotMonitoringTableData> plotMonitoringTableDataList;
-    RealFarmer FARMER;
+    Farmer FARMER;
     List<Question> ALL_PLOT_DATA_QUESTIONS = new ArrayList<>();
     List<Plot> PLOTS_LIST;
-
-    FormAnswerData laborFormAnswerData = null;
-    JSONObject LABOUR_FORM_ANSWER_JSON = new JSONObject();
-
-    public static Intent getStartIntent(Context context) {
-        return new Intent(context, PlotReviewActivity.class);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +80,7 @@ public class PlotReviewActivity extends BaseActivity implements PlotReviewContra
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
         setUnBinder(ButterKnife.bind(this));
-        FARMER = getGson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+        FARMER = getGson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
         getAppDataManager().setBooleanValue("refreshViewPager", false);
         if (FARMER != null) {
             mPresenter.getAllPlotQuestions();

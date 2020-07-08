@@ -19,12 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
 public abstract class MyLabeledFieldController extends MyFormElementController {
-    //private static final RequiredFieldValidator REQUIRED_FIELD_VALIDATOR = new RequiredFieldValidator();
     private final String labelText;
     private View fieldView;
     private TextView errorView;
@@ -59,7 +54,6 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         this.labelText = labelText;
         this.validators = validators;
     }
-
 
     public MyLabeledFieldController(Context ctx, String name, String content_desc, String labelText, boolean isRequired) {
         this(ctx, name, content_desc, labelText, new HashSet<>());
@@ -112,10 +106,6 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
     public void setValidators(Set<InputValidator> newValidators) {
         validators.clear();
         validators = newValidators;
-
-        AppLogger.e("EditTextController", getName() + " is required == true");
-        AppLogger.e(this.getClass().getSimpleName(), "Setting validations for " + getName());
-        AppLogger.e(this.getClass().getSimpleName(), "Validation size == " + validators.size());
     }
 
     /**
@@ -154,8 +144,6 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         }
         return errors;
     }
-
-
     /**
      * Returns the associated view for the field (without the label view) of this element.
      *
@@ -167,7 +155,6 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         }
         return fieldView;
     }
-
     /**
      * Constructs the view associated with this field without the label. It will be used to combine with the label.
      *
@@ -188,7 +175,6 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
             label.setText(labelText);
             label.setContentDescription(getName());
         }
-
         FrameLayout container = view.findViewById(R.id.field_container);
         container.addView(getFieldView());
         return view;
@@ -215,8 +201,6 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         }
 
         textView.setEnabled(false);
-
         return textView;
     }
-
 }

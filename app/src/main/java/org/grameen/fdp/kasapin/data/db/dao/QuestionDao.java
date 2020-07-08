@@ -13,15 +13,8 @@ import java.util.List;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 12:37 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 @Dao
 public interface QuestionDao extends BaseDao<Question> {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertQuestion(Question question);
 
@@ -48,5 +41,4 @@ public interface QuestionDao extends BaseDao<Question> {
 
     @Query("SELECT * FROM questions WHERE id = :id")
     Maybe<Question> get(int id);
-
 }

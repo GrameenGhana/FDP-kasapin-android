@@ -1,12 +1,5 @@
 package org.grameen.fdp.kasapin.utilities;
 
-
-/**
- * Created by AangJnr on 18, September, 2018 @ 2:18 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -19,12 +12,10 @@ import org.grameen.fdp.kasapin.ui.form.model.MapFormModel;
 
 import static dagger.internal.Preconditions.checkNotNull;
 
-
 /**
  * This provides methods to help Activities load their UI.
  */
 public class ActivityUtils {
-
     /**
      * The {@code fragment} is added to the container view with id {@code frameId}. The operation is
      * performed by the {@code fragmentManager}.
@@ -33,23 +24,10 @@ public class ActivityUtils {
                                              @NonNull Fragment fragment, int frameId) {
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
-
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(frameId, fragment);
         transaction.commit();
     }
-
-
-    public static void loadDynamicView(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment, int frameId) {
-        //Todo add parameter to load data from the database, if is in editing mode else display default forms with their resp values
-        checkNotNull(fragmentManager);
-        checkNotNull(fragment);
-
-        fragmentManager.beginTransaction()
-                .add(frameId, fragment, fragment.getClass().getSimpleName())
-                .commit();
-    }
-
 
     public static void loadDynamicView(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment, String formName) {
         //Todo add parameter to load data from the database, if is in editing mode else display default forms with their resp values
@@ -61,7 +39,6 @@ public class ActivityUtils {
                 .addToBackStack(null)
                 .commit();
     }
-
 
     /**
      * Returns a retained Fragment that stores the FormModel. The Fragment is associated with the specified <code>FragmentActivity</code>.
@@ -80,9 +57,6 @@ public class ActivityUtils {
             fm.beginTransaction().add(formModelFragment, FormModelFragment.TAG).commit();
             formModelFragment.setModel(new MapFormModel());
         }
-
         return formModelFragment;
     }
-
-
 }

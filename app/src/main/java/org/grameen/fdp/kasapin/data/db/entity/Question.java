@@ -13,10 +13,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
-/**
- * Created by aangjnr on 29/11/2017.
- */
 @Entity(tableName = "questions", indices = {@Index(value = "formTranslationId"), @Index(value = "id", unique = true), @Index(value = "labelC", unique = true)})
 public class Question {
     @PrimaryKey(autoGenerate = true)
@@ -156,22 +152,12 @@ public class Question {
         this.formTranslationId = formTranslationId;
     }
 
-    public Question withFormTranslationId(int formTranslationId) {
-        this.formTranslationId = formTranslationId;
-        return this;
-    }
-
     public String getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
-    }
-
-    public Question withCreateTime(String createTime) {
-        this.createTime = createTime;
-        return this;
     }
 
     public String getUpdateTime() {
@@ -182,22 +168,12 @@ public class Question {
         this.updateTime = updateTime;
     }
 
-    public Question withUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-        return this;
-    }
-
     public String getCaptionC() {
         return captionC;
     }
 
     public void setCaptionC(String captionC) {
         this.captionC = captionC;
-    }
-
-    public Question withCaptionC(String captionC) {
-        this.captionC = captionC;
-        return this;
     }
 
     public String getTypeC() {
@@ -208,22 +184,12 @@ public class Question {
         this.typeC = typeC;
     }
 
-    public Question withTypeC(String typeC) {
-        this.typeC = typeC;
-        return this;
-    }
-
     public int getRequiredC() {
         return requiredC;
     }
 
     public void setRequiredC(int requiredC) {
         this.requiredC = requiredC;
-    }
-
-    public Question withRequiredC(int requiredC) {
-        this.requiredC = requiredC;
-        return this;
     }
 
     public String getFormulaC() {
@@ -234,22 +200,12 @@ public class Question {
         this.formulaC = formulaC;
     }
 
-    public Question withFormulaC(String formulaC) {
-        this.formulaC = formulaC;
-        return this;
-    }
-
     public String getLabelC() {
         return labelC;
     }
 
     public void setLabelC(String labelC) {
         this.labelC = labelC;
-    }
-
-    public Question withLabelC(String labelC) {
-        this.labelC = labelC;
-        return this;
     }
 
     public String getDefaultValueC() {
@@ -260,22 +216,12 @@ public class Question {
         this.defaultValueC = defaultValueC;
     }
 
-    public Question withDefaultValueC(String defaultValueC) {
-        this.defaultValueC = defaultValueC;
-        return this;
-    }
-
     public int getDisplayOrderC() {
         return displayOrderC;
     }
 
     public void setDisplayOrderC(int displayOrderC) {
         this.displayOrderC = displayOrderC;
-    }
-
-    public Question withDisplayOrderC(int displayOrderC) {
-        this.displayOrderC = displayOrderC;
-        return this;
     }
 
     public String getHelpTextC() {
@@ -286,22 +232,12 @@ public class Question {
         this.helpTextC = helpTextC;
     }
 
-    public Question withHelpTextC(String helpTextC) {
-        this.helpTextC = helpTextC;
-        return this;
-    }
-
     public int getHideC() {
         return hideC;
     }
 
     public void setHideC(int hideC) {
         this.hideC = hideC;
-    }
-
-    public Question withHideC(int hideC) {
-        this.hideC = hideC;
-        return this;
     }
 
     public String getOptionsC() {
@@ -312,11 +248,6 @@ public class Question {
         this.optionsC = optionsC;
     }
 
-    public Question withOptionsC(String optionsC) {
-        this.optionsC = optionsC;
-        return this;
-    }
-
     public int getCanEdit() {
         return canEdit;
     }
@@ -325,15 +256,9 @@ public class Question {
         this.canEdit = canEdit;
     }
 
-    public Question withCanEdit(int canEdit) {
-        this.canEdit = canEdit;
-        return this;
-    }
-
     public boolean shouldHide() {
         return getHideC() == 1;
     }
-
 
     public boolean caEdit() {
         return canEdit == 1;

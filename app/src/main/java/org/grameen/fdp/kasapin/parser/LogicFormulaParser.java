@@ -16,97 +16,31 @@ import java.util.regex.Pattern;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
-/**
- * Created by AangJnr on 12, October, 2018 @ 10:57 AM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
-
-
-/*
-
-^: Matches the beginning position of the string
--: The minus character
-?: Indicates that there is zero or one of the preceding element
-
-The double value can be positive or negative, so the string can have one or no minus character in the beginning.
-
-\\d: Digits; [0-9] is an alternative
-*: Matches the preceding element zero or more times.
-
-Because ".1515674" is also a valid double value, \\d in the regexDecimal is succeeded by * instead of +.
-
-\\.: The '.' character.
-
-Since a '.' alone matches any single character in regular expression, so an escape character \\ should be added before '.' in order to successfully represent the dot character.
-
-+: Matches the preceding element one or more times.
-
-Since "234." is not a valid decimal number but "234.0" is, "\\.\\d" is succeeded by + instead of *.
-
-$: Matches the ending position of the string
-
-|: The alternation operator
-
-*/
-
-
-//    IF((farm_condition_ghana == "B") || (ao_tree_age_ghana > 30)  && (ao_planting_ghana == "G") && (ao_disease_ghana == "G")  || (ao_tree_density_ghana == "4x4"), G, B)
-
-
 public class LogicFormulaParser extends Tokenizer {
-
     private String TAG = this.getClass().getSimpleName();
     private String FORMULA = null;
     private JSONObject jsonObject = null;
     private JSONObject allValuesJson = null;
-    private Tokenizer TOKENIZER;
     private ScriptEngine _engine = new ScriptEngineManager().getEngineByName("rhino");
 
-
     private LogicFormulaParser() {
-        // TOKENIZER = initializeTokenizer();
     }
 
     public static LogicFormulaParser getInstance() {
         return new LogicFormulaParser();
     }
 
-    private static Tokenizer initializeTokenizer() {
-        Tokenizer tokenizer = new Tokenizer();
-        tokenizer.add("IF", AppConstants.TOKEN_IF); // function
-        tokenizer.add("\\(", AppConstants.TOKEN_BRACKET_OPEN); // open bracket
-        tokenizer.add("\\)", AppConstants.TOKEN_BRAKET_CLOSED); // close bracket
-        tokenizer.add("[+-]", AppConstants.TOKEN_ARITHMETIC_PLUS_MINUS); // plus or minus
-        tokenizer.add(",", AppConstants.TOKEN_CHAR);
-        tokenizer.add("==", AppConstants.TOKEN_OPERATOR_EQUAL_TO); // equals
-        tokenizer.add("<=", AppConstants.TOKEN_OPERATOR_GREATER_THAN_EQUALS);
-        tokenizer.add(">=", AppConstants.TOKEN_OPERATOR_LESS_THAN_EQUALS);
-        tokenizer.add("<", AppConstants.TOKEN_OPERATOR_GREATER_THAN);
-        tokenizer.add(">", AppConstants.TOKEN_OPERATOR_LESS_THAN);
-        tokenizer.add("||", AppConstants.TOKEN_OPERATOR_OR);
-        tokenizer.add("&&", AppConstants.TOKEN_OPERATOR_AND);
-        tokenizer.add("\"", AppConstants.TOKEN_QUOTATION);
-        tokenizer.add("[0-9]+|[a-zA-Z][a-zA-Z0-9_]*[[*/]-?[0-9]*\\.\\[0-9]+]*", AppConstants.TOKEN_VARIABLE); // variable
-        return tokenizer;
-    }
-
     public Tokenizer getTokenizer() {
-        tokenize(FORMULA);
-        return TOKENIZER;
+       return null;
     }
-
 
     @Override
     public void tokenize(String str) {
-        TOKENIZER.tokenize(str);
     }
-
 
     @Override
     public LinkedList<Token> getTokens() {
-        return TOKENIZER.getTokens();
+        return null;
     }
 
 
@@ -114,7 +48,6 @@ public class LogicFormulaParser extends Tokenizer {
         FORMULA = _formula;
         return evaluate();
     }
-
 
     private String evaluate() {
         int count = 0;
@@ -134,7 +67,7 @@ public class LogicFormulaParser extends Tokenizer {
 
             System.out.println("NESTED FORMULA PART " + count + " >>>> " + nestedFormula);
 
-            //BREAK DOWN INTO SECTIONS AND EVALUATE
+            //BREAK DOWN INTO SECTIONS AND EVALUATE INDIVIDUAL PARTS
             String rawFormula = nestedFormula
                     .replace("I", "")
                     .replace("F(", "");
@@ -151,7 +84,7 @@ public class LogicFormulaParser extends Tokenizer {
             } catch (Exception ignored) {
             }
 
-            Iterator iterator = jsonObject.keys();
+            Iterator<String> iterator = jsonObject.keys();
             while (iterator.hasNext()) {
                 String tmp_key = (String) iterator.next();
 
@@ -196,7 +129,6 @@ public class LogicFormulaParser extends Tokenizer {
                         returnValue = falseValue.replace("\"", "");
                         break;
                     }
-
                 }
             }
         }
@@ -231,6 +163,7 @@ public class LogicFormulaParser extends Tokenizer {
         }
 
         //Todo Remove logs
+        //Logs only in debug mode
         AppLogger.e(TAG, "");
         AppLogger.e(TAG, "COMPLEX FORMULA AFTER EVALUATING LOGIC SECTIONS");
         AppLogger.e(TAG, "Complex Formula >>> " + complexFormula);
@@ -266,10 +199,8 @@ public class LogicFormulaParser extends Tokenizer {
     }
 
     public void setJsonObject(JSONObject jsonObject) {
-
         AppLogger.e(TAG, "JSON DATA IS " + jsonObject);
         this.jsonObject = jsonObject;
-
     }
 
     public void setFormula(String formula) {

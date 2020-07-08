@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.ui.plotDetails;
 
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
@@ -18,42 +17,16 @@ import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 9:06 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View> implements PlotDetailsContract.Presenter {
-
     AppDataManager mAppDataManager;
-
-
     @Inject
     public PlotDetailsPresenter(AppDataManager appDataManager) {
         super(appDataManager);
         this.mAppDataManager = appDataManager;
-
-
     }
-
 
     @Override
     public void getPlotQuestions() {
-
-       /* List<FormAndQuestions> formAndQuestionsList = new ArrayList<>();
-
-        AppLogger.e(TAG, "All Forms size is " + BaseActivity.FORM_AND_QUESTIONS.size());
-
-        if (BaseActivity.FORM_AND_QUESTIONS != null)
-            for (FormAndQuestions formAndQuestions : BaseActivity.FORM_AND_QUESTIONS) {
-                if (formAndQuestions.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_PLOT_FORM))
-                    formAndQuestionsList.add(formAndQuestions);
-            }
-
-        AppLogger.e(TAG, "Plot Forms size is " + formAndQuestionsList.size());
- */
-
         runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType(AppConstants.DISPLAY_TYPE_PLOT_FORM)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -61,7 +34,6 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                     getView().showMessage(R.string.error_has_occurred);
                     throwable.printStackTrace();
                 }));
-
     }
 
 
@@ -69,30 +41,23 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
     public void getAreaUnits(String farmerCode) {
         Question areaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_area_units");
         Question estProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_weight_units");
-
         runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataSingle(farmerCode, areaQuestion.getFormTranslationId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(answerData -> {
-
-
                     if (answerData != null) {
                         JSONObject jsonObject = new JSONObject(answerData.getData());
                         if (jsonObject.has(areaQuestion.getLabelC())) {
                             getView().setAreaUnits(jsonObject.getString(areaQuestion.getLabelC()));
                         }
-
                         if (jsonObject.has(estProdQuestion.getLabelC())) {
                             getView().setProductionUnit(jsonObject.getString(estProdQuestion.getLabelC()));
                         }
                     }
-
                 }, throwable -> {
                     throwable.printStackTrace();
                     getView().showMessage("Could not get area unit.");
                 }));
-
-
     }
 
 
@@ -102,7 +67,6 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(recommendations -> {
-
                             if (recommendations != null)
                                 getView().loadRecommendation(recommendations);
                         },
@@ -110,14 +74,10 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                             getView().showMessage(R.string.error_has_occurred_loading_data);
                             throwable.printStackTrace();
                         }));
-
     }
 
     @Override
-    public void openNextActivity() {
-
-    }
-
+    public void openNextActivity() {}
 
     @Override
     public void saveData(Plot plot) {
@@ -126,19 +86,11 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
                     if (aLong > 0) {
-
                         getAppDataManager().setBooleanValue("reload", true);
                         getAppDataManager().setBooleanValue("reloadPlotsData", true);
                         getAppDataManager().setBooleanValue("reloadRecommendation", false);
-
-
                         getView().showRecommendation();
                         getView().showMessage("Plot data updated!");
-
-
-                        AppLogger.e(TAG, "PRESENTER PLOT DATA FROM DB " + getGson().toJson(getAppDataManager().getDatabaseManager().plotsDao().getPlotById(String.valueOf(plot.getId()))));
-
-
                     } else
                         getView().showMessage("Error occurred updating Plot data!");
 
@@ -147,6 +99,4 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                     throwable.printStackTrace();
                 }));
     }
-
-
 }

@@ -4,28 +4,18 @@ import androidx.room.Entity;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by aangjnr on 30/01/2018.
- */
-
 @Entity(tableName = "countries")
 public class Country extends BaseModel {
-
     String name;
-
     @SerializedName("currency")
     String currency;
-
     @SerializedName("iso_code")
     String isoCode;
-
     @SerializedName("avg_gate_price")
     String averageGatePrice;
 
-
     public Country() {
     }
-
 
     public String getName() {
         return name;
@@ -58,6 +48,4 @@ public class Country extends BaseModel {
     public void setIsoCode(String isoCode) {
         this.isoCode = isoCode;
     }
-
-
 }

@@ -12,19 +12,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 9:06 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class AddEditServerUrlPresenter extends BasePresenter<AddEditServerUrlContract.View> implements AddEditServerUrlContract.Presenter {
-
     @Inject
     AddEditServerUrlPresenter(AppDataManager appDataManager) {
         super(appDataManager);
     }
-
     @Override
     public void fetchData() {
         getAppDataManager().getDatabaseManager().serverUrlsDao().getAllUrls()
@@ -35,14 +27,12 @@ public class AddEditServerUrlPresenter extends BasePresenter<AddEditServerUrlCon
                     public void onSuccess(List<ServerUrl> serverUrls) {
                         getView().showServerList(serverUrls);
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         getView().showMessage(e.getMessage());
                     }
                 });
     }
-
     @Override
     public void deleteUrl(ServerUrl serverUrl) {
         getAppDataManager().getDatabaseManager().serverUrlsDao().deleteOne(serverUrl);

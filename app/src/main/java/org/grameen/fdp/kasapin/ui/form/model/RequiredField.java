@@ -7,17 +7,8 @@ import android.content.res.Resources;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.ValidationError;
 
-/**
- * Created by AangJnr on 27, September, 2018 @ 10:39 AM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
-
 public class RequiredField extends ValidationError {
-
     private String messageToDisplay = null;
-
     /**
      * Creates a new instance with the specified field name.
      *
@@ -36,7 +27,6 @@ public class RequiredField extends ValidationError {
     @SuppressLint("StringFormatInvalid")
     @Override
     public String getMessage(Resources resources) {
-
         return (messageToDisplay == null) ?
                 String.format(resources.getString(R.string.required_field_error_msg), getFieldLabel())
                 : messageToDisplay;

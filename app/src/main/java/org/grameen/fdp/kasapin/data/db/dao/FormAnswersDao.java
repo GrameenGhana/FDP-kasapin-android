@@ -10,20 +10,8 @@ import java.util.List;
 
 import io.reactivex.Single;
 
-/**
- * Created by AangJnr on 17, September, 2018 @ 7:07 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 @Dao
 public interface FormAnswersDao extends BaseDao<FormAnswerData> {
-   /* @Insert
-    long insertOne(FormAnswerData answerData);
-
-    @Update
-    int updateOne(FormAnswerData answerData);*/
-
     @Query("DELETE FROM form_answers WHERE id = :id")
     int deleteAnswerData(int id);
 
@@ -35,6 +23,5 @@ public interface FormAnswersDao extends BaseDao<FormAnswerData> {
 
     @Query("SELECT * FROM form_answers WHERE farmerCode = :farmerCode")
     Single<List<FormAnswerData>> getAll(String farmerCode);
-
 
 }

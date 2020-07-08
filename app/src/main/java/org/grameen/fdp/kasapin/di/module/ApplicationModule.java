@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.di.module;
 
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -28,22 +27,13 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by AangJnr on 19, September, 2018 @ 11:04 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 
 @Module
 public class ApplicationModule {
-
     private final Application application;
-
     public ApplicationModule(Application app) {
         application = app;
     }
-
 
     @Provides
     @ApplicationContext
@@ -59,7 +49,7 @@ public class ApplicationModule {
     @Singleton
     @Provides
     public AppDatabase providesDatabase() {
-
+        //Todo For future migrations
          /* Migration MIGRATION_1_2 = new Migration(1, 2) {
             @Override
             public void migrate(@NonNull SupportSQLiteDatabase database) {
@@ -104,7 +94,6 @@ public class ApplicationModule {
     @Singleton
     @Provides
     Retrofit providesRetrofit(OkHttpClient client) {
-
         return new Retrofit.Builder().baseUrl(providesSharedPrefs().getString(AppConstants.SERVER_URL, BuildConfig.END_POINT))
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
@@ -112,19 +101,15 @@ public class ApplicationModule {
                 .build();
     }
 
-
     @Singleton
     @Provides
     FdpApi providesFdpApi(Retrofit retrofit) {
         return retrofit.create(FdpApi.class);
     }
 
-
     @Singleton
     @Provides
     FdpApiService providesFdpApiService(FdpApi fdpApi) {
         return new FdpApiService(fdpApi);
     }
-
-
 }

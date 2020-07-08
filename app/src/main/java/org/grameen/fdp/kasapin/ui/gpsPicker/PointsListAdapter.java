@@ -4,12 +4,14 @@ package org.grameen.fdp.kasapin.ui.gpsPicker;
  * Created by AangJnr on 9/21/16.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -18,32 +20,20 @@ import org.grameen.fdp.kasapin.R;
 
 import java.util.List;
 
-
-/**
- * Created by AangJnr on 6/27/16.
- */
-
-
 public class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.ViewHolder> {
 
     OnItemClickListener mItemClickListener;
     OnLongClickListener longClickListener;
     private List<LatLng> plots;
-    private Context context;
-
 
     /**
      * Constructor
      *
-     * @param plots
+     * @param plots .
      **/
-
     public PointsListAdapter(Context context, List<LatLng> plots) {
         this.plots = plots;
-        this.context = context;
-
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -53,27 +43,21 @@ public class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.Vi
     @Override
     public int getItemCount() {
         return plots.size();
-
     }
 
+    @NonNull
     @Override
     public PointsListAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.point_item_view, viewGroup, false);
-
         return new PointsListAdapter.ViewHolder(v);
-
-
     }
 
-
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-
-
         LatLng plot = plots.get(position);
-        viewHolder.index.setText(position + 1 + ".");
-        viewHolder.coords.setText(plot.latitude + ", " + plot.longitude);
-
+        viewHolder.index.setText(String.format("%d.", position + 1));
+        viewHolder.coordinates.setText(String.format("%s, %s", plot.latitude, plot.longitude));
     }
 
     @Override
@@ -92,7 +76,6 @@ public class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.Vi
     public void removePoint(int position) {
         plots.remove(position);
         notifyDataSetChanged();
-
     }
 
     public void addPoint(LatLng latLng) {
@@ -104,41 +87,28 @@ public class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.Vi
         return plots;
     }
 
-
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
-
 
     public interface OnLongClickListener {
         void onLongClick(View view, int position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-
         TextView index;
-        TextView coords;
+        TextView coordinates;
         TextView delete;
-
 
         ViewHolder(final View itemView) {
             super(itemView);
-
             index = itemView.findViewById(R.id.index);
-            coords = itemView.findViewById(R.id.coordinates);
-
+            coordinates = itemView.findViewById(R.id.coordinates);
             delete = itemView.findViewById(R.id.delete);
-
-
             delete.setOnClickListener(v -> {
                 if (mItemClickListener != null)
                     mItemClickListener.onItemClick(delete, getAdapterPosition());
             });
         }
-
-
     }
-
-
 }

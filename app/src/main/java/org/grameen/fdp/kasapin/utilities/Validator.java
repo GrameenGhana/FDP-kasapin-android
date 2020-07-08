@@ -12,8 +12,7 @@ import java.util.HashSet;
 public class Validator {
     private JSONObject VALIDATIONS = new JSONObject();
 
-    public Validator() {
-    }
+    public Validator() {}
 
     public void addValidation(Question question) {
         HashSet<InputValidator> validation = new HashSet<>();
@@ -30,7 +29,6 @@ public class Validator {
             }
         }
     }
-
 
     //Some answers to questions require multiple variants of the same answer eg. Answers to Family Members questions of a farmer
     //Since the data is usually represented in a JsonArray for such cases, we use the indexes of the answer json in the array to distinguish

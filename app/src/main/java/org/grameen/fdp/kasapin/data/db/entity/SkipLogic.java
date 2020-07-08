@@ -7,16 +7,10 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
-
-/**
- * Created by aangjnr on 02/01/2018.
- */
-
 @Entity(tableName = "skip_logics", indices = {@Index(value = "questionId")})
 public class SkipLogic {
 
     @PrimaryKey
-    @NonNull
     @SerializedName("id")
     int id;
 
@@ -35,7 +29,6 @@ public class SkipLogic {
     @SerializedName("hide_c")
     int shouldHide;
 
-
     @Ignore
     String comparingQuestion;
     @Ignore
@@ -43,16 +36,14 @@ public class SkipLogic {
     @Ignore
     String answerValue;
 
-
     public SkipLogic() {
     }
 
-    @NonNull
     public int getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

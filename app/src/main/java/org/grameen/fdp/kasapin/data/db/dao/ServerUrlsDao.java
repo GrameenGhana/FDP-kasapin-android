@@ -11,10 +11,6 @@ import io.reactivex.Single;
 
 @Dao
 public interface ServerUrlsDao extends BaseDao<ServerUrl> {
-
-
     @Query("SELECT * FROM urls")
     Single<List<ServerUrl>> getAllUrls();
-
-
 }

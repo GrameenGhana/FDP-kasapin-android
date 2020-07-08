@@ -1,9 +1,5 @@
 package org.grameen.fdp.kasapin.ui.serverUrl;
 
-/*
- * Created by AangJnr on 6/27/19.
- */
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,17 +21,10 @@ public class ServerUrlListAdapter extends RecyclerView.Adapter<ServerUrlListAdap
     private List<ServerUrl> urls;
     private String currentUrl;
 
-    /**
-     * Constructor
-     *
-     * @param serverUrls
-     **/
-
     ServerUrlListAdapter(List<ServerUrl> serverUrls, String _currentUrl) {
         this.urls = serverUrls;
         this.currentUrl = _currentUrl;
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -45,7 +34,6 @@ public class ServerUrlListAdapter extends RecyclerView.Adapter<ServerUrlListAdap
     @Override
     public int getItemCount() {
         return urls.size();
-
     }
 
     @NonNull
@@ -54,7 +42,6 @@ public class ServerUrlListAdapter extends RecyclerView.Adapter<ServerUrlListAdap
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.server_url_item_view, viewGroup, false);
         return new ServerUrlListAdapter.ViewHolder(v);
     }
-
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
@@ -79,7 +66,6 @@ public class ServerUrlListAdapter extends RecyclerView.Adapter<ServerUrlListAdap
     void setOnDeleteClickListener(final ServerUrlListAdapter.OnDeleteClickListener mItemClickListener) {
         this.mDeleteClickListener = mItemClickListener;
     }
-
 
     public void remove(int position) {
         urls.remove(position);
@@ -108,7 +94,6 @@ public class ServerUrlListAdapter extends RecyclerView.Adapter<ServerUrlListAdap
     public interface OnDeleteClickListener {
         void onDeleteClick(View view, int position);
     }
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
         RadioButton radioButton;

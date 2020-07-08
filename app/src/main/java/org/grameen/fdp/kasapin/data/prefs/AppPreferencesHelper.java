@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2017 MINDORKS NEXTGEN PRIVATE LIMITED
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://mindorks.com/license/apache-v2
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License
- */
-
 package org.grameen.fdp.kasapin.data.prefs;
 
 import android.content.SharedPreferences;
@@ -23,13 +8,8 @@ import org.grameen.fdp.kasapin.utilities.AppConstants;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-/**
- * Created by janisharali on 27/01/17.
- */
-
 @Singleton
 public class AppPreferencesHelper implements PreferencesHelper {
-
     public static final String PREF_KEY_IS_MONITORING_MODE = "PREF_KEY_MONITORING_MODE";
     private static final String PREF_KEY_USER_LOGGED_IN_MODE = "PREF_KEY_USER_LOGGED_IN_MODE";
     private static final String PREF_KEY_USER_ID = "PREF_KEY_USER_ID";
@@ -45,12 +25,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN";
     private final SharedPreferences mPrefs;
 
-    // private SecurePreferences securedPreferences;
-
     @Inject
     public AppPreferencesHelper(SharedPreferences preferences) {
         mPrefs = preferences;
-        //securedPreferences = new SecurePreferences(mPrefs, BaseActivity.DEVICE_ID, false);
     }
 
     @Override
@@ -71,7 +48,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public void setUserFirstName(String firstName) {
         mPrefs.edit().putString(PREF_KEY_USER_FNAME, firstName).apply();
-
     }
 
     @Override
@@ -84,37 +60,24 @@ public class AppPreferencesHelper implements PreferencesHelper {
         mPrefs.edit().putString(PREF_KEY_USER_LNAME, lastName).apply();
     }
 
-
     @Override
     public String getUserEmail() {
-        //return securedPreferences.getString(PREF_KEY_USER_EMAIL);
         return mPrefs.getString(PREF_KEY_USER_EMAIL, null);
-
     }
 
     @Override
     public void setUserEmail(String email) {
-
-        //securedPreferences.put(PREF_KEY_USER_EMAIL, email);
         mPrefs.edit().putString(PREF_KEY_USER_EMAIL, email).apply();
-
-
     }
 
     @Override
     public String getUserUuid() {
-
-        //return securedPreferences.getString(PREF_KEY_USER_UUID);
         return mPrefs.getString(PREF_KEY_USER_UUID, null);
-
-
     }
 
     @Override
     public void setUserUuid(String uuid) {
-        //securedPreferences.put(PREF_KEY_USER_UUID, uuid);
         mPrefs.edit().putString(PREF_KEY_USER_UUID, uuid).apply();
-
     }
 
     @Override
@@ -125,7 +88,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public void setUserIsActive(boolean isActive) {
         mPrefs.edit().putBoolean(PREF_KEY_USER_ACTIVE, isActive).apply();
-
     }
 
     @Override
@@ -145,9 +107,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public void setUserConfirmationCode(String code) {
-
         mPrefs.edit().putString(PREF_KEY_USER_CONFIRMATION_CODE, code).apply();
-
     }
 
     @Override
@@ -158,7 +118,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     @Override
     public void setUserIsConfirmed(boolean isConfirmed) {
         mPrefs.edit().putBoolean(PREF_KEY_USER_CONFIRMED, isConfirmed).apply();
-
     }
 
     @Override
@@ -173,25 +132,17 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public String getAccessToken() {
-        //return securedPreferences.getString(PREF_KEY_ACCESS_TOKEN);
         return mPrefs.getString(PREF_KEY_ACCESS_TOKEN, null);
-
     }
 
     @Override
     public void setAccessToken(String accessToken) {
-
-        //securedPreferences.put(PREF_KEY_ACCESS_TOKEN, accessToken);
         mPrefs.edit().putString(PREF_KEY_ACCESS_TOKEN, accessToken).apply();
-
-
     }
 
     @Override
     public void setIsMonitoringMode(boolean isMonitoringMode) {
         mPrefs.edit().putBoolean(PREF_KEY_IS_MONITORING_MODE, isMonitoringMode).apply();
-
-
     }
 
     @Override
@@ -221,11 +172,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public void setIsTranslationToggled(boolean isTranslationToggled) {
-
         mPrefs.edit().putBoolean(PREF_KEY_IS_TRANSLATION, isTranslationToggled).apply();
-
     }
-
 
     @Override
     public String getStringValue(String key) {
@@ -237,10 +185,8 @@ public class AppPreferencesHelper implements PreferencesHelper {
         mPrefs.edit().putString(key, value).apply();
     }
 
-
     @Override
     public void setBooleanValue(String key, boolean value) {
-
         mPrefs.edit().putBoolean(key, value).apply();
     }
 

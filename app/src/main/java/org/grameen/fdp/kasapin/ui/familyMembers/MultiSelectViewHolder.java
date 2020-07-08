@@ -13,10 +13,6 @@ import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.List;
 
-/**
- * Created by aangjnr on 22/02/2018.
- */
-
 public class MultiSelectViewHolder extends AbstractViewHolder {
     private static FdpCallbacks.UpdateJsonArray updateJsonArrayListener;
     private MaterialEditText textView;
@@ -51,7 +47,6 @@ public class MultiSelectViewHolder extends AbstractViewHolder {
         textView.requestLayout();
     }
 
-
     private void showCheckboxDialog(Question question, final int rowPosition) {
         List<String> items = question.formatQuestionOptions();
 
@@ -68,12 +63,10 @@ public class MultiSelectViewHolder extends AbstractViewHolder {
         builder.setCancelable(false);
         builder.setTitle("Select options");
         builder.setPositiveButton("DONE", (dialog, which) -> {
-
             StringBuilder newValue = new StringBuilder();
             for (int i = 0; i < checked.length; i++) {
                 if (checked[i]) {
                     newValue.append(items.get(i));
-
                     if (i < checked.length - 1)
                         newValue.append(", ");
                 }

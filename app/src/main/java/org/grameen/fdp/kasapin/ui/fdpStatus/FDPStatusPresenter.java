@@ -3,7 +3,7 @@ package org.grameen.fdp.kasapin.ui.fdpStatus;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 
@@ -14,7 +14,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class FDPStatusPresenter extends BasePresenter<FDPStatusContract.View> implements FDPStatusContract.Presenter {
-
     @Inject
     FDPStatusPresenter(AppDataManager appDataManager) {
         super(appDataManager);
@@ -36,7 +35,7 @@ public class FDPStatusPresenter extends BasePresenter<FDPStatusContract.View> im
     }
 
     @Override
-    public void saveData(RealFarmer farmer, FormAnswerData formAnswerData) {
+    public void saveData(Farmer farmer, FormAnswerData formAnswerData) {
         getAppDataManager().getCompositeDisposable().add(Single.fromCallable(()
                 -> getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(formAnswerData))
                 .subscribeOn(Schedulers.io())

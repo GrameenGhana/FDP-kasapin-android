@@ -1,11 +1,8 @@
 package org.grameen.fdp.kasapin.data.network.model;
 
 public class Response {
-
     int status;
     String message;
-
-
     public Response() {
     }
 

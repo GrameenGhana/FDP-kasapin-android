@@ -43,24 +43,11 @@ android {
             versionNameSuffix "-debug"
             debuggable true
             useProguard false
-            //buildConfigField("String", "API_KEY", "testkey")
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
             buildConfigField "String", "END_POINT", "\"http://52.15.172.252/fdp/\""
         }
     }
 
-    /*        productFlavors {
-            internal {
-                applicationId "$appPackageId" + ".internal"
-                versionName "i$appVersionName"
-            }
-
-            production {
-                applicationId "$appPackageId"
-                versionName "$appVersionName"
-            }
-        }
-    }*/
 
     lintOptions {
         checkReleaseBuilds true
@@ -73,9 +60,7 @@ android {
     allprojects {
         repositories {
             maven { url 'https://jitpack.io' }
-
             jcenter()
-
             maven { url "https://maven.google.com" }
         }
     }
@@ -92,7 +77,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-
     }
 
 
@@ -112,7 +96,7 @@ android {
         implementation "com.google.android.gms:play-services-maps:$rootProject.ext.playServicesVersion"
         implementation "com.google.android.gms:play-services-location:$rootProject.ext.playServicesVersion"
 
-        implementation 'com.google.maps.android:android-maps-utils:0.5'
+        implementation 'com.google.maps.android:android-maps-utils:0.6.2'
 
         implementation "com.android.support:gridlayout-v7:$rootProject.ext.supportLibraryVersion"
 
@@ -122,7 +106,7 @@ android {
         }
 
         implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
-        implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
+        implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitGsonConverterVersion"
         implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.loggingInterceptorVersion"
 
         //ReactiveX
@@ -192,16 +176,16 @@ android {
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
 
         // UI Testing
-        androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
-        androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
-        androidTestImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
-        androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
+//        androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
+//        androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+//        androidTestImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+//        androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
 
         //Permissions
         implementation "com.github.karanchuri:PermissionManager:$rootProject.ext.permissionManager"
         implementation 'com.android.support:exifinterface:28.0.0'
 
-        implementation 'androidx.preference:preference:1.1+'
+        implementation 'androidx.preference:preference:1.1.1'
     }
 
 

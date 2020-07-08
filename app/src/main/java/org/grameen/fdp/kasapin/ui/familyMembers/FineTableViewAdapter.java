@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHeader, Cell> {
-
     // Cell View Types by Column Position
     private List<Question> questions;
     private ArrayList<List<View>> views;
@@ -36,7 +35,6 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
             views.add(new ArrayList<>());
         CURRENT_VISIBLE_COLUMN = 0;
     }
-
     /**
      * This is where you create your custom Cell ViewHolder. This method is called when Cell
      * RecyclerView of the TableView needs a new RecyclerView.ViewHolder of the given type to
@@ -52,7 +50,6 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         switch (TYPE) {
             case AppConstants.TYPE_SELECTABLE:
                 return new SpinnerViewHolder(getLayoutView(parent, AppConstants.TYPE_SELECTABLE));
-
             case AppConstants.TYPE_CHECKBOX:
                 return new CheckBoxViewHolder(getLayoutView(parent, AppConstants.TYPE_CHECKBOX));
             case AppConstants.TYPE_MULTI_SELECTABLE:
@@ -83,7 +80,6 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         Cell cell = (Cell) cellItemModel;
         if (holder instanceof CellViewHolder) {
             CellViewHolder viewHolder = (CellViewHolder) holder;
-
             viewHolder.setData(rowPosition, (Question) cell.getData());
             viewHolder.itemView.setTag("edittext");
             views.get(rowPosition).add(columnPosition, viewHolder.itemView);
@@ -181,7 +177,7 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         RowHeader rowHeader = (RowHeader) rowHeaderItemModel;
         // Get the holder to update row header item text
         RowHeaderViewHolder rowHeaderViewHolder = (RowHeaderViewHolder) holder;
-        rowHeaderViewHolder.row_header_textview.setText(String.valueOf(rowHeader.getData()));
+        rowHeaderViewHolder.rowHeaderTextview.setText(String.valueOf(rowHeader.getData()));
     }
 
     @SuppressLint("InflateParams")
@@ -218,25 +214,18 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
         View view;
         switch (TYPE) {
             case AppConstants.TYPE_TEXT:
-                view = LayoutInflater.from(mContext).inflate(R.layout.table_view_edittext, parent, false);
-                view.setTag(TYPE);
-                break;
-
             case AppConstants.TYPE_MULTI_SELECTABLE:
                 view = LayoutInflater.from(mContext).inflate(R.layout.table_view_edittext, parent, false);
                 view.setTag(TYPE);
                 break;
-
             case AppConstants.TYPE_SELECTABLE:
                 view = LayoutInflater.from(mContext).inflate(R.layout.table_view_spinner, parent, false);
                 view.setTag(TYPE);
                 break;
-
             case AppConstants.TYPE_CHECKBOX:
                 view = LayoutInflater.from(mContext).inflate(R.layout.table_view_checkbox, parent, false);
                 view.setTag(TYPE);
                 break;
-
             default:
                 view = LayoutInflater.from(mContext).inflate(R.layout.table_view_cell_layout, parent, false);
                 view.setTag(TYPE);
@@ -251,7 +240,6 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
             return null;
         }
     }
-
 
     int getCurrentVisibleColumn() {
         return CURRENT_VISIBLE_COLUMN;

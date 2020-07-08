@@ -25,10 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * A login screen that offers login via email/password.
- */
-
 public class AddEditServerUrlActivity extends BaseActivity implements AddEditServerUrlContract.View, ServerUrlListAdapter.OnItemClickListener, ServerUrlListAdapter.OnDeleteClickListener {
     @Inject
     AddEditServerUrlPresenter mPresenter;
@@ -77,7 +73,6 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
     void togglePlaceholder() {
         placeHolderView.setVisibility((mAdapter.getUrls().size() > 0) ? View.GONE : View.VISIBLE);
     }
-
 
     @OnClick(R.id.add_url)
     void showAddUrlDialog() {

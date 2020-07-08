@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -44,11 +45,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by aangjnr on 01/12/2017.
- */
-
-
 public class DynamicFormFragment extends FormFragment {
     private ComputationUtils computationUtils;
     private FormAndQuestions FORM_AND_QUESTIONS;
@@ -58,16 +54,13 @@ public class DynamicFormFragment extends FormFragment {
     private String FARMER_ID = "";
     private boolean shouldLoadOldValues = false;
     private boolean IS_CONTROLLER_ENABLED;
-
     private String TAG = "MYFORMFRAGMENT";
-
 
     public DynamicFormFragment() {
     }
 
     public static DynamicFormFragment newInstance(FormAndQuestions formAndQuestions, boolean shouldLoadOldValues, @Nullable String farmerId, boolean isMonitoring, @Nullable FormAnswerData answer) {
         DynamicFormFragment formFragment = new DynamicFormFragment();
-
         Bundle bundle = new Bundle();
         bundle.putString("formAndQuestions", BaseActivity.getGson().toJson(formAndQuestions));
         bundle.putBoolean("loadOldValues", shouldLoadOldValues);
@@ -76,8 +69,6 @@ public class DynamicFormFragment extends FormFragment {
         bundle.putString("answerData", BaseActivity.getGson().toJson(answer));
         formFragment.setArguments(bundle);
         return formFragment;
-
-
     }
 
     @Override
@@ -86,7 +77,7 @@ public class DynamicFormFragment extends FormFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         if (getArguments() != null) {
             FORM_AND_QUESTIONS = BaseActivity.getGson().fromJson(getArguments().getString("formAndQuestions"), FormAndQuestions.class);
             QUESTIONS = FORM_AND_QUESTIONS.getQuestions();
@@ -101,7 +92,6 @@ public class DynamicFormFragment extends FormFragment {
             } catch (JSONException ignore) {
                 initializeAnswersData();
             }
-
             IS_CONTROLLER_ENABLED = !getArguments().getBoolean("isMonitoring");
         }
 
@@ -113,14 +103,12 @@ public class DynamicFormFragment extends FormFragment {
             }
             return -1;
         });
-
         super.onAttach(context);
     }
 
     @Override
     protected void setUp(View view) {
     }
-
 
     private void initializeAnswersData() {
         ANSWERS_JSON = new JSONObject();
@@ -130,10 +118,8 @@ public class DynamicFormFragment extends FormFragment {
         ANSWER_DATA.setCreatedAt(TimeUtils.getCurrentDateTime());
     }
 
-
     @Override
     public void initForm(MyFormController controller) {
-        AppLogger.i(TAG, "**************   INIT FORM");
         Context context = getContext();
         computationUtils = ComputationUtils.newInstance(controller);
         if (QUESTIONS != null) {
@@ -171,15 +157,12 @@ public class DynamicFormFragment extends FormFragment {
                 .subscribe();
     }
 
-
     private void loadQuestions(Context context, List<Question> questions, MyFormSectionController formSectionController) {
         for (final Question q : questions) {
             HashSet<InputValidator> validation = new HashSet<>();
             validation.add(new FieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
-
             if (!q.shouldHide()) {
-                String storedValue = (shouldLoadOldValues) ? getComputationUtils().getValue(q, ANSWERS_JSON) : q.getDefaultValueC();
-
+                String storedValue = (shouldLoadOldValues) ? getComputationUtils().getFormAnswerValue(q, ANSWERS_JSON) : q.getDefaultValueC();
                 switch (q.getTypeC().toLowerCase()) {
                     case AppConstants.TYPE_TEXT:
                         //Define validations
@@ -187,26 +170,22 @@ public class DynamicFormFragment extends FormFragment {
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_TEXT,
                                 IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC(), validation));
                         break;
-
                     case AppConstants.TYPE_NUMBER_DECIMAL:
                         validation.add(new NumericalFieldValidator(q.getMinValue(), q.getMaxValue(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(),
                                 InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL,
                                 IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC(), validation));
                         break;
-
                     case AppConstants.TYPE_NUMBER:
                         validation.add(new NumericalFieldValidator(q.getMinValue(), q.getMaxValue(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(),
                                 InputType.TYPE_CLASS_NUMBER, IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC(), validation));
                         break;
-
                     case AppConstants.TYPE_SELECTABLE:
                         formSectionController.addElement(new SelectionController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
                                 q.isRequired(), storedValue, q.formatQuestionOptions(), true,
                                 IS_CONTROLLER_ENABLED && q.caEdit(), q.getHelpTextC(), validation));
                         break;
-
                     case AppConstants.TYPE_MULTI_SELECTABLE:
                         formSectionController.addElement(new CheckBoxController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
                                 q.isRequired(), storedValue, q.formatQuestionOptions(), true, IS_CONTROLLER_ENABLED && q.caEdit(), validation));
@@ -225,7 +204,6 @@ public class DynamicFormFragment extends FormFragment {
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
                                 storedValue, q.isRequired(), InputType.TYPE_CLASS_TEXT, IS_CONTROLLER_ENABLED && q.caEdit()));
                         break;
-
                     case AppConstants.TYPE_LOCATION:
                         formSectionController.addElement(new ButtonController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, v -> {
                             if (hasPermissions(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION))
@@ -235,7 +213,6 @@ public class DynamicFormFragment extends FormFragment {
                             }
                         }, IS_CONTROLLER_ENABLED && q.caEdit(), q.isRequired(), validation));
                         break;
-
                     case AppConstants.TYPE_PHOTO:
                         formSectionController.addElement(new PhotoButtonController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
                                 v -> {
@@ -245,7 +222,7 @@ public class DynamicFormFragment extends FormFragment {
                                         e.printStackTrace();
                                     }
                                 }, IS_CONTROLLER_ENABLED && q.caEdit()));
-                        getComputationUtils().getValue(q, ANSWERS_JSON);
+                        getComputationUtils().getFormAnswerValue(q, ANSWERS_JSON);
                         break;
                 }
             }
@@ -262,14 +239,12 @@ public class DynamicFormFragment extends FormFragment {
         getComputationUtils().setUpPropertyChangeListeners(q.getLabelC(), skipLogic);
     }
 
-
     private void applySkipLogicAndHideViews(Question question, List<SkipLogic> skipLogic) {
         getComputationUtils().initiateSkipLogicAndHideViews(question.getLabelC(), skipLogic);
     }
 
-
     private void applyFormulas(Question question) {
-        getComputationUtils().applyFormulas(question);
+        getComputationUtils().applyAndParseFormulas(question);
     }
 
     @Override
@@ -295,7 +270,6 @@ public class DynamicFormFragment extends FormFragment {
     private ComputationUtils getComputationUtils() {
         return computationUtils;
     }
-
 
     public JSONObject getDataJson() {
         JSONObject jsonObject = new JSONObject();

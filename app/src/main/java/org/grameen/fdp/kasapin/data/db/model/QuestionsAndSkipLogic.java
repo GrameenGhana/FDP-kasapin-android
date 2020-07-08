@@ -10,7 +10,7 @@ public class QuestionsAndSkipLogic {
 
     Question question;
 
-    List<SkipLogic> skiplogic;
+    List<SkipLogic> skipLogic;
 
     List<Mapping> map;
 
@@ -25,12 +25,12 @@ public class QuestionsAndSkipLogic {
         this.map = map;
     }
 
-    public List<SkipLogic> getSkiplogic() {
-        return skiplogic;
+    public List<SkipLogic> getSkipLogic() {
+        return skipLogic;
     }
 
-    public void setSkiplogic(List<SkipLogic> skiplogic) {
-        this.skiplogic = skiplogic;
+    public void setSkipLogic(List<SkipLogic> skipLogic) {
+        this.skipLogic = skipLogic;
     }
 
     public Question getQuestion() {

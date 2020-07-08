@@ -6,7 +6,7 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -98,9 +98,9 @@ public class AddPlotMonitoringPresenter extends BasePresenter<AddPlotMonitoringC
     }
 
     @Override
-    public void saveMonitoringData(Monitoring monitoring, RealFarmer farmer) {
+    public void saveMonitoringData(Monitoring monitoring, Farmer farmer) {
 
-        getAppDataManager().getDatabaseManager().monitoringsDao().insertMonitoring(monitoring);
+        getAppDataManager().getDatabaseManager().monitoringDao().insertMonitoring(monitoring);
         setFarmerAsUnsynced(farmer);
 
         getAppDataManager().setBooleanValue("reload", true);

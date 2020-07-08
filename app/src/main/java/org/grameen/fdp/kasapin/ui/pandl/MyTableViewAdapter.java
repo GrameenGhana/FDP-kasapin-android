@@ -16,7 +16,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
-import org.grameen.fdp.kasapin.ui.base.model.Data;
+import org.grameen.fdp.kasapin.ui.base.model.TableData;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.text.DecimalFormat;
@@ -31,14 +31,14 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.BUTTON_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_SPINNER_VIEW;
 
 
 /**
  * Created by aangjnr on 17/01/2018.
  */
 
-public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
+public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<TableData> {
 
     private static final int TEXT_SIZE = 11;
     private static final int TITLE_TEXT_SIZE = 14;
@@ -48,7 +48,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
     private AppDatabase mAppDatabase;
 
 
-    MyTableViewAdapter(final Context context, final List<Data> data, final TableView<Data> tableView, AppDatabase appDatabase) {
+    MyTableViewAdapter(final Context context, final List<TableData> data, final TableView<TableData> tableView, AppDatabase appDatabase) {
         super(context, data, tableView);
         this.context = context;
         this.mAppDatabase = appDatabase;
@@ -64,7 +64,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
 
     @Override
     public View getDefaultCellView(int i, int i1, ViewGroup viewGroup) {
-        final Data myTableData = getRowData(i);
+        final TableData myTableData = getRowData(i);
         return (i1 == 0) ? renderColumn0Values(myTableData) : renderCalculatedValuesForYear(myTableData, i1 - 1);
     }
 
@@ -74,7 +74,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
     }
 
 
-    private View renderCalculatedValuesForYear(final Data data, int year) {
+    private View renderCalculatedValuesForYear(final TableData data, int year) {
         TextView textView = null;
         List<String> calculationsForTheYears = data.getYearsDataFormula();
 
@@ -114,7 +114,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
     }
 
 
-    private View renderColumn0Values(final Data data) {
+    private View renderColumn0Values(final TableData data) {
         View view = null;
 
         if (data.getTag() != null) {
@@ -171,7 +171,7 @@ public class MyTableViewAdapter extends LongPressAwareTableDataAdapter<Data> {
                     view = button;
                     break;
 
-                case TAG_VIEW:
+                case TAG_SPINNER_VIEW:
                     if (ProfitAndLossActivity.START_YEAR_QUESTION != null) {
                         String[] values = data.getLabel().split("_");
                         final MaterialSpinner spinner = new MaterialSpinner(getContext());

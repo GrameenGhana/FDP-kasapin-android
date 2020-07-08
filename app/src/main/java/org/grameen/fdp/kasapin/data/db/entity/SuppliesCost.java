@@ -4,24 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-/**
- * Created by aangjnr on 17/03/2018.
- */
-
 @Entity(tableName = "supplies_costs")
 
 public class SuppliesCost {
-
-
     @PrimaryKey
     @NonNull
-    String id;
+    String id = "";
     String cost;
-
 
     public SuppliesCost() {
     }
-
     @NonNull
     public String getId() {
         return id;

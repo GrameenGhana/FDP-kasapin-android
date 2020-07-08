@@ -13,14 +13,6 @@ import io.reactivex.Single;
 
 @Dao
 public interface FormAndQuestionsDao {
-
-
-    /*@Transaction
-    @Query("SELECT * FROM forms")
-    Single<List<FormAndQuestions>> getAllFormAndQuestions();
-*/
-
-
     @Transaction
     @Query("SELECT * FROM forms WHERE formNameC LIKE '%' || :name|| '%'")
     Single<FormAndQuestions> getFormAndQuestionsByName(String name);
@@ -36,19 +28,11 @@ public interface FormAndQuestionsDao {
     @Query("SELECT * FROM forms WHERE typeC LIKE '%' || :formType|| '%' AND displayTypeC LIKE '%' || :displayType|| '%' ORDER BY displayOrderC ASC")
     Single<List<FormAndQuestions>> getFormAndQuestionsByType(String formType, String displayType);
 
-
-    /* @Transaction
-     @Query("SELECT * FROM forms WHERE displayTypeC LIKE '%' || :displayType|| '%' ORDER BY displayOrderC ASC")
-     Single<List<FormAndQuestions>> getFormAndQuestionsByDispayTypeOnly(String displayType);
- */
     @Transaction
     @Query("SELECT * FROM forms WHERE displayTypeC COLLATE NOCASE IN (:displayTypes) ORDER BY displayOrderC ASC")
     Single<List<FormAndQuestions>> getFormAndQuestionsByDisplayTypeOnly(String[] displayTypes);
 
-
     @Transaction
     @Query("SELECT * FROM forms WHERE displayTypeC LIKE '%' || :displayType|| '%' ORDER BY displayOrderC ASC")
     Maybe<List<FormAndQuestions>> getFormAndQuestionsByDisplayType(String displayType);
-
-
 }

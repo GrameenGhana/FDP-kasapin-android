@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
@@ -43,21 +44,12 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by aangjnr on 01/12/2017.
- */
-
-
 public class DynamicPlotFormFragment extends FormFragment {
     private ComputationUtils computationUtils;
     private JSONObject ANSWERS_JSON;
-    private String FARMER_ID = "";
     private boolean shouldLoadOldValues = false;
     private boolean IS_CONTROLLER_ENABLED;
-    private String TAG = "MYFORMFRAGMENT";
-
     private List<Question> ALL_QUESTIONS = new ArrayList<>();
-
 
     public DynamicPlotFormFragment() {
     }
@@ -76,58 +68,35 @@ public class DynamicPlotFormFragment extends FormFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        //getBaseActivity().getActivityComponent().inject(this);
-        // mPresenter.takeView(this);
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
-    public void onAttach(Context context) {
-
-        AppLogger.i(TAG, "ON ATTACHED");
-
+    public void onAttach(@NonNull Context context) {
         if (getArguments() != null) {
-
-            FARMER_ID = getArguments().getString("farmerId");
-
             shouldLoadOldValues = getArguments().getBoolean("loadOldValues");
-
             try {
                 ANSWERS_JSON = new JSONObject(getArguments().getString("answerData"));
-
             } catch (JSONException ignore) {
                 ANSWERS_JSON = new JSONObject();
             }
-
             IS_CONTROLLER_ENABLED = !getArguments().getBoolean("isMonitoring");
         }
         super.onAttach(context);
-
     }
 
     @Override
     protected void setUp(View view) {
-
     }
 
     @Override
     public void initForm(MyFormController controller) {
         int count = 0;
-        AppLogger.e(TAG, "**************   INIT FORM " + BaseActivity.PLOT_FORM_AND_QUESTIONS.size());
-
         Context context = getContext();
         computationUtils = ComputationUtils.newInstance(controller);
 
-
         if (BaseActivity.PLOT_FORM_AND_QUESTIONS != null) {
-            //if(getActivity() instanceof AddEditFarmerPlotActivity)
             for (FormAndQuestions formAndQuestions : BaseActivity.PLOT_FORM_AND_QUESTIONS) {
-
-                AppLogger.e(TAG, "Adding controller for " + formAndQuestions.getForm().getTranslation());
-
-
                 MyFormSectionController formSectionController = new MyFormSectionController(getContext(), formAndQuestions.getForm().getTranslation());
                 loadQuestionsValues(context, formAndQuestions.getQuestions(), formSectionController);
                 controller.addSection(formSectionController);
@@ -165,12 +134,11 @@ public class DynamicPlotFormFragment extends FormFragment {
             validation.add(new FieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
 
             if (!q.shouldHide()) {
-                String storedValue = (shouldLoadOldValues) ? getComputationUtils().getValue(q, ANSWERS_JSON) : q.getDefaultValueC();
+                String storedValue = (shouldLoadOldValues) ? getComputationUtils().getFormAnswerValue(q, ANSWERS_JSON) : q.getDefaultValueC();
                 switch (q.getTypeC().toLowerCase()) {
                     case AppConstants.TYPE_TEXT:
                         validation.add(new TextFieldValidator(q.getDefaultValueC(), q.getErrorMessage()));
                         formSectionController.addElement(new EditTextController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(), storedValue, q.isRequired(), InputType.TYPE_CLASS_TEXT, IS_CONTROLLER_ENABLED, q.getHelpTextC(), validation));
-
                         break;
                     case AppConstants.TYPE_NUMBER:
                         validation.add(new NumericalFieldValidator(q.getMinValue(), q.getMaxValue(), q.getErrorMessage()));
@@ -222,7 +190,7 @@ public class DynamicPlotFormFragment extends FormFragment {
                                         e.printStackTrace();
                                     }
                                 }, IS_CONTROLLER_ENABLED));
-                        getComputationUtils().getValue(q, ANSWERS_JSON);
+                        getComputationUtils().getFormAnswerValue(q, ANSWERS_JSON);
                         break;
                 }
             }
@@ -247,30 +215,20 @@ public class DynamicPlotFormFragment extends FormFragment {
     }
 
     @Override
-    public void openNextActivity() {
-
-    }
+    public void openNextActivity() {}
 
     @Override
-    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
-
-    }
+    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {}
 
     @Override
-    public void openLoginActivityOnTokenExpire() {
-
-    }
+    public void openLoginActivityOnTokenExpire() {}
 
     @Override
-    public void toggleFullScreen(Boolean hideNavBar, Window W) {
-
-    }
-
+    public void toggleFullScreen(Boolean hideNavBar, Window W) {}
 
     private ComputationUtils getComputationUtils() {
         return computationUtils;
     }
-
 
     public JSONObject getAnswersData() {
         JSONObject jsonObject = new JSONObject();

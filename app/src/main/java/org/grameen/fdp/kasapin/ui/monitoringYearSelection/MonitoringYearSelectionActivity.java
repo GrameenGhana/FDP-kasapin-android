@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.plotMonitoringActivity.PlotMonitoringActivity;
@@ -58,9 +58,8 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
     ImageView syncIndicator;
     @BindView(R.id.list_view)
     ListView listView;
-    RealFarmer FARMER;
+    Farmer FARMER;
     Plot PLOT;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +68,8 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
         mPresenter.takeView(this);
-
-        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), RealFarmer.class);
+        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
         PLOT = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
-
         setUpViews();
         onBackClicked();
     }
@@ -94,7 +91,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         listView.setOnItemClickListener((parent, view, position, id) -> {
             if (PLOT.getRecommendationId() > 0) {
                 int year = position + 1;
-
                 Intent intent = new Intent(MonitoringYearSelectionActivity.this, PlotMonitoringActivity.class);
                 intent.putExtra("farmer", new Gson().toJson(FARMER));
                 intent.putExtra("plot", new Gson().toJson(PLOT));
@@ -111,7 +107,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         setToolbar(getStringResources(R.string.farmer_details));
         name.setText(FARMER.getFarmerName());
         code.setText(FARMER.getCode());
-
         if (FARMER.getVillageId() > 0) {
             Community village = getAppDataManager().getDatabaseManager().villagesDao().getVillageById(FARMER.getVillageId());
 
@@ -170,7 +165,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
 
     @Override
     public void openNextActivity() {
-        AppLogger.i(TAG, "Opening Landing Page activity");
         startActivity(new Intent(this, LandingActivity.class));
         supportFinishAfterTransition();
     }

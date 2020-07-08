@@ -1,7 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
-    
     repositories {
         google()
         jcenter()
@@ -10,12 +8,11 @@ buildscript {
         }
     }
 
-
     dependencies {
 
-        classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'com.google.gms:google-services:4.2.0'
-        classpath 'io.fabric.tools:gradle:1.26.1'
+        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'io.fabric.tools:gradle:1.28.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -44,19 +41,15 @@ ext {
     buildToolsVersion = '28.0.0'
     playServicesVersion = '15.0.1'
 
-
     // App dependencies
     supportLibraryVersion = '28.0.0'
     guavaVersion = '18.0'
 
-    junitVersion = '4.12'
-    runnerVersion = '1.0.2'
-    espressoVersion = '3.0.2'
     roomVersion = "2.2.0-rc01"
     gsonVersion = "2.8.5"
-    playServicesVersion = "15.0.0"
-    firebaseVersion = "16.0.5"
-    crashyticsVersion = "2.9.6"
+    playServicesVersion = "17.0.0"
+    firebaseVersion = "17.4.3"
+    crashyticsVersion = "2.10.1"
     volleyVersion = "1.1.1"
 
     rhinoVersion = "1.0"
@@ -66,10 +59,10 @@ ext {
 
     rx2FastAndroidNetworking = '1.0.1'
 
-    dagger2Version = '2.11'
+    dagger2Version = '2.24'
 
-    rxjava2Version = '2.1.10'
-    rxandroidVersion = '2.0.1'
+    rxjava2Version = '2.2.10'
+    rxandroidVersion = '2.1.1'
     butterKnifeVersion = '10.2.0'
     greenDaoVersion = '3.2.0'
     placeholderviewVersion = '0.6.1'
@@ -79,19 +72,20 @@ ext {
     smartTabVersion = '1.6.1@aar'
 
     //Test dependencies
-     mockitoVersion = '2.7.1'
+    mockitoVersion = '3.3.3'
+    junitVersion = '4.12'
+    runnerVersion = '1.0.2'
+    espressoVersion = '3.0.2'
 
     crashReporterVersion = '1.0.9'
 
     permissionManager = '0.1.0'
 
     materialSearchDialogVersion = '1.2.3'
-    moshiVersion = "1.8.0"
-    retrofitVersion = "2.5.0"
+    moshiVersion = "1.9.2"
+    retrofitVersion = "2.7.1"
+    retrofitGsonConverterVersion = "2.6.0"
     apacheCommonsVersion = "3.6"
 
-    loggingInterceptorVersion = '3.9.1'
-
-
-
+    loggingInterceptorVersion = '3.12.3'
 }

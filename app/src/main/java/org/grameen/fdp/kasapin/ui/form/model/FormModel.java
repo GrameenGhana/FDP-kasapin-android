@@ -2,6 +2,7 @@ package org.grameen.fdp.kasapin.ui.form.model;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 
 /**
  * <code>FormModel</code> is an abstract class that represents the backing data for a form. It provides a mechanism
@@ -9,10 +10,8 @@ import java.beans.PropertyChangeSupport;
  */
 public abstract class FormModel {
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-
     private static boolean objectsEqual(Object a, Object b) {
-        return a == b || (a != null && a.equals(b));
-
+        return Objects.equals(a, b);
     }
 
     /**
@@ -77,7 +76,7 @@ public abstract class FormModel {
     }
 
     /**
-     * Unsubscribes {@code listener} from change notifications for all fields.
+     * Un subscribes {@code listener} from change notifications for all fields.
      *
      * @see PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
      */
@@ -86,7 +85,7 @@ public abstract class FormModel {
     }
 
     /**
-     * Unsubscribes {@code listener} from change notifications for the specified field name.
+     * Un subscribes {@code listener} from change notifications for the specified field name.
      *
      * @see PropertyChangeSupport#removePropertyChangeListener(String, java.beans.PropertyChangeListener)
      */

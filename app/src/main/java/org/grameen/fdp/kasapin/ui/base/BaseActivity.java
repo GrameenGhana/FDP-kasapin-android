@@ -38,7 +38,7 @@ import org.grameen.fdp.kasapin.data.DataManager;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.di.component.ActivityComponent;
 import org.grameen.fdp.kasapin.di.component.DaggerActivityComponent;
@@ -70,7 +70,6 @@ import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity.familyMembersFormPosition;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
-
 
 public abstract class BaseActivity extends AppCompatActivity implements BaseContract.View, BaseFragment.Callback {
     public static String DEVICE_ID;
@@ -105,15 +104,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
         recyclerView.scheduleLayoutAnimation();
     }
 
-    public static void runLayoutAnimation(final ListView recyclerView) {
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_fall_down);
-        recyclerView.setLayoutAnimation(controller);
-        //recyclerView.getAdapter().notifyAll();
-        recyclerView.scheduleLayoutAnimation();
-    }
-
-
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
         BigDecimal bd = new BigDecimal(value);
@@ -124,7 +114,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         TAG = getClass().getSimpleName();
         //Sets theme for if Diagnostic or Monitoring mode
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(AppPreferencesHelper.PREF_KEY_IS_MONITORING_MODE, true))
@@ -138,7 +127,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     @Override
     public void toggleFullScreen(Boolean hideNavBar, Window window) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             int flags = getWindow().getDecorView().getSystemUiVisibility();
             flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             window.getDecorView().setSystemUiVisibility(flags);
@@ -322,9 +310,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_white_24dp);
 
-            toolbar.setNavigationOnClickListener((v) -> {
-                onBackPressed();
-            });
+            toolbar.setNavigationOnClickListener((v) -> onBackPressed());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -356,9 +342,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
 
     protected File createTemporaryFile(String part, String ext) throws Exception {
         File dir = new File(ROOT_DIR + File.separator + "temp/");
-        if (!dir.exists()) {
-            boolean created = dir.mkdirs();
-        }
+        if (!dir.exists())
+            dir.mkdirs();
         return File.createTempFile(part, ext, dir);
     }
 
@@ -386,7 +371,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     }
 
 
-    public void goToFamilyMembersTable(RealFarmer FARMER) {
+    public void goToFamilyMembersTable(Farmer FARMER) {
         Question numberFamilyMembersQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farmer_familycount_");
         int farmerProfileFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.FARMER_PROFILE).blockingGet(0);
         FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmerProfileFormId);
@@ -411,7 +396,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
             showMessage(getStringResources(R.string.error_has_occurred));
     }
 
-    public void moveToNextForm(RealFarmer FARMER) {
+    public void moveToNextForm(Farmer FARMER) {
         CURRENT_FORM_POSITION++;
         if (CURRENT_FORM_POSITION == familyMembersFormPosition) {
             goToFamilyMembersTable(FARMER);
@@ -428,7 +413,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
             showFarmerDetailsActivity(FARMER);
     }
 
-    public void showFarmerDetailsActivity(RealFarmer farmer) {
+    public void showFarmerDetailsActivity(Farmer farmer) {
         Intent intent = new Intent(this, FarmerProfileActivity.class);
         intent.putExtra("farmer", getGson().toJson(farmer));
         startActivity(intent);

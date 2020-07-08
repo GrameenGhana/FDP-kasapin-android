@@ -1,18 +1,10 @@
 package org.grameen.fdp.kasapin.ui.base.model;
 
-
 import ir.mirrajabi.searchdialog.core.Searchable;
-
-/**
- * Created by AangJnr on 25, September, 2018 @ 12:09 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
 
 public class MySearchItem implements Searchable {
     String mExtId;
     private String mName;
-
     public MySearchItem(String extId, String name) {
         mName = name;
         mExtId = extId;
@@ -28,15 +20,11 @@ public class MySearchItem implements Searchable {
         return this;
     }
 
-    public String getmName() {
+    public String getName() {
         return mName;
     }
 
-    public String getmExtId() {
+    public String getExtId() {
         return mExtId;
-    }
-
-    public void setmExtId(String mExtId) {
-        this.mExtId = mExtId;
     }
 }

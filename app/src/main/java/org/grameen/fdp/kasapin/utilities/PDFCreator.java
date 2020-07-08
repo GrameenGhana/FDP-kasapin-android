@@ -22,7 +22,9 @@ import java.util.List;
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.OnScrollListener;
 
+
 public class PDFCreator {
+
     private int leftMargin = 24;
     private boolean isEndOfTable = false;
     private boolean isPdfCreated = false;
@@ -30,7 +32,9 @@ public class PDFCreator {
     private PdfDocument document = new PdfDocument();
     private File pdfDocFile;
 
-
+    /** Todo provide actual type for
+     * @param _tableView .
+     **/
     private PDFCreator(TableView _tableView, String _activityName) {
         tableView = _tableView;
         pdfDocFile = FileUtils.createFolder("screenCaptures", _activityName + "_document.pdf");
@@ -64,7 +68,6 @@ public class PDFCreator {
             public void onScroll(ListView tableDataView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 isEndOfTable = (firstVisibleItem + visibleItemCount) == totalItemCount;
             }
-
             @Override
             public void onScrollStateChanged(ListView tableDateView, ScrollState scrollState) {
             }

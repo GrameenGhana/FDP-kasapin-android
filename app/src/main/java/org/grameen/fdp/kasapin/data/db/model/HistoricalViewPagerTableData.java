@@ -2,17 +2,10 @@ package org.grameen.fdp.kasapin.data.db.model;
 
 import java.util.List;
 
-/**
- * Created by aangjnr on 08/02/2018.
- */
-
 public class HistoricalViewPagerTableData {
-
     Integer position;
     String title;
     List<List<String>> tableData;
-
-
     public HistoricalViewPagerTableData(String title, List<List<String>> tableData) {
         this.title = title;
         this.tableData = tableData;
@@ -34,7 +27,6 @@ public class HistoricalViewPagerTableData {
         this.tableData = tableData;
 
     }
-
     public Integer getPosition() {
         return position;
     }

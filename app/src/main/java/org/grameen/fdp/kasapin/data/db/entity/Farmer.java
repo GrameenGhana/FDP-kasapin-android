@@ -10,13 +10,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-/**
- * Created by aangjnr on 13/12/2017.
- */
-
 @Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true)})
-public class RealFarmer {
-
+public class Farmer {
     @PrimaryKey(autoGenerate = true)
     int id;
 
@@ -57,7 +52,7 @@ public class RealFarmer {
     @Ignore
     String externalId;
 
-    public RealFarmer() {
+    public Farmer() {
     }
 
     public String getExternalId() {
@@ -133,12 +128,11 @@ public class RealFarmer {
         this.hasSubmitted = hasSubmitted;
     }
 
-    @NonNull
     public int getId() {
         return id;
     }
 
-    public void setId(@NonNull int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

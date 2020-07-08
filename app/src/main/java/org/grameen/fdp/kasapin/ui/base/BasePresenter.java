@@ -13,7 +13,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.PlotGpsPoint;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.network.model.BaseModel;
 import org.grameen.fdp.kasapin.syncManager.UploadData;
@@ -126,18 +126,18 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     }
 
 
-    public void setFarmerAsUnsynced(RealFarmer realFarmer) {
+    public void setFarmerAsUnsynced(Farmer realFarmer) {
         realFarmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
         getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
     }
 
-    public void setFarmerAsSynced(RealFarmer realFarmer) {
+    public void setFarmerAsSynced(Farmer realFarmer) {
         realFarmer.setSyncStatus(AppConstants.SYNC_OK);
         getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
     }
 
 
-    public void syncData(FdpCallbacks.UploadDataListener listener, boolean showProgress, List<RealFarmer> farmers) {
+    public void syncData(FdpCallbacks.UploadDataListener listener, boolean showProgress, List<Farmer> farmers) {
 
         /**Todo Sync all un synced data
          Callbacks can be declared at the global or local level
@@ -198,9 +198,9 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                             Observable.fromIterable(farmers)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new DisposableObserver<RealFarmer>() {
+                                    .subscribe(new DisposableObserver<Farmer>() {
                                         @Override
-                                        public void onNext(RealFarmer farmer) {
+                                        public void onNext(Farmer farmer) {
                                             /**Since the answers are separated by forms in the Answers table. ie. every Form filled has an answer data in the db
                                              * we should get all answers of the farmer and bundle it into one object where we can just get values to questions
                                              * using the question id
@@ -297,7 +297,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                 arrayOfValues.put(plotArray);
                                                             }
 
-                                                        } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGONOSTIC_MONITORING_TABLE)) {
+                                                        } else if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.DIAGNOSTIC_MONITORING_TABLE)) {
                                                             for (Plot plot : farmersPlots) {
                                                                 JSONArray diagnosticAndMonitoringObjectsArray = new JSONArray();
 
@@ -308,7 +308,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                 JSONObject index0JSONObject = new JSONObject();
                                                                 index0JSONObject.put(AppConstants.TYPE_FIELD_NAME, AppConstants.MODULE_TYPE_DIAGNOSTIC);
-                                                                index0JSONObject.put(AppConstants.DIAGONOSTIC_MONITORING_EXTERNAL_ID_C, plot.getExternalId());
+                                                                index0JSONObject.put(AppConstants.DIAGNOSTIC_MONITORING_EXTERNAL_ID_C, plot.getExternalId());
                                                                 index0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
 
                                                                 diagnosticArray.put(index0JSONObject);
@@ -347,7 +347,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
 
                                                                 //Generate JSON payload for Monitoring Module for the plot's Monitorings
-                                                                List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringForPlot(plot.getExternalId())
+                                                                List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringDao().getAllMonitoringForPlot(plot.getExternalId())
                                                                         .blockingGet();
 
                                                                 if (plotMonitoringList != null && plotMonitoringList.size() > 0) {
@@ -358,7 +358,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                         JSONObject monitoringIndex0JSONObject = new JSONObject();
                                                                         monitoringIndex0JSONObject.put(AppConstants.TYPE_FIELD_NAME, AppConstants.MODULE_TYPE_MONITORING);
-                                                                        monitoringIndex0JSONObject.put(AppConstants.DIAGONOSTIC_MONITORING_EXTERNAL_ID_C, monitoring.getExternalId());
+                                                                        monitoringIndex0JSONObject.put(AppConstants.DIAGNOSTIC_MONITORING_EXTERNAL_ID_C, monitoring.getExternalId());
                                                                         monitoringIndex0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
 
                                                                         monitoringArray.put(monitoringIndex0JSONObject);
@@ -405,7 +405,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                 JSONObject index0JSONObject = new JSONObject();
                                                                 index0JSONObject.put(AppConstants.TYPE_FIELD_NAME, AppConstants.MODULE_TYPE_DIAGNOSTIC);
-                                                                index0JSONObject.put(AppConstants.DIAGONOSTIC_MONITORING_EXTERNAL_ID_C, plot.getExternalId());
+                                                                index0JSONObject.put(AppConstants.DIAGNOSTIC_MONITORING_EXTERNAL_ID_C, plot.getExternalId());
                                                                 index0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
 
                                                                 observationArray.put(index0JSONObject);
@@ -430,7 +430,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
 
                                                                 //Generate JSON payload for Monitoring Module for the plot's Monitorings
-                                                                List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringsDao().getAllMonitoringForPlot(plot.getExternalId())
+                                                                List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringDao().getAllMonitoringForPlot(plot.getExternalId())
                                                                         .blockingGet();
 
                                                                 if (plotMonitoringList != null && plotMonitoringList.size() > 0) {
@@ -440,7 +440,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                         JSONObject monitoringIndex0JSONObject = new JSONObject();
                                                                         monitoringIndex0JSONObject.put(AppConstants.TYPE_FIELD_NAME, AppConstants.MODULE_TYPE_MONITORING);
-                                                                        monitoringIndex0JSONObject.put(AppConstants.DIAGONOSTIC_MONITORING_EXTERNAL_ID_C, monitoring.getExternalId());
+                                                                        monitoringIndex0JSONObject.put(AppConstants.DIAGNOSTIC_MONITORING_EXTERNAL_ID_C, monitoring.getExternalId());
                                                                         monitoringIndex0JSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plot.getExternalId());
 
                                                                         monitoringObservationsArray.put(monitoringIndex0JSONObject);
@@ -580,7 +580,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     }
 
 
-    protected void formatFarmerObjectData(RealFarmer farmer, JSONArray arrayOfValues) {
+    protected void formatFarmerObjectData(Farmer farmer, JSONArray arrayOfValues) {
         JSONObject farmerDataJson;
         try {
             farmerDataJson = new JSONObject();

@@ -15,16 +15,8 @@ import java.util.List;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 12:53 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 @Dao
-public interface SkipLogicsDao extends BaseDao<SkipLogic> {
-
-
+public interface SkipLogicDao extends BaseDao<SkipLogic> {
     @Query("SELECT * FROM skip_logics")
     LiveData<List<SkipLogic>> getAll();
 
@@ -33,7 +25,6 @@ public interface SkipLogicsDao extends BaseDao<SkipLogic> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSkipLogic(SkipLogic skipLogic);
-
 
     @Query("SELECT * FROM skip_logics WHERE id = :id")
     SkipLogic getSkipLogicById(int id);
@@ -47,13 +38,9 @@ public interface SkipLogicsDao extends BaseDao<SkipLogic> {
     @Update
     int updateSkipLogic(SkipLogic skipLogic);
 
-
     @Query("DELETE FROM skip_logics")
-    void deleteAlSkipLogics();
-
+    void deleteAlSkipLogic();
 
     @Query("DELETE FROM skip_logics WHERE id = :id")
     int deleteSkipLogicById(int id);
-
-
 }

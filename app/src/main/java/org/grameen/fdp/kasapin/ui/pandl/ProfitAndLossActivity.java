@@ -21,14 +21,14 @@ import org.grameen.fdp.kasapin.data.db.entity.Calculation;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.data.db.entity.RecommendationActivity;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
-import org.grameen.fdp.kasapin.ui.base.model.Data;
+import org.grameen.fdp.kasapin.ui.base.model.TableData;
 import org.grameen.fdp.kasapin.ui.detailedYearMonthlyView.DetailedMonthActivity;
 import org.grameen.fdp.kasapin.ui.fdpStatus.FDPStatusDialogActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -59,13 +59,8 @@ import static org.grameen.fdp.kasapin.utilities.AppConstants.BUTTON_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_SPINNER_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TYPE_TEXT;
-
-/**
- * P & L page
- */
-
 
 enum LabourType {
     FULL, SEASONAL
@@ -109,7 +104,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @BindView(R.id.labour_type_spinner)
     MaterialSpinner labourTypeSpinner;
     JSONObject VALUES_JSON_OBJECT;
-    List<Data> TABLE_DATA_LIST;
+    List<TableData> TABLE_DATA_LIST;
     List<String> TOTAL_LABOR_COST;
     List<String> TOTAL_LABOR_DAYS;
     List<String> TOTAL_MAINTENANCE_COST;
@@ -148,7 +143,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     MyTableViewAdapter myTableViewAdapter;
     JSONObject PLOT_SIZES_IN_HA_JSON;
     ScriptEngine engine;
-    RealFarmer farmer;
+    Farmer farmer;
     MathFormulaParser mathFormulaParser;
     LogicFormulaParser logicFormulaParser;
     Recommendation GAPS_RECOMENDATION_FOR_START_YEAR;
@@ -193,7 +188,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         farmerCodeTextView.setText(farmer.getCode());
         tableView.setColumnCount(9);
         String[] TABLE_HEADERS = getResources().getStringArray(R.array.seven_years);
-        MyTableHearderAdapter tableHeaderAdapter = new MyTableHearderAdapter(this, TABLE_HEADERS);
+        MyTableHeaderAdapter tableHeaderAdapter = new MyTableHeaderAdapter(this, TABLE_HEADERS);
         tableView.setHeaderAdapter(tableHeaderAdapter);
 
         tableHeaderAdapter.setHeaderClickListener(view -> {
@@ -409,20 +404,15 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 labourSpinner.setSelectedIndex(0);
                 labourTypeSpinner.setSelectedIndex(0);
             }
-
     }
 
     private void toggleTable() {
         findViewById(R.id.labor_type_layout).setVisibility(DID_LABOUR != null && DID_LABOUR ? View.VISIBLE : View.GONE);
-
         if ((DID_LABOUR != null && !DID_LABOUR) || LABOUR_TYPE.equals(LabourType.FULL.name()) || LABOUR_TYPE.equals(LabourType.SEASONAL.name())) {
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.GONE);
-
             if (BuildConfig.DEBUG)
                 print.setVisibility(View.VISIBLE);
-
             loadTableData();
-
         } else {
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.VISIBLE);
             print.setVisibility(View.GONE);
@@ -556,13 +546,13 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             }
             if (DID_LABOUR) {
                 //TABLE_DATA_LIST.add(new Data("Total Costs" + prefs.getString("labourType", ""), null, TAG_TITLE_TEXT_VIEW));
-                TABLE_DATA_LIST.add(new Data(getStringResources(R.string.total_maintenance_cost), TOTAL_MAINTENANCE_COST, TAG_RESULTS));
-                TABLE_DATA_LIST.add(new Data(getStringResources(R.string.total_labour_days), TOTAL_LABOR_DAYS, TAG_RESULTS));
-                TABLE_DATA_LIST.add(new Data(getStringResources(R.string.total_labour_cost), TOTAL_LABOR_COST, TAG_RESULTS));
+                TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.total_maintenance_cost), TOTAL_MAINTENANCE_COST, TAG_RESULTS));
+                TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.total_labour_days), TOTAL_LABOR_DAYS, TAG_RESULTS));
+                TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.total_labour_cost), TOTAL_LABOR_COST, TAG_RESULTS));
             }
 
-            TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
-            TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
+            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
             //Get All Aggregate results questions
 
             Integer aggregateResultsFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.AGGREGATE_ECONOMIC_RESULTS).blockingGet();
@@ -574,7 +564,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                     for (Question q : AGGREGATE_ECO_RESULTS_QUESTIONS) {
                         mathFormulaParser.setMathFormula(q.getFormulaC());
                         if (q.getLabelC().startsWith("net_income_cocoa_")) {
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), TOTAL_GROSS_INCOME_FROM_COCOA, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), TOTAL_GROSS_INCOME_FROM_COCOA, TAG_RESULTS));
                         } else if (q.getLabelC().startsWith("net_income_other_crops_")) {
                             String value = mathFormulaParser.evaluate();
                             calculationsList = new ArrayList<>();
@@ -582,12 +572,12 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                                 calculationsList.add(value);
                             }
                             TOTAL_NET_INCOME_FROM_OTHER_CROPS = calculationsList;
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), calculationsList, TAG_RESULTS));
                         } else if (q.getLabelC().startsWith("farming_income_")) {
                             calculationsList = new ArrayList<>();
                             for (int i = 0; i < MAX_YEARS + 1; i++)
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_GROSS_INCOME_FROM_COCOA.get(i) + "+" + TOTAL_NET_INCOME_FROM_OTHER_CROPS.get(i))));
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), calculationsList, TAG_RESULTS));
                             TOTAL_FARMING_INCOME = calculationsList;
                         } else if (q.getLabelC().startsWith("net_income_other_sources_")) {
                             String value = mathFormulaParser.evaluate();
@@ -596,12 +586,12 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                                 calculationsList.add(value);
                             }
                             TOTAL_NET_INCOME_FROM_OTHER_SOURCES = calculationsList;
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), calculationsList, TAG_RESULTS));
                         } else if (q.getLabelC().startsWith("total_income_")) {
                             calculationsList = new ArrayList<>();
                             for (int i = 0; i < MAX_YEARS + 1; i++)
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_FARMING_INCOME.get(i) + "+" + TOTAL_NET_INCOME_FROM_OTHER_SOURCES.get(i))));
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), calculationsList, TAG_RESULTS));
                             TOTAL_INCOME = calculationsList;
                         } else if (q.getLabelC().startsWith("total_family_expenses_")) {
                             String value = mathFormulaParser.evaluate();
@@ -610,13 +600,13 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                                 calculationsList.add(value);
                             }
                             TOTAL_FAMILY_EXPENSES = value;
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), calculationsList, TAG_RESULTS));
                         } else if (q.getLabelC().startsWith("net_family_income_")) {
                             calculationsList = new ArrayList<>();
                             for (int i = 0; i < MAX_YEARS + 1; i++) {
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_INCOME.get(i) + "-" + TOTAL_FAMILY_EXPENSES)));
                             }
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), calculationsList, TAG_RESULTS));
                             NET_FAMILY_INCOME = calculationsList;
                         } else if (q.getLabelC().startsWith("fdp_invest_")) {
                             calculationsList = new ArrayList<>();
@@ -624,7 +614,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                             for (int i = 0; i < MAX_YEARS + 1; i++) {
                                 calculationsList.add(mathFormulaParser.evaluate((TOTAL_MAINTENANCE_COST.get(i) + "+" + TOTAL_LABOR_COST.get(i))));
                             }
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), calculationsList, TAG_RESULTS));
                             TOTAL_INVESTMENT_IN_FDP = calculationsList;
                         } else if (q.getLabelC().startsWith("p&l_")) {
                             calculationsList = new ArrayList<>();
@@ -638,32 +628,32 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                                     calculationsList.add(mathFormulaParser.evaluate((TOTAL_INCOME.get(i) + "-" + TOTAL_INVESTMENT_IN_FDP.get(i))));
                                 }
                             }
-                            TABLE_DATA_LIST.add(new Data(q.getCaptionC(), calculationsList, TAG_RESULTS));
+                            TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), calculationsList, TAG_RESULTS));
                             TOTAL_P_AND_L_LIST = calculationsList;
                         }
                     }
                 }
             }
-            TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
-            TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
+            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
 
 
             Question hhs = getAppDataManager().getDatabaseManager().questionDao().get("hh_savings_");
             Question pI = getAppDataManager().getDatabaseManager().questionDao().get("hh_planed_investment_");
             try {
-                TABLE_DATA_LIST.add(new Data(hhs.getCaptionC(), VALUES_JSON_OBJECT.get(hhs.getLabelC()).toString()));
+                TABLE_DATA_LIST.add(new TableData(hhs.getCaptionC(), VALUES_JSON_OBJECT.get(hhs.getLabelC()).toString()));
             } catch (JSONException e) {
                 e.printStackTrace();
-                TABLE_DATA_LIST.add(new Data(hhs.getCaptionC(), "0.00"));
+                TABLE_DATA_LIST.add(new TableData(hhs.getCaptionC(), "0.00"));
             }
             try {
-                TABLE_DATA_LIST.add(new Data(pI.getCaptionC(), VALUES_JSON_OBJECT.get(pI.getLabelC()).toString()));
+                TABLE_DATA_LIST.add(new TableData(pI.getCaptionC(), VALUES_JSON_OBJECT.get(pI.getLabelC()).toString()));
             } catch (JSONException e) {
                 e.printStackTrace();
-                TABLE_DATA_LIST.add(new Data(pI.getCaptionC(), "0.00"));
+                TABLE_DATA_LIST.add(new TableData(pI.getCaptionC(), "0.00"));
             }
-            TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
-            TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
+            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
 
             myTableViewAdapter = new MyTableViewAdapter(ProfitAndLossActivity.this, TABLE_DATA_LIST, tableView, getAppDataManager().getDatabaseManager());
             runOnUiThread(() -> tableView.setDataAdapter(myTableViewAdapter));
@@ -801,11 +791,11 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         String name = PLOT_RECOMMENDATION.getLabel();
 
-        TABLE_DATA_LIST.add(new Data(PLOT.getName() + "\n" + name, null, TAG_TITLE_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(PLOT.getName() + "\n" + name, null, TAG_TITLE_TEXT_VIEW));
 
         Question plotIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_income_");
 
-        TABLE_DATA_LIST.add(new Data(plotIncomeQuestion.getCaptionC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(plotIncomeQuestion.getCaptionC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
 
         //Maintenance cost, labor cost and labor days * plot size in ha
         //This is also known as Supplies cost. The selected year is always with   the (GAPS) recommendation obtained in conjunction with the plot recommendation attained
@@ -869,36 +859,36 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         Question plotRenovatedCorrectlyQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_correctly_");
 
         if (plotRenovatedCorrectlyQuestion != null) {
-            if (!ComputationUtils.getValue(plotRenovatedCorrectlyQuestion.getLabelC(), PLOT_ANSWERS_JSON_OBJECT).equalsIgnoreCase("yes"))
+            if (!ComputationUtils.getDataValue(plotRenovatedCorrectlyQuestion, PLOT_ANSWERS_JSON_OBJECT).equalsIgnoreCase("yes"))
                 if ((PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Grafting")) ||
                         PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Thinning Out") ||
                         PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Filling In")) {
 
                     getAppDataManager().setStringValue(PLOT.getExternalId(), PLOT_RECOMMENDATION.getRecommendationName());
-                    TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Replant", null, BUTTON_VIEW));
+                    TABLE_DATA_LIST.add(new TableData(PLOT.getExternalId() + "_Replant", null, BUTTON_VIEW));
                 } else if (PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Replant")) {
                     if (getAppDataManager().getStringValue(PLOT.getExternalId()).equalsIgnoreCase("thinning out"))
-                        TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Thinning out", null, BUTTON_VIEW));
+                        TABLE_DATA_LIST.add(new TableData(PLOT.getExternalId() + "_Thinning out", null, BUTTON_VIEW));
                     else if (getAppDataManager().getStringValue(PLOT.getExternalId()).equalsIgnoreCase("filling in"))
-                        TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Filling in", null, BUTTON_VIEW));
+                        TABLE_DATA_LIST.add(new TableData(PLOT.getExternalId() + "_Filling in", null, BUTTON_VIEW));
                     else if (getAppDataManager().getStringValue(PLOT.getExternalId()).equalsIgnoreCase("grafting"))
-                        TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Grafting", null, BUTTON_VIEW));
+                        TABLE_DATA_LIST.add(new TableData(PLOT.getExternalId() + "_Grafting", null, BUTTON_VIEW));
                 } else if (PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Filling in + Extra Soil")
                         || PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Thinning out + Extra Soil")
                         || PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Grafting + Extra Soil")) {
 
                     getAppDataManager().setStringValue(PLOT.getExternalId(), PLOT_RECOMMENDATION.getRecommendationName());
-                    TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Replant + Extra Soil", null, BUTTON_VIEW));
+                    TABLE_DATA_LIST.add(new TableData(PLOT.getExternalId() + "_Replant + Extra Soil", null, BUTTON_VIEW));
                 } else if (PLOT_RECOMMENDATION.getRecommendationName().equalsIgnoreCase("Replant + Extra Soil")) {
                     if (getAppDataManager().getStringValue(PLOT.getExternalId()).equalsIgnoreCase("Thinning out + Extra Soil"))
-                        TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Thinning out + Extra Soil", null, BUTTON_VIEW));
+                        TABLE_DATA_LIST.add(new TableData(PLOT.getExternalId() + "_Thinning out + Extra Soil", null, BUTTON_VIEW));
                     else if (getAppDataManager().getStringValue(PLOT.getExternalId()).equalsIgnoreCase("Filling in + Extra Soil"))
-                        TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Filling in + Extra Soil", null, BUTTON_VIEW));
+                        TABLE_DATA_LIST.add(new TableData(PLOT.getExternalId() + "_Filling in + Extra Soil", null, BUTTON_VIEW));
                     else if (getAppDataManager().getStringValue(PLOT.getExternalId()).equalsIgnoreCase("Grafting + Extra Soil"))
-                        TABLE_DATA_LIST.add(new Data(PLOT.getExternalId() + "_Grafting + Extra Soil", null, BUTTON_VIEW));
+                        TABLE_DATA_LIST.add(new TableData(PLOT.getExternalId() + "_Grafting + Extra Soil", null, BUTTON_VIEW));
                 }
         }
-        TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
     }
 
 
@@ -951,11 +941,11 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             AppLogger.i(TAG, "^^^^^^^^^^^^^^    TEMP IS NOW " + TEMP);
         }
         String name = PLOT_RECOMMENDATION.getLabel();
-        TABLE_DATA_LIST.add(new Data(PLOT.getName() + "\n" + name + "\nYear " + PLOT.getStartYear(), null, TAG_TITLE_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(PLOT.getName() + "\n" + name + "\nYear " + PLOT.getStartYear(), null, TAG_TITLE_TEXT_VIEW));
 
         Question plotIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_income_");
 
-        TABLE_DATA_LIST.add(new Data(plotIncomeQuestion.getLabelC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(plotIncomeQuestion.getLabelC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
 
         //This is also known as Supplies cost. The selected year is always with   the (GAPS) recommendation obtained in conjunction with the plot recommendation
         maintenanceCostList = new ArrayList<>();
@@ -1001,7 +991,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             LABOR_DAYS_STRING_BUILDERS.get(i).append(labourDaysList.get(i)).append("+");
         }
         computePlotResults();
-        TABLE_DATA_LIST.add(new Data("", null, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
     }
 
 
@@ -1027,7 +1017,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         CSSV_VALUE = "--";
 
         if (PLOT_ANSWERS_JSON_OBJECT != null)
-            CSSV_VALUE = ComputationUtils.getValue(CSSV_QUESTION.getLabelC(), PLOT_ANSWERS_JSON_OBJECT);
+            CSSV_VALUE = ComputationUtils.getDataValue(CSSV_QUESTION, PLOT_ANSWERS_JSON_OBJECT);
 
         List<SkipLogic> skipLogics = getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(START_YEAR_QUESTION.getId()).blockingGet();
         if (skipLogics != null && skipLogics.size() > 0) {
@@ -1037,8 +1027,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                     sl.setComparingQuestion(values[0]);
                     sl.setLogicalOperator(values[1]);
                     sl.setAnswerValue(values[2]);
-                    if (ComputationUtils.compareValues(sl, CSSV_VALUE, engine)) {
-                        TABLE_DATA_LIST.add(new Data(COUNTER + "_" + year, null, TAG_VIEW));
+                    if (ComputationUtils.compareSkipLogicValues(sl, CSSV_VALUE, engine)) {
+                        TABLE_DATA_LIST.add(new TableData(COUNTER + "_" + year, null, TAG_SPINNER_VIEW));
                         break;
                     }
                 } catch (Exception ignored) {
@@ -1053,16 +1043,16 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             pandlist.add(mathFormulaParser.evaluate(plotIncomes.get(i) + "-" + "(" + maintenanceCostList.get(i) + "+" + labourCostList.get(i) + ")"));
 
         Question plotCostQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_cost_");
-        TABLE_DATA_LIST.add(new Data(plotCostQuestion.getCaptionC(), maintenanceCostList, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(plotCostQuestion.getCaptionC(), maintenanceCostList, TAG_OTHER_TEXT_VIEW));
 
         Question laborDaysQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_labor_days_");
-        TABLE_DATA_LIST.add(new Data(laborDaysQuestion.getCaptionC(), labourDaysList, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(laborDaysQuestion.getCaptionC(), labourDaysList, TAG_OTHER_TEXT_VIEW));
 
         Question labourCostQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_labor_cost_");
-        TABLE_DATA_LIST.add(new Data(labourCostQuestion.getCaptionC(), labourCostList, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(labourCostQuestion.getCaptionC(), labourCostList, TAG_OTHER_TEXT_VIEW));
 
         Question plotProfitLossQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_p&l_");
-        TABLE_DATA_LIST.add(new Data(plotProfitLossQuestion.getCaptionC(), pandlist, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(plotProfitLossQuestion.getCaptionC(), pandlist, TAG_OTHER_TEXT_VIEW));
 
         Integer plotResultsFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId("Plot results").blockingGet();
         if (plotResultsFormId != null) {
@@ -1070,7 +1060,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             if (plotResultsQuestions != null) {
                 for (Question q : plotResultsQuestions) {
                     if (q.getTypeC().equalsIgnoreCase(TYPE_TEXT)) {
-                        String answerValue = ComputationUtils.getValue(q.getLabelC().replace("pl_", ""), PLOT_ANSWERS_JSON_OBJECT);
+                        q.setLabelC(q.getLabelC().replace("pl_", ""));
+                        String answerValue = ComputationUtils.getDataValue(q, PLOT_ANSWERS_JSON_OBJECT);
                         try {
                             SkipLogic skipLogic = getAppDataManager().getDatabaseManager().skipLogicsDao().getSkipLogicByQuestionId(q.getId());
                             String[] values = skipLogic.getFormula().replace("\"", "").split(" ");
@@ -1078,8 +1069,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                             skipLogic.setLogicalOperator(values[1]);
                             skipLogic.setAnswerValue(values[2]);
 
-                            if (ComputationUtils.compareValues(skipLogic, answerValue, engine) && !skipLogic.shouldHide())
-                                TABLE_DATA_LIST.add(new Data(q.getCaptionC(), answerValue));
+                            if (ComputationUtils.compareSkipLogicValues(skipLogic, answerValue, engine) && !skipLogic.shouldHide())
+                                TABLE_DATA_LIST.add(new TableData(q.getCaptionC(), answerValue));
                         } catch (NullPointerException e) {
                             e.printStackTrace();
                         }

@@ -29,22 +29,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
 public class SelectionController extends MyLabeledFieldController {
-
     private final int spinnerId = MyFormController.generateViewId();
-
     private final String prompt;
     private final List<String> items;
     private final List<?> values;
     boolean IS_ENABLED = true;
     PopupWindow popupWindow;
-
     String helperText = null;
-
 
     /**
      * Constructs a selection field
@@ -83,8 +75,6 @@ public class SelectionController extends MyLabeledFieldController {
         this.items.add(prompt);     // last item is used for the 'prompt' by the SpinnerView
         this.values = new ArrayList<>(values);
         this.IS_ENABLED = isEnabled;
-
-
     }
 
     /**
@@ -145,11 +135,9 @@ public class SelectionController extends MyLabeledFieldController {
             int id;
             AtomicInteger nextGeneratedViewId = new AtomicInteger(1);
             id = nextGeneratedViewId.get();
-
             RelativeLayout linearLayout = new RelativeLayout(getContext());
             // linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
 
             Spinner spinnerView = new Spinner(getContext());
             spinnerView.setContentDescription(getContentDesc());
@@ -167,7 +155,6 @@ public class SelectionController extends MyLabeledFieldController {
                     }
                     return view;
                 }
-
                 @Override
                 public int getCount() {
                     return super.getCount() - 1; // don't display last item (it's used for the prompt)
@@ -175,9 +162,7 @@ public class SelectionController extends MyLabeledFieldController {
             };
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerView.setAdapter(spinnerAdapter);
-
             spinnerView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                     Object value;
@@ -198,29 +183,22 @@ public class SelectionController extends MyLabeledFieldController {
                     getModel().setValue(getName(), value);
 
                 }
-
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
                     if (prompt != null)
                         getModel().setValue(getName(), prompt);
-
                 }
             });
 
             refresh(spinnerView);
-
             spinnerView.setEnabled(IS_ENABLED);
 
-
-            RelativeLayout.LayoutParams spinnerViewLayoutParamsparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            spinnerViewLayoutParamsparams.addRule(RelativeLayout.LEFT_OF, id);
-
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.addRule(RelativeLayout.LEFT_OF, id);
 
             if (helperText != null && !helperText.equalsIgnoreCase("null") && !helperText.equalsIgnoreCase("")) {
-
-                spinnerViewLayoutParamsparams.rightMargin = 5;
-
+                layoutParams.rightMargin = 5;
                 final ImageView imageView = new ImageView(getContext());
                 imageView.setImageResource(R.drawable.ic_info_grey_400_18dp);
                 imageView.setPadding(4, 4, 4, 4);
@@ -230,7 +208,6 @@ public class SelectionController extends MyLabeledFieldController {
                 imageView.setBackgroundResource(outValue.resourceId);
                 imageView.setClickable(true);
                 imageView.setFocusable(true);
-
 
                 imageView.setOnClickListener(v -> {
                     if (popupWindow != null && popupWindow.isShowing())
@@ -246,7 +223,6 @@ public class SelectionController extends MyLabeledFieldController {
 
                         popupWindow.setBackgroundDrawable(new BitmapDrawable());
                         popupWindow.setOutsideTouchable(true);
-
                         popupWindow.setFocusable(false);
                         popupWindow.showAsDropDown(imageView, 0, 5);
                     }
@@ -260,7 +236,8 @@ public class SelectionController extends MyLabeledFieldController {
                 imageView.requestLayout();
                 linearLayout.addView(imageView);
             }
-            spinnerView.setLayoutParams(spinnerViewLayoutParamsparams);
+
+            spinnerView.setLayoutParams(layoutParams);
             spinnerView.requestLayout();
             linearLayout.addView(spinnerView);
             return linearLayout;
@@ -283,15 +260,11 @@ public class SelectionController extends MyLabeledFieldController {
         } else if (value instanceof Integer) {
             selectionIndex = (Integer) value;
         }
-
         spinner.setSelection(selectionIndex);
     }
 
-
     @Override
     public void refresh() {
-
         refresh(getSpinner());
-
     }
 }

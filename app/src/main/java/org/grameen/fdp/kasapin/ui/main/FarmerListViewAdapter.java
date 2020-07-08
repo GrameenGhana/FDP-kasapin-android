@@ -15,23 +15,16 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.util.List;
 import java.util.Random;
 
+public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
 
-/**
- * Created by AangJnr on 14, December, 2018 @ 12:22 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
-public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
-
-    private List<RealFarmer> farmers;
+    private List<Farmer> farmers;
     private Context context;
     private LayoutInflater layoutInflater;
     private int lastPosition = -1;
@@ -39,7 +32,7 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
     private OnLongClickListener longClickListener;
 
 
-    public FarmerListViewAdapter(Context c, List<RealFarmer> _farmers) {
+    public FarmerListViewAdapter(Context c, List<Farmer> _farmers) {
         super(c, R.layout.farmer_grid_item_view, _farmers);
 
         this.context = c;
@@ -52,7 +45,7 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        RealFarmer realFarmer = farmers.get(position);
+        Farmer realFarmer = farmers.get(position);
 
         ViewHolder viewHolder;
 
@@ -84,7 +77,7 @@ public class FarmerListViewAdapter extends ArrayAdapter<RealFarmer> {
         return convertView;
     }
 
-    private void setData(RealFarmer farmer, ViewHolder viewHolder) {
+    private void setData(Farmer farmer, ViewHolder viewHolder) {
 
         if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")) {
             viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));

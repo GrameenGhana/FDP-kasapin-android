@@ -15,9 +15,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import org.grameen.fdp.kasapin.R;
 
 public class TableViewListener implements ITableViewListener {
-
     String TAG = TableViewListener.class.getSimpleName();
-
     /**
      * Called when user click any cell item.
      *
@@ -30,9 +28,7 @@ public class TableViewListener implements ITableViewListener {
             rowPosition) {
         // Do what you want.
         View view = cellView.itemView;
-
         View childView = view.findViewById(R.id.cell_data);
-
         if (childView instanceof MaterialEditText) {
             childView.requestFocus();
             InputMethodManager imm = (InputMethodManager) childView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -45,7 +41,6 @@ public class TableViewListener implements ITableViewListener {
             spinner.performClick();
         }
     }
-
     /**
      * Called when user long press any cell item.
      *
@@ -54,10 +49,7 @@ public class TableViewListener implements ITableViewListener {
      * @param row      : Y (Row) position of Long Pressed Cell item.
      */
     @Override
-    public void onCellLongPressed(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
-        // Do What you want
-    }
-
+    public void onCellLongPressed(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {}
     /**
      * Called when user click any column header item.
      *
@@ -69,13 +61,11 @@ public class TableViewListener implements ITableViewListener {
             columnPosition) {
         // Do what you want.
     }
-
     /**
      * Called when user click any column header item.
      *
      * @param columnHeaderView : Long pressed Column Header ViewHolder.
      * @param columnPosition   : X (Column) position of Clicked Column Header item.
-     * @version 0.8.5.1
      */
     @Override
     public void onColumnHeaderLongPressed(@NonNull RecyclerView.ViewHolder columnHeaderView, int
@@ -93,7 +83,6 @@ public class TableViewListener implements ITableViewListener {
     public void onRowHeaderClicked(@NonNull RecyclerView.ViewHolder rowHeaderView, int
             rowPosition) {
         // Do what you want.
-
     }
 
     /**
@@ -101,12 +90,10 @@ public class TableViewListener implements ITableViewListener {
      *
      * @param rowHeaderView : Long pressed Row Header ViewHolder.
      * @param rowPosition   : Y (Row) position of Clicked Row Header item.
-     * @version 0.8.5.1
      */
     @Override
     public void onRowHeaderLongPressed(@NonNull RecyclerView.ViewHolder rowHeaderView, int
             rowPosition) {
         // Do what you want.
-
     }
 }
