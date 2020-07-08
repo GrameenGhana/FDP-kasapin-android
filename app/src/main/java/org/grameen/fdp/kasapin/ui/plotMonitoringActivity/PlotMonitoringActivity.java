@@ -14,11 +14,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.addPlotMonitoring.AddPlotMonitoringActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
@@ -27,7 +27,6 @@ import org.grameen.fdp.kasapin.ui.plotReview.HistoricalTableHeaderAdapter;
 import org.grameen.fdp.kasapin.ui.plotReview.PlotMonitoringTablePagerAdapter;
 import org.grameen.fdp.kasapin.ui.plotReview.PlotMonitoringTableViewAdapter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.json.JSONException;
@@ -212,12 +211,15 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
 
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
                 @Override
                 public void onPageSelected(int position) {
                     MONITORING_POSITION = position;
                     titleView.setText(plotMonitoringTableDataList.get(position).getTitle());
                 }
+
                 @Override
                 public void onPageScrollStateChanged(int state) {
                 }
@@ -262,7 +264,8 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
     }
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @OnClick({R.id.edit_monitoring, R.id.add_monitoring})
     public void onViewClicked(View view) {

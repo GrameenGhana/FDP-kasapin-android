@@ -6,6 +6,7 @@ public class HistoricalViewPagerTableData {
     Integer position;
     String title;
     List<List<String>> tableData;
+
     public HistoricalViewPagerTableData(String title, List<List<String>> tableData) {
         this.title = title;
         this.tableData = tableData;
@@ -27,6 +28,7 @@ public class HistoricalViewPagerTableData {
         this.tableData = tableData;
 
     }
+
     public Integer getPosition() {
         return position;
     }

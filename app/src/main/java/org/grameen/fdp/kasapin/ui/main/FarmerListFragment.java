@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.ui.main;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +22,6 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseFragment;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.util.List;
 
@@ -46,6 +43,7 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     FarmerListViewAdapter farmerListViewAdapter;
     int index = 0;
     String SELECTED_VILLAGE;
+
     public FarmerListFragment() {
         super();
     }
@@ -78,7 +76,8 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     }
 
     @Override
-    public void setRecyclerAdapter() {}
+    public void setRecyclerAdapter() {
+    }
 
     @Override
     public void setListAdapter(List<Farmer> mFarmers) {
@@ -132,16 +131,20 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     }
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @Override
-    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {}
+    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
+    }
 
     @Override
-    public void openLoginActivityOnTokenExpire() {}
+    public void openLoginActivityOnTokenExpire() {
+    }
 
     @Override
-    public void toggleFullScreen(Boolean hideNavBar, Window W) {}
+    public void toggleFullScreen(Boolean hideNavBar, Window W) {
+    }
 
     @Override
     public void onDestroy() {

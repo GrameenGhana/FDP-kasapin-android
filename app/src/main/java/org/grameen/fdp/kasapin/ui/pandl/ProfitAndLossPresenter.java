@@ -2,9 +2,9 @@ package org.grameen.fdp.kasapin.ui.pandl;
 
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +40,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                             JSONObject object = formAnswerData.getJsonData();
                             Iterator<String> iterator = object.keys();
                             while (iterator.hasNext()) {
-                                String key = (String) iterator.next();
+                                String key = iterator.next();
                                 try {
                                     ALL_DATA_JSON.put(key, formAnswerData.getJsonData().get(key));
                                 } catch (JSONException e) {

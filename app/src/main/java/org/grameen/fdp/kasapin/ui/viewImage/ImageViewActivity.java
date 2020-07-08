@@ -3,7 +3,6 @@ package org.grameen.fdp.kasapin.ui.viewImage;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -86,7 +85,8 @@ public class ImageViewActivity extends BaseActivity {
     }
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @Override
     public void toggleFullScreen(Boolean hideNavBar, Window window) {

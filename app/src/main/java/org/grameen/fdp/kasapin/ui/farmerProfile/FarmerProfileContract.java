@@ -3,9 +3,9 @@ package org.grameen.fdp.kasapin.ui.farmerProfile;
 
 import android.widget.Button;
 
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 import java.util.List;

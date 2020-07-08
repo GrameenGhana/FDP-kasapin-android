@@ -24,6 +24,7 @@ public class EditTextController extends MyLabeledFieldController {
     private boolean IS_ENABLED;
     private String helperText;
     private int inputType;
+
     /**
      * Constructs a new instance of an edit text field.
      *
@@ -111,6 +112,7 @@ public class EditTextController extends MyLabeledFieldController {
 
     /**
      * Constructs a new instance of an edit text field.
+     *
      * @param ctx       the Android context
      * @param name      the name of the field
      * @param labelText the label to display beside the field

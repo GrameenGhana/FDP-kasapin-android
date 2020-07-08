@@ -7,5 +7,6 @@ public class FarmAssessmentContract {
         void setUpViews();
     }
 
-    public interface Presenter {}
+    public interface Presenter {
+    }
 }

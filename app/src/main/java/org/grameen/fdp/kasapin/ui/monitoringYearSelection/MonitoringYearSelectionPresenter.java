@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 public class MonitoringYearSelectionPresenter extends BasePresenter<MonitoringYearSelectionContract.View> implements MonitoringYearSelectionContract.Presenter {
     AppDataManager mAppDataManager;
+
     @Inject
     public MonitoringYearSelectionPresenter(AppDataManager appDataManager) {
         super(appDataManager);

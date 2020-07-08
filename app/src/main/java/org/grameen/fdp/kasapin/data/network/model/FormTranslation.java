@@ -26,10 +26,10 @@ public class FormTranslation {
     }
 
     /**
-     * @param id Integer id of the FormTranslation model
-     * @param form Form of the FormTranslation model
-     * @param formId of the FormTranslation model
-     * @param name of the FormTranslation model
+     * @param id        Integer id of the FormTranslation model
+     * @param form      Form of the FormTranslation model
+     * @param formId    of the FormTranslation model
+     * @param name      of the FormTranslation model
      * @param questions of the FormTranslation model
      */
     public FormTranslation(int id, String name, int formId, Form form, List<Question> questions) {

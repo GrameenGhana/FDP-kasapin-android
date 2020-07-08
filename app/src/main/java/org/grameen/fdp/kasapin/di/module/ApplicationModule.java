@@ -31,6 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class ApplicationModule {
     private final Application application;
+
     public ApplicationModule(Application app) {
         application = app;
     }

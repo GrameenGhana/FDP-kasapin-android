@@ -10,15 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
-
 import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
@@ -107,10 +105,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     }
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @Override
-    public void openLoginActivityOnTokenExpire() {}
+    public void openLoginActivityOnTokenExpire() {
+    }
 
     @Override
     public void showForm(List<FormAndQuestions> formAndQuestionsList) {
@@ -139,18 +139,25 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
-                    public void onComplete() {}
+                    public void onComplete() {
+                    }
+
                     @Override
-                    public void onError(Throwable ignored) {}
+                    public void onError(Throwable ignored) {
+                    }
                 });
 
         //Edit Plot
         saveButton.setEnabled(false);
         plotNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() < 2) {

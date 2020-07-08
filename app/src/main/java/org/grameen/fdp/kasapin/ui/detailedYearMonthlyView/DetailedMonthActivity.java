@@ -8,10 +8,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.gson.Gson;
 
-import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
+import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.RecommendationActivity;
 import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
@@ -173,7 +172,8 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
                         } catch (Exception ignored) {
                             labourCost.append("0").append("+");
                         }
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                 }
 
             suppliesCost.append("0.0");

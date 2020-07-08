@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.FarmResult;
-import org.grameen.fdp.kasapin.data.db.entity.PlotAssessment;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
+import org.grameen.fdp.kasapin.data.db.entity.PlotAssessment;
 import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.detailedYearMonthlyView.DetailedYearTableHeaderAdapter;

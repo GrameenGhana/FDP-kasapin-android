@@ -14,6 +14,7 @@ public class SuppliesCost {
 
     public SuppliesCost() {
     }
+
     @NonNull
     public String getId() {
         return id;

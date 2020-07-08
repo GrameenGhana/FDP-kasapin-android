@@ -24,12 +24,12 @@ import androidx.core.content.ContextCompat;
 import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
@@ -136,7 +136,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
         ph.setText(PLOT.getPh());
         i1 = PLOT_AO_ANSWERS_JSON.keys();
         while (i1.hasNext()) {
-            tmp_key = (String) i1.next();
+            tmp_key = i1.next();
             if (tmp_key.toLowerCase().contains("lime")) {
                 try {
                     limeNeeded.setText(PLOT_AO_ANSWERS_JSON.getString(tmp_key));
@@ -166,9 +166,12 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
-                    public void onComplete() {}
+                    public void onComplete() {
+                    }
+
                     @Override
-                    public void onError(Throwable ignored) {}
+                    public void onError(Throwable ignored) {
+                    }
                 });
         if (PLOT.getRecommendationId() > 0) {
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationId(PLOT.getRecommendationId())
@@ -386,6 +389,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                 }
                 return view;
             }
+
             @Override
             public int getCount() {
                 return super.getCount(); // don't display last item (it's used for the prompt)
@@ -526,7 +530,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
         i1 = PLOT_AO_ANSWERS_JSON.keys();
         while (i1.hasNext()) {
-            tmp_key = (String) i1.next();
+            tmp_key = i1.next();
             try {
                 if (MONITORING_ANSWERS_JSON.has(tmp_key))
                     MONITORING_ANSWERS_JSON.remove(tmp_key);

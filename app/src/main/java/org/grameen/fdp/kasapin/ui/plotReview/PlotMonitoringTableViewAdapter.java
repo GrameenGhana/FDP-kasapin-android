@@ -2,7 +2,6 @@ package org.grameen.fdp.kasapin.ui.plotReview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +22,9 @@ import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 import static org.grameen.fdp.kasapin.utilities.AppConstants.BUTTON_VIEW;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_SPINNER_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 
 public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapter<HistoricalTableViewData> {
     private static final int TEXT_SIZE = 10;
@@ -72,36 +70,36 @@ public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapt
     }
 
     private View renderLabelColumnValues(final HistoricalTableViewData data) {
-        return getView(data.getTag(), data.getLabel()) ;
+        return getView(data.getTag(), data.getLabel());
     }
 
     private View renderValuesAtColumn1(final HistoricalTableViewData data) {
-        return getView(data.getTag(), data.getValueAtColumn1()) ;
+        return getView(data.getTag(), data.getValueAtColumn1());
     }
 
     private View renderValuesAtColumn2(final HistoricalTableViewData data) {
-        return getView(data.getTag(), data.getValueAtColumn2()) ;
+        return getView(data.getTag(), data.getValueAtColumn2());
     }
 
     private View renderValuesAtColumn3(final HistoricalTableViewData data) {
-        return getView(data.getTag(), data.getValueAtColumn3()) ;
+        return getView(data.getTag(), data.getValueAtColumn3());
     }
 
     private View getView(String viewType, String dataValue) {
-        if(viewType == null)
-           return getTextView(dataValue, null);
-            switch (viewType) {
-                case TAG_TITLE_TEXT_VIEW:
-                    return getTextView(dataValue, true);
-                case BUTTON_VIEW:
-                   return getButtonView(dataValue);
-                case TAG_SPINNER_VIEW:
-                    return getSpinnerView(dataValue);
-                case TAG_RESULTS:
-                    return getTextView(dataValue, false);
-                default:
-                    return getTextView(dataValue, null);
-            }
+        if (viewType == null)
+            return getTextView(dataValue, null);
+        switch (viewType) {
+            case TAG_TITLE_TEXT_VIEW:
+                return getTextView(dataValue, true);
+            case BUTTON_VIEW:
+                return getButtonView(dataValue);
+            case TAG_SPINNER_VIEW:
+                return getSpinnerView(dataValue);
+            case TAG_RESULTS:
+                return getTextView(dataValue, false);
+            default:
+                return getTextView(dataValue, null);
+        }
     }
 
     private TextView getTextView(String value, Boolean isLabelText) {
@@ -118,11 +116,11 @@ public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapt
         //These specific values must be highlighted in 2 ways,
         //If its a label text , set the text color to the accent color and make it bold
         //else set the text color to black and make it bold
-        if(isLabelText != null) {
-            if(isLabelText) {
+        if (isLabelText != null) {
+            if (isLabelText) {
                 textView.setTextSize(TITLE_TEXT_SIZE);
                 textView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
-            }else
+            } else
                 textView.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         }
         return textView;
@@ -157,6 +155,6 @@ public class PlotMonitoringTableViewAdapter extends LongPressAwareTableDataAdapt
             spinner.setSelectedIndex(Integer.parseInt(label.split("_")[1]));
         } catch (Exception ignored) {
         }
-       return spinner;
+        return spinner;
     }
 }

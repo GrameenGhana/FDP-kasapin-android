@@ -19,6 +19,7 @@ import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 public class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginContract.Presenter, FdpCallbacks.OnDownloadResourcesListener {
     private AppDataManager mAppDataManager;
+
     @Inject
     public LoginPresenter(AppDataManager appDataManager) {
         super(appDataManager);
@@ -37,6 +38,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                                 mAppDataManager.setAccessToken(token);
                                 fetchUserData(token);
                             }
+
                             @Override
                             public void onError(Throwable e) {
                                 AppLogger.e(TAG, e.getMessage());
@@ -61,6 +63,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
                         mAppDataManager.updateUserInfo(user);
                         fetchData();
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         AppLogger.e(TAG, e);

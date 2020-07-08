@@ -3,29 +3,15 @@ package org.grameen.fdp.kasapin.utilities;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Base64;
-import android.view.View;
-import android.widget.ListView;
-
-import org.grameen.fdp.kasapin.R;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.listeners.OnScrollListener;
 
 public class ImageUtil {
     private static boolean isEndOfTable = false;

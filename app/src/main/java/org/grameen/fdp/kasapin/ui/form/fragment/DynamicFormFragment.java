@@ -31,7 +31,6 @@ import org.grameen.fdp.kasapin.ui.form.controller.view.PhotoButtonController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.SelectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.TimePickerController;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;

@@ -29,6 +29,7 @@ public class FarmerListRecyclerViewAdapter extends RecyclerView.Adapter<FarmerLi
 
     /**
      * Constructor
+     *
      * @param farmers .
      **/
     FarmerListRecyclerViewAdapter(Context context, List<Farmer> farmers) {

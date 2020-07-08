@@ -2,10 +2,10 @@ package org.grameen.fdp.kasapin.ui.plotMonitoringActivity;
 
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -45,6 +45,7 @@ public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContrac
                     public void onComplete() {
                         getView().setupAdoptionObservationsTableView(aoFormAndQuestions, aoMonitoringFormAndQuestions);
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         getView().showMessage("Couldn't obtain Adoption Observation questions");
@@ -63,6 +64,7 @@ public class PlotMonitoringPresenter extends BasePresenter<PlotMonitoringContrac
                     public void onSuccess(List<Monitoring> monitorings) {
                         getView().updateTableData(monitorings);
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         getView().showMessage(e.getMessage());

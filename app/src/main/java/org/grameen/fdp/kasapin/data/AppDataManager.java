@@ -229,7 +229,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void updateApiHeader(Long userId, String accessToken) {}
+    public void updateApiHeader(Long userId, String accessToken) {
+    }
 
     @Override
     public void setUserAsLoggedOut() {

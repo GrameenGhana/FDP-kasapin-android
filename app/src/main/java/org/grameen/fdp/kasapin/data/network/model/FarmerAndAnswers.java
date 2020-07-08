@@ -2,21 +2,21 @@ package org.grameen.fdp.kasapin.data.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 
 import java.util.List;
 
 public class FarmerAndAnswers {
     @SerializedName("farmer")
-   private Farmer farmer;
+    private Farmer farmer;
 
     @SerializedName("forms")
     private List<FormAnswerData> answers;
 
     @SerializedName("plot_details")
-   private List<List<Plot>> plotDetails;
+    private List<List<Plot>> plotDetails;
 
 
     public FarmerAndAnswers() {

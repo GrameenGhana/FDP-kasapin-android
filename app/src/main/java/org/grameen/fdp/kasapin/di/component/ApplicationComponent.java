@@ -18,10 +18,13 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
     void inject(FDPKasapin app);
+
     void inject(SyncService service);
 
     @ApplicationContext
     Context getContext();
+
     Application getApplication();
+
     AppDataManager getAppDataManager();
 }

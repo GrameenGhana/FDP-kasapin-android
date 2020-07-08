@@ -11,6 +11,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FarmerListFragmentPresenter extends BasePresenter<MainContract.FragmentView> implements MainContract.FragmentPresenter {
     AppDataManager mAppDataManager;
+
     @Inject
     public FarmerListFragmentPresenter(AppDataManager appDataManager) {
         super(appDataManager);
@@ -31,5 +32,6 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
     }
 
     @Override
-    public void deleteFarmer(Farmer farmer, int position) {}
+    public void deleteFarmer(Farmer farmer, int position) {
+    }
 }

@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +34,10 @@ import org.grameen.fdp.kasapin.FDPKasapin;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.DataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.di.component.ActivityComponent;
 import org.grameen.fdp.kasapin.di.component.DaggerActivityComponent;
@@ -50,6 +49,7 @@ import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
+import org.grameen.fdp.kasapin.utilities.FileUtils;
 import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
@@ -69,7 +69,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity.familyMembersFormPosition;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
 public abstract class BaseActivity extends AppCompatActivity implements BaseContract.View, BaseFragment.Callback {
     public static String DEVICE_ID;
@@ -268,7 +267,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
             }, 1000);
 
         }, "OK", (dialog, which) -> dialog.cancel(), "CANCEL", 0);
-
     }
 
     public String getStringResources(int resource) {
@@ -297,7 +295,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     public void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable) {
         CommonUtils.showAlertDialog(mAlertDialogBuilder, cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener,
                 negativeText, icon_drawable);
-
     }
 
     protected Toolbar setToolbar(String title) {
@@ -309,7 +306,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_white_24dp);
-
             toolbar.setNavigationOnClickListener((v) -> onBackPressed());
         } catch (Exception e) {
             e.printStackTrace();
@@ -341,10 +337,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     }
 
     protected File createTemporaryFile(String part, String ext) throws Exception {
-        File dir = new File(ROOT_DIR + File.separator + "temp/");
-        if (!dir.exists())
-            dir.mkdirs();
-        return File.createTempFile(part, ext, dir);
+        return FileUtils.createTemporaryFile(part, ext);
     }
 
     public void openNextActivity() {

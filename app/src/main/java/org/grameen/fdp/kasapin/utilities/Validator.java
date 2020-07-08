@@ -12,7 +12,8 @@ import java.util.HashSet;
 public class Validator {
     private JSONObject VALIDATIONS = new JSONObject();
 
-    public Validator() {}
+    public Validator() {
+    }
 
     public void addValidation(Question question) {
         HashSet<InputValidator> validation = new HashSet<>();

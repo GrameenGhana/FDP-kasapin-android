@@ -19,6 +19,7 @@ public class Mapping extends BaseModel {
      */
     public Mapping() {
     }
+
     public int getQuestionId() {
         return questionId;
     }

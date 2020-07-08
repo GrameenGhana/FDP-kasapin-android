@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 public class SplashPresenter extends BasePresenter<SplashContract.View> implements SplashContract.Presenter {
     AppDataManager mAppDataManager;
+
     @Inject
     public SplashPresenter(AppDataManager appDataManager) {
         super(appDataManager);

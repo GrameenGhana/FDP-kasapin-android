@@ -12,11 +12,13 @@ public class FormsDataWrapper {
     @SerializedName("data")
     @Expose
     private List<FormTranslation> data = null;
+
     /**
      * No args constructor for use in serialization
      */
     public FormsDataWrapper() {
     }
+
     public FormsDataWrapper(List<FormTranslation> data) {
         super();
         this.data = data;

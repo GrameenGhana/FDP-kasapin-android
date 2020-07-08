@@ -10,7 +10,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Community;
 import java.util.List;
 
 import io.reactivex.Maybe;
-import io.reactivex.Single;
 
 @Dao
 public interface CommunitiesDao extends BaseDao<Community> {

@@ -8,6 +8,7 @@ public class PlotMonitoringTableData {
     Integer position;
     String title;
     List<HistoricalTableViewData> tableData;
+
     public PlotMonitoringTableData(String title, List<HistoricalTableViewData> tableData) {
         this.title = title;
         this.tableData = tableData;

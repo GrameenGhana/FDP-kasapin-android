@@ -69,24 +69,24 @@ public class User {
     }
 
     /**
-     * @param lastName .
-     * @param lastLoginAt .
+     * @param lastName          .
+     * @param lastLoginAt       .
      * @param passwordChangedAt .
-     * @param confirmationCode .
-     * @param updatedAt .
-     * @param id .
-     * @param lastLoginIp .
-     * @param timezone .
-     * @param confirmed .
-     * @param avatarType .
-     * @param email .
-     * @param createdAt .
-     * @param deletedAt .
-     * @param active .
-     * @param fullName .
-     * @param uuid .
-     * @param firstName .
-     * @param avatarLocation .
+     * @param confirmationCode  .
+     * @param updatedAt         .
+     * @param id                .
+     * @param lastLoginIp       .
+     * @param timezone          .
+     * @param confirmed         .
+     * @param avatarType        .
+     * @param email             .
+     * @param createdAt         .
+     * @param deletedAt         .
+     * @param active            .
+     * @param fullName          .
+     * @param uuid              .
+     * @param firstName         .
+     * @param avatarLocation    .
      */
     public User(int id, String uuid, String firstName, String lastName, String email, String avatarType, String avatarLocation, String passwordChangedAt, boolean active, String confirmationCode, boolean confirmed, String timezone, String lastLoginAt, String lastLoginIp, String createdAt, String updatedAt, String deletedAt, String fullName) {
         super();

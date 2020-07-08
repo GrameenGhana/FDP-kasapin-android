@@ -24,6 +24,7 @@ public abstract class MyFormElementController {
         this.name = name;
         this.contentDesc = content_desc;
     }
+
     /**
      * Returns the Android context associated with this element.
      *
@@ -45,6 +46,7 @@ public abstract class MyFormElementController {
     public String getContentDesc() {
         return contentDesc;
     }
+
     /**
      * Returns the associated model of this form element.
      *
@@ -57,6 +59,7 @@ public abstract class MyFormElementController {
     public void setModel(FormModel model) {
         this.model = model;
     }
+
     /**
      * Returns the associated view for this element.
      *

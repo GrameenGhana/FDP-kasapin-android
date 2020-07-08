@@ -4,7 +4,6 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 @Entity(tableName = "monitorings", indices = {@Index("plotExternalId"), @Index("year")}, foreignKeys = @ForeignKey(entity = Plot.class, parentColumns = "externalId", childColumns = "plotExternalId"))
-public class Monitoring extends BaseModel{
+public class Monitoring extends BaseModel {
 
     @SerializedName("external_id")
     String externalId;

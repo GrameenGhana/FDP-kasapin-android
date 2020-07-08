@@ -7,6 +7,7 @@ import androidx.room.Query;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 
 import java.util.List;
+
 @Dao
 public interface CountryDao extends BaseDao<Country> {
     @Query("SELECT * FROM countries")

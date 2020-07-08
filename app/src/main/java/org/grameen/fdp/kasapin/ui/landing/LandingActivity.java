@@ -66,7 +66,8 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
     }
 
     @Override
-    public void openLoginActivityOnTokenExpire() {}
+    public void openLoginActivityOnTokenExpire() {
+    }
 
     public void showPopUp(@Nullable final View v) {
         PopupMenu menu = new PopupMenu(this, v);

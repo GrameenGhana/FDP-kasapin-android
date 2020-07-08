@@ -8,10 +8,10 @@ import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
+import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
-import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
 import org.json.JSONObject;
 
 import javax.inject.Inject;

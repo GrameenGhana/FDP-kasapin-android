@@ -26,7 +26,6 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.serverUrl.AddEditServerUrlActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
@@ -48,6 +47,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
     @BindView(R.id.url_text)
     TextView serverUrlTextView;
     PermissionManager permissionManager;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +96,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
                         getString(R.string.grant_permissions), (dialogInterface, i) -> supportFinishAfterTransition(),
                         getString(R.string.quit), 0);
             }
+
             @Override
             public void ifCancelledAndCannotRequest(Activity activity) {
                 showDialog(false, getString(R.string.permissions_not_provided),
@@ -132,7 +133,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
     }
 
     @Override
-    public void openLoginActivityOnTokenExpire() {}
+    public void openLoginActivityOnTokenExpire() {
+    }
 
     @OnClick(R.id.url_text)
     void goToAddServerActivity() {
@@ -205,5 +207,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
     }
 
     @Override
-    public void onUrlSelected(String url) {}
+    public void onUrlSelected(String url) {
+    }
 }

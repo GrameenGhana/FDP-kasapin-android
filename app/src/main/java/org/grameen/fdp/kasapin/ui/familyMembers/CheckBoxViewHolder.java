@@ -32,7 +32,7 @@ public class CheckBoxViewHolder extends AbstractViewHolder {
         String defVal = FamilyMembersActivity.getValue(rowPosition, q.getLabelC());
         if (defVal != null && defVal.equalsIgnoreCase("yes"))
             checkBox.setChecked(true);
-         else
+        else
             checkBox.setChecked(false);
 
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {

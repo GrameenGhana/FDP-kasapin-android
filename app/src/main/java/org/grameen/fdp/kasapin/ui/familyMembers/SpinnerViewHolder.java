@@ -53,6 +53,7 @@ public class SpinnerViewHolder extends AbstractViewHolder {
                 }
                 return view;
             }
+
             @Override
             public int getCount() {
                 return super.getCount(); // don't display last item (it's used for the prompt)
@@ -70,6 +71,7 @@ public class SpinnerViewHolder extends AbstractViewHolder {
                     updateJsonArrayListener.onItemValueChanged(rowPosition, q.getLabelC(), items.get(pos));
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }

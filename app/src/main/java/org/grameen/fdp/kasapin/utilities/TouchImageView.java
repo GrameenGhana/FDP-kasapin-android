@@ -11,12 +11,10 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -341,7 +339,7 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
      * as a fraction from the left and top of the view. For example, the top left
      * corner of the image would be (0, 0). And the bottom right corner would be (1, 1).
      *
-     * @param scale .
+     * @param scale  .
      * @param focusX .
      * @param focusY .
      */
@@ -355,9 +353,9 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
      * as a fraction from the left and top of the view. For example, the top left
      * corner of the image would be (0, 0). And the bottom right corner would be (1, 1).
      *
-     * @param scale .
-     * @param focusX .
-     * @param focusY .
+     * @param scale     .
+     * @param focusX    .
+     * @param focusY    .
      * @param scaleType .
      */
     public void setZoom(float scale, float focusX, float focusY, ScaleType scaleType) {
@@ -642,8 +640,8 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
     /**
      * Set view dimensions based on layout params
      *
-     * @param mode .
-     * @param size .
+     * @param mode          .
+     * @param size          .
      * @param drawableWidth .
      * @return int
      */
@@ -808,6 +806,81 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
 
     public interface OnTouchImageViewListener {
         void onMove();
+    }
+
+    @TargetApi(VERSION_CODES.GINGERBREAD)
+    private static class CompatScroller {
+        Scroller scroller;
+        OverScroller overScroller;
+        boolean isPreGingerbread;
+
+        public CompatScroller(Context context) {
+            isPreGingerbread = false;
+            overScroller = new OverScroller(context);
+        }
+
+        public void fling(int startX, int startY, int velocityX, int velocityY, int minX, int maxX, int minY, int maxY) {
+            if (isPreGingerbread) {
+                scroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY);
+            } else {
+                overScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY);
+            }
+        }
+
+        public void forceFinished(boolean finished) {
+            if (isPreGingerbread) {
+                scroller.forceFinished(finished);
+            } else {
+                overScroller.forceFinished(finished);
+            }
+        }
+
+        public boolean isFinished() {
+            if (isPreGingerbread) {
+                return scroller.isFinished();
+            } else {
+                return overScroller.isFinished();
+            }
+        }
+
+        public boolean computeScrollOffset() {
+            if (isPreGingerbread) {
+                return scroller.computeScrollOffset();
+            } else {
+                overScroller.computeScrollOffset();
+                return overScroller.computeScrollOffset();
+            }
+        }
+
+        public int getCurrX() {
+            if (isPreGingerbread) {
+                return scroller.getCurrX();
+            } else {
+                return overScroller.getCurrX();
+            }
+        }
+
+        public int getCurrY() {
+            if (isPreGingerbread) {
+                return scroller.getCurrY();
+            } else {
+                return overScroller.getCurrY();
+            }
+        }
+    }
+
+    private static class ZoomVariables {
+        public float scale;
+        public float focusX;
+        public float focusY;
+        public ScaleType scaleType;
+
+        public ZoomVariables(float scale, float focusX, float focusY, ScaleType scaleType) {
+            this.scale = scale;
+            this.focusX = focusX;
+            this.focusY = focusY;
+            this.scaleType = scaleType;
+        }
     }
 
     /**
@@ -1100,6 +1173,7 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
     private class Fling implements Runnable {
         CompatScroller scroller;
         int currX, currY;
+
         Fling(int velocityX, int velocityY) {
             setState(State.FLING);
             scroller = new CompatScroller(context);
@@ -1165,81 +1239,6 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
                 setImageMatrix(matrix);
                 compatPostOnAnimation(this);
             }
-        }
-    }
-
-    @TargetApi(VERSION_CODES.GINGERBREAD)
-    private static class CompatScroller {
-        Scroller scroller;
-        OverScroller overScroller;
-        boolean isPreGingerbread;
-
-        public CompatScroller(Context context) {
-            isPreGingerbread = false;
-            overScroller = new OverScroller(context);
-        }
-
-        public void fling(int startX, int startY, int velocityX, int velocityY, int minX, int maxX, int minY, int maxY) {
-            if (isPreGingerbread) {
-                scroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY);
-            } else {
-                overScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY);
-            }
-        }
-
-        public void forceFinished(boolean finished) {
-            if (isPreGingerbread) {
-                scroller.forceFinished(finished);
-            } else {
-                overScroller.forceFinished(finished);
-            }
-        }
-
-        public boolean isFinished() {
-            if (isPreGingerbread) {
-                return scroller.isFinished();
-            } else {
-                return overScroller.isFinished();
-            }
-        }
-
-        public boolean computeScrollOffset() {
-            if (isPreGingerbread) {
-                return scroller.computeScrollOffset();
-            } else {
-                overScroller.computeScrollOffset();
-                return overScroller.computeScrollOffset();
-            }
-        }
-
-        public int getCurrX() {
-            if (isPreGingerbread) {
-                return scroller.getCurrX();
-            } else {
-                return overScroller.getCurrX();
-            }
-        }
-
-        public int getCurrY() {
-            if (isPreGingerbread) {
-                return scroller.getCurrY();
-            } else {
-                return overScroller.getCurrY();
-            }
-        }
-    }
-
-    private static class ZoomVariables {
-        public float scale;
-        public float focusX;
-        public float focusY;
-        public ScaleType scaleType;
-
-        public ZoomVariables(float scale, float focusX, float focusY, ScaleType scaleType) {
-            this.scale = scale;
-            this.focusX = focusX;
-            this.focusY = focusY;
-            this.scaleType = scaleType;
         }
     }
 }

@@ -12,7 +12,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.ValidationError;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -144,6 +143,7 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         }
         return errors;
     }
+
     /**
      * Returns the associated view for the field (without the label view) of this element.
      *
@@ -155,6 +155,7 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         }
         return fieldView;
     }
+
     /**
      * Constructs the view associated with this field without the label. It will be used to combine with the label.
      *

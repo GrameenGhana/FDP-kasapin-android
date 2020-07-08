@@ -5,9 +5,13 @@ import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 
 public interface DataManager extends PreferencesHelper {
     void updateApiHeader(Long userId, String accessToken);
+
     void setUserAsLoggedOut();
+
     void clearAllTablesFromDb();
+
     int backupRestoreDatabase(boolean shouldBackup);
+
     void updateUserInfo(
             String accessToken,
             int userId,
@@ -28,9 +32,11 @@ public interface DataManager extends PreferencesHelper {
         SERVER(3);
 
         private final int mType;
+
         LoggedInMode(int type) {
             mType = type;
         }
+
         public int getType() {
             return mType;
         }

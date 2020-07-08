@@ -9,7 +9,7 @@ import org.grameen.fdp.kasapin.data.db.entity.District;
 import java.util.List;
 
 import io.reactivex.Maybe;
-import io.reactivex.Single;
+
 @Dao
 public interface DistrictsDao extends BaseDao<District> {
     @Query("SELECT * FROM districts")

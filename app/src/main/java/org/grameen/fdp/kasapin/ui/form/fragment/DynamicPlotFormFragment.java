@@ -31,7 +31,6 @@ import org.grameen.fdp.kasapin.ui.form.controller.view.PhotoButtonController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.SelectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.TimePickerController;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -215,16 +214,20 @@ public class DynamicPlotFormFragment extends FormFragment {
     }
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @Override
-    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {}
+    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
+    }
 
     @Override
-    public void openLoginActivityOnTokenExpire() {}
+    public void openLoginActivityOnTokenExpire() {
+    }
 
     @Override
-    public void toggleFullScreen(Boolean hideNavBar, Window W) {}
+    public void toggleFullScreen(Boolean hideNavBar, Window W) {
+    }
 
     private ComputationUtils getComputationUtils() {
         return computationUtils;

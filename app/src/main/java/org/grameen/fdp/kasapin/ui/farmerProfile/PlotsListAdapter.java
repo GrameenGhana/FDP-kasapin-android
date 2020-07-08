@@ -19,6 +19,7 @@ public class PlotsListAdapter extends RecyclerView.Adapter<PlotsListAdapter.View
     OnItemClickListener mItemClickListener;
     OnLongClickListener longClickListener;
     private List<Plot> plots;
+
     /**
      * Constructor
      *

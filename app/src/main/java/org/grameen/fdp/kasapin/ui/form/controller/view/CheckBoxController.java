@@ -88,6 +88,7 @@ public class CheckBoxController extends MyLabeledFieldController {
         if (isRequired)
             this.setValidators(validators);
     }
+
     /**
      * Constructs a new instance of a checkboxes field.
      *

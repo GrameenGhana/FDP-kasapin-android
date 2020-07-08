@@ -31,6 +31,7 @@ public class MyFormSectionController extends MyFormElementController {
         super(ctx, name, content_desc);
         this.title = title;
     }
+
     /**
      * Creates a new instance of a form section with a specified title. The name of the section is generated randomly.
      * This method can be used when you do not need to refer to a section by name.
@@ -91,6 +92,7 @@ public class MyFormSectionController extends MyFormElementController {
     public MyFormElementController addElement(MyFormElementController element) {
         return addElement(element, orderedElements.size());
     }
+
     /**
      * Adds a collection of form elements to this section.
      *
@@ -101,8 +103,10 @@ public class MyFormSectionController extends MyFormElementController {
             addElement(element);
         }
     }
+
     /**
      * Removes the form element with the specified name from this section.
+     *
      * @param name the name of the form element to remove
      * @return the removed form element instance, or null of no such element was found.
      */
@@ -114,6 +118,7 @@ public class MyFormSectionController extends MyFormElementController {
 
     /**
      * Removes the specified form element from this section.
+     *
      * @param element the form element to remove
      * @return the removed form element instance, or null of no such element was found.
      */

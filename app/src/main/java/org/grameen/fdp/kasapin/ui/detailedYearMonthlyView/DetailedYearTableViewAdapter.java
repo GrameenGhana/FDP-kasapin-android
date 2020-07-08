@@ -28,8 +28,8 @@ import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.BUTTON_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_SPINNER_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 
 
 /**

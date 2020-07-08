@@ -5,6 +5,7 @@ import ir.mirrajabi.searchdialog.core.Searchable;
 public class MySearchItem implements Searchable {
     String mExtId;
     private String mName;
+
     public MySearchItem(String extId, String name) {
         mName = name;
         mExtId = extId;
@@ -15,13 +16,13 @@ public class MySearchItem implements Searchable {
         return mName;
     }
 
+    public String getName() {
+        return mName;
+    }
+
     public MySearchItem setName(String title) {
         mName = title;
         return this;
-    }
-
-    public String getName() {
-        return mName;
     }
 
     public String getExtId() {

@@ -32,7 +32,9 @@ public class PDFCreator {
     private PdfDocument document = new PdfDocument();
     private File pdfDocFile;
 
-    /** Todo provide actual type for
+    /**
+     * Todo provide actual type for
+     *
      * @param _tableView .
      **/
     private PDFCreator(TableView _tableView, String _activityName) {
@@ -68,6 +70,7 @@ public class PDFCreator {
             public void onScroll(ListView tableDataView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 isEndOfTable = (firstVisibleItem + visibleItemCount) == totalItemCount;
             }
+
             @Override
             public void onScrollStateChanged(ListView tableDateView, ScrollState scrollState) {
             }

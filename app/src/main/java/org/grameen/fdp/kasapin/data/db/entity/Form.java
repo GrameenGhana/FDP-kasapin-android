@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;

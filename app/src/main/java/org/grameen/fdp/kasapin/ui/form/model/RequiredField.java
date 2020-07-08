@@ -9,6 +9,7 @@ import org.grameen.fdp.kasapin.ui.form.ValidationError;
 
 public class RequiredField extends ValidationError {
     private String messageToDisplay = null;
+
     /**
      * Creates a new instance with the specified field name.
      *

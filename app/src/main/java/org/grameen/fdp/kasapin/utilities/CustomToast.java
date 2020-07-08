@@ -11,6 +11,7 @@ import org.grameen.fdp.kasapin.R;
 
 public class CustomToast extends Toast {
     static Toast toast;
+
     public CustomToast(Context context) {
         super(context);
     }

@@ -21,6 +21,7 @@ import de.codecrafters.tableview.model.TableColumnWeightModel;
 public class PlotMonitoringTablePagerAdapter extends PagerAdapter {
     List<PlotMonitoringTableData> plotMonitoringTableDataList;
     private Context mContext;
+
     public PlotMonitoringTablePagerAdapter(Context context, List<PlotMonitoringTableData> _plotMonitoringTableDataList) {
         mContext = context;
         this.plotMonitoringTableDataList = _plotMonitoringTableDataList;

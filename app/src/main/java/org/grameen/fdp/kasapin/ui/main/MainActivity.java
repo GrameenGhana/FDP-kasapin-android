@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -34,15 +33,13 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
-import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
+import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.preferences.SettingsActivity;
-import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 
 import java.lang.reflect.Method;
@@ -93,7 +90,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 inMemoryDatabases.put("InMemoryOne.db", database[0]);
                 Method setRoomInMemoryDatabase = debugDB.getMethod("setInMemoryRoomDatabases", argTypes);
                 setRoomInMemoryDatabase.invoke(null, inMemoryDatabases);
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
     }
 
@@ -120,11 +118,13 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             public void onDrawerSlide(View drawer, float slideOffset) {
                 findViewById(R.id.main_content).setX(drawer.getWidth() * slideOffset);
             }
+
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu();
                 syncState();
             }
+
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
@@ -180,12 +180,15 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
-                    public void onPageScrolled(int i, float v, int i1) {}
+                    public void onPageScrolled(int i, float v, int i1) {
+                    }
+
                     @Override
                     public void onPageSelected(int i) {
                         SELECTED_VILLAGE = fragmentPagerItems.get(i).getTitle().toString();
                         CURRENT_PAGE = i;
                     }
+
                     @Override
                     public void onPageScrollStateChanged(int i) {
                     }
@@ -226,7 +229,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     public void instantiateSearchDialog(ArrayList<MySearchItem> items) {
         searchDialogCompat = new SimpleSearchDialogCompat<>(MainActivity.this, "Search Farmer",
                 "Who are you looking for?", null, items,
-                (SearchResultListener<MySearchItem>) (dialog, item, position) -> {
+                (dialog, item, position) -> {
                     Toast.makeText(this, item.getTitle(),
                             Toast.LENGTH_SHORT).show();
                     mPresenter.getFarmer(item.getExtId());
@@ -257,7 +260,8 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @Override
     public void toggleDrawer() {

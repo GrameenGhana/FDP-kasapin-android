@@ -18,8 +18,10 @@ public class FarmResult {
 
     @Ignore
     List<PlotAssessment> plotAssessmentList;
+
     public FarmResult() {
     }
+
     public String getPlotAssessmentId() {
         return plotAssessmentId;
     }

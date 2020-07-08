@@ -25,6 +25,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         FdpCallbacks.OnDownloadResourcesListener, FdpCallbacks.UploadDataListener {
     AppDataManager mAppDataManager;
     int count = 0;
+
     @Inject
     public MainPresenter(AppDataManager appDataManager) {
         super(appDataManager);
@@ -55,7 +56,8 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     }
 
     @Override
-    public void startDelay(long delayTime) {}
+    public void startDelay(long delayTime) {
+    }
 
     @Override
     public void openSearchDialog() {
@@ -133,8 +135,10 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                     public void onSuccess(List<MySearchItem> mySearchItems) {
                                         farmerNames.addAll(mySearchItems);
                                     }
+
                                     @Override
-                                    public void onError(Throwable e) {}
+                                    public void onError(Throwable e) {
+                                    }
                                 });
                     return farmerNames;
                 }).subscribe(items -> {

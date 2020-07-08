@@ -11,8 +11,8 @@ import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
-import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
+import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
@@ -52,7 +52,9 @@ public class DownloadResources {
         return mAppDataManager;
     }
 
-    private AppDatabase getAppDatabase(){return getAppDataManager().getDatabaseManager();}
+    private AppDatabase getAppDatabase() {
+        return getAppDataManager().getDatabaseManager();
+    }
 
     public BaseContract.View getView() {
         return mView;
@@ -81,6 +83,7 @@ public class DownloadResources {
                                         @Override
                                         public void onNext(District district) {
                                         }
+
                                         @Override
                                         public void onError(Throwable e) {
                                             showError(e);
@@ -94,6 +97,7 @@ public class DownloadResources {
                         else
                             getSurveyData();
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -133,16 +137,19 @@ public class DownloadResources {
                                     @Override
                                     public void onNext(QuestionsAndSkipLogic questionsAndSkipLogic) {
                                     }
+
                                     @Override
                                     public void onError(Throwable e) {
                                         onError(e);
                                     }
+
                                     @Override
                                     public void onComplete() {
                                         getRecommendationsData();
                                     }
                                 });
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -171,16 +178,19 @@ public class DownloadResources {
                                     @Override
                                     public void onNext(Recommendation recommendation) {
                                     }
+
                                     @Override
                                     public void onError(Throwable e) {
                                         onError(e);
                                     }
+
                                     @Override
                                     public void onComplete() {
                                         getFarmersData();
                                     }
                                 });
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -226,6 +236,7 @@ public class DownloadResources {
                             showSuccess("Data download completed!");
                         } else onError(new Throwable("The download could not complete!"));
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);

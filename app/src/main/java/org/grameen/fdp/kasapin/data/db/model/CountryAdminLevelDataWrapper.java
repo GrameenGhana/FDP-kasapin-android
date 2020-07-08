@@ -18,6 +18,7 @@ public class CountryAdminLevelDataWrapper {
      */
     public CountryAdminLevelDataWrapper() {
     }
+
     public CountryAdminLevelDataWrapper(List<District> data) {
         super();
         this.data = data;

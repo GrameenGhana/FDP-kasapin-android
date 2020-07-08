@@ -10,12 +10,15 @@ import java.util.List;
 public class AddEditFarmerPlotContract {
     public interface View extends BaseContract.View {
         void showForm(List<FormAndQuestions> formAndQuestionsList);
+
         void showPlotDetailsActivity(Plot plot);
+
         void moveToMapActivity(Plot plot);
     }
 
     public interface Presenter {
         void getPlotQuestions();
+
         void saveData(Plot plot, String flag);
     }
 }

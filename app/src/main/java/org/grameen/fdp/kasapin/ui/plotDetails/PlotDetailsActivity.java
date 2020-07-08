@@ -116,7 +116,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                     Iterator<String> iterator = formAnswerData.getJsonData().keys();
 
                     while (iterator.hasNext()) {
-                        String key = (String) iterator.next();
+                        String key = iterator.next();
                         try {
                             if (!plotAnswersDataJson.has(key))
                                 plotAnswersDataJson.put(key, formAnswerData.getJsonData().get(key));
@@ -152,7 +152,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
         Iterator<String> iterator = PLOT_ANSWERS_JSON.keys();
         while (iterator.hasNext()) {
-            String tmp_key = (String) iterator.next();
+            String tmp_key = iterator.next();
             if (tmp_key.toLowerCase().contains("lime")) {
                 try {
                     limeNeeded.setText(PLOT_ANSWERS_JSON.getString(tmp_key));
@@ -192,6 +192,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
                     public void onComplete() {
                         mPresenter.getAreaUnits(PLOT.getFarmerCode());
                     }
+
                     @Override
                     public void onError(Throwable ignored) {
                     }
@@ -286,10 +287,12 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @Override
-    public void openLoginActivityOnTokenExpire() {}
+    public void openLoginActivityOnTokenExpire() {
+    }
 
     @Override
     public void onBackPressed() {

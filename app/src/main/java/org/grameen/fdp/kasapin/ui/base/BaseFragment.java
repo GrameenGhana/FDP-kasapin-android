@@ -22,6 +22,7 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
     public String TAG;
     private BaseActivity mActivity;
     private Unbinder mUnBinder;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,8 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
     }
 
     @Override
-    public void showLoading(){}
+    public void showLoading() {
+    }
 
     @Override
     public void hideLoading() {
@@ -154,6 +156,7 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
 
     public interface Callback {
         void onFragmentAttached();
+
         void onFragmentDetached(String tag);
     }
 }

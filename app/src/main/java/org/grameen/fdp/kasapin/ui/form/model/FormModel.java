@@ -10,6 +10,7 @@ import java.util.Objects;
  */
 public abstract class FormModel {
     private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+
     private static boolean objectsEqual(Object a, Object b) {
         return Objects.equals(a, b);
     }

@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.data.db.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 public class HistoricalData {
     String id;
     String dateTime;

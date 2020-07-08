@@ -6,8 +6,6 @@ import androidx.room.Query;
 
 import org.grameen.fdp.kasapin.data.db.entity.Calculation;
 
-import io.reactivex.Single;
-
 @Dao
 public interface CalculationsDao extends BaseDao<Calculation> {
     @Query("SELECT * FROM calculations WHERE recommendationId = :id AND year = :year")

@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +43,6 @@ import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 import static org.grameen.fdp.kasapin.utilities.ActivityUtils.getFormModelFragment;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.ROOT_DIR;
 
 public abstract class FormFragment extends BaseFragment {
 
@@ -182,12 +180,15 @@ public abstract class FormFragment extends BaseFragment {
             public void onLocationChanged(Location location) {
                 getModel().setValue(q.getLabelC(), location.getLatitude() + ", " + location.getLongitude());
             }
+
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
             }
+
             @Override
             public void onProviderEnabled(String s) {
             }
+
             @Override
             public void onProviderDisabled(String s) {
             }

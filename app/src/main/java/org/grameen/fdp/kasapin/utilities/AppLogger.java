@@ -24,7 +24,6 @@ public class AppLogger {
         } else {
             String crashReporterPath = AppConstants.ROOT_DIR + File.separator + "crashReports";
             CrashReporter.initialize(applicationContext, crashReporterPath);
-            //Todo Initialize Crashytics here
             Fabric.with(applicationContext, new Crashlytics());
         }
     }

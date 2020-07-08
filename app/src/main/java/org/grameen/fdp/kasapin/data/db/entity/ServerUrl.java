@@ -6,6 +6,7 @@ import androidx.room.Entity;
 public class ServerUrl extends BaseModel {
     String name;
     String url;
+
     public ServerUrl() {
     }
 

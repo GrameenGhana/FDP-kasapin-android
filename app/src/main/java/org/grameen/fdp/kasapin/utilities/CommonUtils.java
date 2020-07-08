@@ -5,9 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.AssetManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.provider.Settings;
 
 import androidx.annotation.DrawableRes;
@@ -15,13 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
-import org.grameen.fdp.kasapin.R;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -30,11 +22,12 @@ import java.util.regex.Pattern;
 
 public final class CommonUtils {
     private static final String TAG = "CommonUtils";
+
     private CommonUtils() {
         // This utility class is not publicly instantiable
     }
 
-  public static void showLoadingDialog(ProgressDialog progressDialog) {
+    public static void showLoadingDialog(ProgressDialog progressDialog) {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -55,7 +48,7 @@ public final class CommonUtils {
 
     public static String toCamelCase(String value) {
         return (value == null || value.equals("null")) ? "" :
-        (value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase());
+                (value.substring(0, 1).toUpperCase() + value.substring(1).toLowerCase());
     }
 
     public static void showAlertDialog(AlertDialog.Builder builder, Boolean cancelable, @Nullable String title, @Nullable String message,

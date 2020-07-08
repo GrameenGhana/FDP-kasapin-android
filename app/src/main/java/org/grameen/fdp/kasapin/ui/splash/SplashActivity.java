@@ -11,7 +11,6 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import javax.inject.Inject;
 
@@ -87,6 +86,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                     @Override
                     public void onAnimationStart(Animator animation) {
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         textLayout.animate()
@@ -97,6 +97,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                                     @Override
                                     public void onAnimationStart(Animator animation) {
                                     }
+
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
                                         try {
@@ -107,20 +108,29 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                                                 waited += 100;
                                             }
                                             mPresenter.openNextActivity();
-                                        } catch (InterruptedException ignored) {}
+                                        } catch (InterruptedException ignored) {
+                                        }
                                     }
+
                                     @Override
-                                    public void onAnimationCancel(Animator animation) {}
+                                    public void onAnimationCancel(Animator animation) {
+                                    }
+
                                     @Override
-                                    public void onAnimationRepeat(Animator animation) {}
+                                    public void onAnimationRepeat(Animator animation) {
+                                    }
                                 })
                                 .setStartDelay(200)
                                 .start();
                     }
+
                     @Override
-                    public void onAnimationCancel(Animator animation) {}
+                    public void onAnimationCancel(Animator animation) {
+                    }
+
                     @Override
-                    public void onAnimationRepeat(Animator animation) {}
+                    public void onAnimationRepeat(Animator animation) {
+                    }
                 }).start();
     }
 }

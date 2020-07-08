@@ -12,6 +12,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FamilyMembersPresenter extends BasePresenter<FamilyMembersContract.View> implements FamilyMembersContract.Presenter {
     AppDataManager mAppDataManager;
+
     @Inject
     public FamilyMembersPresenter(AppDataManager appDataManager) {
         super(appDataManager);

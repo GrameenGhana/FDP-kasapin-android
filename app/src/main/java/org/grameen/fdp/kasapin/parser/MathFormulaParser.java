@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.parser;
 
-import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.Tokenizer;
 import org.json.JSONException;
@@ -24,14 +23,16 @@ public class MathFormulaParser extends Tokenizer {
     ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
 
 
-    private MathFormulaParser() {}
+    private MathFormulaParser() {
+    }
 
     public static MathFormulaParser getInstance() {
         return new MathFormulaParser();
     }
 
     @Override
-    public void tokenize(String str){}
+    public void tokenize(String str) {
+    }
 
 
     @Override
@@ -47,7 +48,7 @@ public class MathFormulaParser extends Tokenizer {
         if (jsonObject != null) {
             Iterator<String> iterator = jsonObject.keys();
             while (iterator.hasNext()) {
-                String tmp_key = (String) iterator.next();
+                String tmp_key = iterator.next();
 
                 if (mathFormula.contains(tmp_key))
                     if (tmp_key.equals(mathFormula))
@@ -60,7 +61,7 @@ public class MathFormulaParser extends Tokenizer {
         if (allValuesJson != null) {
             Iterator<String> iterator = allValuesJson.keys();
             while (iterator.hasNext()) {
-                String tmp_key = (String) iterator.next();
+                String tmp_key = iterator.next();
                 if (mathFormula.contains(tmp_key)) {
                     if (tmp_key.equals(mathFormula))
                         newFormula = getValue(tmp_key);

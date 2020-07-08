@@ -18,10 +18,10 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Calculation;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.data.db.entity.RecommendationActivity;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
@@ -58,8 +58,8 @@ import io.reactivex.schedulers.Schedulers;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.BUTTON_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_SPINNER_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TYPE_TEXT;
 
 enum LabourType {

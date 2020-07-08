@@ -16,6 +16,7 @@ import org.grameen.fdp.kasapin.R;
 
 public class TableViewListener implements ITableViewListener {
     String TAG = TableViewListener.class.getSimpleName();
+
     /**
      * Called when user click any cell item.
      *
@@ -41,6 +42,7 @@ public class TableViewListener implements ITableViewListener {
             spinner.performClick();
         }
     }
+
     /**
      * Called when user long press any cell item.
      *
@@ -49,7 +51,9 @@ public class TableViewListener implements ITableViewListener {
      * @param row      : Y (Row) position of Long Pressed Cell item.
      */
     @Override
-    public void onCellLongPressed(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {}
+    public void onCellLongPressed(@NonNull RecyclerView.ViewHolder cellView, int column, int row) {
+    }
+
     /**
      * Called when user click any column header item.
      *
@@ -61,6 +65,7 @@ public class TableViewListener implements ITableViewListener {
             columnPosition) {
         // Do what you want.
     }
+
     /**
      * Called when user click any column header item.
      *

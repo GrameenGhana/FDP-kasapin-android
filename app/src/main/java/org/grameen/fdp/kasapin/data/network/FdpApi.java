@@ -7,10 +7,10 @@ import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
+import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
 import org.grameen.fdp.kasapin.data.network.model.Response;
-import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import io.reactivex.Single;
@@ -20,6 +20,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+
 /**
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com

@@ -155,6 +155,7 @@ public class SelectionController extends MyLabeledFieldController {
                     }
                     return view;
                 }
+
                 @Override
                 public int getCount() {
                     return super.getCount() - 1; // don't display last item (it's used for the prompt)
@@ -183,6 +184,7 @@ public class SelectionController extends MyLabeledFieldController {
                     getModel().setValue(getName(), value);
 
                 }
+
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                     if (prompt != null)

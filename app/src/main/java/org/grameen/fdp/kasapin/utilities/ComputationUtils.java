@@ -31,20 +31,14 @@ public class ComputationUtils {
         return new ComputationUtils(myFormController);
     }
 
-    public String getFormAnswerValue(Question q, JSONObject ANSWERS_JSON) {
-        String defVal = getDataValue(q, ANSWERS_JSON);
-        if (getModel() != null) {
-            getModel().setValue(q.getLabelC(), defVal);
-        }
-        return defVal;
-    }
     public static String getDataValue(Question q, JSONObject ANSWERS_JSON) {
         String defVal = q.getDefaultValueC();
         try {
             if (ANSWERS_JSON.has(q.getLabelC()) && !ANSWERS_JSON.getString(q.getLabelC()).trim().isEmpty() && !ANSWERS_JSON.getString(q.getLabelC()).equalsIgnoreCase("null")) {
                 defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return defVal;
     }
 
@@ -87,6 +81,14 @@ public class ComputationUtils {
             System.out.println(equation + " --> " + value);
         }
         return value;
+    }
+
+    public String getFormAnswerValue(Question q, JSONObject ANSWERS_JSON) {
+        String defVal = getDataValue(q, ANSWERS_JSON);
+        if (getModel() != null) {
+            getModel().setValue(q.getLabelC(), defVal);
+        }
+        return defVal;
     }
 
     FormModel getModel() {
@@ -155,7 +157,8 @@ public class ComputationUtils {
                     } catch (ScriptException e) {
                         e.printStackTrace();
                         getModel().setValue(question.getLabelC(), newValue);
-                    } });
+                    }
+                });
             }
         }
     }

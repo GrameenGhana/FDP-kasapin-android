@@ -31,24 +31,44 @@ import dagger.Component;
 @Component(modules = {ViewModule.class}, dependencies = {ApplicationComponent.class})
 public interface ActivityComponent {
     void inject(SplashActivity view);
+
     void inject(LoginActivity view);
+
     void inject(LandingActivity view);
+
     void inject(MainActivity view);
+
     void inject(FarmerListFragment view);
+
     void inject(AddEditFarmerActivity view);
+
     void inject(FarmerProfileActivity view);
+
     void inject(DynamicFormFragment view);
+
     void inject(AddEditFarmerPlotActivity view);
+
     void inject(PlotDetailsActivity view);
+
     void inject(MapActivity view);
+
     void inject(ProfitAndLossActivity view);
+
     void inject(FDPStatusDialogActivity view);
+
     void inject(DetailedMonthActivity view);
+
     void inject(PlotReviewActivity view);
+
     void inject(MonitoringYearSelectionActivity view);
+
     void inject(PlotMonitoringActivity view);
+
     void inject(AddPlotMonitoringActivity view);
+
     void inject(FamilyMembersActivity view);
+
     void inject(FarmAssessmentActivity view);
+
     void inject(AddEditServerUrlActivity view);
 }

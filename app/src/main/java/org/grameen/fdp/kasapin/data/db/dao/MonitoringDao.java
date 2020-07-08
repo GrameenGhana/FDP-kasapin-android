@@ -14,7 +14,7 @@ import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 @Dao
-public interface MonitoringDao{
+public interface MonitoringDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<Monitoring> objects);
 

@@ -7,6 +7,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseContract;
 public class FamilyMembersContract {
     public interface View extends BaseContract.View {
         void setUpViews();
+
         void setupTableView(FormAndQuestions familyMembersFormAndQuestions);
     }
 

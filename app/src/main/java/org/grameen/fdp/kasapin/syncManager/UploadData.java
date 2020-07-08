@@ -56,6 +56,7 @@ public class UploadData {
                             uploadDataListener.onUploadComplete("Data upload successful.");
                         uploadDataListener = null;
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         showError(e);

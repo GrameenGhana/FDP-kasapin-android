@@ -23,6 +23,7 @@ public class PlotReviewPresenter extends BasePresenter<PlotReviewContract.View> 
     public PlotReviewPresenter(AppDataManager appDataManager) {
         super(appDataManager);
     }
+
     @Override
     public void getAllPlotQuestions() {
         runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType(AppConstants.DISPLAY_TYPE_PLOT_FORM)
@@ -41,7 +42,8 @@ public class PlotReviewPresenter extends BasePresenter<PlotReviewContract.View> 
     }
 
     @Override
-    public void saveAnswerData(FormAnswerData answerData) {}
+    public void saveAnswerData(FormAnswerData answerData) {
+    }
 
     @Override
     public void openNextActivity() {

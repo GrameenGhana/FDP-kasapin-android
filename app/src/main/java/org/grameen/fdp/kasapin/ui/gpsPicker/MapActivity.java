@@ -335,7 +335,8 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
 
     private void hideProgress() {
         if (progressDialog.isShowing())

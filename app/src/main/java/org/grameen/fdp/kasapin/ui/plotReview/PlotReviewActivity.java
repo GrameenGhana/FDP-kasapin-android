@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.ui.plotReview;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,10 +11,9 @@ import android.widget.TextView;
 import androidx.viewpager.widget.ViewPager;
 
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
-import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.model.HistoricalTableViewData;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.PlotMonitoringTableData;

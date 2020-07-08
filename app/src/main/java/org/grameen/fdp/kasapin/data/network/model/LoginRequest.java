@@ -62,7 +62,7 @@ public class LoginRequest {
 
             ServerLoginRequest loginRequest = (ServerLoginRequest) object;
             if (!Objects.equals(email, loginRequest.email)) return false;
-            return Objects.equals(password,  ((ServerLoginRequest) object).password);
+            return Objects.equals(password, ((ServerLoginRequest) object).password);
         }
 
         @Override

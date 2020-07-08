@@ -21,10 +21,12 @@ import de.codecrafters.tableview.model.TableColumnWeightModel;
 public class ReviewTablePagerAdapter extends PagerAdapter {
     List<PlotMonitoringTableData> plotMonitoringTableDataList;
     private Context mContext;
+
     public ReviewTablePagerAdapter(Context context, List<PlotMonitoringTableData> _plotMonitoringTableDataList) {
         mContext = context;
         this.plotMonitoringTableDataList = _plotMonitoringTableDataList;
     }
+
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup collection, int position) {

@@ -2,7 +2,6 @@ package org.grameen.fdp.kasapin.parser;
 
 
 import org.grameen.fdp.kasapin.exceptions.ParserException;
-import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.Tokenizer;
@@ -31,7 +30,7 @@ public class LogicFormulaParser extends Tokenizer {
     }
 
     public Tokenizer getTokenizer() {
-       return null;
+        return null;
     }
 
     @Override
@@ -76,17 +75,17 @@ public class LogicFormulaParser extends Tokenizer {
 
             String formulaToEvaluate = "(" + sections[0].replace(" ", "") + ")";
 
-            String trueValue = sections[1].replace("\'", "").replace("(", "").replace(")", "");
+            String trueValue = sections[1].replace("'", "").replace("(", "").replace(")", "");
 
             String falseValue = "";
             try {
-                falseValue = sections[2].replace("\'", "").replace("(", "").replace(")", "");
+                falseValue = sections[2].replace("'", "").replace("(", "").replace(")", "");
             } catch (Exception ignored) {
             }
 
             Iterator<String> iterator = jsonObject.keys();
             while (iterator.hasNext()) {
-                String tmp_key = (String) iterator.next();
+                String tmp_key = iterator.next();
 
                 if (formulaToEvaluate.contains(tmp_key))
                     formulaToEvaluate = formulaToEvaluate.replace(tmp_key, getValue(tmp_key));
@@ -95,7 +94,7 @@ public class LogicFormulaParser extends Tokenizer {
             if (allValuesJson != null) {
                 iterator = allValuesJson.keys();
                 while (iterator.hasNext()) {
-                    String tmp_key = (String) iterator.next();
+                    String tmp_key = iterator.next();
 
                     if (formulaToEvaluate.contains(tmp_key))
                         formulaToEvaluate = formulaToEvaluate.replace(tmp_key, getValue(tmp_key));

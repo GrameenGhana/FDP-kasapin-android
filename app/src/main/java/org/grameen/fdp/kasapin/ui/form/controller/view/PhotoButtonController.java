@@ -1,10 +1,8 @@
 package org.grameen.fdp.kasapin.ui.form.controller.view;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.util.Date;

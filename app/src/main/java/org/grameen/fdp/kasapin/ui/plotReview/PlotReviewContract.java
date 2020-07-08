@@ -10,12 +10,15 @@ import java.util.List;
 public class PlotReviewContract {
     public interface View extends BaseContract.View {
         void openMainActivity();
+
         void setPlotQuestions(List<Question> questions);
+
         void setUpViewPager();
     }
 
     public interface Presenter {
         void getAllPlotQuestions();
+
         void saveAnswerData(FormAnswerData answerData);
     }
 }

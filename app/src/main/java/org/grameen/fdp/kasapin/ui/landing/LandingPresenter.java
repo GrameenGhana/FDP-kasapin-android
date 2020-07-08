@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 public class LandingPresenter extends BasePresenter<LandingContract.View> implements LandingContract.Presenter {
     private AppDataManager mAppDataManager;
+
     @Inject
     public LandingPresenter(AppDataManager appDataManager) {
         super(appDataManager);
@@ -30,7 +31,8 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
     }
 
     @Override
-    public void showPopupDialog() {}
+    public void showPopupDialog() {
+    }
 
     @Override
     public void uploadLogsToServer() {

@@ -1,8 +1,8 @@
 package org.grameen.fdp.kasapin.ui.addFarmer;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
+import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 
@@ -20,6 +20,7 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
         super(appDataManager);
         this.mAppDataManager = appDataManager;
     }
+
     @Override
     public void openNextActivity() {
     }

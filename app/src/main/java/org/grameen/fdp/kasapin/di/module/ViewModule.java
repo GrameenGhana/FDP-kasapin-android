@@ -23,6 +23,7 @@ import dagger.Provides;
 @Module
 public class ViewModule {
     private AppCompatActivity mActivity;
+
     public ViewModule(AppCompatActivity activity) {
         mActivity = activity;
     }

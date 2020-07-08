@@ -35,6 +35,7 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
             views.add(new ArrayList<>());
         CURRENT_VISIBLE_COLUMN = 0;
     }
+
     /**
      * This is where you create your custom Cell ViewHolder. This method is called when Cell
      * RecyclerView of the TableView needs a new RecyclerView.ViewHolder of the given type to

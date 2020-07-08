@@ -6,7 +6,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -15,10 +14,9 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
-
 public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View> implements PlotDetailsContract.Presenter {
     AppDataManager mAppDataManager;
+
     @Inject
     public PlotDetailsPresenter(AppDataManager appDataManager) {
         super(appDataManager);
@@ -77,7 +75,8 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
     }
 
     @Override
-    public void openNextActivity() {}
+    public void openNextActivity() {
+    }
 
     @Override
     public void saveData(Plot plot) {
