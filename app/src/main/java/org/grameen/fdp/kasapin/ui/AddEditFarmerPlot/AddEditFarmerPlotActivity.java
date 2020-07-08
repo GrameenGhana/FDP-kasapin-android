@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.ui.AddEditFarmerPlot;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,9 +45,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * A login screen that offers login via email/password.
- */
 public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFarmerPlotContract.View {
     @Inject
     AddEditFarmerPlotPresenter mPresenter;
@@ -196,24 +192,18 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                 if (jsonObject.has(soilPhQuestion.getLabelC()))
                     jsonObject.remove(soilPhQuestion.getLabelC());
                 jsonObject.put(soilPhQuestion.getLabelC(), phEditText.getText().toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 if (jsonObject.has(estProductionQuestion.getLabelC()))
                     jsonObject.remove(estProductionQuestion.getLabelC());
                 jsonObject.put(estProductionQuestion.getLabelC(), estimatedProductionEditText.getText().toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 if (jsonObject.has(plotAreaQuestion.getLabelC()))
                     jsonObject.remove(plotAreaQuestion.getLabelC());
                 jsonObject.put(plotAreaQuestion.getLabelC(), plotSizeEditText.getText().toString());
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             AppLogger.e(TAG, jsonObject);
             LogicFormulaParser logicFormulaParser = LogicFormulaParser.getInstance();
             logicFormulaParser.setJsonObject(jsonObject);
