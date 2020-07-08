@@ -1,6 +1,6 @@
 # Sat4Farm Android Application repo
 
-## www.grameenfoundation.org
+## https://www.farmgrow.org/
 
 ### Code Stack
 * Language - **Java**
