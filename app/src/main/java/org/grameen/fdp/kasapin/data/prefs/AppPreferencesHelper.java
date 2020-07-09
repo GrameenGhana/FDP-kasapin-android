@@ -171,7 +171,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     }
 
     @Override
-    public void setIsTranslationToggled(boolean isTranslationToggled) {
+    public void setIsTranslation(boolean isTranslationToggled) {
         mPrefs.edit().putBoolean(PREF_KEY_IS_TRANSLATION, isTranslationToggled).apply();
     }
 

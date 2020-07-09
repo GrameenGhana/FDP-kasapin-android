@@ -7,10 +7,9 @@ import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
-import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
+import org.grameen.fdp.kasapin.data.network.model.ServerResponse;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
-import org.grameen.fdp.kasapin.data.network.model.Response;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import io.reactivex.Single;
@@ -44,9 +43,9 @@ public interface FdpApi {
 
     @POST(AppConstants.API + "synchupdata")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
-    Single<Response> uploadFarmersData(@Query("token") String token, @Body JsonObject farmersData);
+    Single<ServerResponse> uploadFarmersData(@Query("token") String token, @Body JsonObject farmersData);
 
     @POST(AppConstants.API + "syncdowndata")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
-    Single<DownloadDataResponse> downloadFarmerData(@Query("token") String token, @Body JsonObject body);
+    Single<ServerResponse> downloadFarmerData(@Query("token") String token, @Body JsonObject body);
 }

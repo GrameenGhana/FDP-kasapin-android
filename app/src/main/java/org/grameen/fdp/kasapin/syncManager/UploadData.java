@@ -2,7 +2,7 @@ package org.grameen.fdp.kasapin.syncManager;
 
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.network.model.Response;
+import org.grameen.fdp.kasapin.data.network.model.ServerResponse;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 import org.json.JSONObject;
@@ -49,9 +49,9 @@ public class UploadData {
                 .uploadFarmersData(token, farmersJsonObject)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<Response>() {
+                .subscribe(new DisposableSingleObserver<ServerResponse>() {
                     @Override
-                    public void onSuccess(Response response) {
+                    public void onSuccess(ServerResponse response) {
                         if (uploadDataListener != null)
                             uploadDataListener.onUploadComplete("Data upload successful.");
                         uploadDataListener = null;

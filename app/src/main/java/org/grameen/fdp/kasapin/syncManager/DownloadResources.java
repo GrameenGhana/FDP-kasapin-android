@@ -11,7 +11,7 @@ import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.QuestionsAndSkipLogic;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
-import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
+import org.grameen.fdp.kasapin.data.network.model.ServerResponse;
 import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -204,9 +204,9 @@ public class DownloadResources {
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
         getAppDataManager().getFdpApiService()
                 .fetchFarmersData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), INDEX, AppConstants.BATCH_NO)
-                .subscribe(new DisposableSingleObserver<DownloadDataResponse>() {
+                .subscribe(new DisposableSingleObserver<ServerResponse>() {
                     @Override
-                    public void onSuccess(DownloadDataResponse syncDownData) {
+                    public void onSuccess(ServerResponse syncDownData) {
                         if (syncDownData.getSuccess() != null && syncDownData.getSuccess().trim().equalsIgnoreCase("true")) {
                             TOTAL_COUNT = syncDownData.getTotal_count();
                             //check for total count here against pageDown/pageEnd and loop method getFarmersData

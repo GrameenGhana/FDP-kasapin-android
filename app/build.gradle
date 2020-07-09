@@ -73,6 +73,9 @@ android {
         exclude 'META-INF/NOTICE'
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -173,13 +176,9 @@ android {
         // dependencies for local unit tests
         testImplementation "junit:junit:$rootProject.ext.junitVersion"
         testImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+        testImplementation "org.json:json:20190722"
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
 
-        // UI Testing
-//        androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
-//        androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
-//        androidTestImplementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
-//        androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
 
         //Permissions
         implementation "com.github.karanchuri:PermissionManager:$rootProject.ext.permissionManager"

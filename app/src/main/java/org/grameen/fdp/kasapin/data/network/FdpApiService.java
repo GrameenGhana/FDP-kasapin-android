@@ -8,10 +8,9 @@ import org.grameen.fdp.kasapin.data.db.model.CountryAdminLevelDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
-import org.grameen.fdp.kasapin.data.network.model.DownloadDataResponse;
+import org.grameen.fdp.kasapin.data.network.model.ServerResponse;
 import org.grameen.fdp.kasapin.data.network.model.LoginRequest;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
-import org.grameen.fdp.kasapin.data.network.model.Response;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -57,13 +56,13 @@ public class FdpApiService {
         return fdpApi.getRecommendations(cropId, countryId, token).subscribeOn(Schedulers.io());
     }
 
-    public Single<Response> uploadFarmersData(String token, JSONObject data) {
+    public Single<ServerResponse> uploadFarmersData(String token, JSONObject data) {
         JsonObject gson = new JsonParser().parse(data.toString()).getAsJsonObject();
         return fdpApi.uploadFarmersData(token, gson).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<DownloadDataResponse> fetchFarmersData(String token, int countryId, int surveyorId, int pageUp, int pageDown) {
+    public Single<ServerResponse> fetchFarmersData(String token, int countryId, int surveyorId, int pageUp, int pageDown) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("country_id", countryId);
         jsonObject.addProperty("surveyor_id", surveyorId);

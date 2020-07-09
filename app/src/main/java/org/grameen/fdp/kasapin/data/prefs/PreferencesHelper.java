@@ -17,7 +17,7 @@ public interface PreferencesHelper {
 
     void clearPreferences();
 
-    void setIsTranslationToggled(boolean isTranslationToggled);
+    void setIsTranslation(boolean isTranslationToggled);
 
     void clearSecurePreferences();
 

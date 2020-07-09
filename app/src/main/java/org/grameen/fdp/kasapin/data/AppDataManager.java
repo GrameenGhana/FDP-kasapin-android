@@ -73,8 +73,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void setIsTranslationToggled(boolean isTranslationToggled) {
-        mPreferencesHelper.setIsTranslationToggled(isTranslationToggled);
+    public void setIsTranslation(boolean isTranslationToggled) {
+        mPreferencesHelper.setIsTranslation(isTranslationToggled);
     }
 
     @Override
