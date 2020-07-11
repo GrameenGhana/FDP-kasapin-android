@@ -81,7 +81,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     public void openNextActivity() {
     }
 
-
     @Override
     public void onTokenExpire() {
         getView().openLoginActivityOnTokenExpire();
@@ -107,11 +106,10 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     public void setFarmerAsUnsynced(Farmer realFarmer) {
         realFarmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
-        getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
+        updateFarmerData(realFarmer);
     }
 
-    public void setFarmerAsSynced(Farmer realFarmer) {
-        realFarmer.setSyncStatus(AppConstants.SYNC_OK);
+    public void updateFarmerData(Farmer realFarmer) {
         getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(realFarmer);
     }
 
@@ -161,19 +159,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
             formatPlotsGpsData(plot, plotArray);
             arrayOfValues.put(plotArray);
         }
-    }
-
-    private JSONObject generateModuleData(String plotExternalId, String moduleType) {
-        JSONObject diagnosticInfoJSONObject = new JSONObject();
-        try {
-            diagnosticInfoJSONObject.put(AppConstants.TYPE_FIELD_NAME, moduleType);
-            diagnosticInfoJSONObject.put(AppConstants.DIAGNOSTIC_MONITORING_EXTERNAL_ID_C, plotExternalId);
-            diagnosticInfoJSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plotExternalId);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return diagnosticInfoJSONObject;
     }
 
     private void generateDiagnosticMonitoringPayloadData(Map.Entry<String, ArrayList<Mapping>> mappingEntry, List<Plot> farmersPlots, JSONArray arrayOfValues, boolean isObservationsData) {
@@ -259,26 +244,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                 e.printStackTrace();
             }
         }
-    }
-
-    private JSONObject generateAnswerJSONObject(String questionType, String fieldName, Object answerValue, String variableLabel) {
-        JSONObject answerJson;
-        answerJson = new JSONObject();
-        try {
-            answerJson.put("field_name", fieldName);
-
-            //For decimal values, add answer to payload as a decimal instead of as a string
-            Object answer = (questionType != null && (questionType.equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ||
-                    questionType.equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)))
-                    ? Double.parseDouble(answerValue.toString().trim().replace(",", "")) : answerValue;
-            answerJson.put("answer", answer);
-
-            if (variableLabel != null)
-                answerJson.put("variable_c", variableLabel);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return answerJson;
     }
 
     public void syncData(FdpCallbacks.UploadDataListener listener, boolean showProgress, List<Farmer> farmers) {
@@ -372,7 +337,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                             //Generate Observations JSON payload for Diagnostic Module
                                                             generateDiagnosticMonitoringPayloadData(mappingEntry, farmersPlots, arrayOfValues, true);
                                                         else {
-
                                                             //This formats the farmer basic info into the mapping payload since this data is not obtained from the form/answer survey module
                                                             if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
                                                                 formatFarmerObjectData(farmer, arrayOfValues);
@@ -396,14 +360,12 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                 getView().showMessage(e.getMessage());
                                             }
                                         }
-
                                         @Override
                                         public void onError(Throwable e) {
                                             e.printStackTrace();
                                             getView().hideLoading();
                                             getView().showMessage(e.getMessage());
                                         }
-
                                         @Override
                                         public void onComplete() {
                                             try {
@@ -521,5 +483,38 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
             }
         }
         return jsonObject;
+    }
+
+    private JSONObject generateModuleData(String plotExternalId, String moduleType) {
+        JSONObject diagnosticInfoJSONObject = new JSONObject();
+        try {
+            diagnosticInfoJSONObject.put(AppConstants.TYPE_FIELD_NAME, moduleType);
+            diagnosticInfoJSONObject.put(AppConstants.DIAGNOSTIC_MONITORING_EXTERNAL_ID_C, plotExternalId);
+            diagnosticInfoJSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plotExternalId);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return diagnosticInfoJSONObject;
+    }
+
+    private JSONObject generateAnswerJSONObject(String questionType, String fieldName, Object answerValue, String variableLabel) {
+        JSONObject answerJson;
+        answerJson = new JSONObject();
+        try {
+            answerJson.put("field_name", fieldName);
+
+            //For decimal values, add answer to payload as a decimal instead of as a string
+            Object answer = (questionType != null && (questionType.equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ||
+                    questionType.equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)))
+                    ? Double.parseDouble(answerValue.toString().trim().replace(",", "")) : answerValue;
+            answerJson.put("answer", answer);
+
+            if (variableLabel != null)
+                answerJson.put("variable_c", variableLabel);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return answerJson;
     }
 }

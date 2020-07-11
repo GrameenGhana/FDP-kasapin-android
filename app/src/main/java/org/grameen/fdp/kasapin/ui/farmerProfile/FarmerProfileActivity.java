@@ -278,11 +278,10 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     @Override
     public void updateFarmerSyncStatus() {
-
         FARMER.setSyncStatus(AppConstants.SYNC_OK);
         FARMER.setLastModifiedDate(TimeUtils.getDateTime());
         FARMER.setLastVisitDate(TimeUtils.getDateTime());
-        mPresenter.setFarmerAsSynced(FARMER);
+        mPresenter.updateFarmerData(FARMER);
 
         lastSyncDate.setText((FARMER.getLastModifiedDate() != null) ? FARMER.getLastModifiedDate().toString() : "--");
 
