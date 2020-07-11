@@ -20,7 +20,7 @@ public class NumericalFieldValidator implements InputValidator {
 
         double min, max, actual;
         try {
-            actual = Double.parseDouble(value.toString());
+            actual = Double.parseDouble(value.toString().replace(",", ""));
             min = Double.parseDouble(minimum);
             max = Double.parseDouble(maximum);
 

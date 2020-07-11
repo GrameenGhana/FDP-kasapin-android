@@ -2,6 +2,8 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,11 +52,8 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
         ViewHolder viewHolder;
 
         if (convertView == null) {
-
             viewHolder = new ViewHolder();
             convertView = layoutInflater.inflate(R.layout.farmer_grid_item_view, parent, false);
-
-
             viewHolder.mainLayout = convertView.findViewById(R.id.mainLayout);
             viewHolder.rl1 = convertView.findViewById(R.id.rl1);
 
@@ -66,10 +65,7 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
 
             viewHolder.syncStatus = convertView.findViewById(R.id.sync_status);
             viewHolder.fdpStatus = convertView.findViewById(R.id.fdp_status);
-
-
             convertView.setTag(viewHolder);
-
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -78,21 +74,21 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
     }
 
     private void setData(Farmer farmer, ViewHolder viewHolder) {
-
-        if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")) {
-            viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));
-            //Picasso.with(context).load(farmer.getImageUrl()).resize(200, 200).into(viewHolder.photo);
-            // viewHolder.setIsRecyclable(false);
-        } else {
+//        if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")) {
+//            new Handler().postDelayed(() -> {
+//                viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));
+//
+//            }, 10);
+//            //Picasso.with(context).load(farmer.getImageUrl()).resize(200, 200).into(viewHolder.photo);
+//            // viewHolder.setIsRecyclable(false);
+//        } else {
             //viewHolder.setIsRecyclable(true);
-
             try {
                 String[] valueArray = farmer.getFarmerName().split(" ");
                 String value = valueArray[0].substring(0, 1) + valueArray[1].substring(0, 1);
                 viewHolder.initials.setText(value);
 
             } catch (Exception e) {
-
                 if (!farmer.getFarmerName().trim().isEmpty())
                     viewHolder.initials.setText(farmer.getFarmerName().substring(0, 1));
             }
@@ -105,10 +101,8 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
             drawable.setCornerRadius(0);
             drawable.setColor(randomColor);
             viewHolder.rl1.setBackground(drawable);
-
             viewHolder.imageView.setVisibility(View.GONE);
-
-        }
+       // }
 
 
         viewHolder.name.setText(farmer.getFarmerName());

@@ -13,7 +13,6 @@ import java.util.List;
 //, foreignKeys = {@ForeignKey(entity = Form.class, parentColumns = "id", childColumns = "formId", deferred = true)}
 @Entity(tableName = "form_translation", indices = {@Index(value = "formId"), @Index(value = "id", unique = true)})
 public class FormTranslation extends BaseModel {
-
     @SerializedName("form_id")
     String formId;
     @SerializedName("name")
@@ -21,10 +20,9 @@ public class FormTranslation extends BaseModel {
     @Ignore
     @SerializedName("form")
     private Form form;
-
     @Ignore
     @SerializedName("questions")
-    private List<QuestionsAndSkipLogic> questionsAndSkipLogic = null;
+    private List<QuestionsAndSkipLogic> questionsAndSkipLogic;
 
     /**
      * No args constructor for use in serialization
@@ -48,7 +46,6 @@ public class FormTranslation extends BaseModel {
     public void setId(int id) {
         this.id = id;
     }
-
 
     public String getName() {
         return name;

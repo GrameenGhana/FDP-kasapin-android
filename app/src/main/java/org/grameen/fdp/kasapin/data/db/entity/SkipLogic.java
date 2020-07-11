@@ -9,26 +9,19 @@ import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "skip_logics", indices = {@Index(value = "questionId")})
 public class SkipLogic {
-
     @PrimaryKey
     @SerializedName("id")
     int id;
-
     @SerializedName("question_id")
     int questionId;
-
     @SerializedName("updated_at")
     String dateUpdated;
-
     @SerializedName("created_at")
     String dateCreated;
-
     @SerializedName("formula_c")
     String formula;
-
     @SerializedName("hide_c")
     int shouldHide;
-
     @Ignore
     String comparingQuestion;
     @Ignore

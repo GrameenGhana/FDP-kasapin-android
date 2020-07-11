@@ -1,5 +1,7 @@
 package org.grameen.fdp.kasapin.data.db.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
@@ -7,11 +9,9 @@ import org.grameen.fdp.kasapin.data.db.entity.SkipLogic;
 import java.util.List;
 
 public class QuestionsAndSkipLogic {
-
     Question question;
-
+    @SerializedName("skiplogic")
     List<SkipLogic> skipLogic;
-
     List<Mapping> map;
 
     public QuestionsAndSkipLogic() {
@@ -40,5 +40,4 @@ public class QuestionsAndSkipLogic {
     public void setQuestion(Question question) {
         this.question = question;
     }
-
 }

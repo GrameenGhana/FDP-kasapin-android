@@ -107,9 +107,13 @@ public class ComputationUtils {
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
                 getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
-                    AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue());
+                    AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue() + "\nShould hide == " + sl.shouldHide());
                     try {
-                        toggleViewVisibility(compareSkipLogicValues(sl, String.valueOf(event.getNewValue())), questionToHide);
+                        boolean isEqual = compareSkipLogicValues(sl, String.valueOf(event.getNewValue()));
+                        if(isEqual)
+                        toggleViewVisibility(sl.shouldHide(), questionToHide);
+                       else
+                           toggleViewVisibility(!sl.shouldHide(), questionToHide);
                     } catch (Exception ignored) {
                     }
                 });
@@ -125,7 +129,11 @@ public class ComputationUtils {
                 sl.setLogicalOperator(values[1]);
                 sl.setAnswerValue(values[2]);
                 try {
-                    toggleViewVisibility(compareSkipLogicValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString()), label);
+                    boolean isEqual = compareSkipLogicValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString());
+                    if(isEqual)
+                    toggleViewVisibility(sl.shouldHide(), label);
+                    else
+                        toggleViewVisibility(!sl.shouldHide(), label);
                 } catch (Exception ignored) {
                 }
             }

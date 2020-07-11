@@ -156,7 +156,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             versionNumberTV.setText(pInfo.versionName);
         } catch (PackageManager.NameNotFoundException ignore) {
         }
-
         navigationView.setNavigationItemSelectedListener(this);
         setInMemoryRoomDatabases(getAppDataManager().getDatabaseManager().getOpenHelper().getWritableDatabase());
     }
@@ -182,13 +181,11 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                     @Override
                     public void onPageScrolled(int i, float v, int i1) {
                     }
-
                     @Override
                     public void onPageSelected(int i) {
                         SELECTED_VILLAGE = fragmentPagerItems.get(i).getTitle().toString();
                         CURRENT_PAGE = i;
                     }
-
                     @Override
                     public void onPageScrollStateChanged(int i) {
                     }

@@ -72,11 +72,11 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     private List<ColumnHeader> mColumnHeaderList;
     private List<List<Cell>> mCellList;
 
-    public static String getValue(int index, String uid) {
+    public static String getValue(int index, String key) {
         String value = "";
         try {
-            if (oldValuesArray.getJSONObject(index).has(uid))
-                return oldValuesArray.getJSONObject(index).getString(uid);
+            if (oldValuesArray.getJSONObject(index).has(key))
+                return oldValuesArray.getJSONObject(index).getString(key);
         } catch (JSONException ignored) {
         }
         return value;
@@ -272,14 +272,12 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
     @OnClick(R.id.save)
     void saveData() {
-
         AppLogger.e(oldValuesArray.toString());
         // check validations here
 
         if (!validate()) {
             return;
         }
-
         /*
          ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
          */
@@ -294,7 +292,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             socioEconomicProfileFormAnswerData.setFormId(socioEconomicFormId);
             socioEconomicProfileFormAnswerData.setData(new JSONObject().toString());
         }
-
         Question familyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("family_income_");
         Question totalFamilyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("total_family_income_");
 
@@ -311,7 +308,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             familyMembersIncomeStringBuilder.append("0");
 
             JSONObject data = socioEconomicProfileFormAnswerData.getJsonData();
-
             if (data.has(totalFamilyIncomeQuestion.getLabelC()))
                 data.remove(totalFamilyIncomeQuestion.getLabelC());
             try {
@@ -326,16 +322,12 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             //Now Save the family members answer data
             //answerData.setData(allFamilyMembersArrayData.toString());
             answerData.setData(oldValuesArray.toString());
-
             getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
-
             mPresenter.setFarmerAsUnsynced(FARMER);
             getAppDataManager().setBooleanValue("reload", true);
-
             moveToNextForm(FARMER);
         }
     }
-
 
     private List<List<Cell>> getCellList() {
         List<List<Cell>> list = new ArrayList<>();
@@ -356,7 +348,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         }
         return list;
     }
-
 
     private List<RowHeader> getRowHeaderList() {
         List<RowHeader> list = new ArrayList<>();

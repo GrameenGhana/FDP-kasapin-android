@@ -284,7 +284,7 @@ public class Question {
     public List<String> formatQuestionOptions() {
         String s;
         s = getOptionsC();
-        if (!s.equalsIgnoreCase("null"))
+        if (s != null &&!s.equalsIgnoreCase("null"))
             try {
                 return Arrays.asList(s.trim().split(","));
             } catch (Exception e) {

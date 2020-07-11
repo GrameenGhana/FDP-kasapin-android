@@ -12,33 +12,25 @@ import java.util.List;
 public class Recommendation extends BaseModel {
     @SerializedName("crop_id")
     int cropId;
-
     @SerializedName("label")
     String label;
-
     @SerializedName("reco_name")
     String recommendationName;
-
     int hierarchy;
-
     @SerializedName("condition")
     String condition;
-
     @SerializedName("change_condition")
     String changeCondition;
     @SerializedName("change_option")
     String changeOption;
     int country;
-
     @Ignore
     List<Calculation> calculations;
-
     @Ignore
     @SerializedName("recommendation_activity")
     List<RecommendationActivity> recommendationActivities;
 
-    public Recommendation() {
-    }
+    public Recommendation() {}
 
     public String getRecommendationName() {
         return recommendationName;

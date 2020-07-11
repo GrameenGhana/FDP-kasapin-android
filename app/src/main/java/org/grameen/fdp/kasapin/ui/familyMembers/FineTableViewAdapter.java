@@ -79,26 +79,30 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
     public void onBindCellViewHolder(AbstractViewHolder holder, Object cellItemModel, int columnPosition, int rowPosition) {
         CURRENT_VISIBLE_COLUMN = columnPosition;
         Cell cell = (Cell) cellItemModel;
-        if (holder instanceof CellViewHolder) {
-            CellViewHolder viewHolder = (CellViewHolder) holder;
-            viewHolder.setData(rowPosition, (Question) cell.getData());
-            viewHolder.itemView.setTag("edittext");
-            views.get(rowPosition).add(columnPosition, viewHolder.itemView);
-        } else if (holder instanceof CheckBoxViewHolder) {
-            CheckBoxViewHolder viewHolder = (CheckBoxViewHolder) holder;
-            viewHolder.setData(rowPosition, (Question) cell.getData());
-            viewHolder.itemView.setTag("checkbox");
-            views.get(rowPosition).add(columnPosition, viewHolder.itemView);
-        } else if (holder instanceof SpinnerViewHolder) {
-            SpinnerViewHolder viewHolder = (SpinnerViewHolder) holder;
-            viewHolder.setData(rowPosition, (Question) cell.getData());
-            viewHolder.itemView.setTag("spinner");
-            views.get(rowPosition).add(columnPosition, viewHolder.itemView);
-        } else if (holder instanceof MultiSelectViewHolder) {
-            MultiSelectViewHolder viewHolder = (MultiSelectViewHolder) holder;
-            viewHolder.setData(rowPosition, (Question) cell.getData());
-            viewHolder.itemView.setTag("multi_select");
-            views.get(rowPosition).add(columnPosition, viewHolder.itemView);
+        try {
+            if (holder instanceof CellViewHolder) {
+                CellViewHolder viewHolder = (CellViewHolder) holder;
+                viewHolder.setData(rowPosition, (Question) cell.getData());
+                viewHolder.itemView.setTag("edittext");
+                views.get(rowPosition).add(columnPosition, viewHolder.itemView);
+            } else if (holder instanceof CheckBoxViewHolder) {
+                CheckBoxViewHolder viewHolder = (CheckBoxViewHolder) holder;
+                viewHolder.setData(rowPosition, (Question) cell.getData());
+                viewHolder.itemView.setTag("checkbox");
+                views.get(rowPosition).add(columnPosition, viewHolder.itemView);
+            } else if (holder instanceof SpinnerViewHolder) {
+                SpinnerViewHolder viewHolder = (SpinnerViewHolder) holder;
+                viewHolder.setData(rowPosition, (Question) cell.getData());
+                viewHolder.itemView.setTag("spinner");
+                views.get(rowPosition).add(columnPosition, viewHolder.itemView);
+            } else if (holder instanceof MultiSelectViewHolder) {
+                MultiSelectViewHolder viewHolder = (MultiSelectViewHolder) holder;
+                viewHolder.setData(rowPosition, (Question) cell.getData());
+                viewHolder.itemView.setTag("multi_select");
+                views.get(rowPosition).add(columnPosition, viewHolder.itemView);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

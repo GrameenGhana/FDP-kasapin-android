@@ -76,6 +76,11 @@ public class PhotoButtonController extends MyLabeledFieldController {
         this(context, name, content_desc, labelText, false, locationListener);
         this.context = context;
         this.isEnabled = enabled;
+
+        IMAGE_VIEW = new ImageView(context);
+        IMAGE_VIEW.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        IMAGE_VIEW.setMaxHeight(300);
+        IMAGE_VIEW.requestLayout();
     }
 
     @Override
@@ -83,36 +88,30 @@ public class PhotoButtonController extends MyLabeledFieldController {
         final LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.height = 300;
         linearLayout.setLayoutParams(params);
 
         @SuppressLint("RestrictedApi") ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PrimaryButton);
         final Button button = new Button(newContext);
-        button.setText("Take a photo");
+        button.setText(R.string.take_a_photo);
         button.setContentDescription(getContentDesc());
         button.setPadding(0, 20, 0, 20);
         button.setTextSize(12);
         button.setId(editTextId);
         button.setOnClickListener(onClickListener);
 
-        final ImageView imageView = new ImageView(context);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-        this.IMAGE_VIEW = imageView;
-
         getModel().addPropertyChangeListener(getName(), evt -> {
             if (evt.getNewValue() != null && !evt.getNewValue().toString().equalsIgnoreCase(""))
                 try {
-                    imageView.setAdjustViewBounds(true);
-                    imageView.setMaxHeight(300);
-                    imageView.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
-                    linearLayout.addView(imageView);
+                    IMAGE_VIEW.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
+                    linearLayout.addView(IMAGE_VIEW);
                     linearLayout.requestLayout();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
         });
 
-        imageView.setOnClickListener(v -> {
+        IMAGE_VIEW.setOnClickListener(v -> {
             final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppDialog);
             builder.setMessage(R.string.image_options);
             builder.setCancelable(true);
@@ -123,10 +122,10 @@ public class PhotoButtonController extends MyLabeledFieldController {
             });
 
             builder.setNegativeButton(R.string.delete, (dialog, which) -> {
-                imageView.setImageBitmap(null);
+                IMAGE_VIEW.setImageBitmap(null);
                 getModel().setValue(getName(), "");
                 dialog.dismiss();
-                linearLayout.removeView(imageView);
+                linearLayout.removeView(IMAGE_VIEW);
                 linearLayout.requestLayout();
             });
             builder.show();
@@ -134,14 +133,14 @@ public class PhotoButtonController extends MyLabeledFieldController {
 
         try {
             button.setEnabled(isEnabled);
-            imageView.setEnabled(isEnabled);
+            IMAGE_VIEW.setEnabled(isEnabled);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        refresh(imageView);
+        refresh(IMAGE_VIEW);
         linearLayout.addView(button);
-        linearLayout.addView(imageView);
+        linearLayout.addView(IMAGE_VIEW);
         linearLayout.requestLayout();
         return linearLayout;
     }

@@ -449,4 +449,5 @@
     <string name="no_changes_after_sybmission_rational">Veuillez noter que si vous remplissez ce formulaire et synchronisez vos données, vous ne pourrez apporter aucune modification à ces données sur les agriculteurs.</string>
     <string name="error_has_occurred_loading_data">Une erreur s\'est produite lors du chargement des données!</string>
     <string name="plot_monitoring">Surveillance du tracé</string>
+    <string name="take_a_photo">Take a photo</string>
 </resources>

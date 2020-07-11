@@ -142,7 +142,6 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
                     findViewById(R.id.placeHolder).setVisibility(View.VISIBLE);
             }
             hasGpsDataBeenSaved = false;
-
         });
 
         calculateArea.setOnClickListener(view -> {
@@ -242,13 +241,13 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         }
 
         plot.setPlotPoints(getGson().toJson(plotGpsPoints));
-        if (getAppDataManager().getDatabaseManager().plotsDao().updateOne(plot) > 0) {
-            hasGpsDataBeenSaved = true;
-            showMessage(R.string.new_data_updated);
-            if (shouldExit)
-                moveToPlotDetailsActivity();
-        } else
-            showMessage(R.string.data_not_saved);
+            if (getAppDataManager().getDatabaseManager().plotsDao().updateOne(plot) > 0) {
+                hasGpsDataBeenSaved = true;
+                showDialog(true, "Data saved!", getString(R.string.new_data_updated), (d, w)
+                        -> moveToPlotDetailsActivity(), getString(R.string.ok),
+                        null, null, 0);
+            } else
+                showMessage(R.string.data_not_saved);
     }
 
     @Override

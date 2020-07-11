@@ -444,5 +444,6 @@
     <string name="no_changes_after_sybmission_rational">Harap dicatat bahwa jika Anda mengisi formulir ini dan menyinkronkan data Anda, Anda tidak akan dapat membuat perubahan apa pun pada data petani ini.</string>
     <string name="error_has_occurred_loading_data">Terjadi kesalahan saat memuat data!</string>
     <string name="plot_monitoring">Plot Monitoring</string>
+    <string name="take_a_photo">Take a photo</string>
 
 </resources>

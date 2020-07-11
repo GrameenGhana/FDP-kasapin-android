@@ -115,7 +115,6 @@ public class DownloadResources {
                 .subscribeWith(new DisposableSingleObserver<FormsDataWrapper>() {
                     @Override
                     public void onSuccess(FormsDataWrapper dataWrapper) {
-
                         Observable.fromIterable(dataWrapper.getData())
                                 .subscribeOn(Schedulers.io())
                                 .doOnNext(formTranslation -> {
@@ -140,16 +139,15 @@ public class DownloadResources {
 
                                     @Override
                                     public void onError(Throwable e) {
-                                        onError(e);
+                                        e.printStackTrace();
+                                        showError(e);
                                     }
-
                                     @Override
                                     public void onComplete() {
                                         getRecommendationsData();
                                     }
                                 });
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -181,7 +179,7 @@ public class DownloadResources {
 
                                     @Override
                                     public void onError(Throwable e) {
-                                        onError(e);
+                                        showError(e);
                                     }
 
                                     @Override
@@ -190,7 +188,6 @@ public class DownloadResources {
                                     }
                                 });
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         showError(e);
@@ -234,7 +231,7 @@ public class DownloadResources {
                                 }
                             }
                             showSuccess("Data download completed!");
-                        } else onError(new Throwable("The download could not complete!"));
+                        } else onError(new Throwable("The download could not complete. Please contact your admin."));
                     }
 
                     @Override
