@@ -45,11 +45,11 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
 
         findViewById(R.id.diagnostic).setOnClickListener(v -> {
             mPresenter.getAppDataManager().setIsMonitoringMode(false);
-            mPresenter.openNextActivity();
+            openMainActivity();
         });
         findViewById(R.id.monitoring).setOnClickListener(v -> {
             mPresenter.getAppDataManager().setIsMonitoringMode(true);
-            mPresenter.openNextActivity();
+            openMainActivity();
         });
         FileUtils.createNoMediaFile();
     }

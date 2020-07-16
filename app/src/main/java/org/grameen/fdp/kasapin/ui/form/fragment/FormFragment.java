@@ -45,7 +45,6 @@ import static android.app.Activity.RESULT_OK;
 import static org.grameen.fdp.kasapin.utilities.ActivityUtils.getFormModelFragment;
 
 public abstract class FormFragment extends BaseFragment {
-
     private static int CAMERA_INTENT = 506;
     private String ID;
     private Uri URI;
@@ -62,7 +61,7 @@ public abstract class FormFragment extends BaseFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        this.formModelFragment = getFormModelFragment(this.getActivity());
+        this.formModelFragment = getFormModelFragment(requireActivity());
         this.formController = new MyFormController(context, formModelFragment.getModel());
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -117,27 +116,28 @@ public abstract class FormFragment extends BaseFragment {
 
     void startCameraIntent(String id) {
         this.ID = id;
-        File photo;
-        Intent takePictureIntent;
+
         PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("shouldSave", false).apply();
         if (hasPermissions(getActivity(), Manifest.permission.CAMERA)) {
             int PERMISSION_CAMERA = 505;
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CAMERA);
         } else {
+            Intent takePictureIntent;
             takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             try {
+                File photo;
                 // place where to store camera taken picture
                 photo = FileUtils.createTemporaryFile("picture", ".jpg");
-                photo.delete();
+                if(photo.exists())
+                    photo.delete();
                 URI = FileProvider.getUriForFile(getActivity(),
                         getActivity().getApplicationContext().getPackageName() + ".org.grameen.fdp.provider", photo);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, URI);
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             } catch (Exception e) {
-                Timber.tag(TAG).v("Can't create file to take picture!");
+                e.printStackTrace();
             }
             if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                Timber.d("Starting camera intent");
                 startActivityForResult(takePictureIntent, CAMERA_INTENT);
             }
         }
@@ -217,6 +217,7 @@ public abstract class FormFragment extends BaseFragment {
                         BASE64_STRING = ImageUtil.bitmapToBase64(bitmap);
                         getModel().setValue(ID, BASE64_STRING);
 
+                        bitmap.recycle();
                         CustomToast.makeToast(getActivity(), getResources().getString(R.string.click_photo_to_delete), Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         CustomToast.makeToast(getActivity(), "Failed to load image", Toast.LENGTH_SHORT).show();

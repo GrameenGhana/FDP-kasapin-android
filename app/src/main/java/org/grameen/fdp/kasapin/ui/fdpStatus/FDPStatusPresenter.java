@@ -22,15 +22,14 @@ public class FDPStatusPresenter extends BasePresenter<FDPStatusContract.View> im
 
     @Override
     public void getAnswerData(String farmerCode, int formTranslationId) {
-        AppLogger.e(TAG, "Farmer code is " + farmerCode + " and Form translation id is " + formTranslationId);
-        runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataSingle(farmerCode, formTranslationId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(formAnswerData ->
-                                getView().showFormFragment(formAnswerData)
-                        , throwable ->
-                                getView().showFormFragment(null)
-                ));
+//        runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataSingle(farmerCode, formTranslationId)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(formAnswerData ->
+//                                getView().showFormFragment(formAnswerData)
+//                        , throwable ->
+//                                getView().showFormFragment(null)
+//                ));
 
     }
 

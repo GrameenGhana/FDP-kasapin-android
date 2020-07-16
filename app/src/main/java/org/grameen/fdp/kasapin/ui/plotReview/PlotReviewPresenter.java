@@ -45,8 +45,4 @@ public class PlotReviewPresenter extends BasePresenter<PlotReviewContract.View> 
     public void saveAnswerData(FormAnswerData answerData) {
     }
 
-    @Override
-    public void openNextActivity() {
-        getView().openMainActivity();
-    }
 }

@@ -22,42 +22,25 @@ public class BaseContract {
         void dropView();
 
         void setUserAsLoggedOut();
-
         boolean isViewAttached();
-
-        void openNextActivity();
-
         void onTokenExpire();
     }
 
 
     public interface View {
         void showLoading();
-
         void setLoadingMessage(String message);
-
         void hideLoading();
-
         void showLoading(String title, String message, boolean indeterminate, @DrawableRes int icon, boolean cancelableOnTouchOutside);
-
         void openLoginActivityOnTokenExpire();
-
         void onSuccess(String message);
-
         void onError(@StringRes int resId);
-
         void onError(String message);
-
         void showMessage(String message);
-
         void showMessage(@StringRes int resId);
-
         boolean isNetworkConnected();
-
         void hideKeyboard();
-
         void toggleFullScreen(Boolean hideNavBar, Window W);
-
         void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable);
     }
 }

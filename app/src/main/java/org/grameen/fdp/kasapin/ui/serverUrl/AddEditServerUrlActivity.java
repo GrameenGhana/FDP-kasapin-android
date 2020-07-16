@@ -84,7 +84,7 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
         dialog.findViewById(R.id.cancel).setOnClickListener(v -> dialog.dismiss());
         dialog.findViewById(R.id.ok).setOnClickListener(v -> {
             String url = urlEditText.getText().toString().trim();
-            if (!URLUtil.isValidUrl(url))
+            if (!URLUtil.isValidUrl(url) || url.length() < 10)
                 showMessage("Please enter a valid url");
             else {
                 if (!url.endsWith("/"))

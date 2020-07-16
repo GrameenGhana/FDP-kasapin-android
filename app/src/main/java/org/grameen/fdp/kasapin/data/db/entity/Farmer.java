@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true)})
 public class Farmer {
@@ -76,6 +77,20 @@ public class Farmer {
 
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Farmer)) return false;
+        Farmer farmer = (Farmer) o;
+        return id == farmer.id &&
+                code.equals(farmer.code);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code);
     }
 
     public Date getLastVisitDate() {

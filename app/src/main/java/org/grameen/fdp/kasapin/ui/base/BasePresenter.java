@@ -3,7 +3,6 @@ package org.grameen.fdp.kasapin.ui.base;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
@@ -16,7 +15,7 @@ import org.grameen.fdp.kasapin.data.db.entity.PlotGpsPoint;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.Submission;
 import org.grameen.fdp.kasapin.data.network.model.BaseModel;
-import org.grameen.fdp.kasapin.syncManager.UploadData;
+import org.grameen.fdp.kasapin.syncManager.UploadDataManager;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
@@ -75,10 +74,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     public boolean isViewAttached() {
         return mView != null;
-    }
-
-    @Override
-    public void openNextActivity() {
     }
 
     @Override
@@ -163,7 +158,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     private void generateDiagnosticMonitoringPayloadData(Map.Entry<String, ArrayList<Mapping>> mappingEntry, List<Plot> farmersPlots, JSONArray arrayOfValues, boolean isObservationsData) {
         for (Plot plot : farmersPlots) {
-            JSONArray diagnosticAndMonitoringPayload = new JSONArray();
+            JSONArray diagnosticAndMonitoringPayloadArray = new JSONArray();
 
             //Generate JSON payload for Diagnostic Module
 
@@ -185,19 +180,21 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                     if (plotJsonObject.has(questionLabel)) {
                         String answer = plotJsonObject.get(questionLabel).toString();
                         if (!answer.isEmpty() && !answer.equalsIgnoreCase("null"))
-                            diagnosticArray.put(generateAnswerJSONObject(null, mapping.getFieldName(), answer, null));
+                            diagnosticArray.put(generateAnswerJSONObject(null, mapping.getFieldName(), answer, (isObservationsData) ? questionLabel : null));
                     }
                 }
 
-                diagnosticAndMonitoringPayload.put(diagnosticArray);
-
-                //Add recommendation id to the payload for diagnostic data only
                 if (!isObservationsData) {
                     JSONObject recommendationJson = new JSONObject();
                     recommendationJson.put("answer", plot.getRecommendationId());
                     recommendationJson.put("field_name", "recommendation_id");
                     diagnosticArray.put(recommendationJson);
                 }
+
+                diagnosticAndMonitoringPayloadArray.put(diagnosticArray);
+
+                //Add recommendation id to the payload for diagnostic data only
+
 
                 //Generate JSON payload for Monitoring Module for each plot's Monitorings
                 List<Monitoring> plotMonitoringList = getAppDataManager().getDatabaseManager().monitoringDao().getAllMonitoringForPlot(plot.getExternalId())
@@ -212,34 +209,37 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                         for (Mapping mapping : mappingEntry.getValue()) {
                             Question question = getAppDataManager().getDatabaseManager().questionDao().getQuestionById(mapping.getQuestionId());
 
-
                             if (question != null && monitoringJsonObject.has(question.getLabelC())) {
-
                                 String answer = monitoringJsonObject.getString(question.getLabelC());
                                 if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
-                                    JSONObject answerJson = generateAnswerJSONObject(
-                                            question.getTypeC(), mapping.getFieldName(), answer, isObservationsData ? question.getLabelC() : null);
-
+                                    JSONObject answerJson =  null;
                                     if (isObservationsData) {
                                         String[] relatedQuestions = question.splitRelatedQuestions();
                                         if (relatedQuestions != null && relatedQuestions.length > 1) {
                                             String competenceValue = (monitoringJsonObject.has(relatedQuestions[0]) ? monitoringJsonObject.get(relatedQuestions[0]).toString() : null);
                                             String failureValue = (monitoringJsonObject.has(relatedQuestions[1]) ? monitoringJsonObject.get(relatedQuestions[1]).toString() : null);
                                             //Extra information added to the answerJson for Observations mapping data
+
+                                            answerJson = generateAnswerJSONObject(
+                                                    question.getTypeC(), mapping.getFieldName(), answer, question.getLabelC());
                                             answerJson.put("competence_label", relatedQuestions[0]);
                                             answerJson.put("competence_c", competenceValue);
                                             answerJson.put("reason_for_failure_label", relatedQuestions[1]);
                                             answerJson.put("reason_for_failure", failureValue);
                                         }
+                                    }else{
+                                         answerJson = generateAnswerJSONObject(
+                                                question.getTypeC(), mapping.getFieldName(), answer,null);
                                     }
+                                    if(answerJson != null)
                                     monitoringPayload.put(answerJson);
                                 }
                             }
                         }
-                        diagnosticAndMonitoringPayload.put(monitoringPayload);
+                        diagnosticAndMonitoringPayloadArray.put(monitoringPayload);
                     }
                 }
-                arrayOfValues.put(diagnosticAndMonitoringPayload);
+                arrayOfValues.put(diagnosticAndMonitoringPayloadArray);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -275,8 +275,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
         try {
             payloadData.put("submission", new JSONObject(getGson().toJson(submission)));
-        } catch (JSONException ignored) {
-        }
+        } catch (JSONException ignored) {}
 
         JSONArray payloadDataArray = new JSONArray();
 
@@ -294,7 +293,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                              * First parameter is the Object name (Object_c) eg. farmer_c and List<Mapping> has all mapping with object_c = farmer_c
                              * Since we're sending only farmer data first, lets loop through group mappings and get list of mappings which has object_c = farmer_c;
                              */
-
                             Observable.fromIterable(farmers)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
@@ -305,22 +303,16 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                              * we should get all answers of the farmer and bundle it into one object where we can just get values to questions
                                              * using the question id
                                              * */
-
                                             JSONObject allAnswersJsonObject = buildAllAnswersJsonDataPerFarmer(farmer.getCode());
-
                                             JSONObject jsonObject = new JSONObject();
-
                                             try {
                                                 jsonObject.put("external_id", farmer.getCode());
 
                                                 for (int i = 0; i < groupedMappings.size(); i++) {
-
                                                     for (Map.Entry<String, ArrayList<Mapping>> mappingEntry : groupedMappings.get(i).entrySet()) {
 
                                                         List<Plot> farmersPlots = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmer.getCode()).blockingGet();
-
                                                         JSONArray arrayOfValues = new JSONArray();
-
                                                         if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS_TABLE))
                                                             generateFamilyMembersJson(farmer, mappingEntry, arrayOfValues);
 
@@ -363,37 +355,28 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                         @Override
                                         public void onError(Throwable e) {
                                             e.printStackTrace();
-                                            getView().hideLoading();
-                                            getView().showMessage(e.getMessage());
+                                            showGenericError(e);
                                         }
                                         @Override
                                         public void onComplete() {
                                             try {
                                                 payloadData.put("data", payloadDataArray);
-
-                                                AppLogger.e(TAG, "Payload data is " + payloadData.toString());
-                                                getView().hideLoading();
-
-                                                UploadData.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData);
+                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
-                                                getView().hideLoading();
-                                                getView().showMessage(R.string.error_has_occurred_loading_data);
+                                                showGenericError(e);
                                             }
                                         }
                                     });
-                        }, throwable -> {
-                            getView().hideLoading();
-                            getView().showMessage(R.string.error_has_occurred);
-                        }))
+                        }, this::showGenericError))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(disposable -> {
+                }, this::showGenericError));
+    }
 
-                }, throwable -> {
-                    getView().hideLoading();
-                    getView().showMessage(R.string.error_has_occurred_loading_data);
-
-                }));
+    private void showGenericError(Throwable throwable){
+        getView().hideLoading();
+        getView().showMessage(throwable.getLocalizedMessage());
     }
 
     protected void formatFarmerObjectData(Farmer farmer, JSONArray arrayOfValues) {
@@ -502,17 +485,19 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         JSONObject answerJson;
         answerJson = new JSONObject();
         try {
-            answerJson.put("field_name", fieldName);
-
             //For decimal values, add answer to payload as a decimal instead of as a string
-            Object answer = (questionType != null && (questionType.equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL) ||
-                    questionType.equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)))
-                    ? Double.parseDouble(answerValue.toString().trim().replace(",", "")) : answerValue;
+
+            Object answer = (questionType != null
+                    && (questionType.equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)
+                    || questionType.equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA))
+                    &&  answerValue.toString().matches("-?\\d+(\\.\\d+)?"))
+                    ? Double.parseDouble(answerValue.toString().trim().replace(",", "")) : 0;
             answerJson.put("answer", answer);
+            answerJson.put("field_name", fieldName);
 
             if (variableLabel != null)
                 answerJson.put("variable_c", variableLabel);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return answerJson;

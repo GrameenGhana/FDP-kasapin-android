@@ -53,7 +53,6 @@ import org.grameen.fdp.kasapin.utilities.FileUtils;
 import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
-import org.json.JSONException;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -364,51 +363,51 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     }
 
 
-    public void goToFamilyMembersTable(Farmer FARMER) {
+    public void goToFamilyMembersTable(Farmer farmer) {
         Question numberFamilyMembersQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farmer_familycount_");
         int farmerProfileFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.FARMER_PROFILE).blockingGet(0);
-        FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), farmerProfileFormId);
+        FormAnswerData answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(farmer.getCode(), farmerProfileFormId);
         if (numberFamilyMembersQuestion != null) {
             if (answerData != null) {
                 int numberFamilyMembers;
                 try {
                     numberFamilyMembers = Integer.parseInt(answerData.getJsonData().getString(numberFamilyMembersQuestion.getLabelC()));
-                } catch (JSONException ignored) {
+                } catch (Exception ignored) {
                     numberFamilyMembers = 1;
                 }
                 Intent intent = new Intent(this, FamilyMembersActivity.class);
                 intent.putExtra("noFamilyMembers", numberFamilyMembers);
-                intent.putExtra("farmer", getGson().toJson(FARMER));
+                intent.putExtra("farmerCode",  farmer.getCode());
                 startActivity(intent);
                 finish();
             } else
                 showDialog(false, getStringResources(R.string.fill_data),
-                        getStringResources(R.string.enter_data_rationale) + FARMER.getFarmerName() + getStringResources(R.string.before_proceed_suffux),
+                        getStringResources(R.string.enter_data_rationale) + farmer.getFarmerName() + getStringResources(R.string.before_proceed_suffux),
                         (dialog, which) -> dialog.dismiss(), getStringResources(R.string.ok), null, "", 0);
         } else
             showMessage(getStringResources(R.string.error_has_occurred));
     }
 
-    public void moveToNextForm(Farmer FARMER) {
+    public void moveToNextForm(Farmer farmer) {
         CURRENT_FORM_POSITION++;
         if (CURRENT_FORM_POSITION == familyMembersFormPosition) {
-            goToFamilyMembersTable(FARMER);
+            goToFamilyMembersTable(farmer);
             return;
         }
 
         if (CURRENT_FORM_POSITION < FILTERED_FORMS.size()) {
             Intent intent = new Intent(this, AddEditFarmerActivity.class);
-            intent.putExtra("farmer", getGson().toJson(FARMER));
+            intent.putExtra("farmerCode",  farmer.getCode());
             startActivity(intent);
             finish();
             overridePendingTransition(0, 0);
         } else
-            showFarmerDetailsActivity(FARMER);
+            showFarmerDetailsActivity(farmer);
     }
 
     public void showFarmerDetailsActivity(Farmer farmer) {
         Intent intent = new Intent(this, FarmerProfileActivity.class);
-        intent.putExtra("farmer", getGson().toJson(farmer));
+        intent.putExtra("farmerCode",  farmer.getCode());
         startActivity(intent);
         finish();
     }

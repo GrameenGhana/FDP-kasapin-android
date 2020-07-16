@@ -35,11 +35,13 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
+import org.grameen.fdp.kasapin.data.db.model.FarmerNameAndCode;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.preferences.SettingsActivity;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 
 import java.lang.reflect.Method;
@@ -53,7 +55,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
-import ir.mirrajabi.searchdialog.core.SearchResultListener;
 
 public class MainActivity extends BaseActivity implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
     @Inject
@@ -139,7 +140,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             toolBarLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.gradient_background_monitoring));
         }
 
-        mPresenter.getVillagesDataFromDbAndUpdateUI();
+        mPresenter.getVillagesDataFromDatabase();
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
         View headerLayout = navigationView.getHeaderView(0);
@@ -164,19 +165,23 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     public void setFragmentAdapter(List<CommunitiesAndFarmers> villageAndFarmersList) {
         int index = 0;
         FragmentPagerItems fragmentPagerItems = new FragmentPagerItems(this);
+        List<String> array = new ArrayList<>();
         for (CommunitiesAndFarmers villageAndFarmers : villageAndFarmersList) {
             if (villageAndFarmers.getFarmerList() != null && villageAndFarmers.getFarmerList().size() > 0) {
+                array.clear();
+
+                for (FarmerNameAndCode farmerNameAndCode : villageAndFarmers.getFarmerList())
+                    array.add(farmerNameAndCode.getCode());
+
                 fragmentPagerItems.add(FragmentPagerItem.of(villageAndFarmers.getVillage().getName(), FarmerListFragment.class, new Bundler()
                         .putString("villageName", SELECTED_VILLAGE)
                         .putInt("index", index)
-                        .putString("farmers", getGson().toJson(villageAndFarmers.getFarmerList())).get()));
+                        .putString("farmers", getGson().toJson(array)).get()));
                 index += 1;
-                new Handler().postDelayed(() -> {
-                    viewPagerAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(), fragmentPagerItems);
-                    viewPager.setAdapter(viewPagerAdapter);
-                    smartTabLayout.setViewPager(viewPager);
-                }, 500);
 
+                viewPagerAdapter = new FragmentPagerItemAdapter(getSupportFragmentManager(), fragmentPagerItems);
+                viewPager.setAdapter(viewPagerAdapter);
+                smartTabLayout.setViewPager(viewPager);
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int i, float v, int i1) {
@@ -237,7 +242,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public void viewFarmerProfile(Farmer farmer) {
         Intent intent = new Intent(this, FarmerProfileActivity.class);
-        intent.putExtra("farmer", getGson().toJson(farmer));
+        intent.putExtra("farmerCode",  farmer.getCode());
         startActivity(intent);
     }
 
@@ -281,7 +286,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             case R.id.download_resources:
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
                     //Todo Sync data down
-                    new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 1000);
+                    new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 500);
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;
@@ -292,14 +297,14 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 //Todo Sync all un synced farmer data
                 //Generate the json object here, pass the object as a value
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
-                    new Handler().postDelayed(() -> mPresenter.syncData(true), 1000);
+                    new Handler().postDelayed(() -> mPresenter.syncData(true), 500);
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;
             case R.id.download_farmer_data:
                 //Todo Sync down new data from server
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
-                    new Handler().postDelayed(() -> mPresenter.downloadFarmersData(true), 1000);
+                    new Handler().postDelayed(() -> mPresenter.downloadFarmersData(true), 500);
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;

@@ -4,6 +4,9 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,11 +22,15 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
     }
 
     @Override
-    public void getFarmerData() {
-        getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().realFarmersDao().getAll()
+    public void getFarmerData(List<String> farmerCodes) {
+        getView().showLoading();
+        getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().realFarmersDao().getAll(farmerCodes)
                 .subscribeOn(Schedulers.io())
+                .delay(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(realFarmers -> getView().setListAdapter(realFarmers), throwable -> getView().showMessage("An error occurred obtaining farmer data!")));
+                .subscribe(realFarmers ->
+                        getView().setListAdapter(realFarmers),
+                        throwable -> {}));
     }
 
     @Override

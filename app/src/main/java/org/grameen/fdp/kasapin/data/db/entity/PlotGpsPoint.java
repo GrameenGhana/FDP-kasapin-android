@@ -3,13 +3,13 @@ package org.grameen.fdp.kasapin.data.db.entity;
 import com.google.gson.annotations.SerializedName;
 
 public class PlotGpsPoint {
-    @SerializedName("latitude")
+    @SerializedName("latitude_c")
     private double latitude;
-    @SerializedName("longitude")
+    @SerializedName("longitude_c")
     private double longitude;
-    @SerializedName("altitude")
+    @SerializedName("altitude_c")
     private double altitude;
-    @SerializedName("precision")
+    @SerializedName("precision_c")
     private double precision;
 
     public PlotGpsPoint() {

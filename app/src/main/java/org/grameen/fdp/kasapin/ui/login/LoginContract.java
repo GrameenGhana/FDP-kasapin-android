@@ -9,9 +9,8 @@ public class LoginContract {
 
     public interface Presenter {
         void makeLoginApiCall(String email, String password);
-
         void fetchUserData(String token);
-
         void fetchData();
+        void setUserAsLoggedIn();
     }
 }

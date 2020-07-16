@@ -16,6 +16,8 @@ import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -85,7 +87,10 @@ public class ApplicationModule {
     @Singleton
     OkHttpClient provideOkHttpClient() {
         if (BuildConfig.DEBUG) {
-            return new OkHttpClient.Builder().addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            return new OkHttpClient.Builder()
+                    .addInterceptor(new HttpLoggingInterceptor()
+                            .setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .callTimeout(30, TimeUnit.SECONDS)
                     .build();
         } else {
             return new OkHttpClient.Builder().build();
@@ -95,7 +100,8 @@ public class ApplicationModule {
     @Singleton
     @Provides
     Retrofit providesRetrofit(OkHttpClient client) {
-        return new Retrofit.Builder().baseUrl(providesSharedPrefs().getString(AppConstants.SERVER_URL, BuildConfig.END_POINT))
+        String url = providesSharedPrefs().getString(AppConstants.SERVER_URL, BuildConfig.END_POINT);
+        return new Retrofit.Builder().baseUrl((url != null && !url.equals("")) ? url : BuildConfig.END_POINT)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

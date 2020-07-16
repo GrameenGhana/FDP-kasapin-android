@@ -80,7 +80,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     Farmer FARMER;
     boolean isNewFarmer = true;
     boolean shouldSaveData = true;
-    String BASE64_STRING = "";
+    String farmerBase64ImageData = "";
     ArrayList<MySearchItem> villageItems = new ArrayList<>();
     String[] educationLevels;
     String[] genders = {"Male", "Female"};
@@ -99,7 +99,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         mPresenter.takeView(this);
 
         if (getIntent() != null) {
-            FARMER = gson.fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
+            FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
+                    .getStringExtra("farmerCode")).blockingGet();
             if (FARMER != null)
                 isNewFarmer = false;
             setUpViews();
@@ -169,8 +170,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             }
 
             if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().isEmpty()) {
+                farmerBase64ImageData = FARMER.getImageUrl();
                 try {
-                    circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(BASE64_STRING));
+                    circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(farmerBase64ImageData));
                 } catch (Exception ignored) {
                 }
             } else {
@@ -191,8 +193,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 drawable.setColor(randomColor);
                 circleImageView.setBackground(drawable);
             }
-
-            mPresenter.loadFormFragment(FARMER.getCode(), CURRENT_FORM_QUESTION.getForm().getFormTranslationId());
         } else {
             FARMER = new Farmer();
             FARMER.setExternalId(UUID.randomUUID().toString());
@@ -212,13 +212,13 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     break;
                 }
             }
-            showFormFragment(null);
         }
+        showFormFragment();
     }
 
     @Override
-    public void showFormFragment(FormAnswerData answerData) {
-        dynamicFormFragment = DynamicFormFragment.newInstance(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), getAppDataManager().isMonitoring(), answerData);
+    public void showFormFragment() {
+        dynamicFormFragment = DynamicFormFragment.newInstance(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), getAppDataManager().isMonitoring());
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicFormFragment, CURRENT_FORM_QUESTION.getForm().getFormNameC());
     }
 
@@ -270,11 +270,12 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setVillageId(villageId);
             FARMER.setVillageName(villageName);
             FARMER.setLastModifiedDate(TimeUtils.getDateTime());
-            FARMER.setImageUrl(BASE64_STRING);
+            FARMER.setImageUrl(farmerBase64ImageData);
 
             mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer);
         }
     }
+
 
     @Override
     public void moveToNextForm() {
@@ -319,17 +320,17 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 // place where to store camera taken picture
                 photo = createTemporaryFile("picture", ".jpg");
                 photo.delete();
-                //URI = Uri.fromFile(photo);
                 URI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".org.grameen.fdp.provider", photo);
 
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, URI);
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    AppLogger.d(TAG, "Starting camera intent");
+                    AppLogger.e(TAG, "Starting camera intent");
                     startActivityForResult(takePictureIntent, AppConstants.CAMERA_INTENT);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 AppLogger.e(TAG, e.getMessage());
             }
         }
@@ -365,17 +366,17 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 Bitmap bitmap;
                 try {
                     bitmap = ImageUtil.handleSamplingAndRotationBitmap(AddEditFarmerActivity.this, URI);
-                    BASE64_STRING = ImageUtil.bitmapToBase64(bitmap);
+                    farmerBase64ImageData = ImageUtil.bitmapToBase64(bitmap);
 
                     if (circleImageView != null) {
                         circleImageView.setImageBitmap(bitmap);
                         initials.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
-                    Toast.makeText(this, "Failed to load", Toast.LENGTH_SHORT).show();
+                   CustomToast.makeToast(this, "Failed to load", Toast.LENGTH_SHORT).show();
                 }
             }
-        } else CustomToast.makeToast(this, "Something went wrong", Toast.LENGTH_LONG).show();
+        } else CustomToast.makeToast(this, "You did not take any photo", Toast.LENGTH_LONG).show();
         shouldSaveData = true;
     }
 

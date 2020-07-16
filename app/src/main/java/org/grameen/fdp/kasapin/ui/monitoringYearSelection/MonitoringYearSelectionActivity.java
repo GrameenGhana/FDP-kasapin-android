@@ -47,8 +47,7 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
     TextView code;
     @BindView(R.id.villageName)
     TextView villageName;
-    @BindView(R.id.landSize)
-    TextView landSize;
+
     @BindView(R.id.lastVisitDate)
     TextView lastVisitDate;
     @BindView(R.id.lastSyncDate)
@@ -115,7 +114,7 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
             }
         }
 
-        landSize.setText(FARMER.getLandArea());
+        //landSize.setText(FARMER.getLandArea());
         if (FARMER.getSyncStatus() == 0) {
             syncIndicator.setImageResource(R.drawable.ic_sync_problem_black_24dp);
             syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.cpb_red));

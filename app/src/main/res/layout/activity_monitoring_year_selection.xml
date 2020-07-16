@@ -94,30 +94,14 @@
                     android:layout_marginBottom="@dimen/spacing_half"
                     android:text="#TYHS3"
                     android:textAllCaps="true"
-
                     />
-
 
                 <TextView
                     android:id="@+id/villageName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/spacing_half"
-                    android:text="Space Ex Village"
-
-                    />
-
-
-                <TextView
-                    android:id="@+id/landSize"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_half"
-                    android:text="1.5 Ha"
-                    android:textAllCaps="true"
-
-                    />
-
+                    android:text="Space Ex Village"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

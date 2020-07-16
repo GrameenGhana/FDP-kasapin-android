@@ -65,12 +65,6 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     TextView ph;
     @BindView(R.id.lime_needed)
     TextView limeNeeded;
-    @BindView(R.id.aos)
-    TextView aos;
-    @BindView(R.id.good)
-    TextView good;
-    @BindView(R.id.bad)
-    TextView bad;
     @BindView(R.id.editButton)
     Button editButton;
     @BindView(R.id.lime_needed_text)
@@ -78,12 +72,12 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     JSONObject PLOT_ANSWERS_JSON;
     Recommendation PLOT_RECOMMENDATION = null;
     Recommendation GAPS_RECOMENDATION_FOR_START_YEAR = null;
-    String recNames;
+    String recommendationNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_plot_v2);
+        setContentView(R.layout.activity_edit_plot);
         setUnBinder(ButterKnife.bind(this));
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
@@ -260,7 +254,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
         if (PLOT_RECOMMENDATION == null)
             PLOT_RECOMMENDATION = GAPS_RECOMENDATION_FOR_START_YEAR;
         if (PLOT_RECOMMENDATION != null) {
-            recNames = PLOT_RECOMMENDATION.getLabel();
+            recommendationNames = PLOT_RECOMMENDATION.getLabel();
             if (GAPS_RECOMENDATION_FOR_START_YEAR != null)
                 PLOT.setGapsId(GAPS_RECOMENDATION_FOR_START_YEAR.getId());
             PLOT.setRecommendationId(PLOT_RECOMMENDATION.getId());
@@ -271,8 +265,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
     @Override
     public void showRecommendation() {
         recommendationProgress.setVisibility(View.GONE);
-        recommendedIntervention.setText(recNames);
-        recommendedIntervention.setTextColor((recNames.equalsIgnoreCase(AppConstants.RECOMMENDATION_NO_FDP)
+        recommendedIntervention.setText(recommendationNames);
+        recommendedIntervention.setTextColor((recommendationNames.equalsIgnoreCase(AppConstants.RECOMMENDATION_NO_FDP)
                 ? ContextCompat.getColor(PlotDetailsActivity.this, R.color.cpb_red)
                 : ContextCompat.getColor(PlotDetailsActivity.this, R.color.colorAccent)));
     }

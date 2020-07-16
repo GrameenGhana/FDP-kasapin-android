@@ -213,10 +213,7 @@ public class DynamicPlotFormFragment extends FormFragment {
         getComputationUtils().initiateSkipLogicAndHideViews(question.getLabelC(), skipLogic);
     }
 
-    @Override
-    public void openNextActivity() {
-    }
-
+    
     @Override
     public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
     }

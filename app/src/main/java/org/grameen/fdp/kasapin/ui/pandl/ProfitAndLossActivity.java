@@ -84,7 +84,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @BindView(R.id.print_button)
     ImageView print;
     @BindView(R.id.fdp_status)
-    TextView fdpStatus;
+    TextView fdpStatusButton;
     @BindView(R.id.back)
     Button back;
     @BindView(R.id.save)
@@ -160,7 +160,14 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         mPresenter.takeView(this);
         setUnBinder(ButterKnife.bind(this));
         engine = new ScriptEngineManager().getEngineByName("rhino");
-        farmer = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent().getStringExtra("farmerCode")).blockingGet();
+
+        mPresenter.getFarmerData(getIntent().getStringExtra("farmerCode"));
+    }
+
+
+    @Override
+    public void setUpViews(Farmer farmerFromDb) {
+        farmer = farmerFromDb;
         START_YEAR_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("start_year_");
         START_YEAR_LABEL = START_YEAR_QUESTION.getLabelC();
         CSSV_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("ao_disease_");
@@ -169,19 +176,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         mathFormulaParser = MathFormulaParser.getInstance();
         logicFormulaParser = LogicFormulaParser.getInstance();
 
-        if (farmer != null)
-            setUpViews();
-        else {
-            finish();
-            showMessage(getStringResources(R.string.error_has_occurred));
-        }
-    }
-
-
-    @Override
-    public void setUpViews() {
-
-        AppLogger.e(TAG, "Farmer = " + farmer.getCode());
         tableView.setBackground(ContextCompat.getDrawable(this, R.drawable.table_view_border_background));
         tableView.setSaveEnabled(true);
         farmerName.setText(farmer.getFarmerName());
@@ -248,10 +242,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         if (getAppDataManager().isMonitoring() || (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.YES) && farmer.getSyncStatus() == 1))
             disableButtons();
-
     }
 
-    void disableButtons() {
+    private void disableButtons() {
         submitAgreement.setVisibility(View.GONE);
         save.setVisibility(View.GONE);
 
@@ -280,34 +273,28 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         startActivity(intent);
     }
 
-
     @Override
     public void issuePrinting() {
         showLoading("Initializing print", "Please wait...", false, 0, false);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl");
-                hideLoading();
-                showMessage("Done!");
+        new Handler().postDelayed(() -> {
+            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl");
+            hideLoading();
+            showMessage("Done!");
 
-                try {
-                    pdfCreator.print();
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
+            try {
+                pdfCreator.print();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
             }
         }, 200);
     }
-
 
     @Override
     public void setAnswerData(JSONObject object) {
         VALUES_JSON_OBJECT = object;
 
         AppLogger.e(TAG, VALUES_JSON_OBJECT.toString());
-
         try {
             if (!VALUES_JSON_OBJECT.has("total_family_income_ghana"))
                 VALUES_JSON_OBJECT.put("total_family_income_ghana", 0);
@@ -318,12 +305,10 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         logicFormulaParser.setAllValuesJsonObject(VALUES_JSON_OBJECT);
         mathFormulaParser.setAllValuesJsonObject(VALUES_JSON_OBJECT);
 
-
         PLOT_SIZE_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_area_ha_");
         PLOT_PROD_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_production_kg_");
         FARM_AREA_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_area_units_").blockingGet();
         FARM_WEIGHT_UNITS_LABEL = getAppDataManager().getDatabaseManager().questionDao().getLabel("farm_weight_units_").blockingGet();
-
 
         //Set the values for the labor views and spinners
         final Question labourQuestion = getAppDataManager().getDatabaseManager().questionDao().get("labour");
@@ -370,7 +355,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             toggleTable();
 
             saveLabourAnswerData(labourQuestion.getFormTranslationId(), labourQuestion.getLabelC(), labourTypeQuestion.getLabelC());
-
         });
 
         //Check to make sure that the options have been set for the spinners.
@@ -386,8 +370,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                     DID_LABOUR = false;
 
                 LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
-
-                AppLogger.e("labour", "*********  DID LABOUR  == " + val + " | LABOUR TYPE  == " + LABOUR_TYPE);
 
                 labourSpinner.setSelectedIndex(DID_LABOUR ? 1 : 2);
 
@@ -417,6 +399,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.VISIBLE);
             print.setVisibility(View.GONE);
         }
+        fdpStatusButton.setEnabled(!LABOUR_TYPE.isEmpty());
     }
 
     private void saveLabourAnswerData(int laborFormId, String didLaborQuestionLabel, String labourTypeQuestionLabel) {

@@ -298,7 +298,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         if (plotNameEditText.getText().toString().trim().isEmpty()) {
             plotNameEditText.setError(plotNameQuestion.getErrorMessage());
             isValid = false;
-        } else
+         } else
             plotNameEditText.setError(null);
 
         if (estProductionQuestion.isRequired() && estimatedProductionEditText.getText().toString().trim().isEmpty()) {
@@ -317,11 +317,13 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             isValid = false;
         } else
             phEditText.setError(null);
+
         if (!dynamicPlotFormFragment.getFormController().isValidInput()) {
             dynamicPlotFormFragment.getFormController().resetValidationErrors();
             dynamicPlotFormFragment.getFormController().showValidationErrors();
             isValid = false;
         }
+
         return isValid;
     }
 

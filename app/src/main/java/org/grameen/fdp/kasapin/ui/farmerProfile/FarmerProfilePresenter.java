@@ -25,14 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.FILTERED_FORMS;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 9:06 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.View> implements FarmerProfileContract.Presenter, FdpCallbacks.UploadDataListener {
-    private AppDataManager mAppDataManager;
     private int count;
 
     @Inject
@@ -40,11 +33,6 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
         super(appDataManager);
         this.mAppDataManager = appDataManager;
         count = 0;
-    }
-
-
-    @Override
-    public void openNextActivity() {
     }
 
 
@@ -125,15 +113,13 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
 
     @Override
     public void onUploadComplete(String message) {
-        AppLogger.i(TAG, "**** ON SUCCESS");
         getView().hideLoading();
-        getView().showMessage(message);
         getView().updateFarmerSyncStatus();
+        getView().showMessage(message);
     }
 
     @Override
     public void onUploadError(Throwable throwable) {
-        AppLogger.i(TAG, "**** ON ERROR");
         getView().hideLoading();
         getView().showMessage(throwable.getMessage());
         throwable.printStackTrace();

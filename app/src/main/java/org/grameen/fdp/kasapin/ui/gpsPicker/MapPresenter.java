@@ -12,8 +12,4 @@ public class MapPresenter extends BasePresenter<MapContract.View> implements Map
         super(appDataManager);
     }
 
-    @Override
-    public void openNextActivity() {
-        getView().openMainActivity();
-    }
 }

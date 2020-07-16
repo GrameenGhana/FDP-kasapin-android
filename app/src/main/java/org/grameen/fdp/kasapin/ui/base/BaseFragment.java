@@ -1,10 +1,10 @@
 package org.grameen.fdp.kasapin.ui.base;
 
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,9 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
-
-import javax.script.ScriptEngine;
-
 import butterknife.Unbinder;
 
 public abstract class BaseFragment extends Fragment implements BaseContract.View {
@@ -113,6 +110,17 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
         }
     }
 
+    @Override
+    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
+    }
+
+    @Override
+    public void openLoginActivityOnTokenExpire() {
+    }
+
+    @Override
+    public void toggleFullScreen(Boolean hideNavBar, Window W) {
+    }
 
     public BaseActivity getBaseActivity() {
         return mActivity;
@@ -120,10 +128,6 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
 
     public AppDataManager getAppDataManager() {
         return mActivity.mAppDataManager;
-    }
-
-    public ScriptEngine getScriptEngine() {
-        return mActivity.getScriptEngine();
     }
 
     public void setUnBinder(Unbinder unBinder) {
@@ -152,11 +156,8 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
             mActivity.mProgressDialog.setMessage(message);
     }
 
-    public abstract void openNextActivity();
-
     public interface Callback {
         void onFragmentAttached();
-
         void onFragmentDetached(String tag);
     }
 }

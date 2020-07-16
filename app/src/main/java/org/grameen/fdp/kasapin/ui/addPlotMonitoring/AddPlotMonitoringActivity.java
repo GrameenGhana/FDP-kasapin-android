@@ -42,6 +42,7 @@ import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
+import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.grameen.fdp.kasapin.utilities.Validator;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -212,14 +213,16 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @Override
     public void loadDynamicFragmentAndViews(FormAndQuestions monitoringPlotInfoQuestions, FormAndQuestions aoMonitoringQuestions) {
-        if (IS_NEW_MONITORING)
-            dynamicFormFragment = DynamicFormFragment.newInstance(monitoringPlotInfoQuestions, false, null, false, null);
-        else {
-            FormAnswerData formAnswerData = new FormAnswerData();
-            formAnswerData.setFarmerCode(PLOT.getFarmerCode());
-            formAnswerData.setFormId(monitoringPlotInfoQuestions.getForm().getId());
-            formAnswerData.setData(MONITORING_ANSWERS_JSON.toString());
+        FormAnswerData formAnswerData = new FormAnswerData();
+        formAnswerData.setFarmerCode(PLOT.getFarmerCode());
+        formAnswerData.setFormId(monitoringPlotInfoQuestions.getForm().getId());
 
+        if (IS_NEW_MONITORING) {
+            formAnswerData.setCreatedAt(TimeUtils.getCurrentDateTime());
+            formAnswerData.setData(new JSONObject().toString());
+            dynamicFormFragment = DynamicFormFragment.newInstance(monitoringPlotInfoQuestions, false, PLOT.getFarmerCode(), false, formAnswerData);
+        }else {
+            formAnswerData.setData(MONITORING_ANSWERS_JSON.toString());
             dynamicFormFragment = DynamicFormFragment.newInstance(monitoringPlotInfoQuestions, true, PLOT.getFarmerCode(), false, formAnswerData);
         }
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicFormFragment, monitoringPlotInfoQuestions.getForm().getFormNameC());

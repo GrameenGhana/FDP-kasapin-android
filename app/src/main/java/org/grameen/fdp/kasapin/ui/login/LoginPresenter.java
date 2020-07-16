@@ -79,7 +79,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.View> implements
     }
 
     @Override
-    public void openNextActivity() {
+    public void setUserAsLoggedIn() {
         getView().openNextActivity();
     }
 

@@ -58,11 +58,11 @@ public class PhotoButtonController extends MyLabeledFieldController {
      * @param name          the name of the field
      * @param labelText     the label to display beside the field. Set to {@code null} to not show a label.
      * @param isRequired    indicates if the field is required or not
-     * @param displayFormat the format of the date to show in the text box when a date is set
+     * @param clickListener the format of the date to show in the text box when a date is set
      */
-    public PhotoButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, OnClickListener displayFormat) {
+    public PhotoButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, OnClickListener clickListener) {
         super(ctx, name, content_desc, labelText, isRequired);
-        this.onClickListener = displayFormat;
+        this.onClickListener = clickListener;
         this.context = ctx;
     }
 
@@ -79,8 +79,6 @@ public class PhotoButtonController extends MyLabeledFieldController {
 
         IMAGE_VIEW = new ImageView(context);
         IMAGE_VIEW.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        IMAGE_VIEW.setMaxHeight(300);
-        IMAGE_VIEW.requestLayout();
     }
 
     @Override
@@ -88,7 +86,6 @@ public class PhotoButtonController extends MyLabeledFieldController {
         final LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.height = 300;
         linearLayout.setLayoutParams(params);
 
         @SuppressLint("RestrictedApi") ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PrimaryButton);
@@ -104,6 +101,8 @@ public class PhotoButtonController extends MyLabeledFieldController {
             if (evt.getNewValue() != null && !evt.getNewValue().toString().equalsIgnoreCase(""))
                 try {
                     IMAGE_VIEW.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
+                    params.height = 350;
+                    IMAGE_VIEW.setLayoutParams(params);
                     linearLayout.addView(IMAGE_VIEW);
                     linearLayout.requestLayout();
                 } catch (Exception e) {
@@ -126,7 +125,6 @@ public class PhotoButtonController extends MyLabeledFieldController {
                 getModel().setValue(getName(), "");
                 dialog.dismiss();
                 linearLayout.removeView(IMAGE_VIEW);
-                linearLayout.requestLayout();
             });
             builder.show();
         });
@@ -141,7 +139,6 @@ public class PhotoButtonController extends MyLabeledFieldController {
         refresh(IMAGE_VIEW);
         linearLayout.addView(button);
         linearLayout.addView(IMAGE_VIEW);
-        linearLayout.requestLayout();
         return linearLayout;
     }
 
@@ -157,7 +154,11 @@ public class PhotoButtonController extends MyLabeledFieldController {
         Object value = getModel().getValue(getName());
         if (value != null && !value.toString().contains("http://")) {
             try {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+               params.height = 350;
+                IMAGE_VIEW.setLayoutParams(params);
                 imageView.setImageBitmap(ImageUtil.base64ToBitmap(value.toString()));
+
             } catch (IllegalArgumentException ignored) {
             }
         }

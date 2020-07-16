@@ -32,11 +32,6 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
 
     }
 
-
-    @Override
-    public void openNextActivity() {
-    }
-
     @Override
     public void getPlotQuestions() {
         runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType(AppConstants.DISPLAY_TYPE_PLOT_FORM)

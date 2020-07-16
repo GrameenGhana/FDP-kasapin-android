@@ -4,33 +4,30 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Base64;
+
+import androidx.exifinterface.media.ExifInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageUtil {
-    private static boolean isEndOfTable = false;
-
     public static Bitmap base64ToScaledBitmap(String base64Str) throws IllegalArgumentException {
-        byte[] decodedBytes = Base64.decode(base64Str.getBytes(), Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 10, bitmap.getHeight() / 10, false);
+        Bitmap bitmap = base64ToBitmap(base64Str);
+        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 20, bitmap.getHeight() / 20, false);
     }
 
     public static Bitmap base64ToBitmap(String base64Str) throws IllegalArgumentException {
-        byte[] decodedBytes = Base64.decode(base64Str.getBytes(), Base64.DEFAULT);
+        byte[] decodedBytes = Base64.decode(base64Str.getBytes(), Base64.NO_WRAP);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 
     public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
-        return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
     }
 
     public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
@@ -56,12 +53,10 @@ public class ImageUtil {
 
     private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
         InputStream input = context.getContentResolver().openInputStream(selectedImage);
-        ExifInterface ei;
-        if (Build.VERSION.SDK_INT > 23)
-            ei = new ExifInterface(input);
-        else
-            ei = new ExifInterface(selectedImage.getPath());
+        if(input == null)
+            return img;
 
+        ExifInterface ei = new ExifInterface(input);
         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         switch (orientation) {
             case ExifInterface.ORIENTATION_ROTATE_90:
@@ -110,7 +105,7 @@ public class ImageUtil {
             final float totalReqPixelsCap = reqWidth * reqHeight * 2;
 
             while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
-                inSampleSize++;
+                inSampleSize+=1;
             }
         }
         return inSampleSize;

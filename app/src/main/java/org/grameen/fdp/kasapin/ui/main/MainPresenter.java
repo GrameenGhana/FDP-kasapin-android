@@ -56,17 +56,13 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     }
 
     @Override
-    public void startDelay(long delayTime) {
-    }
-
-    @Override
     public void openSearchDialog() {
         //Todo get list of farmers and ids, populate into search dialog
         getView().showSearchDialog(null);
     }
 
     @Override
-    public void getVillagesDataFromDbAndUpdateUI() {
+    public void getVillagesDataFromDatabase() {
         runSingleCall(getAppDataManager().getDatabaseManager().villageAndFarmersDao().getVillagesAndFarmers()
                 .filter(villageAndFarmers -> villageAndFarmers != null && villageAndFarmers.size() > 0)
                 .subscribeOn(Schedulers.io())
@@ -135,7 +131,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                     public void onSuccess(List<MySearchItem> mySearchItems) {
                                         farmerNames.addAll(mySearchItems);
                                     }
-
                                     @Override
                                     public void onError(Throwable e) {
                                     }

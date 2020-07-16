@@ -8,6 +8,7 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 @Dao
@@ -16,7 +17,7 @@ public interface FormAnswersDao extends BaseDao<FormAnswerData> {
     int deleteAnswerData(int id);
 
     @Query("SELECT * FROM form_answers WHERE farmerCode = :farmerCode AND formId = :formId")
-    Single<FormAnswerData> getFormAnswerDataSingle(String farmerCode, int formId);
+    Maybe<FormAnswerData> getFormAnswerDataOrNull(String farmerCode, int formId);
 
     @Query("SELECT * FROM form_answers WHERE farmerCode = :farmerCode AND formId = :formId")
     FormAnswerData getFormAnswerData(String farmerCode, int formId);

@@ -241,7 +241,7 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         }
 
         plot.setPlotPoints(getGson().toJson(plotGpsPoints));
-            if (getAppDataManager().getDatabaseManager().plotsDao().updateOne(plot) > 0) {
+            if (getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot) > 0) {
                 hasGpsDataBeenSaved = true;
                 showDialog(true, "Data saved!", getString(R.string.new_data_updated), (d, w)
                         -> moveToPlotDetailsActivity(), getString(R.string.ok),

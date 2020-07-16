@@ -91,7 +91,11 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         mPresenter.takeView(this);
 
-        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
+        FARMER = getAppDataManager()
+                .getDatabaseManager().realFarmersDao()
+                .get(getIntent().getStringExtra("farmerCode"))
+                .blockingGet();
+
         noFamilyMembers = getIntent().getIntExtra("noFamilyMembers", 1);
         ROW_SIZE = noFamilyMembers;
 

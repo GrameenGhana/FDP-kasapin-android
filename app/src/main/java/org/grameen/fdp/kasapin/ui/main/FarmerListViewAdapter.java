@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Random;
 
 public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
-
     private List<Farmer> farmers;
     private Context context;
     private LayoutInflater layoutInflater;
@@ -62,27 +61,25 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
             viewHolder.initials = convertView.findViewById(R.id.initials);
             viewHolder.photo = convertView.findViewById(R.id.photo);
             viewHolder.imageView = convertView.findViewById(R.id.image_view1);
-
             viewHolder.syncStatus = convertView.findViewById(R.id.sync_status);
             viewHolder.fdpStatus = convertView.findViewById(R.id.fdp_status);
             convertView.setTag(viewHolder);
-        } else {
+        } else
             viewHolder = (ViewHolder) convertView.getTag();
-        }
+
         setData(realFarmer, viewHolder);
         return convertView;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return farmers.get(position).hashCode();
+    }
+
     private void setData(Farmer farmer, ViewHolder viewHolder) {
-//        if (farmer.getImageUrl() != null && !farmer.getImageUrl().equals("")) {
-//            new Handler().postDelayed(() -> {
-//                viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));
-//
-//            }, 10);
-//            //Picasso.with(context).load(farmer.getImageUrl()).resize(200, 200).into(viewHolder.photo);
-//            // viewHolder.setIsRecyclable(false);
-//        } else {
-            //viewHolder.setIsRecyclable(true);
+        if (farmer.getImageUrl() != null && !farmer.getImageUrl().isEmpty()) {
+            viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));
+        } else {
             try {
                 String[] valueArray = farmer.getFarmerName().split(" ");
                 String value = valueArray[0].substring(0, 1) + valueArray[1].substring(0, 1);
@@ -96,18 +93,16 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
             int[] mColors = context.getResources().getIntArray(R.array.recommendations_colors);
 
             int randomColor = mColors[new Random().nextInt(mColors.length)];
-
             GradientDrawable drawable = new GradientDrawable();
             drawable.setCornerRadius(0);
             drawable.setColor(randomColor);
             viewHolder.rl1.setBackground(drawable);
             viewHolder.imageView.setVisibility(View.GONE);
-       // }
+        }
 
 
         viewHolder.name.setText(farmer.getFarmerName());
         viewHolder.code.setText(farmer.getCode());
-
 
         if (farmer.getSyncStatus() == 1) {
             viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_black_18dp);
@@ -153,6 +148,5 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
         ImageView imageView;
         ImageView syncStatus;
         ImageView fdpStatus;
-
     }
 }

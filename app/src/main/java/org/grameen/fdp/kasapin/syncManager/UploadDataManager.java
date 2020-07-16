@@ -4,6 +4,7 @@ package org.grameen.fdp.kasapin.syncManager;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.network.model.ServerResponse;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 import org.json.JSONObject;
 
@@ -12,7 +13,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class UploadData {
+public class UploadDataManager {
     String TAG = "Upload data";
     private FdpCallbacks.UploadDataListener uploadDataListener;
     private BaseContract.View mView;
@@ -21,7 +22,7 @@ public class UploadData {
     private String token;
 
 
-    private UploadData(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress) {
+    private UploadDataManager(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress) {
         this.mAppDataManager = appDataManager;
         this.mView = view;
         this.uploadDataListener = listener;
@@ -29,8 +30,8 @@ public class UploadData {
         token = mAppDataManager.getAccessToken();
     }
 
-    public static UploadData newInstance(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress) {
-        return new UploadData(view, appDataManager, listener, showProgress);
+    public static UploadDataManager newInstance(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress) {
+        return new UploadDataManager(view, appDataManager, listener, showProgress);
     }
 
     public AppDataManager getAppDataManager() {
@@ -42,9 +43,8 @@ public class UploadData {
     }
 
     public void uploadFarmersData(JSONObject farmersJsonObject) {
-
         if (showProgress)
-            getView().setLoadingMessage("Syncing farmers data...");
+            getView().setLoadingMessage("Syncing farmer(s) data...");
         getAppDataManager().getFdpApiService()
                 .uploadFarmersData(token, farmersJsonObject)
                 .subscribeOn(Schedulers.io())
@@ -55,20 +55,16 @@ public class UploadData {
                         if (uploadDataListener != null)
                             uploadDataListener.onUploadComplete("Data upload successful.");
                         uploadDataListener = null;
+                        getAppDataManager().setBooleanValue("reload", true);
                     }
-
                     @Override
                     public void onError(Throwable e) {
-                        showError(e);
+                        AppLogger.e("OnError " + (uploadDataListener != null));
+                        if (uploadDataListener != null) {
+                            uploadDataListener.onUploadError(e);
+                            uploadDataListener = null;
+                        }
                     }
                 });
-    }
-
-
-    void showError(Throwable throwable) {
-        if (uploadDataListener != null) {
-            uploadDataListener.onUploadError(throwable);
-            uploadDataListener = null;
-        }
     }
 }

@@ -46,7 +46,8 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
         for (int i = 0; i < FILTERED_FORMS.size(); i++)
             if (FILTERED_FORMS.get(i).getForm().getFormNameC().equalsIgnoreCase(AppConstants.FDP_STATUS)) {
                 formAndQuestions = FILTERED_FORMS.get(i);
-                mPresenter.getAnswerData(FARMER.getCode(), formAndQuestions.getForm().getFormTranslationId());
+                //mPresenter.getAnswerData(FARMER.getCode(), formAndQuestions.getForm().getFormTranslationId());
+                showFormFragment();
                 break;
             }
 
@@ -70,8 +71,8 @@ public class FDPStatusDialogActivity extends BaseActivity implements FDPStatusCo
     }
 
     @Override
-    public void showFormFragment(@Nullable FormAnswerData answerData) {
-        dynamicFormFragment = DynamicFormFragment.newInstance(formAndQuestions, true, FARMER.getCode(), getAppDataManager().isMonitoring(), answerData);
+    public void showFormFragment() {
+        dynamicFormFragment = DynamicFormFragment.newInstance(formAndQuestions, true, FARMER.getCode(), getAppDataManager().isMonitoring());
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicFormFragment, formAndQuestions.getForm().getFormNameC());
     }
 

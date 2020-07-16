@@ -17,6 +17,9 @@ public interface RealFarmersDao extends BaseDao<Farmer> {
     @Query("SELECT * FROM farmers")
     Single<List<Farmer>> getAll();
 
+    @Query("SELECT farmerName, code, syncStatus, lastModifiedDate, id, villageId FROM farmers WHERE code IN (:codes)")
+    Single<List<Farmer>> getAll(List<String> codes);
+
     @Query("SELECT * FROM farmers WHERE syncStatus = '0'")
     Maybe<List<Farmer>> getAllNotSynced();
 

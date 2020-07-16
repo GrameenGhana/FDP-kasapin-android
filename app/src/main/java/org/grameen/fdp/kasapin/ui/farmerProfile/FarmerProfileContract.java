@@ -28,8 +28,6 @@ public class FarmerProfileContract {
         void addButtons(List<Button> buttons);
 
         void updateFarmerSyncStatus();
-
-
     }
 
     public interface Presenter {

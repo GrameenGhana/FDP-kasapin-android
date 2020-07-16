@@ -77,8 +77,4 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
         return listOfFiles;
     }
 
-    @Override
-    public void openNextActivity() {
-        getView().openMainActivity();
-    }
 }

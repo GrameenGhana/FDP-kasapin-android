@@ -95,8 +95,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                                 .setDuration(500)
                                 .setListener(new Animator.AnimatorListener() {
                                     @Override
-                                    public void onAnimationStart(Animator animation) {
-                                    }
+                                    public void onAnimationStart(Animator animation) {}
 
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
@@ -107,11 +106,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                                                 sleep(100);
                                                 waited += 100;
                                             }
-                                            mPresenter.openNextActivity();
+                                            mPresenter.checkIfIsLoggedIn();
                                         } catch (InterruptedException ignored) {
                                         }
                                     }
-
                                     @Override
                                     public void onAnimationCancel(Animator animation) {
                                     }
@@ -125,12 +123,10 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
                     }
 
                     @Override
-                    public void onAnimationCancel(Animator animation) {
-                    }
+                    public void onAnimationCancel(Animator animation) {}
 
                     @Override
-                    public void onAnimationRepeat(Animator animation) {
-                    }
+                    public void onAnimationRepeat(Animator animation) {}
                 }).start();
     }
 }

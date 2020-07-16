@@ -303,6 +303,8 @@ public class Question {
     }
 
     public String getErrorMessage() {
+        if(errorMessage == null || errorMessage.isEmpty())
+            return "This field is required";
         return errorMessage;
     }
 

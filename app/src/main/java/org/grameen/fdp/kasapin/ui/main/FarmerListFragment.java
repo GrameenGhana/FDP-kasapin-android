@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.LinearInterpolator;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +19,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
-import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseFragment;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -37,9 +37,10 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     FarmerListFragmentPresenter mPresenter;
     @BindView(R.id.grid_view)
     GridView listView;
+    @BindView(R.id.progress_circular)
+    ProgressBar circularProgress;
     View rootView;
-    FarmerListRecyclerViewAdapter mAdapter;
-    List<Farmer> mFarmers;
+    List<String> farmerCodes;
     FarmerListViewAdapter farmerListViewAdapter;
     int index = 0;
     String SELECTED_VILLAGE;
@@ -67,26 +68,20 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     @Override
     protected void setUp(View view) {
         if (getArguments() != null) {
-            mFarmers = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<Farmer>>() {
-            }.getType());
+            farmerCodes = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<String>>() {}.getType());
+
+            mPresenter.getFarmerData(farmerCodes);
             SELECTED_VILLAGE = getArguments().getString("village");
             index = getArguments().getInt("index");
-            setListAdapter(mFarmers);
         }
-    }
-
-    @Override
-    public void setRecyclerAdapter() {
     }
 
     @Override
     public void setListAdapter(List<Farmer> mFarmers) {
-        if (index == 0) {
+        if (index % 2 == 0) {
             listView.setAlpha(0);
-            listView.animate().alpha(1).setDuration(1500).setInterpolator(new LinearInterpolator()).start();
+            listView.animate().alpha(1).setDuration(1000).setInterpolator(new LinearInterpolator()).start();
         }
-
-        new Handler().post(() -> {
             if (mFarmers.size() > 0) {
                 if (IS_TABLET)
                     listView.setNumColumns(AppConstants.TABLET_COLUMN_COUNT);
@@ -96,10 +91,9 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
                 farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
                 listView.setAdapter(farmerListViewAdapter);
                 listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                    Farmer farmer = mFarmers.get(i);
                     //Todo uncomment this
                     Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
-                    intent.putExtra("farmer", BaseActivity.getGson().toJson(farmer));
+                    intent.putExtra("farmerCode",  mFarmers.get(i).getCode());
                     startActivity(intent);
                 });
 
@@ -111,14 +105,15 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
                     return true;
                 });
             }
-        });
+
+            circularProgress.setVisibility(View.GONE);
     }
 
     @Override
     public void showFarmerDeletedMessage(String farmerName, int position) {
         showMessage(R.string.farmer_data_deleted_message);
-        mFarmers.remove(position);
-        mAdapter.notifyItemRemoved(position);
+        farmerCodes.remove(position);
+        listView.removeViewAt(position);
     }
 
     @Override
@@ -128,22 +123,6 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
                     dialogInterface.dismiss();
                     mPresenter.deleteFarmer(farmer, position);
                 }, getString(R.string.yes), (dialogInterface, j) -> dialogInterface.dismiss(), getString(R.string.no), 0);
-    }
-
-    @Override
-    public void openNextActivity() {
-    }
-
-    @Override
-    public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
-    }
-
-    @Override
-    public void openLoginActivityOnTokenExpire() {
-    }
-
-    @Override
-    public void toggleFullScreen(Boolean hideNavBar, Window W) {
     }
 
     @Override

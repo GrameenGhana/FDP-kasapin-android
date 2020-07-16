@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.form.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,17 +32,21 @@ import org.grameen.fdp.kasapin.ui.form.controller.view.PhotoButtonController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.SelectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.TimePickerController;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableMaybeObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class DynamicFormFragment extends FormFragment {
@@ -49,8 +54,8 @@ public class DynamicFormFragment extends FormFragment {
     private FormAndQuestions FORM_AND_QUESTIONS;
     private FormAnswerData ANSWER_DATA;
     private JSONObject ANSWERS_JSON = new JSONObject();
-    private List<Question> QUESTIONS;
-    private String FARMER_ID = "";
+    private List<Question> QUESTIONS = new ArrayList<>();
+    private String farmerCode = "";
     private boolean shouldLoadOldValues = false;
     private boolean IS_CONTROLLER_ENABLED;
     private String TAG = "MYFORMFRAGMENT";
@@ -58,15 +63,22 @@ public class DynamicFormFragment extends FormFragment {
     public DynamicFormFragment() {
     }
 
-    public static DynamicFormFragment newInstance(FormAndQuestions formAndQuestions, boolean shouldLoadOldValues, @Nullable String farmerId, boolean isMonitoring, @Nullable FormAnswerData answer) {
+    public static DynamicFormFragment newInstance(FormAndQuestions formAndQuestions, boolean shouldLoadOldValues, @Nullable String farmerCode, boolean isMonitoring) {
         DynamicFormFragment formFragment = new DynamicFormFragment();
         Bundle bundle = new Bundle();
         bundle.putString("formAndQuestions", BaseActivity.getGson().toJson(formAndQuestions));
         bundle.putBoolean("loadOldValues", shouldLoadOldValues);
         bundle.putBoolean("isMonitoring", isMonitoring);
-        bundle.putString("farmerId", farmerId);
-        bundle.putString("answerData", BaseActivity.getGson().toJson(answer));
+        bundle.putString("farmerCode", farmerCode);
         formFragment.setArguments(bundle);
+        return formFragment;
+    }
+
+    public static DynamicFormFragment newInstance(FormAndQuestions formAndQuestions, boolean shouldLoadOldValues, @Nullable String farmerCode, boolean isMonitoring, @Nullable FormAnswerData answerData) {
+        DynamicFormFragment formFragment = newInstance(formAndQuestions, shouldLoadOldValues, farmerCode, isMonitoring);
+        if (formFragment.getArguments() != null) {
+            formFragment.getArguments().putString("answerData", BaseActivity.getGson().toJson(answerData));
+        }
         return formFragment;
     }
 
@@ -80,53 +92,58 @@ public class DynamicFormFragment extends FormFragment {
         if (getArguments() != null) {
             FORM_AND_QUESTIONS = BaseActivity.getGson().fromJson(getArguments().getString("formAndQuestions"), FormAndQuestions.class);
             QUESTIONS = FORM_AND_QUESTIONS.getQuestions();
-            FARMER_ID = getArguments().getString("farmerId");
+            farmerCode = getArguments().getString("farmerCode");
             shouldLoadOldValues = getArguments().getBoolean("loadOldValues");
-            try {
-                ANSWER_DATA = BaseActivity.getGson().fromJson(getArguments().getString("answerData"), FormAnswerData.class);
-                if (ANSWER_DATA != null)
-                    ANSWERS_JSON = new JSONObject(ANSWER_DATA.getData());
-                else
-                    initializeAnswersData();
-            } catch (JSONException ignore) {
-                initializeAnswersData();
-            }
             IS_CONTROLLER_ENABLED = !getArguments().getBoolean("isMonitoring");
-        }
+            ANSWER_DATA = BaseActivity.getGson().fromJson(getArguments().getString("answerData"), FormAnswerData.class);
 
-        Collections.sort(QUESTIONS, (o, t1) -> {
-            try {
-                return o.getDisplayOrderC() - t1.getDisplayOrderC();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return -1;
-        });
-        super.onAttach(context);
+            super.onAttach(context);
+        }
     }
 
     @Override
     protected void setUp(View view) {
     }
 
-    private void initializeAnswersData() {
-        ANSWERS_JSON = new JSONObject();
-        ANSWER_DATA = new FormAnswerData();
-        ANSWER_DATA.setFormId(FORM_AND_QUESTIONS.getForm().getFormTranslationId());
-        ANSWER_DATA.setFarmerCode(FARMER_ID);
-        ANSWER_DATA.setCreatedAt(TimeUtils.getCurrentDateTime());
+    private FormAnswerData getDefaultFormAnswerData() {
+       FormAnswerData answerData = new FormAnswerData();
+        answerData.setFormId(FORM_AND_QUESTIONS.getForm().getFormTranslationId());
+        answerData.setFarmerCode(farmerCode);
+        answerData.setCreatedAt(TimeUtils.getCurrentDateTime());
+        answerData.setData("{}");
+        return answerData;
     }
 
     @Override
     public void initForm(MyFormController controller) {
-        Context context = getContext();
+        MyFormSectionController formSectionController = new MyFormSectionController(getContext(), FORM_AND_QUESTIONS.getForm().getTranslation());
         computationUtils = ComputationUtils.newInstance(controller);
+
+        if (ANSWER_DATA == null)
+            ANSWER_DATA = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataOrNull(farmerCode, FORM_AND_QUESTIONS.getForm()
+                    .getFormTranslationId()).blockingGet(getDefaultFormAnswerData());
+        try {
+            ANSWERS_JSON = new JSONObject(ANSWER_DATA.getData());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            ANSWERS_JSON = new JSONObject();
+        }
+
         if (QUESTIONS != null) {
-            MyFormSectionController formSectionController = new MyFormSectionController(getContext(), FORM_AND_QUESTIONS.getForm().getTranslation());
-            loadQuestions(context, QUESTIONS, formSectionController);
+            Collections.sort(QUESTIONS, (o, t1) -> {
+                try {
+                    return o.getDisplayOrderC() - t1.getDisplayOrderC();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return -1;
+            });
+            loadQuestions(getContext(), QUESTIONS, formSectionController);
             controller.addSection(formSectionController);
         }
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -221,7 +238,7 @@ public class DynamicFormFragment extends FormFragment {
                                         e.printStackTrace();
                                     }
                                 }, IS_CONTROLLER_ENABLED && q.caEdit()));
-                        getComputationUtils().getFormAnswerValue(q, ANSWERS_JSON);
+                        //getComputationUtils().getFormAnswerValue(q, ANSWERS_JSON);
                         break;
                 }
             }
@@ -244,10 +261,6 @@ public class DynamicFormFragment extends FormFragment {
 
     private void applyFormulas(Question question) {
         getComputationUtils().applyAndParseFormulas(question);
-    }
-
-    @Override
-    public void openNextActivity() {
     }
 
     @Override

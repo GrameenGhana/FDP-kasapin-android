@@ -39,7 +39,7 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
     public void getAreaUnits(String farmerCode) {
         Question areaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_area_units");
         Question estProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("farm_weight_units");
-        runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataSingle(farmerCode, areaQuestion.getFormTranslationId())
+        runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataOrNull(farmerCode, areaQuestion.getFormTranslationId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(answerData -> {
@@ -72,10 +72,6 @@ public class PlotDetailsPresenter extends BasePresenter<PlotDetailsContract.View
                             getView().showMessage(R.string.error_has_occurred_loading_data);
                             throwable.printStackTrace();
                         }));
-    }
-
-    @Override
-    public void openNextActivity() {
     }
 
     @Override

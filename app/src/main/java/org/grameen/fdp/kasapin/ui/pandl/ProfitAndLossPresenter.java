@@ -17,6 +17,7 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.View> implements ProfitAndLossContract.Presenter {
@@ -27,8 +28,27 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
     }
 
     @Override
-    public void getAllAnswers(String farmerCode) {
+    public void getFarmerData(String farmerCode) {
+        getView().showLoading("Getting farmer data", "Please wait...", true, 0, false);
+        getAppDataManager().getDatabaseManager().realFarmersDao().get(farmerCode)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableMaybeObserver<Farmer>() {
+            @Override
+            public void onSuccess(Farmer farmer) {
+                getView().setUpViews(farmer);
+            }
+            @Override
+            public void onError(Throwable e){
+                getView().showMessage("Could not fetch farmer data. Please report this issue.");
+            }
+            @Override
+            public void onComplete() {
+                getView().hideLoading();
+            }
+        });
+    }
 
+    @Override
+    public void getAllAnswers(String farmerCode) {
         JSONObject ALL_DATA_JSON = new JSONObject();
         runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getAll(farmerCode)
                 .subscribeOn(Schedulers.io())
@@ -36,7 +56,6 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                 .subscribe(formAnswerDatas -> {
                     if (formAnswerDatas != null) {
                         for (FormAnswerData formAnswerData : formAnswerDatas) {
-
                             JSONObject object = formAnswerData.getJsonData();
                             Iterator<String> iterator = object.keys();
                             while (iterator.hasNext()) {
@@ -74,7 +93,6 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                     }
                 });
     }
-
 
     @Override
     public void saveLabourValues(FormAnswerData formAnswerData, Farmer farmer) {
