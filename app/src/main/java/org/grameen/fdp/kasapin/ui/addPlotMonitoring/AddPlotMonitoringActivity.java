@@ -181,7 +181,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
                     .subscribe(s -> recommendedIntervention.setText(s), throwable -> showMessage("Couldn't load plot's recommendation")));
         }
         if (IS_NEW_MONITORING) {
-            setToolbar(getStringResources(R.string.add_plot_monitoring));
+            setToolbar(getString(R.string.add_plot_monitoring));
             MONITORING_ANSWERS_JSON = new JSONObject();
             MONITORING = new Monitoring();
             MONITORING.setExternalId(String.valueOf(System.currentTimeMillis()));
@@ -190,7 +190,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             MONITORING.setYear(SELECTED_YEAR);
 
         } else {
-            setToolbar(getStringResources(R.string.edit_plot_monitoring) + " " + MONITORING.getName());
+            setToolbar(getString(R.string.edit_plot_monitoring) + " " + MONITORING.getName());
             try {
                 MONITORING_ANSWERS_JSON = MONITORING.getMonitoringAOJsonData();
             } catch (JSONException e) {
@@ -602,16 +602,16 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
 
     @Override
     public void onBackPressed() {
-        showDialog(true, getStringResources(R.string.save_data), getStringResources(R.string.save_data_explanation),
+        showDialog(true, getString(R.string.save_data), getString(R.string.save_data_explanation),
                 (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     saveData();
                 }
-                , getStringResources(R.string.yes),
+                , getString(R.string.yes),
                 (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     finish();
-                }, getStringResources(R.string.no), 0);
+                }, getString(R.string.no), 0);
     }
 
     boolean validate() {

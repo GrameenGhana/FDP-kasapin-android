@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
+import org.grameen.fdp.kasapin.data.db.AppDatabase;
+import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,16 +18,12 @@ import java.util.List;
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 @Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
-public class Plot {
-    @PrimaryKey(autoGenerate = true)
-    int id;
+public class Plot extends BaseModel{
     @SerializedName("external_id_c")
     private String externalId;
-    private String distanceBetweenCocoaTrees;
     private String farmerName;
     @SerializedName("farmer_code")
     private String farmerCode;
-    private String numberOfShadeTrees = null;
     @SerializedName("age_c")
     private String plotAge = "0";
     @SerializedName("area_c")
@@ -51,12 +49,6 @@ public class Plot {
     private List<Monitoring> monitoringList;
 
     public Plot() {
-    }
-
-    @Ignore
-    public List<PlotGpsPoint> getGpsPoints() {
-        return getGson().fromJson(plotPoints, new TypeToken<List<PlotGpsPoint>>() {
-        }.getType());
     }
 
     public String getExternalId() {
@@ -91,21 +83,6 @@ public class Plot {
         this.farmerName = farmerName;
     }
 
-    public String getDistanceBetweenCocoaTrees() {
-        return distanceBetweenCocoaTrees;
-    }
-
-    public void setDistanceBetweenCocoaTrees(String distanceBetweenCocoaTrees) {
-        this.distanceBetweenCocoaTrees = distanceBetweenCocoaTrees;
-    }
-
-    public String getNumberOfShadeTrees() {
-        return numberOfShadeTrees;
-    }
-
-    public void setNumberOfShadeTrees(String numberOfShadeTrees) {
-        this.numberOfShadeTrees = numberOfShadeTrees;
-    }
 
     public String getPlotAge() {
         return (plotAge == null) ? "" : plotAge;
@@ -121,14 +98,6 @@ public class Plot {
 
     public void setPlotPoints(String plotPoints) {
         this.plotPoints = plotPoints;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -188,6 +157,12 @@ public class Plot {
     }
 
     @Ignore
+    public List<PlotGpsPoint> getGpsPoints() {
+        return getGson().fromJson(plotPoints, new TypeToken<List<PlotGpsPoint>>() {
+        }.getType());
+    }
+
+    @Ignore
     public JSONObject getAOJsonData() throws JSONException {
         return new JSONObject(answersData);
     }
@@ -200,11 +175,20 @@ public class Plot {
         this.startYear = startYear;
     }
 
+    @Ignore
     public List<Monitoring> getMonitoringList() {
         return monitoringList;
     }
 
+    @Ignore
     public void setMonitoringList(List<Monitoring> monitoringList) {
         this.monitoringList = monitoringList;
+    }
+
+    @Override
+    public String getCreatedAt() {
+        if (super.getCreatedAt() == null)
+            return TimeUtils.getCurrentDateTime();
+        return super.getCreatedAt();
     }
 }

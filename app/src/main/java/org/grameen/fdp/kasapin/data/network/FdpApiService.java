@@ -37,7 +37,6 @@ public class FdpApiService {
     }
 
     public Single<User> fetchUserData(String token) {
-
         return fdpApi.getUser(token).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

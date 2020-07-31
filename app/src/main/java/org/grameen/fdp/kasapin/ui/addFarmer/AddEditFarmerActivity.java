@@ -26,7 +26,6 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Community;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
-import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicFormFragment;
@@ -199,7 +198,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setCode(FARMER.getExternalId());
             farmerCode.setText(FARMER.getCode());
             setToolbar("Add a new Farmer");
-            save.setText(getStringResources(R.string.save));
+            save.setText(getString(R.string.save));
 
             gender = genders[0];
             educationLevel = educationLevels[0];
@@ -400,19 +399,19 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             finish();
         else
             //Todo save data and exit if user clicks on yes
-            showDialog(true, getStringResources(R.string.save_data), getStringResources(R.string.save_data_explanation),
+            showDialog(true, getString(R.string.save_data), getString(R.string.save_data_explanation),
                     (dialogInterface, i) -> {
                         dialogInterface.dismiss();
                         isNewFarmer = true;
                         saveAndContinue();
                     }
-                    , getStringResources(R.string.yes),
+                    , getString(R.string.yes),
 
                     (dialogInterface, i) -> {
                         dialogInterface.dismiss();
                         getAppDataManager().setBooleanValue("reload", true);
                         finish();
-                    }, getStringResources(R.string.no), 0);
+                    }, getString(R.string.no), 0);
     }
 
     @Override

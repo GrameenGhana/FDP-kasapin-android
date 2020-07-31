@@ -17,30 +17,17 @@ import java.util.List;
  */
 
 public class FarmerProfileContract {
-
-
     public interface View extends BaseContract.View {
-
         void initializeViews(boolean shouldLoadButtons);
-
         void setUpFarmersPlotsAdapter(List<Plot> plotList);
-
         void addButtons(List<Button> buttons);
-
         void updateFarmerSyncStatus();
     }
 
     public interface Presenter {
-
         void getFarmersPlots(String farmerCode);
-
         void deletePlot(Plot plot);
-
         void loadDynamicButtons(List<FormAndQuestions> formAndQuestions);
-
         void syncFarmerData(Farmer farmer, boolean showProgress);
-
-
     }
-
 }

@@ -127,7 +127,7 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
         String recommendationName = getAppDataManager().getDatabaseManager().recommendationsDao().getByRecommendationName(PLOT.getRecommendationId()).blockingGet();
 
         //Set the table headers for AO table view
-        String[] TABLE_HEADERS = {recommendationName, getStringResources(R.string.diagnostic)};
+        String[] TABLE_HEADERS = {recommendationName, getString(R.string.diagnostic)};
         //Set general ao table column model
         TableColumnWeightModel columnModel = new TableColumnWeightModel(2);
         columnModel.setColumnWeight(0, 4);
@@ -181,11 +181,11 @@ public class PlotMonitoringActivity extends BaseActivity implements PlotMonitori
                 String dateValue = ComputationUtils.getDataValue(monitoringPlotDate, jsonObject);
                 try {
                     if (dateValue.length() > 20) {
-                        historicalTableViewDataList.add(new HistoricalTableViewData("", "", getStringResources(R.string.date), dateValue.substring(0, 19), AppConstants.TAG_RESULTS));
+                        historicalTableViewDataList.add(new HistoricalTableViewData("", "", getString(R.string.date), dateValue.substring(0, 19), AppConstants.TAG_RESULTS));
                     } else
-                        historicalTableViewDataList.add(new HistoricalTableViewData("", "", getStringResources(R.string.date), dateValue, AppConstants.TAG_RESULTS));
+                        historicalTableViewDataList.add(new HistoricalTableViewData("", "", getString(R.string.date), dateValue, AppConstants.TAG_RESULTS));
                 } catch (Exception e) {
-                    historicalTableViewDataList.add(new HistoricalTableViewData("", "", getStringResources(R.string.date), dateValue.substring(0, 19), AppConstants.TAG_RESULTS));
+                    historicalTableViewDataList.add(new HistoricalTableViewData("", "", getString(R.string.date), dateValue.substring(0, 19), AppConstants.TAG_RESULTS));
                     e.printStackTrace();
                 }
             }

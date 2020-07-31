@@ -104,8 +104,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
 
-        if (FORM_AND_QUESTIONS == null)
-            mPresenter.getFormsAndQuestionsData();
+        mPresenter.getVillagesDataFromDatabase();
 
         navigationView.setNavigationItemSelectedListener(this);
         toggleTranslation.setChecked(mPresenter.getAppDataManager().isTranslation());
@@ -140,25 +139,29 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             toolBarLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.gradient_background_monitoring));
         }
 
-        mPresenter.getVillagesDataFromDatabase();
 
         NavigationView navigationView = findViewById(R.id.navigation_view);
         View headerLayout = navigationView.getHeaderView(0);
 
-        TextView nameTV = headerLayout.findViewById(R.id.name_textView);
-        TextView emailTV = headerLayout.findViewById(R.id.email_textView);
-        TextView versionNumberTV = navigationView.findViewById(R.id.version_number);
+        TextView nameTextView = headerLayout.findViewById(R.id.name_textView);
+        TextView emailTextView = headerLayout.findViewById(R.id.email_textView);
+        TextView versionNumberTextView = navigationView.findViewById(R.id.version_number);
 
-        nameTV.setText(getAppDataManager().getUserFullName());
-        emailTV.setText(getAppDataManager().getUserEmail());
+        nameTextView.setText(getAppDataManager().getUserFullName());
+        emailTextView.setText(getAppDataManager().getUserEmail());
 
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            versionNumberTV.setText(pInfo.versionName);
+            versionNumberTextView.setText(pInfo.versionName);
         } catch (PackageManager.NameNotFoundException ignore) {
         }
         navigationView.setNavigationItemSelectedListener(this);
-        setInMemoryRoomDatabases(getAppDataManager().getDatabaseManager().getOpenHelper().getWritableDatabase());
+
+        if (FORM_AND_QUESTIONS == null)
+            mPresenter.getFormsAndQuestionsData();
+
+        //if(BuildConfig.DEBUG)
+        //setInMemoryRoomDatabases(getAppDataManager().getDatabaseManager().getOpenHelper().getWritableDatabase());
     }
 
     @Override

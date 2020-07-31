@@ -120,7 +120,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
-        setToolbar(getStringResources(R.string.farmer_details));
+        setToolbar(getString(R.string.farmer_details));
 
 
         if (getAppDataManager().isMonitoring()) {
@@ -136,10 +136,9 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         if (FARMER != null)
             initializeViews(true);
         else
-            showMessage(getStringResources(R.string.error_getting_farmer_info));
+            showMessage(getString(R.string.error_getting_farmer_info));
         CURRENT_FORM_POSITION = 0;
     }
-
 
     @Override
     public void initializeViews(boolean shouldLoadButtons) {
@@ -219,7 +218,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         PLOTS = plots;
         plotsSize = PLOTS.size();
         if (plotsSize > 0) {
-            noOfPlots.setText((plotsSize > 1) ? getStringResources(R.string.plot_aos) + "(" + plotsSize + ")" : getStringResources(R.string.plot_ao) + "(" + plotsSize + ")");
+            noOfPlots.setText((plotsSize > 1) ? getString(R.string.plot_aos) + "(" + plotsSize + ")" : getString(R.string.plot_ao) + "(" + plotsSize + ")");
             LinearLayoutManager horizontalLayoutManager
                     = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
@@ -237,8 +236,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(FarmerProfileActivity.this, MonitoringYearSelectionActivity.class);
-                    intent.putExtra("farmer", getGson().toJson(FARMER));
-                    intent.putExtra("plot", getGson().toJson(PLOTS.get(position)));
+                    intent.putExtra("farmerCode", FARMER.getCode());
+                    intent.putExtra("plotExternalId", PLOTS.get(position).getExternalId());
                     startActivity(intent);
                 }
             });
@@ -251,7 +250,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     PLOTS.remove(position);
                     plotsListAdapter.notifyItemRemoved(position);
                 }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0));
-        } else noOfPlots.setText(getStringResources(R.string.plot_adoption_observations));
+        } else noOfPlots.setText(getString(R.string.plot_adoption_observations));
     }
 
 
@@ -338,7 +337,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
                      for (Plot plot : PLOTS) {
                          if (plot.getRecommendationId() == -1) {
-                             showMessage(getStringResources(R.string.enter_all_ao_data) + plot.getName());
+                             showMessage(getString(R.string.enter_all_ao_data) + plot.getName());
                              return;
                          }
                      }
@@ -346,8 +345,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                      intent.putExtra("farmerCode", FARMER.getCode());
                      startActivity(intent);
                 } else
-                    showDialog(true, getStringResources(R.string.no_plots), getStringResources(R.string.add_plot_to_access_pl),
-                            (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok),
+                    showDialog(true, getString(R.string.no_plots), getString(R.string.add_plot_to_access_pl),
+                            (dialogInterface, i) -> dialogInterface.dismiss(), getString(R.string.ok),
                             null, "", 0);
                 break;
             case R.id.farm_assessment:
@@ -405,7 +404,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     try {
                         String farmResultsValue = logicFormulaParser.evaluate(farmResultsQuestion.getFormulaC());
                         FarmResult farmResult = new FarmResult();
-                        farmResult.setCaption(getStringResources(R.string.farm_result));
+                        farmResult.setCaption(getString(R.string.farm_result));
 
                         farmResult.setStatus(farmResultsValue);
                         farmResult.setPlotAssessmentList(PLOT_ASSESSMENTS);
@@ -555,7 +554,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     if (monitoring != null)
                         assessment = monitoring.getMonitoringAOJsonData().getString(plotAssessmentQuestion.getLabelC());
                     if (assessment.contains(AppConstants.NO_MONITORING_PLACE_HOLDER)) {
-                        showMessage(p.getName() + "\n" + getStringResources(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getStringResources(R.string.incomplete_monitoring_suffix));
+                        showMessage(p.getName() + "\n" + getString(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getString(R.string.incomplete_monitoring_suffix));
                         return false;
                     }
                     PLOT_ASSESSMENTS.add(new PlotAssessment(p.getName(), assessment));
@@ -565,7 +564,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     MONITORING_DATA_JSON.put(p.getExternalId(), assessment.trim());
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    showMessage(p.getName() + "\n" + getStringResources(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getStringResources(R.string.incomplete_monitoring_suffix));
+                    showMessage(p.getName() + "\n" + getString(R.string.incomplete_monitoring_prefix) + currentMonitoringYear + getString(R.string.incomplete_monitoring_suffix));
                     break;
                 }
             }
@@ -602,18 +601,18 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             int numberOfMaximumMonitoringOccurred = Collections.frequency(numberOfMonitoringsPerPlot, maxValueOfMonitoring);
 
             if (!Objects.equals(numberOfMaximumMonitoringOccurred, noOfPlots)) {
-                showMessage(getStringResources(R.string.monitoring_for_year) + currentMonitoringYear + getStringResources(R.string.for_) + FARMER.getFarmerName() + getResources() + getStringResources(R.string.incorrect_no_plots_suffix));
+                showMessage(getString(R.string.monitoring_for_year) + currentMonitoringYear + getString(R.string.for_) + FARMER.getFarmerName() + getResources() + getString(R.string.incorrect_no_plots_suffix));
                 return;
             }
             //Check to make sure a plot has at least 1 monitoring for selected year
             for (int j = 0; j < numberOfMonitoringsPerPlot.size(); j++) {
                 if (numberOfMonitoringsPerPlot.get(j) == 0) {
-                    showMessage(getStringResources(R.string.farmer) + FARMER.getFarmerName() + getStringResources(R.string.no_monitoring_added) + currentMonitoringYear + "of plot " + plots.get(j).getName() + " " + getStringResources(R.string.please_add_monitoring_suffix));
+                    showMessage(getString(R.string.farmer) + FARMER.getFarmerName() + getString(R.string.no_monitoring_added) + currentMonitoringYear + "of plot " + plots.get(j).getName() + " " + getString(R.string.please_add_monitoring_suffix));
                     return;
                 }
             }
         } else
-            showMessage(getStringResources(R.string.farmer) + FARMER.getFarmerName() + getStringResources(R.string.no_plots_added_suffix));
+            showMessage(getString(R.string.farmer) + FARMER.getFarmerName() + getString(R.string.no_plots_added_suffix));
 
     }
 

@@ -132,7 +132,7 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
 
     void setupViews() {
         //Todo get units and apply
-        setToolbar(getStringResources(R.string.plot_info));
+        setToolbar(getString(R.string.plot_info));
         plotName.setText(PLOT.getName());
         ph.setText(PLOT.getPh());
 

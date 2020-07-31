@@ -22,7 +22,6 @@ import io.reactivex.schedulers.Schedulers;
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 /**
- * Created by AangJnr on 18, September, 2018 @ 9:06 PM
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */

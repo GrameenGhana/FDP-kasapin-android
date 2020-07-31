@@ -84,7 +84,7 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
             e.printStackTrace();
         }
 
-        toolbar = setToolbar(getStringResources(R.string.year) + " " + year);
+        toolbar = setToolbar(getString(R.string.year) + " " + year);
 
         if (farmer != null) {
             farmerName.setText(farmer.getFarmerName());
@@ -103,10 +103,10 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
     @Override
     public void setData() {
         tableView.setColumnCount(12);
-        String[] TABLE_HEADERS = {getStringResources(R.string.jan), getStringResources(R.string.feb),
-                getStringResources(R.string.mar), getStringResources(R.string.apr), getStringResources(R.string.may), getStringResources(R.string.jun),
-                getStringResources(R.string.jul), getStringResources(R.string.aug), getStringResources(R.string.sep), getStringResources(R.string.oct),
-                getStringResources(R.string.nov), getStringResources(R.string.dec)};
+        String[] TABLE_HEADERS = {getString(R.string.jan), getString(R.string.feb),
+                getString(R.string.mar), getString(R.string.apr), getString(R.string.may), getString(R.string.jun),
+                getString(R.string.jul), getString(R.string.aug), getString(R.string.sep), getString(R.string.oct),
+                getString(R.string.nov), getString(R.string.dec)};
 
         tableView.setHeaderAdapter(new DetailedYearTableHeaderAdapter(this, TABLE_HEADERS));
         for (Plot plot : plotList) {
@@ -216,11 +216,11 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         }
 
         TABLE_DATA_LIST.add(new TableData(plotName, null, TAG_TITLE_TEXT_VIEW));
-        TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.activities), activities, TAG_OTHER_TEXT_VIEW));
-        TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.supplies), suppliesCost, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(getString(R.string.activities), activities, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(getString(R.string.supplies), suppliesCost, TAG_OTHER_TEXT_VIEW));
 
         if (DID_LABOUR)
-            TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.labour), labourCost, TAG_OTHER_TEXT_VIEW));
+            TABLE_DATA_LIST.add(new TableData(getString(R.string.labour), labourCost, TAG_OTHER_TEXT_VIEW));
     }
 
     @Override

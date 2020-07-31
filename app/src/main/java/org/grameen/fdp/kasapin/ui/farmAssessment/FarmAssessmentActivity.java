@@ -66,7 +66,7 @@ public class FarmAssessmentActivity extends BaseActivity implements FarmAssessme
             plotAssessmentList = FARM_RESULT.getPlotAssessmentList();
             farmStatus.setText(FARM_RESULT.getStatus());
             tableView.setColumnCount(2);
-            String[] TABLE_HEADERS = {getStringResources(R.string.plot_name), getStringResources(R.string.farm_assessment)};
+            String[] TABLE_HEADERS = {getString(R.string.plot_name), getString(R.string.farm_assessment)};
             TableColumnWeightModel columnModel = new TableColumnWeightModel(tableView.getColumnCount());
             columnModel.setColumnWeight(0, 1);
             columnModel.setColumnWeight(1, 1);

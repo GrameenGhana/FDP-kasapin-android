@@ -13,12 +13,17 @@ import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 @Dao
-public interface RealFarmersDao extends BaseDao<Farmer> {
+public interface FarmersDao extends BaseDao<Farmer> {
     @Query("SELECT * FROM farmers")
     Single<List<Farmer>> getAll();
 
-    @Query("SELECT farmerName, code, syncStatus, lastModifiedDate, id, villageId FROM farmers WHERE code IN (:codes)")
+    @Query("SELECT farmerName, code, syncStatus, lastModifiedDate, id, villageId, gender, " +
+            "lastVisitDate, educationLevel, hasSubmitted FROM farmers WHERE code IN (:codes)")
     Single<List<Farmer>> getAll(List<String> codes);
+
+    @Query("SELECT farmerName, code, syncStatus, lastModifiedDate, id, villageId, gender, " +
+            "lastVisitDate, educationLevel, hasSubmitted FROM farmers WHERE code = :farmerCode")
+    Single<Farmer> getOne(String farmerCode);
 
     @Query("SELECT * FROM farmers WHERE syncStatus = '0'")
     Maybe<List<Farmer>> getAllNotSynced();
@@ -29,19 +34,9 @@ public interface RealFarmersDao extends BaseDao<Farmer> {
     @Query("SELECT * FROM farmers WHERE code = :code")
     Maybe<Farmer> get(String code);
 
-    @Update
-    int updateFarmer(Farmer farmer);
-
-    @Query("DELETE FROM farmers")
-    void deleteAllFarmers();
-
-    @Query("DELETE FROM farmers WHERE id = :id")
-    int deleteFarmerById(int id);
-
     @Query("SELECT COUNT(syncStatus) FROM farmers")
     Maybe<Integer> checkIfUnsyncedFarmersAvailable();
 
     @Query("SELECT COUNT(id) FROM farmers where code =:code")
     int checkIfFarmerExists(String code);
-
 }

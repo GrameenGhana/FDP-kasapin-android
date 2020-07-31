@@ -129,8 +129,8 @@ public class AddEditServerUrlActivity extends BaseActivity implements AddEditSer
                         getAppDataManager().setStringValue(AppConstants.SERVER_URL, null);
                     togglePlaceholder();
                     wereChangesMade = true;
-                }, getStringResources(R.string.yes),
-                (d, w) -> d.dismiss(), getStringResources(R.string.cancel), 0);
+                }, getString(R.string.yes),
+                (d, w) -> d.dismiss(), getString(R.string.cancel), 0);
 
     }
 

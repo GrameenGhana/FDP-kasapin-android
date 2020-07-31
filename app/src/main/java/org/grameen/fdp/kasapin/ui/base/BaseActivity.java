@@ -84,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     @Inject
     public AlertDialog.Builder mAlertDialogBuilder;
     @Inject
-    ProgressDialog mProgressDialog;
+    protected ProgressDialog mProgressDialog;
     @Inject
     ScriptEngine scriptEngine;
     ActivityComponent activityComponent;
@@ -268,10 +268,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
         }, "OK", (dialog, which) -> dialog.cancel(), "CANCEL", 0);
     }
 
-    public String getStringResources(int resource) {
-        return getString(resource);
-    }
-
     protected void logOut() {
         //Todo show dialog to confirm logout
         CommonUtils.showAlertDialog(mAlertDialogBuilder, true, getString(R.string.log_out), getString(R.string.log_out_rational),
@@ -381,11 +377,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
                 startActivity(intent);
                 finish();
             } else
-                showDialog(false, getStringResources(R.string.fill_data),
-                        getStringResources(R.string.enter_data_rationale) + farmer.getFarmerName() + getStringResources(R.string.before_proceed_suffux),
-                        (dialog, which) -> dialog.dismiss(), getStringResources(R.string.ok), null, "", 0);
+                showDialog(false, getString(R.string.fill_data),
+                        getString(R.string.enter_data_rationale) + farmer.getFarmerName() + getString(R.string.before_proceed_suffux),
+                        (dialog, which) -> dialog.dismiss(), getString(R.string.ok), null, "", 0);
         } else
-            showMessage(getStringResources(R.string.error_has_occurred));
+            showMessage(getString(R.string.error_has_occurred));
     }
 
     public void moveToNextForm(Farmer farmer) {

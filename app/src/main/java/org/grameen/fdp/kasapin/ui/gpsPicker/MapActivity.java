@@ -72,6 +72,7 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     boolean hasGpsDataBeenSaved = true;
     String action = "";
     private GoogleApiClient googleApiClient;
+
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -112,11 +113,13 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         setUnBinder(ButterKnife.bind(this));
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
+
+        //Todo replace with di instance
         progressDialog = new ProgressDialog(this, R.style.AppDialog);
         recyclerView = findViewById(R.id.recycler_view);
         plot = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
 
-        setToolbar((plot != null) ? plot.getName() + " " + getStringResources(R.string.title_area_calc) : "Plot GPS Area Calculation");
+        setToolbar((plot != null) ? plot.getName() + " " + getString(R.string.title_area_calc) : "Plot GPS Area Calculation");
         if (plot.getGpsPoints() != null) {
             for (PlotGpsPoint point : plot.getGpsPoints()) {
                 latLngs.add(new LatLng(point.getLatitude(), point.getLongitude()));
@@ -178,7 +181,7 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
                 "\nArea in Square Meters is " + new DecimalFormat("0.00").format(AREA_OF_PLOT);
         showDialog(false, "Area of plot " + plot.getName(), message, (dialogInterface, i) ->
                         dialogInterface.dismiss(),
-                getStringResources(R.string.ok), null, null, 0);
+                getString(R.string.ok), null, null, 0);
         hasCalculated = true;
     }
 
@@ -201,7 +204,7 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
             showDialog(true, "GPS disabled", "Do you want to open GPS settings?", (dialog, which) -> {
                 dialog.dismiss();
                 startActivity(new Intent(action));
-            }, getStringResources(R.string.yes), (dialog, which) -> dialog.dismiss(), getStringResources(R.string.no), 0);
+            }, getString(R.string.yes), (dialog, which) -> dialog.dismiss(), getString(R.string.no), 0);
         }
     }
 

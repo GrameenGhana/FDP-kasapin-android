@@ -14,5 +14,4 @@ import io.reactivex.Maybe;
 public interface DistrictsDao extends BaseDao<District> {
     @Query("SELECT * FROM districts")
     Maybe<List<District>> getAll();
-
 }

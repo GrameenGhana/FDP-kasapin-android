@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -44,6 +45,8 @@ public class ImageViewActivity extends BaseActivity {
             touchImageView = findViewById(R.id.touch_image_view);
             try {
                 touchImageView.setImageBitmap(ImageUtil.base64ToBitmap(decodableString));
+                touchImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                touchImageView.resetZoom();
             } catch (Exception e) {
                 e.printStackTrace();
                 finish();

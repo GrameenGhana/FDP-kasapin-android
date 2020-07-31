@@ -17,6 +17,10 @@ public interface PlotsDao extends BaseDao<Plot> {
     @Query("SELECT * FROM plots WHERE farmerCode = :farmerCode")
     Single<List<Plot>> getFarmersPlots(String farmerCode);
 
+    @Transaction
+    @Query("SELECT * FROM plots WHERE farmerCode = :farmerCode AND externalId =:plotExternalId")
+    Single<Plot> getPlot(String farmerCode, String plotExternalId);
+
     @Query("DELETE FROM plots WHERE externalId = :id")
     void deleteOne(String id);
 }

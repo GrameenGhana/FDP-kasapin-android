@@ -21,6 +21,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.plotMonitoringActivity.PlotMonitoringActivity;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
@@ -47,7 +48,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
     TextView code;
     @BindView(R.id.villageName)
     TextView villageName;
-
     @BindView(R.id.lastVisitDate)
     TextView lastVisitDate;
     @BindView(R.id.lastSyncDate)
@@ -66,22 +66,33 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
         mPresenter.takeView(this);
-        FARMER = new Gson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
-        PLOT = new Gson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
-        setUpViews();
+        mPresenter.getFarmerAndPlotData(getIntent().getStringExtra("farmerCode"),
+                getIntent().getStringExtra("plotExternalId"));
+
         onBackClicked();
     }
 
     @Override
+    public void setFarmerAndPlotData(Farmer farmer, Plot plot) {
+        FARMER = farmer;
+        PLOT = plot;
+        setUpViews();
+    }
+
+    @Override
     public void setupListAdapter() {
+        AppLogger.e("MonitoringYear", PLOT.getCreatedAt());
+        int yearStartedProfiling = 0;
+        try {
+            yearStartedProfiling = Integer.parseInt(PLOT.getCreatedAt().substring(0, 4).trim());
+        }catch(Exception ignore){}
+
+        String[] yearStrings = getResources().getStringArray(R.array.monitoring_years);
         List<String> YEARS = new ArrayList<>();
-        YEARS.add(getStringResources(R.string.year_1));
-        YEARS.add(getStringResources(R.string.year_2));
-        YEARS.add(getStringResources(R.string.year_3));
-        YEARS.add(getStringResources(R.string.year_4));
-        YEARS.add(getStringResources(R.string.year_5));
-        YEARS.add(getStringResources(R.string.year_6));
-        YEARS.add(getStringResources(R.string.year_7));
+
+        for(int i=0; i<7; i++)
+        YEARS.add(String.format(yearStrings[i], yearStartedProfiling + i + 1));
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, YEARS);
         listView.setAdapter(adapter);
@@ -95,14 +106,14 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
                 intent.putExtra("selectedYear", year);
                 startActivity(intent);
             } else
-                showDialog(true, getStringResources(R.string.incomplete_ao_monitoring),
-                        getStringResources(R.string.incomplete_ao_rational) + PLOT.getName(), (dialogInterface, i) -> dialogInterface.dismiss(), getStringResources(R.string.ok), null, "", 0);
+                showDialog(true, getString(R.string.incomplete_ao_monitoring),
+                        getString(R.string.incomplete_ao_rational) + PLOT.getName(), (dialogInterface, i) -> dialogInterface.dismiss(), getString(R.string.ok), null, "", 0);
         });
     }
 
     @Override
     public void setUpViews() {
-        setToolbar(getStringResources(R.string.farmer_details));
+        setToolbar(getString(R.string.farmer_details));
         name.setText(FARMER.getFarmerName());
         code.setText(FARMER.getCode());
         if (FARMER.getVillageId() > 0) {
@@ -114,7 +125,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
             }
         }
 
-        //landSize.setText(FARMER.getLandArea());
         if (FARMER.getSyncStatus() == 0) {
             syncIndicator.setImageResource(R.drawable.ic_sync_problem_black_24dp);
             syncIndicator.setColorFilter(ContextCompat.getColor(this, R.color.cpb_red));
@@ -155,11 +165,16 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
     }
 
     @Override
+    public void showError() {
+      showMessage(R.string.error_getting_farmer_info);
+        finishActivity();
+    }
+
+    @Override
     protected void onDestroy() {
         mPresenter.dropView();
         super.onDestroy();
     }
-
 
     @Override
     public void openNextActivity() {

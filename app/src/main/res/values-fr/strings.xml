@@ -232,17 +232,15 @@
         <item name="15">2031</item>
     </string-array>
 
-
-    <string name="year_1">Année 1</string>
-    <string name="year_2">Année 2</string>
-    <string name="year_3">Année 3</string>
-
-    <string name="year_4">Année 4</string>
-    <string name="year_5">Année 5</string>
-    <string name="year_6">Année 6</string>
-
-    <string name="year_7">Année 7</string>
-
+    <string-array name="monitoring_years">
+    <item name="year_1">Année %d</item>
+    <item name="year_2">Année %d</item>
+    <item name="year_3">Année %d</item>
+    <item name="year_4">Année %d</item>
+    <item name="year_5">Année %d</item>
+    <item name="year_6">Année %d</item>
+    <item name="year_7">Année %d</item>
+    </string-array>
 
     <string-array name="seven_years">
         <item name="1"> </item>

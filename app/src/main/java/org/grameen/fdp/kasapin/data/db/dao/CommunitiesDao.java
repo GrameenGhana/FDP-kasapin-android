@@ -18,13 +18,4 @@ public interface CommunitiesDao extends BaseDao<Community> {
 
     @Query("SELECT * FROM communities WHERE id = :id")
     Community getVillageById(int id);
-
-    @Update
-    int updateVillage(Community village);
-
-    @Query("DELETE FROM communities")
-    void deleteAllVillages();
-
-    @Query("DELETE FROM communities WHERE id = :id")
-    int deleteVillageById(String id);
 }

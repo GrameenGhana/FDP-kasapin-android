@@ -204,33 +204,33 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 if (checkIfFarmerFdpStatusFormFilled(farmer.getCode())) {
                     if (NetworkUtils.isNetworkConnected(ProfitAndLossActivity.this)) {
 
-                        showDialog(true, getStringResources(R.string.caution), getStringResources(R.string.read_only_rational),
+                        showDialog(true, getString(R.string.caution), getString(R.string.read_only_rational),
                                 (dialog, which) -> {
                                     //Todo sync up, set agreement submitted
-                                }, getStringResources(R.string.ok), (dialog, which) -> dialog.dismiss(), getStringResources(R.string.cancel), 0);
+                                }, getString(R.string.ok), (dialog, which) -> dialog.dismiss(), getString(R.string.cancel), 0);
                     } else {
-                        showDialog(false, getStringResources(R.string.status_submitted), getStringResources(R.string.no_internet_connection_available) + "\n" +
-                                        getStringResources(R.string.you_can_still_make_edits) + farmer.getFarmerName() +
-                                        getStringResources(R.string.apostrophe_s) + getStringResources(R.string.data_before_sync),
+                        showDialog(false, getString(R.string.status_submitted), getString(R.string.no_internet_connection_available) + "\n" +
+                                        getString(R.string.you_can_still_make_edits) + farmer.getFarmerName() +
+                                        getString(R.string.apostrophe_s) + getString(R.string.data_before_sync),
                                 (d, w) -> {
                                     d.dismiss();
                                     //Todo update farmer data, set agreement submitted to true
-                                }, getStringResources(R.string.ok), null, "", 0);
+                                }, getString(R.string.ok), null, "", 0);
                     }
                 } else {
-                    showDialog(true, getStringResources(R.string.fdp_status_incomplete), getStringResources(R.string.fill_out_fdp_status) + farmer.getFarmerName(),
-                            (d, w) -> d.dismiss(), getStringResources(R.string.ok), (d, w1) -> {
+                    showDialog(true, getString(R.string.fdp_status_incomplete), getString(R.string.fill_out_fdp_status) + farmer.getFarmerName(),
+                            (d, w) -> d.dismiss(), getString(R.string.ok), (d, w1) -> {
                                 d.dismiss();
                                 moveToFdpStatusActivity();
-                            }, getStringResources(R.string.go_to_fdp_status_form), 0);
+                            }, getString(R.string.go_to_fdp_status_form), 0);
                 }
             } else if (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.YES)) {
-                showDialog(false, getStringResources(R.string.status_submitted), getStringResources(R.string.no_more_mods) + farmer.getFarmerName()
-                                + getStringResources(R.string.apostrophe_s) + getStringResources(R.string.data),
+                showDialog(false, getString(R.string.status_submitted), getString(R.string.no_more_mods) + farmer.getFarmerName()
+                                + getString(R.string.apostrophe_s) + getString(R.string.data),
                         (d, w) -> {
                             d.dismiss();
                             disableButtons();
-                        }, getStringResources(R.string.ok), null, "", 0);
+                        }, getString(R.string.ok), null, "", 0);
             }
         });
 
@@ -529,9 +529,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
             }
             if (DID_LABOUR) {
                 //TABLE_DATA_LIST.add(new Data("Total Costs" + prefs.getString("labourType", ""), null, TAG_TITLE_TEXT_VIEW));
-                TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.total_maintenance_cost), TOTAL_MAINTENANCE_COST, TAG_RESULTS));
-                TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.total_labour_days), TOTAL_LABOR_DAYS, TAG_RESULTS));
-                TABLE_DATA_LIST.add(new TableData(getStringResources(R.string.total_labour_cost), TOTAL_LABOR_COST, TAG_RESULTS));
+                TABLE_DATA_LIST.add(new TableData(getString(R.string.total_maintenance_cost), TOTAL_MAINTENANCE_COST, TAG_RESULTS));
+                TABLE_DATA_LIST.add(new TableData(getString(R.string.total_labour_days), TOTAL_LABOR_DAYS, TAG_RESULTS));
+                TABLE_DATA_LIST.add(new TableData(getString(R.string.total_labour_cost), TOTAL_LABOR_COST, TAG_RESULTS));
             }
 
             TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
@@ -1122,6 +1122,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
     @Override
     public void showLoading() {
-        super.showLoading(getStringResources(R.string.populating_data), getStringResources(R.string.please_wait), true, 0, false);
+        super.showLoading(getString(R.string.populating_data), getString(R.string.please_wait), true, 0, false);
     }
 }

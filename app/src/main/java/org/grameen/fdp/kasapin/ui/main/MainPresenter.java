@@ -50,7 +50,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(formAndQuestions -> getView().cacheFormsAndQuestionsData(formAndQuestions), throwable -> {
-                    getView().showMessage(R.string.error_has_occurred);
+                    getView().onError(throwable.getLocalizedMessage());
                     throwable.printStackTrace();
                 }));
     }
@@ -71,7 +71,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                     if (villageAndFarmers.size() > 0) {
                         getView().setFragmentAdapter(villageAndFarmers);
                     }
-                }, Throwable::printStackTrace));
+                }, throwable -> getView().onError(throwable.getLocalizedMessage())));
     }
 
     @Override

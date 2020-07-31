@@ -10,7 +10,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.02"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -186,7 +186,6 @@ android {
 
         implementation 'androidx.preference:preference:1.1.1'
     }
-
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->

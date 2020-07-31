@@ -13,7 +13,6 @@ import io.reactivex.Single;
 
 @Dao
 public interface CommunityAndFarmersDao {
-
     @Transaction
     @Query("SELECT * FROM communities")
     Single<List<CommunitiesAndFarmers>> getVillagesAndFarmers();

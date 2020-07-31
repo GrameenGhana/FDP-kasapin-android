@@ -244,25 +244,22 @@
         <item name="2">Year 0</item>
         <item name="3">Year 1</item>
         <item name="4">Year 2</item>
-
         <item name="5">Year 3</item>
         <item name="6">Year 4</item>
         <item name="7">Year 5</item>
-
         <item name="8">Year 6</item>
         <item name="9">Year 7</item>
     </string-array>
 
-
-    <string name="year_1">Year 1</string>
-    <string name="year_2">Year 2</string>
-    <string name="year_3">Year 3</string>
-
-    <string name="year_4">Year 4</string>
-    <string name="year_5">Year 5</string>
-    <string name="year_6">Year 6</string>
-
-    <string name="year_7">Year 7</string>
+    <string-array name="monitoring_years">
+    <item name="year_1">Year %d</item>
+    <item name="year_2">Year %d</item>
+    <item name="year_3">Year %d</item>
+    <item name="year_4">Year %d</item>
+    <item name="year_5">Year %d</item>
+    <item name="year_6">Year %d</item>
+    <item name="year_7">Year %d</item>
+    </string-array>
 
 
     <string name="all_data_synced">All data synced successfully!</string>

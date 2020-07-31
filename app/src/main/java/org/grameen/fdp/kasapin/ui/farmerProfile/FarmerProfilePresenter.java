@@ -35,10 +35,9 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
         count = 0;
     }
 
-
     @Override
     public void deletePlot(Plot plot) {
-        getAppDataManager().getDatabaseManager().plotsDao().deleteOne(plot.getExternalId());
+        mAppDataManager.getDatabaseManager().plotsDao().deleteOne(plot.getExternalId());
         getView().showMessage("Data deleted!");
     }
 
@@ -49,7 +48,6 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(plots -> getView().setUpFarmersPlotsAdapter(plots), throwable -> getView().showMessage("Could not obtain plots data.")));
     }
-
 
     public void loadDynamicButtons(List<FormAndQuestions> formAndQuestions) {
         count = 0;
@@ -109,7 +107,6 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     public void syncFarmerData(Farmer farmer, boolean showProgress) {
         syncData(this, showProgress, Collections.singletonList(farmer));
     }
-
 
     @Override
     public void onUploadComplete(String message) {

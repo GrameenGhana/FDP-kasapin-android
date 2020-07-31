@@ -169,7 +169,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         if (getIntent().getStringExtra("flag") != null && getIntent().getStringExtra("flag").equals("edit")) {
             isEditMode = true;
-            setToolbar(getStringResources(R.string.edit_plot));
+            setToolbar(getString(R.string.edit_plot));
             PLOT = getGson().fromJson(getIntent().getStringExtra("plot"), Plot.class);
             FARMER_CODE = PLOT.getFarmerCode();
             plotNameEditText.setText(PLOT.getName());
@@ -185,7 +185,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             plotNameEditText.setText(name);
             PLOT.setName(name);
             //New Plot
-            setToolbar(getStringResources(R.string.add_new_plot));
+            setToolbar(getString(R.string.add_new_plot));
         }
         mPresenter.getPlotQuestions();
         saveButton.setOnClickListener(v -> savePlotData(null));
@@ -348,6 +348,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
     @Override
     public void moveToMapActivity(Plot plot) {
+
         final Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("plot", new Gson().toJson(plot));
         startActivity(intent);
