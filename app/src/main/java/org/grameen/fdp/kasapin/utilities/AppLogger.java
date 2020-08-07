@@ -19,10 +19,12 @@ import static android.util.Log.INFO;
 
 public class AppLogger {
     public static void init(Application applicationContext) {
+        String crashReporterPath = AppConstants.ROOT_DIR + File.separator + "crashReports";
+
         if (!BuildConfig.ENABLE_CRASHLYTICS) {
             Timber.plant(new Timber.DebugTree());
+            CrashReporter.initialize(applicationContext, crashReporterPath);
         } else {
-            String crashReporterPath = AppConstants.ROOT_DIR + File.separator + "crashReports";
             CrashReporter.initialize(applicationContext, crashReporterPath);
             Fabric.with(applicationContext, new Crashlytics());
         }

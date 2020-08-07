@@ -122,8 +122,8 @@ public class AppConstants {
     public static int CAMERA_INTENT = 1004;
     public static int PERMISSION_CAMERA = 1005;
     public static String ROOT_DIR = Environment.getExternalStorageDirectory() + File.separator + ".fdpkasapin";
-    public static String CRASH_REPORTS_DIR = AppConstants.ROOT_DIR + File.separator + "crashReports";
-    public static String DATABASE_BACKUP_DIR = AppConstants.ROOT_DIR + File.separator + "databaseBackups";
+    public static String CRASH_REPORTS_DIR = "crashReports";
+    public static String DATABASE_BACKUP_DIR = "databaseBackups";
     public static String IS_USER_SIGNED_IN = "isUserSignedIn";
     public static String IS_RETAILER_SIGNED_IN = "isUserSignedIn";
     public static String IS_GAME_CENTER_SIGNED_IN = "isUserSignedIn";

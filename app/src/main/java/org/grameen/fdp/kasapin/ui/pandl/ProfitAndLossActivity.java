@@ -187,7 +187,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         tableHeaderAdapter.setHeaderClickListener(view -> {
             int position = Integer.parseInt(view.getTag().toString());
-            AppLogger.i("P & L ACTIVITY", position + "");
             Intent intent = new Intent(this, DetailedMonthActivity.class);
             intent.putExtra("year", position - 1);
             intent.putExtra("farmer", new Gson().toJson(farmer));

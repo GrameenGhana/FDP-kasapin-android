@@ -93,7 +93,6 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         for(int i=0; i<7; i++)
         YEARS.add(String.format(yearStrings[i], yearStartedProfiling + i + 1));
 
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, YEARS);
         listView.setAdapter(adapter);
 

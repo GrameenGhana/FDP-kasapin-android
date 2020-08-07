@@ -288,8 +288,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
 
     @Override
     public void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable) {
-        CommonUtils.showAlertDialog(mAlertDialogBuilder, cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener,
-                negativeText, icon_drawable);
+      runOnUiThread(() -> CommonUtils.showAlertDialog(mAlertDialogBuilder, cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener,
+              negativeText, icon_drawable));
     }
 
     protected Toolbar setToolbar(String title) {

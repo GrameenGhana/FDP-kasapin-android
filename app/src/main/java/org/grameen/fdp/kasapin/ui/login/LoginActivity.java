@@ -28,6 +28,7 @@ import org.grameen.fdp.kasapin.ui.serverUrl.AddEditServerUrlActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
+import org.grameen.fdp.kasapin.utilities.FileUtils;
 
 import java.util.ArrayList;
 
@@ -147,7 +148,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         ArrayList<String> granted = permissionManager.getStatus().get(0).granted;
         ArrayList<String> denied = permissionManager.getStatus().get(0).denied;
         if (granted.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            FDPKasapin.createNoMediaFile();
+            FileUtils.createNoMediaFile();
         }
         permissionManager.checkResult(requestCode, permissions, grantResults);
     }

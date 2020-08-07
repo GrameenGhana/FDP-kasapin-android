@@ -30,7 +30,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
     @Override
     public void getFarmerData(String farmerCode) {
         getView().showLoading("Getting farmer data", "Please wait...", true, 0, false);
-        getAppDataManager().getDatabaseManager().realFarmersDao().get(farmerCode)
+        getAppDataManager().getDatabaseManager().realFarmersDao().getOne(farmerCode).toMaybe()
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableMaybeObserver<Farmer>() {
             @Override
             public void onSuccess(Farmer farmer) {
