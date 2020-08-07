@@ -10,7 +10,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.02"
+        versionName "1.0.04"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -190,7 +190,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def formattedDate = new Date().format('ddMMMYY')
-            def newApkName = "FDP-kasapin" + variant.versionName + "@" + formattedDate + ".apk"
+            def newApkName = "fdp-kasapin_v" + variant.versionName + ".apk"
             outputFileName = new File(variant.name, newApkName)
         }
     }
