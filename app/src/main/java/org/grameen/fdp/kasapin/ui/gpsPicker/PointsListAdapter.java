@@ -35,9 +35,13 @@ public class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.Vi
         this.plots = plots;
     }
 
+    /**
+     * @param position position of the itemView
+     * @return position
+     */
     @Override
     public int getItemViewType(int position) {
-        return 0;
+        return position;
     }
 
     @Override

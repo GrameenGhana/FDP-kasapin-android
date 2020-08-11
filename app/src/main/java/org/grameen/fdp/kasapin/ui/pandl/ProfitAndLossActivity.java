@@ -361,14 +361,12 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         if (labourSpinner.getItems().size() >= 3 && labourTypeSpinner.getItems().size() >= 3)
             try {
-                String val = VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC());
+                DID_LABOUR = VALUES_JSON_OBJECT.has(labourQuestion.getLabelC())
+                        && VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC()).equalsIgnoreCase(AppConstants.YES);
 
-                if (val.equalsIgnoreCase(AppConstants.YES))
-                    DID_LABOUR = true;
-                else if (val.equalsIgnoreCase(AppConstants.NO))
-                    DID_LABOUR = false;
-
+                if(VALUES_JSON_OBJECT.has(labourTypeQuestion.getLabelC()))
                 LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
+                else LABOUR_TYPE = "";
 
                 labourSpinner.setSelectedIndex(DID_LABOUR ? 1 : 2);
 
@@ -384,6 +382,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 e.printStackTrace();
                 labourSpinner.setSelectedIndex(0);
                 labourTypeSpinner.setSelectedIndex(0);
+                toggleTable();
             }
     }
 
@@ -400,6 +399,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         }
         fdpStatusButton.setEnabled(!LABOUR_TYPE.isEmpty());
     }
+
 
     private void saveLabourAnswerData(int laborFormId, String didLaborQuestionLabel, String labourTypeQuestionLabel) {
         FormAnswerData laborFormAnswerData = new FormAnswerData();

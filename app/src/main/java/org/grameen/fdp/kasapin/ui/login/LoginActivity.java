@@ -29,6 +29,7 @@ import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 import org.grameen.fdp.kasapin.utilities.FileUtils;
+import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
 
 import java.util.ArrayList;
 
@@ -73,6 +74,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         });
 
         mPasswordView.setOnTouchListener((v, motionEvent) -> {
+           KeyboardUtils.showSoftInput(mPasswordView,LoginActivity.this);
+
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mPasswordView.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
@@ -106,7 +109,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
             }
         };
 
-        new Handler().postDelayed(() -> showDialog(false, getString(R.string.hello),
+        if(!permissionManager.checkAndRequestPermissions(this))
+            new Handler().postDelayed(() -> showDialog(false, getString(R.string.hello),
                 getString(R.string.provide_all_permissions_rationale), (dialogInterface, i) -> {
                     permissionManager.checkAndRequestPermissions(LoginActivity.this);
                 }, getString(R.string.grant_permissions), (dialogInterface, i) -> finishAfterTransition(),

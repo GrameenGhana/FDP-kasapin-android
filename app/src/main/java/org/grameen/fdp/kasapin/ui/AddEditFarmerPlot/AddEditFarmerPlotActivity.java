@@ -348,13 +348,11 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
     @Override
     public void moveToMapActivity(Plot plot) {
-
         final Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra("plot", new Gson().toJson(plot));
+        intent.putExtra("plotExternalId", plot.getExternalId());
         startActivity(intent);
         finish();
     }
-
     @Override
     public void onBackPressed() {
         finish();

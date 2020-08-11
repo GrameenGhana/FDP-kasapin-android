@@ -89,6 +89,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
+                        if(textLayout != null)
                         textLayout.animate()
                                 .translationY(0)
                                 .alpha(1f)

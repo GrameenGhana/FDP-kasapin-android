@@ -50,8 +50,8 @@ import javax.inject.Singleton;
  */
 @Singleton
 @Database(entities = {Country.class, District.class, Community.class, Form.class, Question.class, SkipLogic.class, Mapping.class, Recommendation.class,
-        RecommendationActivity.class, Calculation.class, ComplexCalculation.class,
-        Farmer.class, FormAnswerData.class, Plot.class, Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class, ServerUrl.class
+        RecommendationActivity.class, Calculation.class, ComplexCalculation.class, Farmer.class, FormAnswerData.class, Plot.class,
+        Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class, ServerUrl.class
 }, version = 1, exportSchema = false)
 
 @TypeConverters({DateTypeConverter.class})

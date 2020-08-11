@@ -448,4 +448,7 @@
     <string name="error_has_occurred_loading_data">Une erreur s\'est produite lors du chargement des données!</string>
     <string name="plot_monitoring">Surveillance du tracé</string>
     <string name="take_a_photo">Take a photo</string>
+    <string name="save_gps">Save GPS data</string>
+    <string name="save_gps_rational">Do you want to save the GPS points?</string>
+    <string name="gps_data_saved">GPS data saved!</string>
 </resources>

@@ -439,7 +439,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     boolean checkIfFarmSizeCorresponds(List<Plot> plots) {
         boolean value = true;
-        Double farmAcre;
+        double farmAcre;
         Question cocoaAreaQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_area_");
 
         if (cocoaAreaQuestion != null) {
@@ -453,7 +453,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 }
 
                 StringBuilder stringBuilder = new StringBuilder();
-                Double totalSizes;
+                double totalSizes;
                 if (plots != null)
                     for (Plot plot : plots) {
                         try {

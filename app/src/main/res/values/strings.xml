@@ -38,9 +38,9 @@
     <string name="add_new_plot">Add a new plot</string>
     <string name="provide_plot_name">Please provide the plot name</string>
     <string name="new_plot_added">New plot added</string>
-    <string name="data_saved">Data saved successfully!</string>
-    <string name="data_not_saved">Could not save data!</string>
-    <string name="generic_error">Could not save data!</string>
+    <string name="data_saved">Data saved successfully.</string>
+    <string name="data_not_saved">Could not save data.</string>
+    <string name="generic_error">An error has occurred</string>
 
 
     <string name="could_not_add_plot">Could not add plot info. Please try again</string>
@@ -458,5 +458,8 @@
     <string name="choose_labor_option_rationale">To show table data, please select Labor option above.</string>
     <string name="no_changes_after_sybmission_rational">Please note that if you complete this form and sync your data, you will not be able to make any changes to this farmers data.</string>
     <string name="take_a_photo">Take a photo</string>
+    <string name="save_gps">Save GPS data</string>
+    <string name="save_gps_rational">Do you want to save the GPS points?</string>
+    <string name="gps_data_saved">GPS data saved!</string>
 
 </resources>

@@ -442,5 +442,8 @@
     <string name="error_has_occurred_loading_data">Terjadi kesalahan saat memuat data!</string>
     <string name="plot_monitoring">Plot Monitoring</string>
     <string name="take_a_photo">Take a photo</string>
+    <string name="save_gps">Save GPS data</string>
+    <string name="save_gps_rational">Do you want to save the GPS points?</string>
+    <string name="gps_data_saved">GPS data saved!</string>
 
 </resources>

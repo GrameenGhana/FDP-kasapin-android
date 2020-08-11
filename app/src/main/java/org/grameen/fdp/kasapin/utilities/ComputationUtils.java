@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -102,21 +104,26 @@ public class ComputationUtils {
     public void setUpPropertyChangeListeners(String questionToHide, List<SkipLogic> skipLogics) {
         if (skipLogics != null && skipLogics.size() > 0) {
             for (SkipLogic sl : skipLogics) {
-                String[] values = sl.getFormula().replace("\"", "").split(" ");
-                sl.setComparingQuestion(values[0]);
-                sl.setLogicalOperator(values[1]);
-                sl.setAnswerValue(values[2]);
-                getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
-                    AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue() + "\nShould hide == " + sl.shouldHide());
-                    try {
-                        boolean isEqual = compareSkipLogicValues(sl, String.valueOf(event.getNewValue()));
-                        if(isEqual)
-                        toggleViewVisibility(sl.shouldHide(), questionToHide);
-                       else
-                           toggleViewVisibility(!sl.shouldHide(), questionToHide);
-                    } catch (Exception ignored) {
-                    }
-                });
+
+                Pattern pattern = Pattern.compile("^([A-Za-z_]*)\\s*([!><=]=)\\s*\"*([A-Za-z0-9]*)\"*$");
+                Matcher matcher = pattern.matcher(sl.getFormula());
+
+                if (matcher.find()) {
+                    sl.setComparingQuestion(matcher.group(1));
+                    sl.setLogicalOperator(matcher.group(2));
+                    sl.setAnswerValue(matcher.group(3));
+                    getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
+                        AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue() + "\nShould hide == " + sl.shouldHide());
+                        try {
+                            boolean isEqual = compareSkipLogicValues(sl, String.valueOf(event.getNewValue()));
+                            if (isEqual)
+                                toggleViewVisibility(sl.shouldHide(), questionToHide);
+                            else
+                                toggleViewVisibility(!sl.shouldHide(), questionToHide);
+                        } catch (Exception ignored) {
+                        }
+                    });
+                }
             }
         }
     }

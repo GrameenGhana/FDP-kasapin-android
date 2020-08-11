@@ -41,6 +41,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class DynamicPlotFormFragment extends FormFragment {
@@ -65,10 +66,6 @@ public class DynamicPlotFormFragment extends FormFragment {
         return formFragment;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -194,6 +191,7 @@ public class DynamicPlotFormFragment extends FormFragment {
                 }
             }
 
+            if(getAppDataManager() != null)
             getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
@@ -202,6 +200,8 @@ public class DynamicPlotFormFragment extends FormFragment {
             );
         }
     }
+
+
 
 
     private void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogic) {
