@@ -24,13 +24,13 @@ public interface MonitoringDao {
     @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId")
     Maybe<List<Monitoring>> getAllMonitoringForPlot(String plotExternalId);
 
-    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY createdAt ASC, id ASC")
+    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY createdAt ASC")
     Single<List<Monitoring>> getAllMonitoringForSelectedYear(String plotExternalId, int year);
 
-    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY id ASC LIMIT 1")
+    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY createdAt ASC LIMIT 1")
     Monitoring getFirstMonitoringForSelectedYear(String plotExternalId, int year);
 
-    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY id DESC LIMIT 1")
+    @Query("SELECT * FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year ORDER BY createdAt DESC LIMIT 1")
     Monitoring getLastMonitoringForSelectedYear(String plotExternalId, int year);
 
     @Query("SELECT COUNT(id) FROM monitorings WHERE plotExternalId = :plotExternalId AND year =:year")

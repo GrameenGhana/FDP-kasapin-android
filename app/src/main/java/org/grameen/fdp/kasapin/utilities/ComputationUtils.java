@@ -104,14 +104,7 @@ public class ComputationUtils {
     public void setUpPropertyChangeListeners(String questionToHide, List<SkipLogic> skipLogics) {
         if (skipLogics != null && skipLogics.size() > 0) {
             for (SkipLogic sl : skipLogics) {
-
-                Pattern pattern = Pattern.compile("^([A-Za-z_]*)\\s*([!><=]=)\\s*\"*([A-Za-z0-9]*)\"*$");
-                Matcher matcher = pattern.matcher(sl.getFormula());
-
-                if (matcher.find()) {
-                    sl.setComparingQuestion(matcher.group(1));
-                    sl.setLogicalOperator(matcher.group(2));
-                    sl.setAnswerValue(matcher.group(3));
+                parseSkipLogicFormula(sl);
                     getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
                         AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue() + "\nShould hide == " + sl.shouldHide());
                         try {
@@ -123,7 +116,6 @@ public class ComputationUtils {
                         } catch (Exception ignored) {
                         }
                     });
-                }
             }
         }
     }
@@ -131,10 +123,7 @@ public class ComputationUtils {
     public void initiateSkipLogicAndHideViews(String label, List<SkipLogic> skipLogics) {
         if (skipLogics != null && skipLogics.size() > 0) {
             for (final SkipLogic sl : skipLogics) {
-                String[] values = sl.getFormula().replace("\"", "").split(" ");
-                sl.setComparingQuestion(values[0]);
-                sl.setLogicalOperator(values[1]);
-                sl.setAnswerValue(values[2]);
+                 parseSkipLogicFormula(sl);
                 try {
                     boolean isEqual = compareSkipLogicValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString());
                     if(isEqual)
@@ -144,6 +133,17 @@ public class ComputationUtils {
                 } catch (Exception ignored) {
                 }
             }
+        }
+    }
+
+    private void parseSkipLogicFormula(SkipLogic skipLogic){
+        Pattern pattern = Pattern.compile("^([A-Za-z_]*)\\s*([!><=]=?)\\s*[\"\\\\]*([A-Za-z0-9]*)[\"\\\\]*$");
+        Matcher matcher = pattern.matcher(skipLogic.getFormula());
+
+        if (matcher.find()) {
+            skipLogic.setComparingQuestion(matcher.group(1));
+            skipLogic.setLogicalOperator(matcher.group(2));
+            skipLogic.setAnswerValue(matcher.group(3));
         }
     }
 

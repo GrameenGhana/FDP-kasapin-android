@@ -158,7 +158,7 @@ public class DynamicFormFragment extends FormFragment {
                                         if (skipLogics != null && skipLogics.size() > 0)
                                             applySkipLogicAndHideViews(question, skipLogics);
 
-                                    }))
+                                    }, Throwable::printStackTrace))
                     ).observeOn(AndroidSchedulers.mainThread())
                     .subscribe();
 

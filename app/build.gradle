@@ -10,14 +10,13 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.04"
+        versionName "1.0.07"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
         buildConfigField "String", "END_POINT", "\"http://52.15.172.252/fdp/\""
     }
-
 
     signingConfigs {
         release {
@@ -27,7 +26,6 @@ android {
             keyPassword "sirrius"
         }
     }
-
 
     buildTypes {
         release {

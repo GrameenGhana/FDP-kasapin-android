@@ -30,8 +30,7 @@ public class MapPresenter extends BasePresenter<MapContract.View> implements Map
 
     @Override
     public void updatePlotData(Plot plot) {
-        //insertOne returns a 1 if the transaction was successful and 0 if unsuccessful
-
+        //insertOne returns autogen id of plot which is > 0 if the transaction was successful and 0 if unsuccessful
         runSingleCall(Single.just(getAppDataManager().getDatabaseManager().plotsDao().insertOne(plot))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
