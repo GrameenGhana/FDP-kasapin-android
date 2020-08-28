@@ -1,5 +1,7 @@
 package org.grameen.fdp.kasapin.ui.detailedYearMonthlyView;
 
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.TableData;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
+import org.grameen.fdp.kasapin.utilities.IconMerger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.codecrafters.tableview.TableView;
 
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_ICON_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 
@@ -61,6 +65,7 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
     List<TableData> TABLE_DATA_LIST = new ArrayList<>();
     ScriptEngine engine;
     MathFormulaParser mathFormulaParser;
+    IconMerger iconMerger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,8 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
         mathFormulaParser = MathFormulaParser.getInstance();
+
+        iconMerger = new IconMerger(this);
 
         engine = new ScriptEngineManager().getEngineByName("rhino");
         farmer = new Gson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
@@ -133,8 +140,14 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
             } else
                 getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), Math.min(year + Math.abs(plotYear), 7));
         }
-        myTableViewAdapter = new DetailedYearTableViewAdapter(this, TABLE_DATA_LIST, tableView);
+        setTableData();
+    }
+
+    void setTableData(){
+        if(myTableViewAdapter == null)
+        myTableViewAdapter = new DetailedYearTableViewAdapter(this, TABLE_DATA_LIST, tableView, true);
         tableView.setDataAdapter(myTableViewAdapter);
+        hideLoading();
     }
 
     HistoricalTableViewData getMonthlyData(int id, String month, int year) {
@@ -142,21 +155,30 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         HistoricalTableViewData data = new HistoricalTableViewData("", "", "");
 
         try {
-            recommendationsPlusActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao().getAllByRecommendation(id, month, String.valueOf(year)).blockingGet();
+            recommendationsPlusActivities = getAppDataManager().getDatabaseManager()
+                    .recommendationPlusActivitiesDao().getAllByRecommendation(id, month, String.valueOf(year)).blockingGet();
             StringBuilder activities = new StringBuilder();
             StringBuilder labourCost = new StringBuilder();
             StringBuilder suppliesCost = new StringBuilder();
+            StringBuilder iconsStringBuilder = new StringBuilder();
+
 
             if (recommendationsPlusActivities != null)
                 for (int i = 0; i < recommendationsPlusActivities.size(); i++) {
                     RecommendationActivity ra = recommendationsPlusActivities.get(i);
                     try {
+
+                        //Combine farm activity names
                         if (ra.getActivityTranslation() != null && !ra.getActivityTranslation().equals("null"))
                             if (!activities.toString().toLowerCase().contains(ra.getActivityTranslation().toLowerCase()))
-                                activities.append(CommonUtils.toCamelCase(ra.getActivityTranslation())).append(", ");
+                                activities.append(CommonUtils.toCamelCase(ra.getActivityTranslation())).append(" | ");
+
+                        //Combine icon names
+                        if (ra.getImageId() != null)
+                            //if (!iconsStringBuilder.toString().toLowerCase().contains(ra.getImageId().toLowerCase()))
+                                iconsStringBuilder.append(ra.getImageId()).append(",");
 
                         suppliesCost.append(ra.getSuppliesCost()).append("+");
-
                         try {
                             if (DID_LABOUR) {
                                 if (LABOUR_TYPE.equalsIgnoreCase("seasonal")) {
@@ -181,6 +203,8 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
             data = new HistoricalTableViewData(activities.toString(),
                     mathFormulaParser.evaluate("(" + suppliesCost.toString() + ") * " + CURRENT_SIZE_IN_HA),
                     mathFormulaParser.evaluate("(" + labourCost.toString() + ") * " + CURRENT_SIZE_IN_HA));
+
+            data.setIconData(iconsStringBuilder.toString().trim());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,30 +213,25 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
 
 
     void getActivitiesSuppliesAndCosts(int recommendationId, String plotName, int year) {
-        List<HistoricalTableViewData> dataList = new ArrayList<>();
-
-        dataList.add(getMonthlyData(recommendationId, "Jan", year));
-        dataList.add(getMonthlyData(recommendationId, "Feb", year));
-        dataList.add(getMonthlyData(recommendationId, "Mar", year));
-        dataList.add(getMonthlyData(recommendationId, "Apr", year));
-        dataList.add(getMonthlyData(recommendationId, "May", year));
-        dataList.add(getMonthlyData(recommendationId, "Jun", year));
-        dataList.add(getMonthlyData(recommendationId, "Jul", year));
-        dataList.add(getMonthlyData(recommendationId, "Aug", year));
-        dataList.add(getMonthlyData(recommendationId, "Sep", year));
-        dataList.add(getMonthlyData(recommendationId, "Oct", year));
-        dataList.add(getMonthlyData(recommendationId, "Nov", year));
-        dataList.add(getMonthlyData(recommendationId, "Dec", year));
+        TypedArray monthsArray = getResources().obtainTypedArray(R.array.months);
 
         List<String> activities = new ArrayList<>();
         List<String> labourCost = new ArrayList<>();
         List<String> suppliesCost = new ArrayList<>();
+        List<Bitmap> bitmaps = new ArrayList<>();
 
-        for (HistoricalTableViewData data : dataList) {
-            activities.add(data.getLabel());
-            suppliesCost.add(data.getValueAtColumn1());
-            if (DID_LABOUR)
-                labourCost.add(data.getValueAtColumn2());
+        for (int i = 0; i < 12; i++) {
+
+            String month = monthsArray.getString(i);
+            if(month != null) {
+                HistoricalTableViewData data = getMonthlyData(recommendationId, month.substring(0, 3), year);
+                    activities.add(data.getLabel());
+                    suppliesCost.add(data.getValueAtColumn1());
+                    if (DID_LABOUR)
+                        labourCost.add(data.getValueAtColumn2());
+
+                bitmaps.add(iconMerger.combineIcons(data.getIconData()));
+            }
         }
 
         TABLE_DATA_LIST.add(new TableData(plotName, null, TAG_TITLE_TEXT_VIEW));
@@ -221,6 +240,9 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
 
         if (DID_LABOUR)
             TABLE_DATA_LIST.add(new TableData(getString(R.string.labour), labourCost, TAG_OTHER_TEXT_VIEW));
+
+        TABLE_DATA_LIST.add(new TableData("Icons", null, bitmaps, TAG_ICON_VIEW));
+        monthsArray.recycle();
     }
 
     @Override

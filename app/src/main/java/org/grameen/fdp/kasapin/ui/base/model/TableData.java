@@ -1,5 +1,7 @@
 package org.grameen.fdp.kasapin.ui.base.model;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.Nullable;
 
 import java.util.List;
@@ -9,9 +11,7 @@ public class TableData {
     String tag;
     List<String> yearsDataFormula;
     String singleValue;
-    String v1;
-    String v2;
-    String v3;
+    List<Bitmap> imageBitmaps;
 
     public TableData(String label, @Nullable List<String> formula, String tag) {
         this.label = label;
@@ -19,23 +19,14 @@ public class TableData {
         this.tag = tag;
     }
 
+    public TableData(String label, @Nullable List<String> formula, List<Bitmap> _bitmaps,  String tag) {
+        this(label, formula, tag);
+        this.imageBitmaps = _bitmaps;
+    }
+
     public TableData(String label, String s) {
         this.label = label;
         this.singleValue = s;
-    }
-
-//    public TableData(String label, String s1, String s2) {
-//        this.label = label;
-//        this.v1 = s1;
-//        this.v2 = s2;
-//    }
-
-    public TableData(String label, String s1, String s2, String s3, @Nullable String TAG) {
-        this.label = label;
-        this.v1 = s1;
-        this.v2 = s2;
-        this.v3 = s3;
-        this.tag = TAG;
     }
 
     public String getLabel() {
@@ -68,5 +59,13 @@ public class TableData {
 
     public void setSingleValue(String singleValue) {
         this.singleValue = singleValue;
+    }
+
+    public void setImageBitmaps(List<Bitmap> imageBitmaps) {
+        this.imageBitmaps = imageBitmaps;
+    }
+
+    public List<Bitmap> getImageBitmaps() {
+        return imageBitmaps;
     }
 }

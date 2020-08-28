@@ -81,8 +81,7 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
 
     @Override
     public void setupListAdapter() {
-        AppLogger.e("MonitoringYear", PLOT.getCreatedAt());
-        int yearStartedProfiling = 0;
+         int yearStartedProfiling = 0;
         try {
             yearStartedProfiling = Integer.parseInt(PLOT.getCreatedAt().substring(0, 4).trim());
         }catch(Exception ignore){}

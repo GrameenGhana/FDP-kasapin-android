@@ -12,6 +12,7 @@ public class HistoricalTableViewData {
     String tag;
     String singleValue;
 
+    String iconData;
 
     List<String> values;
     List<String> valueTags;
@@ -93,5 +94,13 @@ public class HistoricalTableViewData {
 
     public void setLabel(String name) {
         this.label = name;
+    }
+
+    public void setIconData(String iconData) {
+        this.iconData = iconData;
+    }
+
+    public String getIconData() {
+        return iconData;
     }
 }

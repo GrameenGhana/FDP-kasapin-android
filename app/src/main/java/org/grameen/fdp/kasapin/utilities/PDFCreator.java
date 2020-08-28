@@ -98,7 +98,7 @@ public class PDFCreator {
             //Combine all bitmaps into a single bitmap image
             int totalHeightOfAllBitmaps = allitemsheight + farmerNameBitmap.getHeight() + (headerView.getMeasuredHeight() * 3);
 
-            //Create pdf file from big bitmap inn landscape mode specifying a height of a4Height per page
+            //Create pdf file from big bitmap in landscape mode specifying a height of a4Height per page
             //return path if created successfully or null
             Bitmap finalBitmap = combineBitmaps(bitmaps, tableDataListView.getMeasuredWidth(), totalHeightOfAllBitmaps);
             generatePdfFromBitmap(finalBitmap);
