@@ -235,13 +235,15 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         }
 
         TABLE_DATA_LIST.add(new TableData(plotName, null, TAG_TITLE_TEXT_VIEW));
+
+        TABLE_DATA_LIST.add(new TableData("Icons", null, bitmaps, TAG_ICON_VIEW));
+
         TABLE_DATA_LIST.add(new TableData(getString(R.string.activities), activities, TAG_OTHER_TEXT_VIEW));
         TABLE_DATA_LIST.add(new TableData(getString(R.string.supplies), suppliesCost, TAG_OTHER_TEXT_VIEW));
 
         if (DID_LABOUR)
             TABLE_DATA_LIST.add(new TableData(getString(R.string.labour), labourCost, TAG_OTHER_TEXT_VIEW));
 
-        TABLE_DATA_LIST.add(new TableData("Icons", null, bitmaps, TAG_ICON_VIEW));
         monthsArray.recycle();
     }
 

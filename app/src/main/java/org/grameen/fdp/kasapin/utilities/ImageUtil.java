@@ -118,26 +118,24 @@ public class ImageUtil {
 
         int iconSize = 80;
         int noOfColumns = 3;
+        int sizeOfBitmapsArray = bitmaps.size();
 
-        int totalWidth = (bitmaps.size() <= noOfColumns) ? (bitmaps.size() * iconSize) : (noOfColumns * iconSize);
-        int totalHeight = (bitmaps.size() <= noOfColumns) ? iconSize : (iconSize + (iconSize * (bitmaps.size() / noOfColumns)) + 5);
+        int totalWidth = (sizeOfBitmapsArray <= noOfColumns) ? (sizeOfBitmapsArray * iconSize) : (noOfColumns * iconSize);
+        int totalHeight = iconSize + iconSize * (bitmaps.size() / noOfColumns);
         int top = 0;
         int left = 0;
         Bitmap bigBitmap = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888);
         Canvas bitCanvas = new Canvas(bigBitmap);
 
-        for (int i = 0; i < bitmaps.size(); i++) {
+        for (int i = 0; i < sizeOfBitmapsArray; i++) {
             Bitmap bitmap =  Bitmap.createScaledBitmap(bitmaps.get(i), iconSize, iconSize, false);
             bitCanvas.drawBitmap(bitmap, left, top, null);
             bitmap.recycle();
 
             left = ((i + 1) % noOfColumns == 0) ? 0 : left + iconSize;
-            top = ((i + 1) % noOfColumns == 0) ? top + iconSize : top;
-
-            System.out.println( i + " TOP ==> " + top + "  ||  LEFT ==> " + left);
+            top = ((i + 1) % noOfColumns == 0) ? top + iconSize + 2 : top;
         }
         return bigBitmap;
-
     }
 
 }

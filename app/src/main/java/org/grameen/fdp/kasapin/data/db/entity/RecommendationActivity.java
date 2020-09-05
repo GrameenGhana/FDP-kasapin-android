@@ -22,7 +22,7 @@ public class RecommendationActivity extends BaseModel {
     String month;
 
     @SerializedName("image_id")
-    String imageId = "fertilizer";
+    String imageId;
 
     @SerializedName("year_c")
     int year;
@@ -115,11 +115,10 @@ public class RecommendationActivity extends BaseModel {
     }
 
     public void setImageId(String imageId) {
-        this.imageId = imageId != null ? imageId.replace(".png", "") : "fertilizer";
+        this.imageId = imageId;
     }
 
     public String getImageId() {
-        return "fertilizer";
-       // return imageId;
+         return imageId != null ? imageId.replace(".png", "") : "n/a";
     }
 }

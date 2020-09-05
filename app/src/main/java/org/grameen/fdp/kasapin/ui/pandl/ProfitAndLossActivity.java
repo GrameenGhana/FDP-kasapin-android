@@ -146,7 +146,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     Farmer farmer;
     MathFormulaParser mathFormulaParser;
     LogicFormulaParser logicFormulaParser;
-    Recommendation GAPS_RECOMENDATION_FOR_START_YEAR;
+    Recommendation GAPS_RECOMMENDATION_FOR_START_YEAR;
     Recommendation PLOT_RECOMMENDATION;
     String plotSizeInHaValue = "0.0";
     private JSONObject PLOT_ANSWERS_JSON_OBJECT = new JSONObject();
@@ -168,6 +168,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
     @Override
     public void setUpViews(Farmer farmerFromDb) {
         farmer = farmerFromDb;
+        mPresenter.getAllAnswers(farmer.getCode());
+
         START_YEAR_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("start_year_");
         START_YEAR_LABEL = START_YEAR_QUESTION.getLabelC();
         CSSV_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("ao_disease_");
@@ -236,8 +238,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         print.setOnClickListener(v -> issuePrinting());
 
         onBackClicked();
-
-        mPresenter.getAllAnswers(farmer.getCode());
 
         if (getAppDataManager().isMonitoring() || (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.YES) && farmer.getSyncStatus() == 1))
             disableButtons();
@@ -508,7 +508,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 AppLogger.i(TAG, "^^^^^^^^^^^^^^   PLOT PROD IN HA VALUE IS ^^^^^^^^^^^^^^^^^  " + plot_production_kg);
                 logicFormulaParser.setJsonObject(PLOT_ANSWERS_JSON_OBJECT);
                 mathFormulaParser.setJsonObject(PLOT_ANSWERS_JSON_OBJECT);
-                GAPS_RECOMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao().get(PLOT.getGapsId()).blockingGet();
+                GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao().get(PLOT.getGapsId()).blockingGet();
                 PLOT_RECOMMENDATION = getAppDataManager().getDatabaseManager().recommendationsDao().get(PLOT.getRecommendationId()).blockingGet();
 
                 if (PLOT.getStartYear() > 0) {
@@ -644,7 +644,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 AppLogger.i(TAG, "Spinner item selected with tag " + view.getTag());
                 //Position of plot selected from the list is saved as a tag to the start year view for you to know which plot has its start year changed
                 try {
-                    Plot plotData = realPlotList.get(Integer.valueOf(view.getTag().toString()));
+                    Plot plotData = realPlotList.get(Integer.parseInt(view.getTag().toString()));
                     JSONObject jsonObject = plotData.getAOJsonData();
 
                     if (jsonObject.has(START_YEAR_LABEL))
@@ -742,7 +742,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         for (int i = 0; i < CONTROLLING_YEAR; i++) {
             //Todo get Recommendation calculation, get formula and apply here
             AppLogger.e(TAG, "YEAR " + i);
-            Calculation calculation = getAppDataManager().getDatabaseManager().calculationsDao().getByRecommendationYear(GAPS_RECOMENDATION_FOR_START_YEAR.getId(), 0);
+            Calculation calculation = getAppDataManager().getDatabaseManager().calculationsDao().getByRecommendationYear(GAPS_RECOMMENDATION_FOR_START_YEAR.getId(), 0);
 
             if (calculation != null) {
                 mathFormulaParser.setMathFormula(calculation.getFormula());
@@ -794,7 +794,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         for (int i = 0; i < CONTROLLING_YEAR; i++) {
             AppLogger.i(TAG, "YEAR " + i);
             if (i == 0) {
-                Calculation calculation = getAppDataManager().getDatabaseManager().calculationsDao().getByRecommendationYearAndType(GAPS_RECOMENDATION_FOR_START_YEAR.getId(), 0, AppConstants.RECOMMENDATION_CALCULATION_TYPE_COST);
+                Calculation calculation = getAppDataManager().getDatabaseManager().calculationsDao().getByRecommendationYearAndType(GAPS_RECOMMENDATION_FOR_START_YEAR.getId(), 0, AppConstants.RECOMMENDATION_CALCULATION_TYPE_COST);
                 if (calculation != null) {
                     AppLogger.i(TAG, "\nYEAR " + i + " >> " + calculation.getFormula());
                     mathFormulaParser.setMathFormula(calculation.getFormula());
@@ -802,10 +802,10 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 } else
                     maintenanceCostList.add("0");
                 recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
-                        .getAllByRecommendation(GAPS_RECOMENDATION_FOR_START_YEAR.getId(), "0").blockingGet();
+                        .getAllByRecommendation(GAPS_RECOMMENDATION_FOR_START_YEAR.getId(), "0").blockingGet();
             } else {
                 recommendationActivities = getAppDataManager().getDatabaseManager().recommendationPlusActivitiesDao()
-                        .getAllByRecommendation(GAPS_RECOMENDATION_FOR_START_YEAR.getId(), "1").blockingGet();
+                        .getAllByRecommendation(GAPS_RECOMMENDATION_FOR_START_YEAR.getId(), "1").blockingGet();
                 maintenanceCostList.add(mathFormulaParser.evaluate(computeCost(recommendationActivities, AppConstants.SUPPLIES_COSTS, false) + "*" + plotSizeInHaValue));
             }
 
@@ -889,7 +889,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         //Todo get Recommendation calculation, get formula and apply here
 
         AppLogger.i(TAG, "\nYEAR " + 0);
-        Calculation calculation = getAppDataManager().getDatabaseManager().calculationsDao().getByRecommendationYear(GAPS_RECOMENDATION_FOR_START_YEAR.getId(), 0);
+        Calculation calculation = getAppDataManager().getDatabaseManager().calculationsDao().getByRecommendationYear(GAPS_RECOMMENDATION_FOR_START_YEAR.getId(), 0);
 
         if (calculation != null) {
             mathFormulaParser.setMathFormula(calculation.getFormula());

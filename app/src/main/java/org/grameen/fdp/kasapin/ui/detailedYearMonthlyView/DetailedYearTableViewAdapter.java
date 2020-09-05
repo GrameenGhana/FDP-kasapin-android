@@ -1,22 +1,16 @@
 package org.grameen.fdp.kasapin.ui.detailedYearMonthlyView;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.ContextCompat;
-
 import com.jaredrummler.materialspinner.MaterialSpinner;
-
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.model.TableData;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -26,23 +20,16 @@ import java.util.Locale;
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
-import static org.grameen.fdp.kasapin.utilities.AppConstants.BUTTON_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_ICON_VIEW;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_SPINNER_VIEW;
-import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 
 
 public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter<TableData> {
 
     private static final int TEXT_SIZE = 10;
     private static final int TITLE_TEXT_SIZE = 14;
-    static MaterialSpinner.OnItemSelectedListener itemSelectedListener;
-    static View.OnClickListener mOnClickListener;
 
     Context context;
-    String[] YEARS = {"YEAR 1", "YEAR 2", "YEAR 3", "YEAR 4", "YEAR 5"};
 
     boolean showIcons = true;
 
@@ -78,6 +65,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
                 ImageView imageView = new ImageView(getContext());
                 imageView.setAdjustViewBounds(true);
                 imageView.setImageBitmap(data.getImageBitmaps().get(year));
+                imageView.setPadding(10, 5, 10, 5);
                 return imageView;
             }
         }else if (calculationsForTheYears != null) {

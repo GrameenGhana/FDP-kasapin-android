@@ -17,7 +17,7 @@ public class DetailedMonthPresenter extends BasePresenter<DetailedMonthContract.
 
     @Override
     public void getPlotsData(String farmerCode) {
-        getView().showMessage(R.string.please_wait);
+        getView().showLoading();
         runSingleCall(getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmerCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
