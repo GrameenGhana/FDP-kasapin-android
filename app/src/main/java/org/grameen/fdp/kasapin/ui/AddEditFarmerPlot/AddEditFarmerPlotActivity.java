@@ -104,6 +104,8 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
     protected void onDestroy() {
         if (mPresenter != null)
             mPresenter.dropView();
+
+        stopService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
         super.onDestroy();
     }
 
