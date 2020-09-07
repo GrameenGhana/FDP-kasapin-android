@@ -1,11 +1,26 @@
 package org.grameen.fdp.kasapin.ui.splash;
 
 
+import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
@@ -36,6 +51,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     protected void onCreate(Bundle savedInstanceState) {
         setStatusBarColor(getWindow(), R.color.colorPrimary, true);
         super.onCreate(savedInstanceState);
+
         setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_splash);
         getActivityComponent().inject(this);
@@ -47,7 +63,6 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         textLayout.setTranslationY(-100f);
         textLayout.setAlpha(0f);
     }
-
 
     @Override
     public void onAttachedToWindow() {
@@ -71,6 +86,11 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     public void openNextActivity() {
         startActivity(new Intent(this, LandingActivity.class));
         supportFinishAfterTransition();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override

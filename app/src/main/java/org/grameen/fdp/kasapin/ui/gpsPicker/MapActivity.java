@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,35 +69,43 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     private double altitude;
     private boolean hasGpsDataBeenSaved = true;
     private String action = "";
-    private GoogleApiClient googleApiClient;
 
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            hideProgress();
+
             altitude = location.getAltitude();
             accuracy = CommonUtils.round(location.getAccuracy(), 2);
-            AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
-            String msg =
-                    "Do you want to add this point? \n\n" +
-                            "Latitude    :   " + location.getLatitude() + "\n" +
-                            "Longitude  :   " + location.getLongitude() + "\n" +
-                            "Accuracy   :   " + accuracy + " meters\n" +
-                            "Altitude    :   " + altitude + " high";
 
-            showDialog(true, "Location update!", msg, (dialog, which) -> {
-                dialog.dismiss();
-                LatLng newLL = new LatLng(location.getLatitude(), location.getLongitude());
-                mAdapter.addPoint(newLL);
+            if(accuracy < 8){
+                hideProgress();
+                AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
+                String msg =
+                        "Do you want to add this point? \n\n" +
+                                "Latitude    :   " + location.getLatitude() + "\n" +
+                                "Longitude  :   " + location.getLongitude() + "\n" +
+                                "Accuracy   :   " + accuracy + " meters\n" +
+                                "Altitude    :   " + altitude + " high";
 
-                if (latLngList.size() > 0) {
-                    if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
-                        findViewById(R.id.placeHolder).setVisibility(View.GONE);
-                }
-                hasGpsDataBeenSaved = false;
-            }, "ADD POINT", (dialog, which) -> dialog.dismiss(), "CANCEL", 0);
+                showDialog(true, "Location update!", msg, (dialog, which) -> {
+                    dialog.dismiss();
+                    LatLng newLL = new LatLng(location.getLatitude(), location.getLongitude());
+                    mAdapter.addPoint(newLL);
 
-            removeLocationListener();
+                    if (latLngList.size() > 0) {
+                        if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
+                            findViewById(R.id.placeHolder).setVisibility(View.GONE);
+                    }
+                    hasGpsDataBeenSaved = false;
+                }, "ADD POINT", (dialog, which) -> dialog.dismiss(), "CANCEL", 0);
+
+                removeLocationListener();
+            }
+            else{
+//                startLocationListener();
+//                Toast.makeText(MapActivity.this, "Accuracy: " + String.valueOf(accuracy) + " not enough.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MapActivity.this, "Location accuracy not high enough.", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -214,6 +223,8 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
+        locationRequest.setNumUpdates(15);
+        locationRequest.setSmallestDisplacement(1.5f);
         locationRequest.setFastestInterval(5000);
 
         if (ActivityCompat.checkSelfPermission(this,
@@ -327,17 +338,12 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
             progressDialog.dismiss();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        googleApiClient.connect();
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//
+//    }
 
     @Override
     protected void onStop() {
