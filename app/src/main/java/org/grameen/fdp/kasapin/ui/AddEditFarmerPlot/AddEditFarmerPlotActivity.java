@@ -19,6 +19,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
+import org.grameen.fdp.kasapin.services.LocationPrepareService;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
 import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
@@ -83,6 +84,8 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
         mAppDataManager = mPresenter.getAppDataManager();
+
+        startService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
 
         FARMER = getGson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
 

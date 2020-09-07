@@ -3,8 +3,10 @@ package org.grameen.fdp.kasapin.ui.gpsPicker;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -12,6 +14,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,6 +38,7 @@ import com.google.maps.android.SphericalUtil;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.PlotGpsPoint;
+import org.grameen.fdp.kasapin.services.LocationPrepareService;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -70,41 +74,40 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     private boolean hasGpsDataBeenSaved = true;
     private String action = "";
 
-    LocationListener locationListener = new LocationListener() {
+    private LatLng currCoordFromService;
+    private Double cAlt,cAcc;
+
+//    LocationListener locationListener = new LocationListener() {
+//        @Override
+//        public void onLocationChanged(Location location) {
+//
+//            altitude = location.getAltitude();
+//            accuracy = CommonUtils.round(location.getAccuracy(), 2);
+//
+//            if(accuracy < 8){
+//                hideProgress();
+//                AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
+//
+//                removeLocationListener();
+//            }
+//            else{
+////                startLocationListener();
+////                Toast.makeText(MapActivity.this, "Accuracy: " + String.valueOf(accuracy) + " not enough.", Toast.LENGTH_SHORT).show();
+////                Toast.makeText(MapActivity.this, "Location accuracy not high enough.", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    };
+
+    //I think I should not put this here
+    //TODO refactor to place this block somewhere
+    BroadcastReceiver brUpdateLoc = new BroadcastReceiver() {
         @Override
-        public void onLocationChanged(Location location) {
-
-            altitude = location.getAltitude();
-            accuracy = CommonUtils.round(location.getAccuracy(), 2);
-
-            if(accuracy < 8){
-                hideProgress();
-                AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
-                String msg =
-                        "Do you want to add this point? \n\n" +
-                                "Latitude    :   " + location.getLatitude() + "\n" +
-                                "Longitude  :   " + location.getLongitude() + "\n" +
-                                "Accuracy   :   " + accuracy + " meters\n" +
-                                "Altitude    :   " + altitude + " high";
-
-                showDialog(true, "Location update!", msg, (dialog, which) -> {
-                    dialog.dismiss();
-                    LatLng newLL = new LatLng(location.getLatitude(), location.getLongitude());
-                    mAdapter.addPoint(newLL);
-
-                    if (latLngList.size() > 0) {
-                        if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
-                            findViewById(R.id.placeHolder).setVisibility(View.GONE);
-                    }
-                    hasGpsDataBeenSaved = false;
-                }, "ADD POINT", (dialog, which) -> dialog.dismiss(), "CANCEL", 0);
-
-                removeLocationListener();
-            }
-            else{
-//                startLocationListener();
-//                Toast.makeText(MapActivity.this, "Accuracy: " + String.valueOf(accuracy) + " not enough.", Toast.LENGTH_SHORT).show();
-//                Toast.makeText(MapActivity.this, "Location accuracy not high enough.", Toast.LENGTH_SHORT).show();
+        public void onReceive(Context context, Intent intent) {
+            if(intent != null){
+                currCoordFromService = new LatLng(intent.getDoubleExtra("lat",0d),
+                        intent.getDoubleExtra("lng",0d));
+                cAcc = intent.getDoubleExtra("accuracy",0d);
+                cAlt = intent.getDoubleExtra("alt",0d);
             }
         }
     };
@@ -120,6 +123,9 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
 
         //Todo replace with di instance
         progressDialog = new ProgressDialog(this, R.style.AppDialog);
+
+        IntentFilter intentF = new IntentFilter("GET_CAPTURED_LOCATION");
+        this.registerReceiver(brUpdateLoc,intentF);
 
         if(getIntent() != null)
         mPresenter.getPlotData(getIntent().getStringExtra("plotExternalId"));
@@ -207,41 +213,68 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        if (gpsStatus)
-            startLocationListener();
-        else {
-            final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-            showDialog(true, "GPS disabled", "Do you want to open GPS settings?", (dialog, which) -> {
-                dialog.dismiss();
-                startActivity(new Intent(action));
-            }, getString(R.string.yes), (dialog, which) -> dialog.dismiss(), getString(R.string.no), 0);
+//        if (gpsStatus)
+//            startLocationListener();
+//        else {
+//            final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+//            showDialog(true, "GPS disabled", "Do you want to open GPS settings?", (dialog, which) -> {
+//                dialog.dismiss();
+//                startActivity(new Intent(action));
+//            }, getString(R.string.yes), (dialog, which) -> dialog.dismiss(), getString(R.string.no), 0);
+//        }
+
+        if(gpsStatus){
+            if(currCoordFromService != null){
+                String msg =
+                        "Do you want to add this point? \n\n" +
+                                "Latitude    :   " + currCoordFromService.latitude + "\n" +
+                                "Longitude  :   " + currCoordFromService.longitude + "\n" +
+                                "Accuracy   :   " + cAcc + " meters\n" +
+                                "Altitude    :   " + cAlt + " high";
+
+                showDialog(true, "Location update!", msg, (dialog, which) -> {
+                    dialog.dismiss();
+                    LatLng newLL = new LatLng(currCoordFromService.latitude, currCoordFromService.longitude);
+                    mAdapter.addPoint(newLL);
+
+                    if (latLngList.size() > 0) {
+                        if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
+                            findViewById(R.id.placeHolder).setVisibility(View.GONE);
+                    }
+                    hasGpsDataBeenSaved = false;
+                }, "ADD POINT", (dialog, which) -> dialog.dismiss(), "CANCEL", 0);
+            }
+            else{
+                Toast.makeText(this, "Please wait while we're getting a lock on your location.", Toast.LENGTH_SHORT).show();
+            }
         }
+
     }
 
-    private void startLocationListener() {
-        CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setNumUpdates(15);
-        locationRequest.setSmallestDisplacement(1.5f);
-        locationRequest.setFastestInterval(5000);
+//    private void startLocationListener() {
+//        CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
+//        LocationRequest locationRequest = new LocationRequest();
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        locationRequest.setInterval(5000);
+//        locationRequest.setNumUpdates(15);
+//        locationRequest.setSmallestDisplacement(1.5f);
+//        locationRequest.setFastestInterval(5000);
+//
+//        if (ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                && ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            showMessage("You need to enable permissions to display location!");
+//            return;
+//        }
+//        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
+//        //fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+//    }
 
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            showMessage("You need to enable permissions to display location!");
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
-        //fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-    }
-
-    private void removeLocationListener() {
-        //fusedLocationClient.removeLocationUpdates(locationCallback);
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
-    }
+//    private void removeLocationListener() {
+//        //fusedLocationClient.removeLocationUpdates(locationCallback);
+//        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
+//    }
 
     private void saveGpsPointsData() {
         plotGpsPoints.clear();
@@ -273,6 +306,8 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     protected void onPause() {
         if (!hasGpsDataBeenSaved)
             saveGpsPointsData();
+
+        unregisterReceiver(brUpdateLoc);
         super.onPause();
     }
 
@@ -306,6 +341,10 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
                 }
             }, "INSTALL", (w2, v) -> finish(), "EXIT", 0);
         }
+
+        //Load data
+        IntentFilter intentF = new IntentFilter("GET_CAPTURED_LOCATION");
+        this.registerReceiver(brUpdateLoc,intentF);
     }
 
     private boolean checkPlayServices() {
