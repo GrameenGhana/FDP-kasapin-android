@@ -94,8 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     ActivityComponent activityComponent;
     private Unbinder mUnBinder;
 
-    public GoogleApiClient googleApiClient;
-
     public static Gson getGson() {
         return gson;
     }
@@ -301,28 +299,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     @Override
     protected void onStart() {
         super.onStart();
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-
-                    }
-                })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                    }
-                })
-                .build();
-        googleApiClient.connect();
     }
 
     protected Toolbar setToolbar(String title) {

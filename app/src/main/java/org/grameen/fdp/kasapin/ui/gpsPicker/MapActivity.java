@@ -387,8 +387,5 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     @Override
     protected void onStop() {
         super.onStop();
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
     }
 }

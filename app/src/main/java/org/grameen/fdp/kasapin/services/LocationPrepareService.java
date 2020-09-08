@@ -78,15 +78,11 @@ public class LocationPrepareService extends Service {
     };
 
     private void startLocationListener(){
-//        CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(1000);
-//        locationRequest.setNumUpdates(15);
         locationRequest.setSmallestDisplacement(1.5f);
         locationRequest.setFastestInterval(1000);
-
-        Log.d("LOC_LISTEN","Started Location Listener");
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -129,13 +125,16 @@ public class LocationPrepareService extends Service {
         i.setAction("GET_CAPTURED_LOCATION");
         sendBroadcast(i);
 
-        Log.d("LAT",Double.valueOf(currLat).toString());
     }
 
     @Override
     public void onDestroy() {
         h.removeCallbacks(runner);
         stopLocationListener();
+
+        if (googleApiClient != null && googleApiClient.isConnected()) {
+            googleApiClient.disconnect();
+        }
         super.onDestroy();
     }
 
