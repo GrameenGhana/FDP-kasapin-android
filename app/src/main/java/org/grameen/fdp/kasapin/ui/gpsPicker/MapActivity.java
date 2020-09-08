@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,7 @@ import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -64,6 +66,8 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     Button calculateArea;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.accuracy_textview)
+    TextView accuracyTextView;
     private Plot plot;
     private List<PlotGpsPoint> plotGpsPoints = new ArrayList<>();
     private List<LatLng> latLngList = new ArrayList<>();
@@ -75,7 +79,6 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     private String action = "";
 
     private LatLng currCoordFromService;
-    private Double cAlt,cAcc;
 
 //    LocationListener locationListener = new LocationListener() {
 //        @Override
@@ -103,11 +106,17 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     BroadcastReceiver brUpdateLoc = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            AppLogger.e("BroadcastRece", "OnReceive");
             if(intent != null){
+                AppLogger.e("BroadcastRece", intent.toString());
+
                 currCoordFromService = new LatLng(intent.getDoubleExtra("lat",0d),
                         intent.getDoubleExtra("lng",0d));
-                cAcc = intent.getDoubleExtra("accuracy",0d);
-                cAlt = intent.getDoubleExtra("alt",0d);
+                accuracy = intent.getDoubleExtra("accuracy",0d);
+                altitude = intent.getDoubleExtra("alt",0d);
+
+                accuracyTextView.setText(String.format(Locale.getDefault(), "Accuracy: %s", accuracy));
+
             }
         }
     };
@@ -127,10 +136,10 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         IntentFilter intentF = new IntentFilter("GET_CAPTURED_LOCATION");
         this.registerReceiver(brUpdateLoc,intentF);
 
-        if(getIntent() != null)
+        if (getIntent() != null)
         mPresenter.getPlotData(getIntent().getStringExtra("plotExternalId"));
 
-        calculateArea.setOnClickListener(view -> {
+        calculateArea.setOnClickListener( view -> {
             action = "calculate area of ";
             if (checkNoGPSPointsAdded())
                 computeAreaInSquareMeters();
@@ -223,19 +232,29 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
 //            }, getString(R.string.yes), (dialog, which) -> dialog.dismiss(), getString(R.string.no), 0);
 //        }
 
-        if(gpsStatus){
+
+        if (!gpsStatus){
+            final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+           showDialog(true, "GPS disabled", "Do you want to open GPS settings?", (dialog, which) -> {
+               dialog.dismiss();
+               startActivity(new Intent(action));
+           }, getString(R.string.yes), (dialog, which) -> dialog.dismiss(), getString(R.string.no), 0);
+
+            return;
+        }
+
             if(currCoordFromService != null){
                 String msg =
                         "Do you want to add this point? \n\n" +
                                 "Latitude    :   " + currCoordFromService.latitude + "\n" +
                                 "Longitude  :   " + currCoordFromService.longitude + "\n" +
-                                "Accuracy   :   " + cAcc + " meters\n" +
-                                "Altitude    :   " + cAlt + " high";
+                                "Accuracy   :   " + accuracy + " meters\n" +
+                                "Altitude    :   " + altitude + " high";
 
                 showDialog(true, "Location update!", msg, (dialog, which) -> {
                     dialog.dismiss();
-                    LatLng newLL = new LatLng(currCoordFromService.latitude, currCoordFromService.longitude);
-                    mAdapter.addPoint(newLL);
+                   // LatLng newLL = new LatLng(currCoordFromService.latitude, currCoordFromService.longitude);
+                    mAdapter.addPoint(currCoordFromService);
 
                     if (latLngList.size() > 0) {
                         if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
@@ -243,12 +262,8 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
                     }
                     hasGpsDataBeenSaved = false;
                 }, "ADD POINT", (dialog, which) -> dialog.dismiss(), "CANCEL", 0);
-            }
-            else{
+            } else
                 Toast.makeText(this, "Please wait while we're getting a lock on your location.", Toast.LENGTH_SHORT).show();
-            }
-        }
-
     }
 
 //    private void startLocationListener() {

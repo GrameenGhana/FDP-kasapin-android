@@ -1,5 +1,6 @@
 package org.grameen.fdp.kasapin.ui.base;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -425,5 +426,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
             flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             window.getDecorView().setSystemUiVisibility(flags);
         }
+    }
+
+    protected boolean isServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

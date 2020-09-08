@@ -28,6 +28,7 @@ import org.grameen.fdp.kasapin.data.db.entity.PlotAssessment;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
+import org.grameen.fdp.kasapin.services.LocationPrepareService;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
@@ -138,6 +139,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         else
             showMessage(getString(R.string.error_getting_farmer_info));
         CURRENT_FORM_POSITION = 0;
+
     }
 
     @Override
@@ -301,6 +303,10 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(FARMER.getCode()).blockingGet();
             initializeViews(false);
         }
+
+        //check if service is running
+        if (isServiceRunning(LocationPrepareService.class))
+        stopService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
     }
 
     @Override
@@ -359,7 +365,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                         .formAndQuestionsDao().maybeGetFormAndQuestionsByName("Farm results").blockingGet();
                 AppLogger.e(TAG, "Farm Results Questions >>> " + getGson().toJson(farmResultsFormAndQuestions));
 
-                if (haveAllPlotsBeenAssessed(PLOTS) && farmResultsFormAndQuestions != null) {
+                if (checkIfAllPlotsHaveAssessments(PLOTS) && farmResultsFormAndQuestions != null) {
 
                     JSONObject valuesJsonObject = new JSONObject();
                     Question farmResultsQuestion = null;
@@ -529,10 +535,9 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             showMessage(R.string.error_has_occurred);
             return false;
         }
-
     }
 
-    boolean haveAllPlotsBeenAssessed(List<Plot> plots) {
+    boolean checkIfAllPlotsHaveAssessments(List<Plot> plots) {
         MONITORING_DATA_JSON = new JSONObject();
         checkIfAllPlotsHaveSameNumberOfMonitoring(plots);
 
@@ -589,7 +594,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         if (plots != null && plots.size() > 0) {
             noOfPlots = plots.size();
             for (Plot plot : plots) {
-                //Check number of monitorngs for each plot for the currrent monitoring year
+                //Check number of monitorings for each plot for the current monitoring year
                 numberOfMonitoringsPerPlot.add(getAppDataManager().getDatabaseManager().monitoringDao()
                         .countMonitoringForSelectedYear(plot.getExternalId(), currentMonitoringYear)
                         .blockingGet(0));
@@ -613,7 +618,6 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             }
         } else
             showMessage(getString(R.string.farmer) + FARMER.getFarmerName() + getString(R.string.no_plots_added_suffix));
-
     }
 
     String parseCollectionsFormula(String formula, List<String> plotAssessmentValues) {
@@ -628,4 +632,5 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             return "0";
         }
     }
+
 }

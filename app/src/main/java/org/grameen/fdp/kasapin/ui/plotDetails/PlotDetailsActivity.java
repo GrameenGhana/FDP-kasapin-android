@@ -17,6 +17,7 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
+import org.grameen.fdp.kasapin.services.LocationPrepareService;
 import org.grameen.fdp.kasapin.ui.AddEditFarmerPlot.AddEditFarmerPlotActivity;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
@@ -91,6 +92,8 @@ public class PlotDetailsActivity extends BaseActivity implements PlotDetailsCont
             showMessage(R.string.error_has_occurred);
             finish();
         }
+
+        startService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
     }
 
 

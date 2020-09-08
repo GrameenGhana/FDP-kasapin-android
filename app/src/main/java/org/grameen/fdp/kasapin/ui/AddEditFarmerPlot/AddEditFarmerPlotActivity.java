@@ -85,8 +85,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         mPresenter.takeView(this);
         mAppDataManager = mPresenter.getAppDataManager();
 
-        startService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
-
         FARMER = getGson().fromJson(getIntent().getStringExtra("farmer"), Farmer.class);
 
         if (FARMER != null)
@@ -105,7 +103,6 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         if (mPresenter != null)
             mPresenter.dropView();
 
-        stopService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
         super.onDestroy();
     }
 
