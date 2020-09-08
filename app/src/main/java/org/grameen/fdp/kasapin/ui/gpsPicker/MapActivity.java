@@ -3,8 +3,10 @@ package org.grameen.fdp.kasapin.ui.gpsPicker;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -12,8 +14,11 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +39,7 @@ import com.google.maps.android.SphericalUtil;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.PlotGpsPoint;
+import org.grameen.fdp.kasapin.services.LocationPrepareService;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.plotDetails.PlotDetailsActivity;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
@@ -42,6 +48,7 @@ import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -59,6 +66,8 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     Button calculateArea;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.accuracy_textview)
+    TextView accuracyTextView;
     private Plot plot;
     private List<PlotGpsPoint> plotGpsPoints = new ArrayList<>();
     private List<LatLng> latLngList = new ArrayList<>();
@@ -68,35 +77,47 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     private double altitude;
     private boolean hasGpsDataBeenSaved = true;
     private String action = "";
-    private GoogleApiClient googleApiClient;
 
-    LocationListener locationListener = new LocationListener() {
+    private LatLng currCoordFromService;
+
+//    LocationListener locationListener = new LocationListener() {
+//        @Override
+//        public void onLocationChanged(Location location) {
+//
+//            altitude = location.getAltitude();
+//            accuracy = CommonUtils.round(location.getAccuracy(), 2);
+//
+//            if(accuracy < 8){
+//                hideProgress();
+//                AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
+//
+//                removeLocationListener();
+//            }
+//            else{
+////                startLocationListener();
+////                Toast.makeText(MapActivity.this, "Accuracy: " + String.valueOf(accuracy) + " not enough.", Toast.LENGTH_SHORT).show();
+////                Toast.makeText(MapActivity.this, "Location accuracy not high enough.", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    };
+
+    //I think I should not put this here
+    //TODO refactor to place this block somewhere
+    BroadcastReceiver brUpdateLoc = new BroadcastReceiver() {
         @Override
-        public void onLocationChanged(Location location) {
-            hideProgress();
-            altitude = location.getAltitude();
-            accuracy = CommonUtils.round(location.getAccuracy(), 2);
-            AppLogger.e(TAG, "^^^^^^^^^^ LOCATION CHANGED ^^^^^^^^^^^^");
-            String msg =
-                    "Do you want to add this point? \n\n" +
-                            "Latitude    :   " + location.getLatitude() + "\n" +
-                            "Longitude  :   " + location.getLongitude() + "\n" +
-                            "Accuracy   :   " + accuracy + " meters\n" +
-                            "Altitude    :   " + altitude + " high";
+        public void onReceive(Context context, Intent intent) {
+            AppLogger.e("BroadcastRece", "OnReceive");
+            if(intent != null){
+                AppLogger.e("BroadcastRece", intent.toString());
 
-            showDialog(true, "Location update!", msg, (dialog, which) -> {
-                dialog.dismiss();
-                LatLng newLL = new LatLng(location.getLatitude(), location.getLongitude());
-                mAdapter.addPoint(newLL);
+                currCoordFromService = new LatLng(intent.getDoubleExtra("lat",0d),
+                        intent.getDoubleExtra("lng",0d));
+                accuracy = intent.getDoubleExtra("accuracy",0d);
+                altitude = intent.getDoubleExtra("alt",0d);
 
-                if (latLngList.size() > 0) {
-                    if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
-                        findViewById(R.id.placeHolder).setVisibility(View.GONE);
-                }
-                hasGpsDataBeenSaved = false;
-            }, "ADD POINT", (dialog, which) -> dialog.dismiss(), "CANCEL", 0);
+                accuracyTextView.setText(String.format(Locale.getDefault(), "Accuracy: %s", accuracy));
 
-            removeLocationListener();
+            }
         }
     };
 
@@ -112,10 +133,13 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         //Todo replace with di instance
         progressDialog = new ProgressDialog(this, R.style.AppDialog);
 
-        if(getIntent() != null)
+        IntentFilter intentF = new IntentFilter("GET_CAPTURED_LOCATION");
+        this.registerReceiver(brUpdateLoc,intentF);
+
+        if (getIntent() != null)
         mPresenter.getPlotData(getIntent().getStringExtra("plotExternalId"));
 
-        calculateArea.setOnClickListener(view -> {
+        calculateArea.setOnClickListener( view -> {
             action = "calculate area of ";
             if (checkNoGPSPointsAdded())
                 computeAreaInSquareMeters();
@@ -198,39 +222,74 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean gpsStatus = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        if (gpsStatus)
-            startLocationListener();
-        else {
+//        if (gpsStatus)
+//            startLocationListener();
+//        else {
+//            final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+//            showDialog(true, "GPS disabled", "Do you want to open GPS settings?", (dialog, which) -> {
+//                dialog.dismiss();
+//                startActivity(new Intent(action));
+//            }, getString(R.string.yes), (dialog, which) -> dialog.dismiss(), getString(R.string.no), 0);
+//        }
+
+
+        if (!gpsStatus){
             final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-            showDialog(true, "GPS disabled", "Do you want to open GPS settings?", (dialog, which) -> {
-                dialog.dismiss();
-                startActivity(new Intent(action));
-            }, getString(R.string.yes), (dialog, which) -> dialog.dismiss(), getString(R.string.no), 0);
-        }
-    }
+           showDialog(true, "GPS disabled", "Do you want to open GPS settings?", (dialog, which) -> {
+               dialog.dismiss();
+               startActivity(new Intent(action));
+           }, getString(R.string.yes), (dialog, which) -> dialog.dismiss(), getString(R.string.no), 0);
 
-    private void startLocationListener() {
-        CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(5000);
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            showMessage("You need to enable permissions to display location!");
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
-        //fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+
+            if(currCoordFromService != null){
+                String msg =
+                        "Do you want to add this point? \n\n" +
+                                "Latitude    :   " + currCoordFromService.latitude + "\n" +
+                                "Longitude  :   " + currCoordFromService.longitude + "\n" +
+                                "Accuracy   :   " + accuracy + " meters\n" +
+                                "Altitude    :   " + altitude + " high";
+
+                showDialog(true, "Location update!", msg, (dialog, which) -> {
+                    dialog.dismiss();
+                   // LatLng newLL = new LatLng(currCoordFromService.latitude, currCoordFromService.longitude);
+                    mAdapter.addPoint(currCoordFromService);
+
+                    if (latLngList.size() > 0) {
+                        if (findViewById(R.id.placeHolder).getVisibility() == View.VISIBLE)
+                            findViewById(R.id.placeHolder).setVisibility(View.GONE);
+                    }
+                    hasGpsDataBeenSaved = false;
+                }, "ADD POINT", (dialog, which) -> dialog.dismiss(), "CANCEL", 0);
+            } else
+                Toast.makeText(this, "Please wait while we're getting a lock on your location.", Toast.LENGTH_SHORT).show();
     }
 
-    private void removeLocationListener() {
-        //fusedLocationClient.removeLocationUpdates(locationCallback);
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
-    }
+//    private void startLocationListener() {
+//        CommonUtils.showLoadingDialog(progressDialog, "Please wait...", "", true, 0, false);
+//        LocationRequest locationRequest = new LocationRequest();
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        locationRequest.setInterval(5000);
+//        locationRequest.setNumUpdates(15);
+//        locationRequest.setSmallestDisplacement(1.5f);
+//        locationRequest.setFastestInterval(5000);
+//
+//        if (ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                && ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            showMessage("You need to enable permissions to display location!");
+//            return;
+//        }
+//        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, locationListener);
+//        //fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+//    }
+
+//    private void removeLocationListener() {
+//        //fusedLocationClient.removeLocationUpdates(locationCallback);
+//        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
+//    }
 
     private void saveGpsPointsData() {
         plotGpsPoints.clear();
@@ -262,6 +321,8 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
     protected void onPause() {
         if (!hasGpsDataBeenSaved)
             saveGpsPointsData();
+
+        unregisterReceiver(brUpdateLoc);
         super.onPause();
     }
 
@@ -295,6 +356,10 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
                 }
             }, "INSTALL", (w2, v) -> finish(), "EXIT", 0);
         }
+
+        //Load data
+        IntentFilter intentF = new IntentFilter("GET_CAPTURED_LOCATION");
+        this.registerReceiver(brUpdateLoc,intentF);
     }
 
     private boolean checkPlayServices() {
@@ -327,23 +392,15 @@ public class MapActivity extends BaseActivity implements MapContract.View, Googl
             progressDialog.dismiss();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        googleApiClient.connect();
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//
+//    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
     }
 }
