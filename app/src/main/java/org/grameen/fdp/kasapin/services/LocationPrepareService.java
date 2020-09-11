@@ -38,9 +38,6 @@ public class LocationPrepareService extends Service {
         h = new Handler(this.getMainLooper());
 
         buildGoogleApiClient();
-
-        //After 3 seconds, we start the location listener
-        //h.postDelayed(runner, 1500);
     }
 
     @Override
