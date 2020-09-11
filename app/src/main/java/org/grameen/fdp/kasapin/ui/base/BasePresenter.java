@@ -486,17 +486,18 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         answerJson = new JSONObject();
         try {
             //For decimal values, add answer to payload as a decimal instead of as a string
+            //If for some reasons the questionType is null, put the answer value in the json as a String anyway
 
-            Object answer = (questionType != null
-                    && (questionType.equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)
-                    || questionType.equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA))
-                    &&  answerValue.toString().matches("-?\\d+(\\.\\d+)?"))
-                    ? Double.parseDouble(answerValue.toString().trim().replace(",", "")) : 0;
+            Object answer = (questionType != null && (questionType.equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)
+                    || questionType.equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)))
+                    && answerValue.toString().matches("-?\\d+(\\.\\d+)?")
+                    ? Double.parseDouble(answerValue.toString().trim().replace(",", "")) : answerValue;
             answerJson.put("answer", answer);
             answerJson.put("field_name", fieldName);
 
             if (variableLabel != null)
                 answerJson.put("variable_c", variableLabel);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
