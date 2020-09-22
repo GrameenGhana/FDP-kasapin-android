@@ -71,8 +71,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     NavigationView navigationView;
     @BindView(R.id.add_farmer)
     Button addFarmerButton;
-    @BindView(R.id.sync)
-    Button syncAllDataButton;
     @BindView(R.id.translation_switch)
     Switch toggleTranslation;
     @BindView(R.id.custom_toolbar_layout)
@@ -210,8 +208,6 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
 
     @OnClick(R.id.add_farmer)
     void addFarmerActivity() {
-        //Todo get forms, check size of forms, move to next activity
-        //mPresenter.getFarmerProfileFormAndQuestions();
         openAddNewFarmerActivity(null);
     }
 
@@ -297,12 +293,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                 logOut();
                 break;
             case R.id.sync_farmer:
-                //Todo Sync all un synced farmer data
-                //Generate the json object here, pass the object as a value
-                if (NetworkUtils.isNetworkConnected(MainActivity.this))
-                    new Handler().postDelayed(() -> mPresenter.syncData(true), 500);
-                else
-                    showMessage(R.string.no_internet_connection_available);
+                syncData();
                 break;
             case R.id.download_farmer_data:
                 //Todo Sync down new data from server
@@ -318,6 +309,14 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
         return true;
     }
 
+    @OnClick(R.id.sync)
+    void syncData(){
+        //Generate the json object here, pass the object as a value
+        if (NetworkUtils.isNetworkConnected(MainActivity.this))
+            new Handler().postDelayed(() -> mPresenter.syncData(true), 500);
+        else
+            showMessage(R.string.no_internet_connection_available);
+    }
     @Override
     public void showNoFarmersMessage() {
         showDialog(true, getString(R.string.no_data), getString(R.string.no_new_data),

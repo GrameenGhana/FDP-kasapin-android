@@ -21,28 +21,19 @@ import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 
 public class LocationPrepareService extends Service {
-
-    private Handler h;
-
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
-
     private Double currLat, currLong, currAccuracy,currAlt;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         AppLogger.e("LOC_SERVICE_CREATE","Service started");
-
-        h = new Handler(this.getMainLooper());
-
         buildGoogleApiClient();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         if(googleApiClient.isConnected())
         startLocationUpdates();
         return START_STICKY;
@@ -66,7 +57,6 @@ public class LocationPrepareService extends Service {
                 .addOnConnectionFailedListener(connectionResult -> {
                 })
                 .build();
-
         createLocationRequest();
     }
 
@@ -101,7 +91,6 @@ public class LocationPrepareService extends Service {
             currLat = location.getLatitude();
             currLong = location.getLongitude();
             currAlt = location.getAltitude();
-
             broadcastCoordinates();
         }
     };
@@ -122,10 +111,7 @@ public class LocationPrepareService extends Service {
 
     @Override
     public void onDestroy() {
-        AppLogger.e("LOC_SERVICE","onDestroy");
-
         stopLocationUpdates();
-
         if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }

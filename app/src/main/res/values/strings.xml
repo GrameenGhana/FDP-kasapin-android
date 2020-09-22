@@ -102,6 +102,8 @@
     <string name="select_country_region">Please Select a Country/Region</string>
     <string name="hey_there">Hi there!</string>
     <string name="sync">Sync</string>
+    <string name="sync_all" translatable="false">Sync All</string>
+
     <string name="sync_anyway">Sync anyway</string>
     <string name="first_sign_in_rationale">Looks like this is your first sign in.
         "Since you have internet connection it's recommended you sync data from the server.</string>

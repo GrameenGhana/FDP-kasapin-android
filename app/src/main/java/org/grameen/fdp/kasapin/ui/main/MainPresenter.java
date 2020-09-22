@@ -17,7 +17,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -25,6 +27,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         FdpCallbacks.OnDownloadResourcesListener, FdpCallbacks.UploadDataListener {
     AppDataManager mAppDataManager;
     int count = 0;
+    List<Farmer> UN_SYNCED_FARMERS;
 
     @Inject
     public MainPresenter(AppDataManager appDataManager) {
@@ -105,12 +108,12 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
          * Same for plots, answers, etc.
          *
          * First check if there are un synced data
-         **/
+         */
         if (getAppDataManager().getDatabaseManager().realFarmersDao().checkIfUnsyncedFarmersAvailable().blockingGet() <= 0) {
             getView().showMessage(R.string.no_new_data);
             return;
         }
-        List<Farmer> UN_SYNCED_FARMERS = getAppDataManager().getDatabaseManager().realFarmersDao().getAllNotSynced().blockingGet();
+        UN_SYNCED_FARMERS = getAppDataManager().getDatabaseManager().realFarmersDao().getAllNotSynced().blockingGet();
         syncData(this, showProgress, UN_SYNCED_FARMERS);
     }
 
@@ -162,6 +165,17 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     @Override
     public void onSuccess(String message) {
         //On download data success.
+        if(UN_SYNCED_FARMERS != null) {
+             runSingleCall(Observable.fromIterable(UN_SYNCED_FARMERS)
+                     .subscribeOn(Schedulers.io())
+                     .map(Farmer::getCode)
+                     .toList().subscribe(farmerCodes -> {
+                      getAppDataManager().getDatabaseManager().realFarmersDao().setFarmersAsSynced(farmerCodes);
+                      UN_SYNCED_FARMERS = null;
+                     },
+                     Throwable::printStackTrace));
+        }
+
         getView().hideLoading();
         getView().showMessage(message);
         getView().restartUI();

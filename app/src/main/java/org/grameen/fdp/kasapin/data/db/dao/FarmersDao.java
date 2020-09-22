@@ -3,7 +3,6 @@ package org.grameen.fdp.kasapin.data.db.dao;
 
 import androidx.room.Dao;
 import androidx.room.Query;
-import androidx.room.Update;
 
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 
@@ -36,6 +35,9 @@ public interface FarmersDao extends BaseDao<Farmer> {
 
     @Query("SELECT COUNT(syncStatus) FROM farmers")
     Maybe<Integer> checkIfUnsyncedFarmersAvailable();
+
+    @Query("UPDATE farmers SET syncStatus = 1 WHERE code IN (:farmerCodes)")
+    void setFarmersAsSynced(List<String> farmerCodes);
 
     @Query("SELECT COUNT(id) FROM farmers where code =:code")
     int checkIfFarmerExists(String code);

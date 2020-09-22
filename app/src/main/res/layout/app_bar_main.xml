@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:padding="@dimen/spacing_normal"
-            android:text="@string/sync" />
+            android:text="@string/sync_all" />
 
 
         <Button

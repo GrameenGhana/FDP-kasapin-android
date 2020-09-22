@@ -172,7 +172,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                 //Eg. Tree Age is an Adoption Observation value which can be obtained either from diagnostic mode or monitoring mode when
                 //using the app. So we must differentiate which answer value is coming from which module (Diagnostic or Monitoring)
 
-                diagnosticArray.put(generateModuleData(plot.getExternalId(), AppConstants.MODULE_TYPE_DIAGNOSTIC));
+                //For plot AO data, plotExternalId == moduleExternalId
+                diagnosticArray.put(generateModuleData(plot.getExternalId(), plot.getExternalId(), AppConstants.MODULE_TYPE_DIAGNOSTIC));
                 JSONObject plotJsonObject = plot.getAOJsonData();
 
                 for (Mapping mapping : mappingEntry.getValue()) {
@@ -203,7 +204,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                 if (plotMonitoringList != null && plotMonitoringList.size() > 0) {
                     for (Monitoring monitoring : plotMonitoringList) {
                         JSONArray monitoringPayload = new JSONArray();
-                        monitoringPayload.put(generateModuleData(plot.getExternalId(), AppConstants.MODULE_TYPE_MONITORING));
+                        monitoringPayload.put(generateModuleData(plot.getExternalId(), monitoring.getExternalId(), AppConstants.MODULE_TYPE_MONITORING));
 
                         JSONObject monitoringJsonObject = monitoring.getMonitoringAOJsonData();
                         for (Mapping mapping : mappingEntry.getValue()) {
@@ -452,8 +453,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
     protected JSONObject buildAllAnswersJsonDataPerFarmer(String code) {
         JSONObject jsonObject = new JSONObject();
-        for (FormAnswerData answerData : getAppDataManager().getDatabaseManager().formAnswerDao().getAll(code)
-                .blockingGet()) {
+        for (FormAnswerData answerData : getAppDataManager().getDatabaseManager().formAnswerDao().getAll(code).blockingGet()) {
             Iterator<String> iterator = answerData.getJsonData().keys();
             while (iterator.hasNext()) {
                 String key = iterator.next();
@@ -468,11 +468,11 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         return jsonObject;
     }
 
-    private JSONObject generateModuleData(String plotExternalId, String moduleType) {
+    private JSONObject generateModuleData(String plotExternalId, String externalId, String moduleType) {
         JSONObject diagnosticInfoJSONObject = new JSONObject();
         try {
             diagnosticInfoJSONObject.put(AppConstants.TYPE_FIELD_NAME, moduleType);
-            diagnosticInfoJSONObject.put(AppConstants.DIAGNOSTIC_MONITORING_EXTERNAL_ID_C, plotExternalId);
+            diagnosticInfoJSONObject.put(AppConstants.DIAGNOSTIC_MONITORING_EXTERNAL_ID_C, externalId);
             diagnosticInfoJSONObject.put(AppConstants.PLOT_EXTERNAL_ID_FIELD, plotExternalId);
 
         } catch (JSONException e) {

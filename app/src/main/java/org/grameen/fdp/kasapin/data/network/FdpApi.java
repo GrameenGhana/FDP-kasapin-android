@@ -19,12 +19,10 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-
 /**
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */
-
 public interface FdpApi {
     /**
      * Makes a login call to the server
@@ -69,7 +67,8 @@ public interface FdpApi {
      * @param token is the token required to authenticate the user at the server side
      * @param farmersData json body of the payload
      */
-    @POST(AppConstants.API + "synchupdata")
+    //@POST(AppConstants.API + "synchupdata")
+    @POST(AppConstants.API + "syncupdatatest")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     Single<ServerResponse> uploadFarmersData(@Query("token") String token, @Body JsonObject farmersData);
 
