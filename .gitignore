@@ -1,6 +1,6 @@
 # AS & Idea stuff
 *.iml
-/.idea
+.idea
 
 # Gradle & build junk
 /.gradle
