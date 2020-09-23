@@ -21,6 +21,9 @@ public class RecommendationActivity extends BaseModel {
     @SerializedName("month_c")
     String month;
 
+    @SerializedName("image_id")
+    String imageId;
+
     @SerializedName("year_c")
     int year;
 
@@ -109,5 +112,13 @@ public class RecommendationActivity extends BaseModel {
 
     public void setSuppliesCost(double suppliesCost) {
         this.suppliesCost = suppliesCost;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
+    public String getImageId() {
+         return imageId != null ? imageId.replace(".png", "") : "n/a";
     }
 }

@@ -6,6 +6,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,14 +35,15 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableMaybeObserver<Farmer>() {
             @Override
             public void onSuccess(Farmer farmer) {
-                getView().setUpViews(farmer);
+                 getView().setUpViews(farmer);
             }
             @Override
             public void onError(Throwable e){
                 getView().showMessage("Could not fetch farmer data. Please report this issue.");
             }
             @Override
-            public void onComplete() {
+            public void onComplete(){
+
                 getView().hideLoading();
             }
         });
@@ -53,23 +55,28 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
         runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getAll(farmerCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(formAnswerDatas -> {
-                    if (formAnswerDatas != null) {
-                        for (FormAnswerData formAnswerData : formAnswerDatas) {
-                            JSONObject object = formAnswerData.getJsonData();
+                .subscribe(formAnswerData -> {
+                    if (formAnswerData != null) {
+                        for (FormAnswerData data : formAnswerData) {
+                            JSONObject object = data.getJsonData();
                             Iterator<String> iterator = object.keys();
                             while (iterator.hasNext()) {
                                 String key = iterator.next();
                                 try {
-                                    ALL_DATA_JSON.put(key, formAnswerData.getJsonData().get(key));
+                                    ALL_DATA_JSON.put(key, data.getJsonData().get(key));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
                         }
+                        getView().hideLoading();
                         getView().setAnswerData(ALL_DATA_JSON);
-                    }
-                }, throwable -> getView().showMessage("Couldn't obtain data!")));
+                    }else
+                        getView().hideLoading();
+                }, throwable -> {
+                    throwable.printStackTrace();
+                    getView().showMessage("Couldn't obtain data!");
+                }));
     }
 
     @Override

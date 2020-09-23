@@ -111,6 +111,8 @@ public class AppConstants {
     public static final String TAG_TITLE_TEXT_VIEW = "titleTag";
     public static final String BUTTON_VIEW = "buttonTag";
     public static final String TAG_OTHER_TEXT_VIEW = "textTag";
+    public static final String TAG_ICON_VIEW = "iconTag";
+
     public static final String TAG_CALCULATION = "calculationTag";
     public static final String TAG_SPINNER_VIEW = "viewTag";
     public static final String TAG_RESULTS = "resultsTag";

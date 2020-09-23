@@ -8,7 +8,6 @@ import java.util.List;
 public class DetailedMonthContract {
     public interface View extends BaseContract.View {
         void setPlotsData(List<Plot> plotsData);
-
         void setData();
     }
 

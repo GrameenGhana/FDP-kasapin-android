@@ -1,8 +1,10 @@
 package org.grameen.fdp.kasapin.utilities;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.util.Base64;
@@ -12,6 +14,7 @@ import androidx.exifinterface.media.ExifInterface;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 
 public class ImageUtil {
     public static Bitmap base64ToScaledBitmap(String base64Str) throws IllegalArgumentException {
@@ -43,8 +46,7 @@ public class ImageUtil {
         options.inJustDecodeBounds = false;
         // Decode bitmap with inSampleSize set
         InputStream imageStream = context.getContentResolver().openInputStream(selectedImage);
-        Bitmap img = BitmapFactory.decodeStream(imageStream, null, options);
-        img = rotateImageIfRequired(context, img, selectedImage);
+         Bitmap img = rotateImageIfRequired(context, BitmapFactory.decodeStream(imageStream, null, options), selectedImage);
 
         if (imageStream != null)
             imageStream.close();
@@ -110,4 +112,30 @@ public class ImageUtil {
         }
         return inSampleSize;
     }
+
+    public static Bitmap mergeIconsToBitmap(LinkedList<Bitmap> bitmaps) {
+        if(bitmaps.size() == 0) return null;
+
+        int iconSize = 80;
+        int noOfColumns = 2;
+        int sizeOfBitmapsArray = bitmaps.size();
+
+        int totalWidth = (sizeOfBitmapsArray <= noOfColumns) ? (sizeOfBitmapsArray * iconSize) : (noOfColumns * iconSize);
+        int totalHeight = iconSize + iconSize * (bitmaps.size() / noOfColumns);
+        int top = 0;
+        int left = 0;
+        Bitmap bigBitmap = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888);
+        Canvas bitCanvas = new Canvas(bigBitmap);
+
+        for (int i = 0; i < sizeOfBitmapsArray; i++) {
+            Bitmap bitmap =  Bitmap.createScaledBitmap(bitmaps.get(i), iconSize, iconSize, false);
+            bitCanvas.drawBitmap(bitmap, left, top, null);
+            bitmap.recycle();
+
+            left = ((i + 1) % noOfColumns == 0) ? 0 : left + iconSize;
+            top = ((i + 1) % noOfColumns == 0) ? top + iconSize + 2 : top;
+        }
+        return bigBitmap;
+    }
+
 }
