@@ -66,12 +66,7 @@ public class PhotoButtonController extends MyLabeledFieldController {
         this.context = ctx;
     }
 
-    /**
-     * Constructs a new instance of a date picker field, with the selected date displayed in "MMM d, yyyy" format.
-     *
-     * @param name      the name of the field
-     * @param labelText the label to display beside the field
-     */
+
     public PhotoButtonController(Context context, String name, String content_desc, String labelText, OnClickListener locationListener, Boolean enabled) {
         this(context, name, content_desc, labelText, false, locationListener);
         this.context = context;

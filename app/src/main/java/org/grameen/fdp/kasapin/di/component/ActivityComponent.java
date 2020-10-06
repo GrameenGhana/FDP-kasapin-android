@@ -24,6 +24,7 @@ import org.grameen.fdp.kasapin.ui.plotMonitoringActivity.PlotMonitoringActivity;
 import org.grameen.fdp.kasapin.ui.plotReview.PlotReviewActivity;
 import org.grameen.fdp.kasapin.ui.serverUrl.AddEditServerUrlActivity;
 import org.grameen.fdp.kasapin.ui.splash.SplashActivity;
+import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
 
 import dagger.Component;
 
@@ -71,4 +72,7 @@ public interface ActivityComponent {
     void inject(FarmAssessmentActivity view);
 
     void inject(AddEditServerUrlActivity view);
+
+    void inject(ImageViewActivity view);
+
 }

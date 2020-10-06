@@ -24,14 +24,12 @@ public class ImageViewActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivityComponent().inject(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(android.R.color.black));
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-          /*  getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);*/
         }
 
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -39,8 +37,9 @@ public class ImageViewActivity extends BaseActivity {
         appBar = findViewById(R.id.appBar);
         hideToolBr();
 
-        Intent intent = getIntent();
-        decodableString = intent.getStringExtra("image_string");
+         decodableString = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
+                .getStringExtra("farmerCode")).blockingGet().getImageUrl();
+
         if (decodableString != null && !decodableString.equalsIgnoreCase("")) {
             touchImageView = findViewById(R.id.touch_image_view);
             try {

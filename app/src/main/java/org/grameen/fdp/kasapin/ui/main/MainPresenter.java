@@ -164,18 +164,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     //Download Data Callbacks declared at the global level
     @Override
     public void onSuccess(String message) {
-        //On download data success.
-        if(UN_SYNCED_FARMERS != null) {
-             runSingleCall(Observable.fromIterable(UN_SYNCED_FARMERS)
-                     .subscribeOn(Schedulers.io())
-                     .map(Farmer::getCode)
-                     .toList().subscribe(farmerCodes -> {
-                      getAppDataManager().getDatabaseManager().realFarmersDao().setFarmersAsSynced(farmerCodes);
-                      UN_SYNCED_FARMERS = null;
-                     },
-                     Throwable::printStackTrace));
-        }
-
         getView().hideLoading();
         getView().showMessage(message);
         getView().restartUI();
@@ -197,6 +185,20 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     //Upload Data Callbacks declared at the global level
     @Override
     public void onUploadComplete(String message) {
+
+        AppLogger.e("MainPresenter", "Unsync farmers size ..> " + UN_SYNCED_FARMERS.size());
+        //On download data success.
+        if(UN_SYNCED_FARMERS != null) {
+            runSingleCall(Observable.fromIterable(UN_SYNCED_FARMERS)
+                    .subscribeOn(Schedulers.io())
+                    .map(Farmer::getCode)
+                    .toList().subscribe(farmerCodes -> {
+                                getAppDataManager().getDatabaseManager().realFarmersDao().setFarmersAsSynced(farmerCodes);
+                                UN_SYNCED_FARMERS = null;
+                            },
+                            Throwable::printStackTrace));
+        }
+
         getView().hideLoading();
         getView().showMessage(message);
         getView().restartUI();

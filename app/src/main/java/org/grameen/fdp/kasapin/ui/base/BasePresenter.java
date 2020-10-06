@@ -288,7 +288,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                 (m, mapping) -> Objects.requireNonNull(m.get(groups.getKey())).add(mapping)))
                         .toList()
                         .subscribe(groupedMappings -> {
-
                             /*
                              * Group mappings are in the form List<String> List<Mapping>> groupMappings;
                              * First parameter is the Object name (Object_c) eg. farmer_c and List<Mapping> has all mapping with object_c = farmer_c
@@ -485,13 +484,12 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         JSONObject answerJson;
         answerJson = new JSONObject();
         try {
-            //For decimal values, add answer to payload as a decimal instead of as a string
-            //If for some reasons the questionType is null, put the answer value in the json as a String anyway
+            Object answer = answerValue;
 
-            Object answer = (questionType != null && (questionType.equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)
-                    || questionType.equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA)))
-                    && answerValue.toString().matches("-?\\d+(\\.\\d+)?")
-                    ? Double.parseDouble(answerValue.toString().trim().replace(",", "")) : answerValue;
+            //For decimal values, add answer to payload as a decimal instead of as a string
+            if(answerValue.toString().matches("-?\\d+(\\.\\d+)?"))
+                answer = Double.parseDouble(answerValue.toString().trim().replace(",", ""));
+
             answerJson.put("answer", answer);
             answerJson.put("field_name", fieldName);
 

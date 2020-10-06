@@ -22,14 +22,18 @@ public class ImageUtil {
         return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 20, bitmap.getHeight() / 20, false);
     }
 
-    public static Bitmap base64ToBitmap(String base64Str) throws IllegalArgumentException {
-        byte[] decodedBytes = Base64.decode(base64Str.getBytes(), Base64.NO_WRAP);
-        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    public static Bitmap base64ToBitmap(String base64Str) {
+        try{
+            byte[] decodedBytes = Base64.decode(base64Str.getBytes(), Base64.NO_WRAP);
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        }catch(Exception e){
+            return null;
+        }
     }
 
     public static String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, outputStream);
         return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP);
     }
 

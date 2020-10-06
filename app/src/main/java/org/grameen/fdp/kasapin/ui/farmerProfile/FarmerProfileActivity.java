@@ -317,7 +317,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         switch (view.getId()) {
             case R.id.photo:
                 Intent intent = new Intent(FarmerProfileActivity.this, ImageViewActivity.class);
-                intent.putExtra("image_string", FARMER.getImageUrl());
+                intent.putExtra("farmerCode", FARMER.getCode());
                 startActivity(intent);
                 break;
             case R.id.addPlot:
