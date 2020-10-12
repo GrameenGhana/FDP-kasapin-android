@@ -6,6 +6,7 @@ import androidx.room.Query;
 
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Maybe;
@@ -36,8 +37,8 @@ public interface FarmersDao extends BaseDao<Farmer> {
     @Query("SELECT COUNT(syncStatus) FROM farmers")
     Maybe<Integer> checkIfUnsyncedFarmersAvailable();
 
-    @Query("UPDATE farmers SET syncStatus = 1 WHERE code IN (:farmerCodes)")
-    void setFarmersAsSynced(List<String> farmerCodes);
+    @Query("UPDATE farmers SET syncStatus = 1 AND updatedAt = :updatedDate  WHERE code IN (:farmerCodes)")
+    void setFarmersAsSynced(List<String> farmerCodes, Date updatedDate);
 
     @Query("SELECT COUNT(id) FROM farmers where code =:code")
     int checkIfFarmerExists(String code);

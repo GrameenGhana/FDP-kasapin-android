@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <include layout="@layout/toolbar" />
     </LinearLayout>
 
@@ -54,11 +53,22 @@
                             android:padding="@dimen/spacing_normal">
 
 
+                            <ImageButton
+                                android:id="@+id/remove_photo_button"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:src="@drawable/round_cancel_red_600_36dp"
+                                android:background="@color/transparent"
+                                android:backgroundTint="@color/transparent"
+                                android:layout_alignParentEnd="true"
+                                android:visibility="gone"
+                                 />
                             <RelativeLayout
                                 android:id="@+id/rl2"
                                 android:layout_width="@dimen/mini_image_height"
                                 android:layout_height="@dimen/mini_image_height"
                                 android:layout_centerHorizontal="true"
+                                android:layout_below="@id/remove_photo_button"
                                 android:layout_marginBottom="@dimen/spacing_normal">
 
 

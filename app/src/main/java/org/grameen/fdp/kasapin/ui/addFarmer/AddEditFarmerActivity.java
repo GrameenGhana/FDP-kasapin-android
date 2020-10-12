@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +77,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     CircleImageView circleImageView;
     @BindView(R.id.initials)
     TextView initials;
+    @BindView(R.id.remove_photo_button)
+    ImageButton removeFarmerPhoto;
     Farmer FARMER;
     boolean isNewFarmer = true;
     boolean shouldSaveData = true;
@@ -172,8 +175,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 farmerBase64ImageData = FARMER.getImageUrl();
                 try {
                     circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(farmerBase64ImageData));
-                } catch (Exception ignored) {
-                }
+
+                    showRemoveButton();
+                } catch (Exception ignored) {}
             } else {
                 circleImageView.setImageBitmap(null);
                 if (FARMER.getFarmerName().contains(" ")) {
@@ -212,6 +216,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 }
             }
         }
+
+        farmerCode.setEnabled(!FARMER.isSynced() && FARMER.getUpdatedAt() == null);
         showFormFragment();
     }
 
@@ -220,6 +226,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         dynamicFormFragment = DynamicFormFragment.newInstance(CURRENT_FORM_QUESTION, !isNewFarmer, FARMER.getCode(), getAppDataManager().isMonitoring());
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicFormFragment, CURRENT_FORM_QUESTION.getForm().getFormNameC());
     }
+
 
     @OnClick(R.id.save)
     void saveAndContinue() {
@@ -273,6 +280,16 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
             mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer);
         }
+    }
+
+
+    private void showRemoveButton(){
+        removeFarmerPhoto.setVisibility(View.VISIBLE);
+        removeFarmerPhoto.setOnClickListener(v -> {
+            FARMER.setImageUrl("");
+            circleImageView.setImageBitmap(null);
+            removeFarmerPhoto.setVisibility(View.GONE);
+        });
     }
 
 
@@ -371,6 +388,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                         circleImageView.setImageBitmap(bitmap);
                         initials.setVisibility(View.GONE);
                     }
+
+                    showRemoveButton();
                 } catch (Exception e) {
                    CustomToast.makeToast(this, "Failed to load", Toast.LENGTH_SHORT).show();
                 }

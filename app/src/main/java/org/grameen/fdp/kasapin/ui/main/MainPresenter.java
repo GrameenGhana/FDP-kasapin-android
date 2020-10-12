@@ -10,6 +10,7 @@ import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
+import org.grameen.fdp.kasapin.utilities.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,7 +186,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     //Upload Data Callbacks declared at the global level
     @Override
     public void onUploadComplete(String message) {
-
         AppLogger.e("MainPresenter", "Unsync farmers size ..> " + UN_SYNCED_FARMERS.size());
         //On download data success.
         if(UN_SYNCED_FARMERS != null) {
@@ -193,12 +193,12 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                     .subscribeOn(Schedulers.io())
                     .map(Farmer::getCode)
                     .toList().subscribe(farmerCodes -> {
-                                getAppDataManager().getDatabaseManager().realFarmersDao().setFarmersAsSynced(farmerCodes);
+                                getAppDataManager().getDatabaseManager().realFarmersDao()
+                                        .setFarmersAsSynced(farmerCodes, TimeUtils.getDateTime());
                                 UN_SYNCED_FARMERS = null;
                             },
                             Throwable::printStackTrace));
         }
-
         getView().hideLoading();
         getView().showMessage(message);
         getView().restartUI();

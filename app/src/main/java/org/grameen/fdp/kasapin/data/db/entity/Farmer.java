@@ -5,21 +5,24 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.Objects;
 
-@Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true)})
+@Entity(tableName = "farmers", indices = {@Index(value = "id", unique = true)})
 public class Farmer {
-    @PrimaryKey(autoGenerate = true)
     int id;
-
     @SerializedName("full_name_c")
     String farmerName;
 
     @SerializedName("farmer_code_c")
-    String code;
+    @PrimaryKey(autoGenerate = false)
+    @NotNull
+    String code = "";
 
     @SerializedName("gender_c")
     String gender;
@@ -51,8 +54,15 @@ public class Farmer {
 
     @Ignore
     String externalId;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
 
     public Farmer() {
+        syncStatus = 0;
     }
 
     public String getExternalId() {
@@ -202,5 +212,25 @@ public class Farmer {
 
     public boolean hasAgreed() {
         return hasSubmitted.equalsIgnoreCase("YES");
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public boolean isSynced() {
+        return syncStatus == 1;
     }
 }
