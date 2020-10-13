@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+//apply plugin: 'com.google.firebase.crashlytics'
 
 
 android {
@@ -10,7 +10,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.10_non_queue"
+        versionName "1.0.11_non_queue"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -94,7 +94,7 @@ android {
         implementation "com.android.support:preference-v14:$rootProject.supportLibraryVersion"
         implementation "com.android.support:percent:$rootProject.ext.supportLibraryVersion"
 
-        implementation "com.google.android.gms:play-services-maps:$rootProject.ext.playServicesVersion"
+        implementation "com.google.android.gms:play-services-maps:17.0.0"
         implementation "com.google.android.gms:play-services-location:$rootProject.ext.playServicesVersion"
 
         implementation 'com.google.maps.android:android-maps-utils:0.6.2'
@@ -117,12 +117,17 @@ android {
         //Serialization
         implementation "com.squareup.moshi:moshi:$rootProject.ext.moshiVersion"
 
-        //firebase
-        implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
-        implementation "com.crashlytics.sdk.android:crashlytics:$rootProject.ext.crashyticsVersion"
+//        //firebase
+//        implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
+//        // Add the Firebase Crashlytics SDK.
+//        implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
+
+        // Recommended: Add the Google Analytics SDK.
+       // implementation 'com.google.firebase:firebase-analytics:17.6.0'
+        
 
         // room database
-        implementation "android.arch.lifecycle:livedata:$rootProject.ext.roomVersion"
+        //implementation "android.arch.lifecycle:livedata:$rootProject.ext.roomVersion"
         implementation "android.arch.persistence.room:rxjava2:$rootProject.ext.roomVersion"
         implementation "android.arch.persistence.room:runtime:$rootProject.ext.roomVersion"
         annotationProcessor "android.arch.persistence.room:compiler:$rootProject.ext.roomVersion"
@@ -163,9 +168,6 @@ android {
 
         //Rhino
         implementation "io.apisense:rhino-android:$rootProject.ext.rhinoVersion"
-
-        //Spotlight for app intro
-        implementation 'com.github.wooplr:Spotlight:1.2.3'
 
         // logger
         implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"

@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.FILTERED_FORMS;
@@ -106,6 +107,18 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
     @Override
     public void syncFarmerData(Farmer farmer, boolean showProgress) {
         syncData(this, showProgress, Collections.singletonList(farmer));
+    }
+
+    @Override
+    public void getFarmer(String code) {
+        runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().get(code)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(farmer -> getView().initializeViews(true, farmer), throwable -> {
+
+                    throwable.printStackTrace();
+                    getView().showErrorAndExit("Could not load farmer data\n" + throwable.getLocalizedMessage());
+                }));
     }
 
     @Override

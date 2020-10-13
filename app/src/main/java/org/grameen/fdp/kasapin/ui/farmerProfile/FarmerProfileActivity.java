@@ -59,6 +59,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.observers.DisposableMaybeObserver;
 
 public class FarmerProfileActivity extends BaseActivity implements FarmerProfileContract.View {
     public static int familyMembersFormPosition = 0;
@@ -132,18 +133,17 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         } else
             farmAssessmentLayout.setVisibility(View.GONE);
 
-        FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
-                .getStringExtra("farmerCode")).blockingGet();
-        if (FARMER != null)
-            initializeViews(true);
-        else
-            showMessage(getString(R.string.error_getting_farmer_info));
-        CURRENT_FORM_POSITION = 0;
 
+        mPresenter.getFarmer(getIntent()
+                .getStringExtra("farmerCode"));
+
+        CURRENT_FORM_POSITION = 0;
     }
 
     @Override
-    public void initializeViews(boolean shouldLoadButtons) {
+    public void initializeViews(boolean shouldLoadButtons, Farmer farmer) {
+        FARMER = farmer;
+
         mPresenter.getFarmersPlots(FARMER.getCode());
         name.setText(FARMER.getFarmerName());
         code.setText(FARMER.getCode());
@@ -299,14 +299,18 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     @Override
     protected void onResume() {
         super.onResume();
-        if (getAppDataManager().getBooleanValue("reload")) {
-            FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(FARMER.getCode()).blockingGet();
-            initializeViews(false);
-        }
+        if (getAppDataManager().getBooleanValue("reload"))
+            mPresenter.getFarmer(FARMER.getCode());
+
 
         //check if service is running
         if (isServiceRunning(LocationPrepareService.class))
         stopService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
+    }
+
+    @Override
+    public void showErrorAndExit(String errorMessage) {
+        showMessage(errorMessage);
     }
 
     @Override

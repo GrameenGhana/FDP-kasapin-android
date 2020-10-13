@@ -80,4 +80,8 @@ public interface FdpApi {
     @POST(AppConstants.API + "syncdowndata")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     Single<ServerResponse> downloadFarmerData(@Query("token") String token, @Body JsonObject body);
+
+    @POST(AppConstants.API + "syncdowndata")
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    Single<ServerResponse> downloadFarmerDataTest(@Query("token") String token, @Body JsonObject body);
 }

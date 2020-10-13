@@ -139,15 +139,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableCompletableObserver() {
-                    @Override
-                    public void onComplete() {
-                    }
-
-                    @Override
-                    public void onError(Throwable ignored) {
-                    }
-                });
+                .subscribe();
 
         //Edit Plot
         saveButton.setEnabled(false);
@@ -180,9 +172,10 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             phEditText.setText(PLOT.getPh());
         } else {
             PLOT = new Plot();
-            PLOT.setExternalId(String.valueOf(System.currentTimeMillis()));
+            PLOT.setExternalId(FARMER_CODE + String.valueOf(System.currentTimeMillis()));
             PLOT.setFarmerCode(FARMER_CODE);
             PLOT.setAnswersData(new JSONObject().toString());
+            PLOT.setCreatedAt(TimeUtils.getCurrentDateTime());
             String name = "Plot " + (getIntent().getIntExtra("plotSize", 0) + 1);
             plotNameEditText.setText(name);
             PLOT.setName(name);
@@ -289,6 +282,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             PLOT.setName(plotNameEditText.getText().toString());
             PLOT.setEstimatedProductionSize(estimatedProductionEditText.getText().toString());
             PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
+            PLOT.setUpdatedAt(TimeUtils.getCurrentDateTime());
             PLOT.setArea(plotSizeEditText.getText().toString());
 
             mPresenter.saveData(PLOT, flag);

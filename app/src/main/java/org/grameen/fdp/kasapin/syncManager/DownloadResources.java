@@ -15,17 +15,31 @@ import org.grameen.fdp.kasapin.data.network.model.ServerResponse;
 import org.grameen.fdp.kasapin.data.network.model.FarmerAndAnswers;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
+
 
 public class DownloadResources {
     private int TOTAL_COUNT = 0;
@@ -35,6 +49,7 @@ public class DownloadResources {
     private FdpCallbacks.OnDownloadResourcesListener onDownloadResourcesListener;
     private BaseContract.View mView;
     private AppDataManager mAppDataManager;
+
 
     private DownloadResources(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.OnDownloadResourcesListener listener, boolean showProgress) {
         this.mAppDataManager = appDataManager;
@@ -198,40 +213,17 @@ public class DownloadResources {
     public void getFarmersData() {
         if (showProgress)
             getView().setLoadingMessage("Getting farmer and answers data...\nNB: This will not replace already existing farmer data!");
+
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
         getAppDataManager().getFdpApiService()
                 .fetchFarmersData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), INDEX, AppConstants.BATCH_NO)
                 .subscribe(new DisposableSingleObserver<ServerResponse>() {
                     @Override
                     public void onSuccess(ServerResponse syncDownData) {
-                        if (syncDownData.getSuccess() != null && syncDownData.getSuccess().trim().equalsIgnoreCase("true")) {
-                            TOTAL_COUNT = syncDownData.getTotal_count();
-                            //check for total count here against pageDown/pageEnd and loop method getFarmersData
-                            if (syncDownData.getData() != null && syncDownData.getData().size() > 0) {
-                                INDEX += syncDownData.getData().size();
-                                for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
-                                    if (getAppDatabase().realFarmersDao().checkIfFarmerExists(farmerAndAnswers1.getFarmer().getCode()) == 0) {
-                                        //Todo replace village id with country admin level fromm the server
-                                        getAppDatabase().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
-                                        getAppDatabase().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
-                                        if (farmerAndAnswers1.getPlotDetails() != null && farmerAndAnswers1.getPlotDetails().size() > 0)
-                                            for (List<Plot> plots : farmerAndAnswers1.getPlotDetails()) {
-                                                for (Plot p : plots) {
-                                                    getAppDatabase().plotsDao().insertOne(p);
-                                                    if (p.getMonitoringList() != null)
-                                                        getAppDatabase().monitoringDao().insertAll(p.getMonitoringList());
-                                                }
-                                            }
-                                    }
-                                }
-                                if (TOTAL_COUNT != (INDEX - 1)) {
-                                    showProgress = false;
-                                    getView().setLoadingMessage("Downloading next batch (" + INDEX + "/" + TOTAL_COUNT + ") of farmer and answers data...\nNB: This will not replace already existing farmer data!");
-                                    getFarmersData();
-                                }
-                            }
-                            showSuccess("Data download completed!");
-                        } else onError(new Throwable("The download could not complete. Please contact your admin."));
+                        if (syncDownData.getSuccess() != null && syncDownData.getSuccess().trim().equalsIgnoreCase("true"))
+                             processFarmerData(syncDownData);
+                        else
+                            onError(new Throwable("The download could not complete. Please contact your admin."));
                     }
 
                     @Override
@@ -240,6 +232,72 @@ public class DownloadResources {
                     }
                 });
     }
+
+
+    private void processFarmerData( ServerResponse syncDownData) {
+             TOTAL_COUNT = syncDownData.getTotal_count();
+            //check for total count here against pageDown/pageEnd and loop method getFarmersData
+            if (syncDownData.getData() != null && syncDownData.getData().size() > 0) {
+                INDEX += syncDownData.getData().size();
+                for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
+                    if (getAppDatabase().realFarmersDao().checkIfFarmerExists(farmerAndAnswers1.getFarmer().getCode()) == 0) {
+                        //Todo replace village id with country admin level fromm the server
+                        getAppDatabase().realFarmersDao().insertOne(farmerAndAnswers1.getFarmer());
+                        getAppDatabase().formAnswerDao().insertAll(farmerAndAnswers1.getAnswers());
+                        if (farmerAndAnswers1.getPlotDetails() != null && farmerAndAnswers1.getPlotDetails().size() > 0)
+                            for (List<Plot> plots : farmerAndAnswers1.getPlotDetails()) {
+                                for (Plot p : plots) {
+                                    getAppDatabase().plotsDao().insertOne(p);
+                                    if (p.getMonitoringList() != null)
+                                        getAppDatabase().monitoringDao().insertAll(p.getMonitoringList());
+
+                                }
+                            }
+                    }
+                }
+                AppLogger.e(TAG, "TOTAL COUNT ==> " + TOTAL_COUNT);
+                AppLogger.e(TAG, "INDEX ==> " + INDEX);
+
+                if (TOTAL_COUNT != (INDEX - 1)) {
+                    showProgress = false;
+//                    getView().setLoadingMessage("Downloading next batch (" + INDEX + "/" + TOTAL_COUNT + ") of farmer and answers data...\nNB: This will not replace already existing farmer data!");
+                    getFarmersData();
+                }else
+                    return;
+            }
+
+            showSuccess("Data download completed!");
+     }
+
+
+//    private void mergeRemainingDownloadRequests() {
+//        Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
+//
+//        List<Single<ServerResponse>> singleList = new ArrayList<>();
+//
+//        while(TOTAL_COUNT > INDEX) {
+//            singleList.add( getAppDataManager().getFdpApiService()
+//                    .fetchFarmersData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), INDEX, AppConstants.BATCH_NO));
+//
+//            INDEX += AppConstants.BATCH_NO;
+//        }
+//
+//        AppLogger.e(TAG, "List of concurrent requests == " + singleList.size());
+//
+//
+//        Single.zip(singleList,  ).timeout(60, TimeUnit.SECONDS)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .doOnComplete(() -> {
+//                    AppLogger.e(TAG, "!!!!!!!!!!!!! DONE");
+//                })
+//                .subscribe(serverResponse -> {
+//                    processFarmerData(serverResponse);
+//                });
+//
+//
+//    }
+
+
 
     private void showError(Throwable e) {
         if (onDownloadResourcesListener != null)

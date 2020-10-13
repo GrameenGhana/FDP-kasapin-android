@@ -217,7 +217,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             }
         }
 
-        farmerCode.setEnabled(!FARMER.isSynced() && FARMER.getUpdatedAt() == null);
+        farmerCode.setEnabled(isNewFarmer && FARMER.getUpdatedAt() == null);
         showFormFragment();
     }
 

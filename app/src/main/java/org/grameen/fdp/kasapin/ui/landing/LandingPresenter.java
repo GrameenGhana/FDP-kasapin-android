@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import com.balsikandar.crashreporter.CrashReporter;
 import com.balsikandar.crashreporter.utils.CrashUtil;
 import com.balsikandar.crashreporter.utils.FileUtils;
-import com.crashlytics.android.Crashlytics;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
@@ -40,8 +39,8 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
         getView().showMessage("Sending logs...");
         List<File> logFiles = getAllCrashes();
         if (logFiles.size() > 0) {
-            Crashlytics.setUserIdentifier(mAppDataManager.getUserEmail());
-            Crashlytics.log(FileUtils.readFromFile(new File(logFiles.get(0).getAbsolutePath())));
+//            Crashlytics.setUserIdentifier(mAppDataManager.getUserEmail());
+//            Crashlytics.log(FileUtils.readFromFile(new File(logFiles.get(0).getAbsolutePath())));
             getView().showMessage(R.string.logs_sent);
             new Thread(() -> {
                 try {

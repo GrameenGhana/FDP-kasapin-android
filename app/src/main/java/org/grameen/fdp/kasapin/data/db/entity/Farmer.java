@@ -13,16 +13,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity(tableName = "farmers", indices = {@Index(value = "id", unique = true)})
-public class Farmer {
-    int id;
+@Entity(tableName = "farmers", indices = {@Index(value = "villageId"), @Index(value = "syncStatus"), @Index(value = "gender"),})
+public class Farmer extends BaseModel{
+
     @SerializedName("full_name_c")
     String farmerName;
 
     @SerializedName("farmer_code_c")
-    @PrimaryKey(autoGenerate = false)
     @NotNull
-    String code = "";
+    String code;
 
     @SerializedName("gender_c")
     String gender;
@@ -47,23 +46,15 @@ public class Farmer {
 
     String landArea;
 
-    int syncStatus = 1;
     String hasSubmitted = "NO";
 
     String villageName;
 
     @Ignore
     String externalId;
-    @SerializedName("created_at")
-    @Expose
-    private String createdAt;
-    @SerializedName("updated_at")
-    @Expose
-    private String updatedAt;
 
-    public Farmer() {
-        syncStatus = 0;
-    }
+
+    public Farmer() {}
 
     public String getExternalId() {
         return externalId;
@@ -136,14 +127,6 @@ public class Farmer {
         this.educationLevel = education;
     }
 
-    public int getSyncStatus() {
-        return syncStatus;
-    }
-
-    public void setSyncStatus(int syncStatus) {
-        this.syncStatus = syncStatus;
-    }
-
     public String getHasSubmitted() {
         return hasSubmitted;
     }
@@ -212,22 +195,6 @@ public class Farmer {
 
     public boolean hasAgreed() {
         return hasSubmitted.equalsIgnoreCase("YES");
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public boolean isSynced() {
