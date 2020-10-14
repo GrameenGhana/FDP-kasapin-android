@@ -30,7 +30,8 @@ public class LogRecorder {
         //We want to be able to keep track of whether questions of type AppConstants.TYPE_PHOTO
         //Was changed or not in order to decide to add to sync up payload since image base64 files are relatively large
         Logs farmerLog = mAppDatabase.logsDao().getAllLogsForFarmer(farmerCode).blockingGet(new Logs(farmerCode));
-        farmerLog.addAll(labels);
+        for(String s : labels)
+            farmerLog.add(s);
 
         Single.just(mAppDatabase.logsDao().insertOne(farmerLog))
                 .subscribeOn(Schedulers.io())

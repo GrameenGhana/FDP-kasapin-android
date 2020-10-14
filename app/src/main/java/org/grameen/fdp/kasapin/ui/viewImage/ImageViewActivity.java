@@ -37,8 +37,12 @@ public class ImageViewActivity extends BaseActivity {
         appBar = findViewById(R.id.appBar);
         hideToolBr();
 
+        if(getIntent().hasExtra("image_string"))
+            decodableString = getIntent().getStringExtra("image_string");
+        else
          decodableString = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
                 .getStringExtra("farmerCode")).blockingGet().getImageUrl();
+
 
         if (decodableString != null && !decodableString.equalsIgnoreCase("")) {
             touchImageView = findViewById(R.id.touch_image_view);

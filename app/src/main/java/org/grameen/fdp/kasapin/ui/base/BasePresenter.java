@@ -8,6 +8,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
+import org.grameen.fdp.kasapin.data.db.entity.Logs;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
@@ -270,15 +271,24 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
             getView().showLoading("Uploading data", "Please wait...", false, 0, false);
 
         JSONObject payloadData = new JSONObject();
+        JSONObject imagesOnlyPayload = new JSONObject();
+        List<Integer> photoTypeQuestions = getAppDataManager().getDatabaseManager().questionDao()
+                .getQuestionsOfTypePhoto().blockingGet(new ArrayList<>());
+
+        AppLogger.e(TAG, "photoTypeQuestions => " + getGson().toJson(photoTypeQuestions));
+
         Submission submission = new Submission();
         //Todo pass user id
         submission.setSurveyor__c(getAppDataManager().getUserId());
 
         try {
-            payloadData.put("submission", new JSONObject(getGson().toJson(submission)));
+            payloadData.put("submission", getGson().toJson(submission));
+            imagesOnlyPayload.put("submission", payloadData.get("submission"));
         } catch (JSONException ignored) {}
 
         JSONArray payloadDataArray = new JSONArray();
+        JSONArray imagesPayloadDataArray = new JSONArray();
+
 
         runSingleCall(getAppDataManager().getDatabaseManager().mappingDao().getAll()
                 .subscribeOn(Schedulers.io())
@@ -303,16 +313,26 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                              * we should get all answers of the farmer and bundle it into one object where we can just get values to questions
                                              * using the question id
                                              * */
+
+                                            Logs farmerLogs = getAppDataManager().getDatabaseManager().logsDao().getAllLogsForFarmer(farmer.getCode())
+                                                    .blockingGet(new Logs(farmer.getCode()));
+                                            AppLogger.e(TAG, "farmer logs => " + getGson().toJson(farmerLogs));
+
+
                                             JSONObject allAnswersJsonObject = buildAllAnswersJsonDataPerFarmer(farmer.getCode());
                                             JSONObject jsonObject = new JSONObject();
+                                            JSONObject imagesJsonObject = new JSONObject();
+
                                             try {
                                                 jsonObject.put("external_id", farmer.getCode());
+                                                imagesJsonObject.put("external_id", farmer.getCode());
 
                                                 for (int i = 0; i < groupedMappings.size(); i++) {
                                                     for (Map.Entry<String, ArrayList<Mapping>> mappingEntry : groupedMappings.get(i).entrySet()) {
 
                                                         List<Plot> farmersPlots = getAppDataManager().getDatabaseManager().plotsDao().getFarmersPlots(farmer.getCode()).blockingGet();
                                                         JSONArray arrayOfValues = new JSONArray();
+                                                        JSONArray imagesArrayOfValues = new JSONArray();
                                                         if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS_TABLE))
                                                             generateFamilyMembersJson(farmer, mappingEntry, arrayOfValues);
 
@@ -330,23 +350,55 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                             generateDiagnosticMonitoringPayloadData(mappingEntry, farmersPlots, arrayOfValues, true);
                                                         else {
                                                             //This formats the farmer basic info into the mapping payload since this data is not obtained from the form/answer survey module
-                                                            if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE))
+                                                            if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE)) {
                                                                 formatFarmerObjectData(farmer, arrayOfValues);
+
+                                                                if(farmerLogs.contains(AppConstants.FARMER_TABLE_PHOTO_FIELD)){
+                                                                    //add farmer profile image
+                                                                    imagesArrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_PHOTO_FIELD,
+                                                                            (farmer.getImageUrl() != null && !farmer.getImageUrl().isEmpty()) ? farmer.getImageUrl() : "", null));
+                                                                }
+                                                            }
 
                                                             //Map rest of data which don't have a specific format
                                                             for (Mapping mapping : mappingEntry.getValue()) {
                                                                 Question question = getAppDataManager().getDatabaseManager().questionDao().get(mapping.getQuestionId()).blockingGet();
                                                                 if (allAnswersJsonObject.has(question.getLabelC())) {
+
+                                                                    //Separate normal string answers from imageData answers
+
                                                                     String answer = allAnswersJsonObject.get(question.getLabelC()).toString();
-                                                                    if (!answer.isEmpty() && !answer.equalsIgnoreCase("null"))
-                                                                        arrayOfValues.put(generateAnswerJSONObject(question.getTypeC(), mapping.getFieldName(), answer, null));
-                                                                }
+                                                                    if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
+
+                                                                        JSONObject dataToInsert = generateAnswerJSONObject(question.getTypeC(), mapping.getFieldName(), answer, null);
+
+                                                                        if(dataToInsert.length() > 0)
+                                                                        if (photoTypeQuestions.contains(question.getId())) {
+                                                                            //Question is a photo type question
+                                                                            // Build images payload data
+
+                                                                            if(farmerLogs.contains(question.getLabelC())){
+                                                                                imagesArrayOfValues.put(dataToInsert);
+
+                                                                            }
+                                                                        }else {
+                                                                            //Question is not a photo type question
+                                                                            arrayOfValues.put(dataToInsert);
+                                                                        }
+                                                                    }
+                                                            }
                                                             }
                                                         }
+                                                        if(arrayOfValues.length() > 0)
                                                         jsonObject.put(mappingEntry.getKey(), arrayOfValues);
+
+                                                        if(imagesArrayOfValues.length() > 0)
+                                                            imagesJsonObject.put(mappingEntry.getKey(), imagesArrayOfValues);
+
                                                     }
                                                 }
                                                 payloadDataArray.put(jsonObject);
+                                                imagesPayloadDataArray.put(imagesJsonObject);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 getView().showMessage(e.getMessage());
@@ -361,8 +413,15 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                         public void onComplete() {
                                             try {
                                                 payloadData.put("data", payloadDataArray);
-                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true)
-                                                        .uploadFarmersData(payloadData);
+                                                imagesOnlyPayload.put("data", imagesPayloadDataArray);
+
+
+                                                AppLogger.e(TAG, "data with out images => " + payloadData.toString());
+                                                AppLogger.e(TAG, "images only data => " + imagesOnlyPayload.toString());
+
+
+                                                getView().hideLoading();
+                                                //UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 showGenericError(e);
@@ -507,7 +566,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         List<Integer> photoTypeQuestions = getAppDataManager().getDatabaseManager().questionDao()
                 .getQuestionsOfTypePhoto().blockingGet(new ArrayList<>());
 
-        if(photoTypeQuestions.isEmpty())
+        //if(photoTypeQuestions.isEmpty())
 
         //Get mappings for questions with type photo
         //Per farmer, compare and check to see if question label is contained in the logs

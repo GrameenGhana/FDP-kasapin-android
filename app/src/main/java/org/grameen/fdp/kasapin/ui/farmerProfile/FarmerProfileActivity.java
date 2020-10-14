@@ -176,6 +176,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             initials.setText("");
         } else {
             try {
+                circleImageView.setImageBitmap(null);
+
                 String[] valueArray = FARMER.getFarmerName().split(" ");
                 String value = valueArray[0].substring(0, 1) + valueArray[1].substring(0, 1);
                 initials.setText(value);
@@ -299,9 +301,9 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     @Override
     protected void onResume() {
         super.onResume();
-        if (getAppDataManager().getBooleanValue("reload"))
+        if (getAppDataManager().getBooleanValue("reload") && FARMER != null) {
             mPresenter.getFarmer(FARMER.getCode());
-
+        }
 
         //check if service is running
         if (isServiceRunning(LocationPrepareService.class))

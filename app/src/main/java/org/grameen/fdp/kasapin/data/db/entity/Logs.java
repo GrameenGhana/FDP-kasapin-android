@@ -45,12 +45,20 @@ public class Logs extends BaseModel {
 
 
     @Ignore
-    public void addAll(Set<String> labels){
-        data.addAll(labels);
+    public void add(String label){
+        if(data.contains(label))
+            return;
+
+        data.add(label);
     }
 
     @Ignore
     public void remove(String label){
       data.remove(label);
+    }
+
+    @Ignore
+    public boolean contains(String label){
+        return data.contains(label);
     }
 }

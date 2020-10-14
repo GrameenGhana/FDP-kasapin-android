@@ -82,6 +82,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     Farmer FARMER;
     boolean isNewFarmer = true;
     boolean shouldSaveData = true;
+    boolean wasProfileImageEdited = false;
     String farmerBase64ImageData = "";
     ArrayList<MySearchItem> villageItems = new ArrayList<>();
     String[] educationLevels;
@@ -133,6 +134,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
         genderSpinner.setItems(genders);
         genderSpinner.setOnItemSelectedListener((view, position, id, item) -> gender = genders[position]);
+
+        AppLogger.e(TAG, "Is new farmer " + isNewFarmer);
 
         if (!isNewFarmer) {
             CURRENT_FORM_QUESTION = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
@@ -230,8 +233,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @OnClick(R.id.save)
     void saveAndContinue() {
-        boolean wasProfileImageEdited = farmerBase64ImageData.hashCode() != FARMER.getImageUrl().hashCode();
-        getLogRecorder().add(farmerCode.getText().toString().trim(), "farmer_profile_photo");
 
         if (farmerName.getText().toString().trim().isEmpty()) {
             showMessage(R.string.enter_valid_farmer_name);
@@ -283,6 +284,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
 
             mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer, wasProfileImageEdited);
+
+            if(wasProfileImageEdited)
+                getLogRecorder().add(farmerCode.getText().toString().trim(), AppConstants.FARMER_TABLE_PHOTO_FIELD);
         }
     }
 
@@ -290,8 +294,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     private void showRemoveButton(){
         removeFarmerPhoto.setVisibility(View.VISIBLE);
         removeFarmerPhoto.setOnClickListener(v -> {
-            FARMER.setImageUrl("");
-            circleImageView.setImageBitmap(null);
+            farmerBase64ImageData = "";
+            circleImageView.setImageResource(R.drawable.icon_farmer_color);
             removeFarmerPhoto.setVisibility(View.GONE);
         });
     }
@@ -388,6 +392,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     bitmap = ImageUtil.handleSamplingAndRotationBitmap(AddEditFarmerActivity.this, URI);
                     farmerBase64ImageData = ImageUtil.bitmapToBase64(bitmap);
 
+                    wasProfileImageEdited = true;
                     if (circleImageView != null) {
                         circleImageView.setImageBitmap(bitmap);
                         initials.setVisibility(View.GONE);

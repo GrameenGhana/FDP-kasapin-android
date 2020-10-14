@@ -42,6 +42,6 @@ public interface QuestionDao extends BaseDao<Question> {
     @Query("SELECT * FROM questions WHERE id = :id")
     Maybe<Question> get(int id);
 
-    @Query("SELECT formTranslationId FROM questions WHERE id = 'photo'")
+    @Query("SELECT id FROM questions WHERE typeC COLLATE NOCASE = 'photo'")
     Maybe<List<Integer>> getQuestionsOfTypePhoto();
 }

@@ -363,7 +363,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return list;
     }
 
-
     private List<ColumnHeader> getColumnHeaderList() {
         List<ColumnHeader> list = new ArrayList<>();
         for (int i = 0; i < COLUMN_SIZE; i++) {
