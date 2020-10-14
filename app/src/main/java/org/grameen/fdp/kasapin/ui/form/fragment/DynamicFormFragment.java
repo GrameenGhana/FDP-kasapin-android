@@ -120,7 +120,7 @@ public class DynamicFormFragment extends FormFragment {
         computationUtils = ComputationUtils.newInstance(controller);
 
         if (ANSWER_DATA == null)
-            ANSWER_DATA = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataOrNull(farmerCode, FORM_AND_QUESTIONS.getForm()
+            ANSWER_DATA =  getDatabaseManager().formAnswerDao().getFormAnswerDataOrNull(farmerCode, FORM_AND_QUESTIONS.getForm()
                     .getFormTranslationId()).blockingGet(getDefaultFormAnswerData());
         try {
             ANSWERS_JSON = new JSONObject(ANSWER_DATA.getData());
@@ -152,8 +152,7 @@ public class DynamicFormFragment extends FormFragment {
             Observable.fromIterable(QUESTIONS)
                     .subscribeOn(Schedulers.io())
                     .doOnNext(question ->
-                            getAppDataManager().getCompositeDisposable().add(getAppDataManager()
-                                    .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
+                            addDisposable(getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
                                     .subscribe(skipLogics -> {
                                         if (skipLogics != null && skipLogics.size() > 0)
                                             applySkipLogicAndHideViews(question, skipLogics);
@@ -165,7 +164,7 @@ public class DynamicFormFragment extends FormFragment {
         Observable.fromIterable(QUESTIONS)
                 .subscribeOn(Schedulers.io())
                 .doOnNext(question ->
-                        getAppDataManager().getCompositeDisposable().add(Observable.just(question).subscribeOn(Schedulers.io())
+                         addDisposable(Observable.just(question).subscribeOn(Schedulers.io())
                                 .filter(question1 -> question1.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA))
                                 .observeOn(Schedulers.computation())
                                 .subscribe(this::applyFormulas)))
@@ -231,19 +230,19 @@ public class DynamicFormFragment extends FormFragment {
                         break;
                     case AppConstants.TYPE_PHOTO:
                         formSectionController.addElement(new PhotoButtonController(context, q.getLabelC(), q.getLabelC(), q.getCaptionC(),
-                                v -> {
+                                (View v) -> {
                                     try {
                                         startCameraIntent(String.valueOf(q.getLabelC()));
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                 }, IS_CONTROLLER_ENABLED && q.caEdit()));
-                        //getComputationUtils().getFormAnswerValue(q, ANSWERS_JSON);
+
                         break;
                 }
             }
 
-            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
+       addDisposable(getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
                     .subscribe(skipLogic -> applyPropertyChangeListeners(q, skipLogic), Throwable::printStackTrace)
@@ -284,6 +283,11 @@ public class DynamicFormFragment extends FormFragment {
     }
 
     public JSONObject getDataJson() {
+
+        if(!getModel().getEditedElements().isEmpty())
+             getLogRecorder().add(farmerCode, getModel().getEditedElements());
+
+
         JSONObject jsonObject = new JSONObject();
         for (Question q : QUESTIONS) {
             try {

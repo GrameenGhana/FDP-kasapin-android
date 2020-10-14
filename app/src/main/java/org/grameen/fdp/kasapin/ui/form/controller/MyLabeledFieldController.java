@@ -83,6 +83,7 @@ public abstract class MyLabeledFieldController extends MyFormElementController {
         return labelText;
     }
 
+
     /**
      * Sets whether this field is required to have user input.
      *

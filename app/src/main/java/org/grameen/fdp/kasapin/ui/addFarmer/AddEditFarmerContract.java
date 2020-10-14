@@ -12,12 +12,13 @@ public class AddEditFarmerContract {
         void showFormFragment();
         void moveToNextForm();
         void showFarmerDetailsActivity(Farmer farmer);
-        void setUpViews();
+        void setUpViews(Farmer farmer);
         void finishActivity();
     }
 
     public interface Presenter {
         void loadFormFragment(String farmerId, int formId);
-        void saveData(Farmer farmer, FormAnswerData answerData, boolean exit);
+        void saveData(Farmer farmer, FormAnswerData answerData, boolean exit, boolean wasProfileImageEdited);
+        void getFarmerData(String code);
     }
 }

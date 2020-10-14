@@ -361,7 +361,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                         public void onComplete() {
                                             try {
                                                 payloadData.put("data", payloadDataArray);
-                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData);
+                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true)
+                                                        .uploadFarmersData(payloadData);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 showGenericError(e);
@@ -398,8 +399,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_EDUCATION_LEVEL_FIELD,
                 farmer.getEducationLevel(), null));
         //Generate farmer image json
-        arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_PHOTO_FIELD,
-                (farmer.getImageUrl() != null && !farmer.getImageUrl().isEmpty()) ? farmer.getImageUrl() : "", null));
+//        arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_PHOTO_FIELD,
+//                (farmer.getImageUrl() != null && !farmer.getImageUrl().isEmpty()) ? farmer.getImageUrl() : "", null));
         //Generate farmer gender json
         arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_GENDER_FIELD,
                 farmer.getGender(), null));
@@ -500,5 +501,22 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
             e.printStackTrace();
         }
         return answerJson;
+    }
+
+    private void syncImages() {
+        List<Integer> photoTypeQuestions = getAppDataManager().getDatabaseManager().questionDao()
+                .getQuestionsOfTypePhoto().blockingGet(new ArrayList<>());
+
+        if(photoTypeQuestions.isEmpty())
+
+        //Get mappings for questions with type photo
+        //Per farmer, compare and check to see if question label is contained in the logs
+        //if yes, generate and add mapping data else skip
+        //Send data in batches
+
+
+
+
+
     }
 }

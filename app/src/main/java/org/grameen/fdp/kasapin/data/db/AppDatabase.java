@@ -12,6 +12,7 @@ import org.grameen.fdp.kasapin.data.db.dao.DistrictsDao;
 import org.grameen.fdp.kasapin.data.db.dao.FormAndQuestionsDao;
 import org.grameen.fdp.kasapin.data.db.dao.FormAnswersDao;
 import org.grameen.fdp.kasapin.data.db.dao.FormsDao;
+import org.grameen.fdp.kasapin.data.db.dao.LogsDao;
 import org.grameen.fdp.kasapin.data.db.dao.MappingsDao;
 import org.grameen.fdp.kasapin.data.db.dao.MonitoringDao;
 import org.grameen.fdp.kasapin.data.db.dao.PlotsDao;
@@ -30,6 +31,7 @@ import org.grameen.fdp.kasapin.data.db.entity.FarmResult;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.Form;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
+import org.grameen.fdp.kasapin.data.db.entity.Logs;
 import org.grameen.fdp.kasapin.data.db.entity.Mapping;
 import org.grameen.fdp.kasapin.data.db.entity.Monitoring;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
@@ -51,10 +53,10 @@ import javax.inject.Singleton;
 @Singleton
 @Database(entities = {Country.class, District.class, Community.class, Form.class, Question.class, SkipLogic.class, Mapping.class, Recommendation.class,
         RecommendationActivity.class, Calculation.class, ComplexCalculation.class, Farmer.class, FormAnswerData.class, Plot.class,
-        Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class, ServerUrl.class
+        Monitoring.class, PlotAssessment.class, FarmResult.class, Submission.class, SuppliesCost.class, ServerUrl.class, Logs.class
 }, version = 1, exportSchema = false)
 
-@TypeConverters({DateTypeConverter.class})
+@TypeConverters({DateTypeConverter.class, ListConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract CountryDao countryDao();
@@ -90,4 +92,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract FormAndQuestionsDao formAndQuestionsDao();
 
     public abstract ServerUrlsDao serverUrlsDao();
+
+    public abstract LogsDao logsDao();
 }

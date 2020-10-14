@@ -34,7 +34,16 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
     }
 
     @Override
-    public void saveData(Farmer farmer, FormAnswerData answerData, boolean exit) {
+    public void getFarmerData(String code) {
+        runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().get(code)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
+                .subscribe(farmer -> getView().setUpViews(farmer),
+                        throwable -> getView().setUpViews(null)));
+    }
+
+    @Override
+    public void saveData(Farmer farmer, FormAnswerData answerData, boolean exit, boolean wasProfileImageEdited) {
         answerData.setFarmerCode(farmer.getCode());
 
         getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmer))
@@ -46,9 +55,7 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(aLong -> {
-
                                 setFarmerAsUnsynced(farmer);
-
                                 getView().showMessage("Farmer data saved!");
 
                                 if (!exit)
@@ -57,6 +64,8 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
                                     getAppDataManager().setBooleanValue("reload", true);
                                     getView().finishActivity();
                                 }
+
+
                             }, throwable -> {
                                 getView().showMessage("An error occurred saving farmer data. Please try again.");
                                 throwable.printStackTrace();

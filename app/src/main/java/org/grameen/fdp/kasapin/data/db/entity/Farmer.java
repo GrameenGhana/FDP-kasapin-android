@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity(tableName = "farmers", indices = {@Index(value = "villageId"), @Index(value = "syncStatus"), @Index(value = "gender"),})
+@Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true), @Index(value = "villageId"), @Index(value = "syncStatus"), @Index(value = "gender"),})
 public class Farmer extends BaseModel{
 
     @SerializedName("full_name_c")

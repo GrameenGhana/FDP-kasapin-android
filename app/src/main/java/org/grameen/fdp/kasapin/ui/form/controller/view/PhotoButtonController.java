@@ -14,6 +14,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Logs;
+import org.grameen.fdp.kasapin.syncManager.LogRecorder;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
@@ -67,13 +70,15 @@ public class PhotoButtonController extends MyLabeledFieldController {
     }
 
 
-    public PhotoButtonController(Context context, String name, String content_desc, String labelText, OnClickListener locationListener, Boolean enabled) {
+    public PhotoButtonController(Context context, String name, String content_desc, String labelText, OnClickListener locationListener, Boolean enabled
+                                 ) {
         this(context, name, content_desc, labelText, false, locationListener);
         this.context = context;
         this.isEnabled = enabled;
 
         IMAGE_VIEW = new ImageView(context);
         IMAGE_VIEW.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
     }
 
     @Override
@@ -100,6 +105,8 @@ public class PhotoButtonController extends MyLabeledFieldController {
                     IMAGE_VIEW.setLayoutParams(params);
                     linearLayout.addView(IMAGE_VIEW);
                     linearLayout.requestLayout();
+
+                     getModel().getEditedElements().add(getName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -100,17 +100,17 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
 
-        if (getIntent() != null) {
-            FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
-                    .getStringExtra("farmerCode")).blockingGet();
-            if (FARMER != null)
-                isNewFarmer = false;
-            setUpViews();
-        }
+
+        mPresenter.getFarmerData(getIntent()
+                .getStringExtra("farmerCode"));
     }
 
     @Override
-    public void setUpViews() {
+    public void setUpViews(Farmer farmer) {
+        FARMER = farmer;
+        isNewFarmer = farmer == null;
+
+
         List<Community> villages = getAppDataManager().getDatabaseManager().villagesDao().getAll().blockingGet();
         villageItems.clear();
         for (Community v : villages) {
@@ -230,6 +230,9 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
     @OnClick(R.id.save)
     void saveAndContinue() {
+        boolean wasProfileImageEdited = farmerBase64ImageData.hashCode() != FARMER.getImageUrl().hashCode();
+        getLogRecorder().add(farmerCode.getText().toString().trim(), "farmer_profile_photo");
+
         if (farmerName.getText().toString().trim().isEmpty()) {
             showMessage(R.string.enter_valid_farmer_name);
             return;
@@ -278,7 +281,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setLastModifiedDate(TimeUtils.getDateTime());
             FARMER.setImageUrl(farmerBase64ImageData);
 
-            mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer);
+
+            mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer, wasProfileImageEdited);
         }
     }
 

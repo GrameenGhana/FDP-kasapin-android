@@ -24,6 +24,7 @@ public class BaseContract {
         void setUserAsLoggedOut();
         boolean isViewAttached();
         void onTokenExpire();
+//        void getFarmerData(String code);
     }
 
 

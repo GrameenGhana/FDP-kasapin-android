@@ -47,6 +47,7 @@ import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.di.component.ActivityComponent;
 import org.grameen.fdp.kasapin.di.component.DaggerActivityComponent;
 import org.grameen.fdp.kasapin.di.module.ViewModule;
+import org.grameen.fdp.kasapin.syncManager.LogRecorder;
 import org.grameen.fdp.kasapin.ui.addFarmer.AddEditFarmerActivity;
 import org.grameen.fdp.kasapin.ui.familyMembers.FamilyMembersActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
@@ -92,6 +93,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     protected ProgressDialog mProgressDialog;
     @Inject
     ScriptEngine scriptEngine;
+    @Inject
+    LogRecorder logRecorder;
     ActivityComponent activityComponent;
     private Unbinder mUnBinder;
 
@@ -252,6 +255,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
                     .build();
         }
         return activityComponent;
+    }
+
+    public LogRecorder getLogRecorder() {
+        return logRecorder;
     }
 
     @Override

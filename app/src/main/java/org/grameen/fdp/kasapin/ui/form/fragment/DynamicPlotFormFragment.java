@@ -112,8 +112,7 @@ public class DynamicPlotFormFragment extends FormFragment {
             Observable.fromIterable(ALL_QUESTIONS)
                     .subscribeOn(Schedulers.io())
                     .doOnNext(question ->
-                            getAppDataManager().getCompositeDisposable().add(getAppDataManager()
-                                    .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
+                             addDisposable(getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(skipLogics -> {
                                         if (skipLogics != null && skipLogics.size() > 0)
@@ -191,8 +190,8 @@ public class DynamicPlotFormFragment extends FormFragment {
                 }
             }
 
-            if(getAppDataManager() != null)
-            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
+            if(getDatabaseManager() != null)
+             addDisposable(getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
                     .subscribe(skipLogic -> applyPropertyChangeListeners(q, skipLogic),

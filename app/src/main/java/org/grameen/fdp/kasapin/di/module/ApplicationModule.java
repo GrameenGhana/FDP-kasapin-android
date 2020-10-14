@@ -14,6 +14,7 @@ import org.grameen.fdp.kasapin.data.network.FdpApiService;
 import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
+import org.grameen.fdp.kasapin.syncManager.LogRecorder;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import java.util.concurrent.TimeUnit;
@@ -81,6 +82,7 @@ public class ApplicationModule {
     CompositeDisposable providesCompositeDisposable() {
         return new CompositeDisposable();
     }
+
 
     @Provides
     @Singleton

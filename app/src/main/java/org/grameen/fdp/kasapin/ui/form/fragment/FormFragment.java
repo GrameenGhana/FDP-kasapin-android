@@ -38,6 +38,8 @@ import org.grameen.fdp.kasapin.utilities.FileUtils;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -52,10 +54,10 @@ public abstract class FormFragment extends BaseFragment {
     private FormModelFragment formModelFragment;
     private MyFormController formController;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        return inflater.inflate(R.layout.form_activity, null);
+         return inflater.inflate(R.layout.form_activity, null);
     }
 
     @Override
@@ -63,6 +65,8 @@ public abstract class FormFragment extends BaseFragment {
         super.onAttach(context);
         this.formModelFragment = getFormModelFragment(requireActivity());
         this.formController = new MyFormController(context, formModelFragment.getModel());
+
+        if(getActivity() != null)
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -86,6 +90,7 @@ public abstract class FormFragment extends BaseFragment {
     public MyFormController getFormController() {
         return formController;
     }
+
 
     /**
      * Returns the associated model of this form.

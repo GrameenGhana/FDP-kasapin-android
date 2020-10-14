@@ -37,6 +37,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
@@ -210,35 +211,71 @@ public class DownloadResources {
                 });
     }
 
+
     public void getFarmersData() {
-        if (showProgress)
+        int REQUEST_SIZE = 2;
+
+        //Since farmer data from the server might be potentially large, we need to download the data in batches
+        //We send 2 requests simultaneously to retrieve 20 records per request
+        if (showProgress) {
             getView().setLoadingMessage("Getting farmer and answers data...\nNB: This will not replace already existing farmer data!");
+            showProgress = false;
+        }
+
 
         Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
-        getAppDataManager().getFdpApiService()
-                .fetchFarmersData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), INDEX, AppConstants.BATCH_NO)
-                .subscribe(new DisposableSingleObserver<ServerResponse>() {
-                    @Override
-                    public void onSuccess(ServerResponse syncDownData) {
-                        if (syncDownData.getSuccess() != null && syncDownData.getSuccess().trim().equalsIgnoreCase("true"))
-                             processFarmerData(syncDownData);
-                        else
-                            onError(new Throwable("The download could not complete. Please contact your admin."));
-                    }
 
+
+        AppLogger.e(TAG, "TOTAL COUNT ==> " + TOTAL_COUNT);
+        AppLogger.e(TAG, "INDEX ==> " + INDEX);
+
+        //Make a batch request of 2 for 20 records per request
+        List<Single<ServerResponse>> singleList = new ArrayList<>();
+        for (int i = 0; i < REQUEST_SIZE; i++) {
+           singleList.add(getAppDataManager().getFdpApiService()
+                    .fetchFarmersData(mAppDataManager.getAccessToken(), country.getId(),
+                            getAppDataManager().getUserId(), INDEX, AppConstants.BATCH_NO));
+            INDEX += AppConstants.BATCH_NO;
+        }
+
+        //This function merges the 2 requests and calls them simultaneously awaiting for their results.
+        //The onNext function is called when the results for each request is returned.
+        //
+        Single.merge(singleList).timeout(60, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSubscriber<ServerResponse>() {
                     @Override
-                    public void onError(Throwable e) {
-                        showError(e);
+                    public void onNext(ServerResponse serverResponse) {
+                        if(TOTAL_COUNT == 0)
+                            TOTAL_COUNT = serverResponse.getTotal_count();
+
+                        if(TOTAL_COUNT > INDEX)
+                        getView().setLoadingMessage(String.format("Fetching %s out of %s records...", INDEX, TOTAL_COUNT));
+
+                        AppLogger.e(TAG, "Server response size => " + serverResponse.getData().size());
+                        processFarmerData(serverResponse);
+                    }
+                    @Override
+                    public void onError(Throwable t) {
+                        showError(t);
+                    }
+                    @Override
+                    public void onComplete() {
+                        AppLogger.e(TAG, "OnComplete");
+
+                        if (TOTAL_COUNT <= (INDEX - 1)) {
+                            showProgress = false;
+                            showSuccess("Data download completed!");
+                        } else
+                             getFarmersData();
                     }
                 });
     }
 
 
     private void processFarmerData( ServerResponse syncDownData) {
-             TOTAL_COUNT = syncDownData.getTotal_count();
             //check for total count here against pageDown/pageEnd and loop method getFarmersData
             if (syncDownData.getData() != null && syncDownData.getData().size() > 0) {
-                INDEX += syncDownData.getData().size();
                 for (FarmerAndAnswers farmerAndAnswers1 : syncDownData.getData()) {
                     if (getAppDatabase().realFarmersDao().checkIfFarmerExists(farmerAndAnswers1.getFarmer().getCode()) == 0) {
                         //Todo replace village id with country admin level fromm the server
@@ -255,48 +292,8 @@ public class DownloadResources {
                             }
                     }
                 }
-                AppLogger.e(TAG, "TOTAL COUNT ==> " + TOTAL_COUNT);
-                AppLogger.e(TAG, "INDEX ==> " + INDEX);
-
-                if (TOTAL_COUNT != (INDEX - 1)) {
-                    showProgress = false;
-//                    getView().setLoadingMessage("Downloading next batch (" + INDEX + "/" + TOTAL_COUNT + ") of farmer and answers data...\nNB: This will not replace already existing farmer data!");
-                    getFarmersData();
-                }else
-                    return;
             }
-
-            showSuccess("Data download completed!");
      }
-
-
-//    private void mergeRemainingDownloadRequests() {
-//        Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
-//
-//        List<Single<ServerResponse>> singleList = new ArrayList<>();
-//
-//        while(TOTAL_COUNT > INDEX) {
-//            singleList.add( getAppDataManager().getFdpApiService()
-//                    .fetchFarmersData(mAppDataManager.getAccessToken(), country.getId(), getAppDataManager().getUserId(), INDEX, AppConstants.BATCH_NO));
-//
-//            INDEX += AppConstants.BATCH_NO;
-//        }
-//
-//        AppLogger.e(TAG, "List of concurrent requests == " + singleList.size());
-//
-//
-//        Single.zip(singleList,  ).timeout(60, TimeUnit.SECONDS)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .doOnComplete(() -> {
-//                    AppLogger.e(TAG, "!!!!!!!!!!!!! DONE");
-//                })
-//                .subscribe(serverResponse -> {
-//                    processFarmerData(serverResponse);
-//                });
-//
-//
-//    }
-
 
 
     private void showError(Throwable e) {
