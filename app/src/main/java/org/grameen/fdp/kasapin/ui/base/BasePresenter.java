@@ -100,9 +100,9 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         getAppDataManager().getCompositeDisposable().add(disposableSingleObserver);
     }
 
-    public void setFarmerAsUnsynced(Farmer realFarmer) {
-        realFarmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
-        updateFarmerData(realFarmer);
+    public void setFarmerAsUnSynced(Farmer farmer) {
+        farmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
+        updateFarmerData(farmer);
     }
 
     public void updateFarmerData(Farmer realFarmer) {
@@ -353,7 +353,10 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                         else {
                                                             //This formats the farmer basic info into the mapping payload since this data is not obtained from the form/answer survey module
                                                             if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE)) {
-                                                                formatFarmerObjectData(farmer, arrayOfValues);
+                                                                JSONArray farmerProfileArray = formatFarmerObjectData(farmer);
+
+                                                                arrayOfValues = farmerProfileArray;
+                                                                imagesArrayOfValues = farmerProfileArray;
 
                                                                 if(farmerLogs.contains(AppConstants.FARMER_TABLE_PHOTO_FIELD)) {
                                                                     //add farmer profile image
@@ -369,15 +372,14 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                                     //Separate normal string answers from imageData answers
                                                                     String answer = allAnswersJsonObject.get(question.getLabelC()).toString();
-                                                                    if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
+                                                                    if (!answer.equalsIgnoreCase("null")) {
 
                                                                         JSONObject dataToInsert =
                                                                                 generateAnswerJSONObject(question.getTypeC(), mapping.getFieldName(), answer, null);
                                                                         if(dataToInsert.length() > 0)
                                                                         if (photoTypeQuestions.contains(question.getId())) {
 
-                                                                            AppLogger.e(TAG, "questionId found ==> " + question.getId());
-                                                                            //Question is a photo type question
+                                                                             //Question is a photo type question
                                                                             // Build images payload data
 
                                                                             if(farmerLogs.contains(question.getLabelC())) {
@@ -385,7 +387,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                             }
                                                                         } else {
                                                                             //Question is not a photo type question
-                                                                            arrayOfValues.put(dataToInsert);
+                                                                            if(!answer.isEmpty() && !answer.equals(question.getDefaultValueC()))
+                                                                              arrayOfValues.put(dataToInsert);
                                                                         }
                                                                     }
                                                                 }
@@ -399,7 +402,14 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                     }
                                                 }
                                                 payloadDataArray.put(jsonObject);
-                                                 imagesPayloadDataList.add(imagesJsonObject);
+
+
+
+                                                //Only add the imagesJsonObject if indeed farmer had some updated image data
+                                                //We can check if the farmerLogs.data is empty or not
+
+                                                if(!farmerLogs.getData().isEmpty())
+                                                imagesPayloadDataList.add(imagesJsonObject);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 getView().showMessage(e.getMessage());
@@ -416,11 +426,13 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                 payloadData.put("data", payloadDataArray);
 
                                                 AppLogger.e(TAG, "data with out images => " + payloadData.toString());
-                                                AppLogger.e(TAG, "images list => " + getGson().toJson(imagesPayloadDataList));
+                                                AppLogger.e(TAG, "Images array size is ==> " + imagesPayloadDataList.size());
+
+                                                //AppLogger.e(TAG, "images list => " + new JSONArray(imagesPayloadDataList));
 
 
-                                                getView().hideLoading();
-                                                //UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData, imagesPayloadDataList);
+                                                //getView().hideLoading();
+                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData, imagesPayloadDataList);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 showGenericError(e);
@@ -438,7 +450,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         getView().showMessage(throwable.getLocalizedMessage());
     }
 
-    protected void formatFarmerObjectData(Farmer farmer, JSONArray arrayOfValues) {
+    protected JSONArray formatFarmerObjectData(Farmer farmer) {
+        JSONArray arrayOfValues = new JSONArray();
         //Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
 
         //Generate VillageId json
@@ -465,6 +478,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         //Generate farmer birth year json
         arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_BIRTHDAY_FIELD,
                 farmer.getBirthYear(), null));
+
+        return arrayOfValues;
     }
 
     protected void formatPlotsData(Plot plot, JSONArray arrayOfValues) {

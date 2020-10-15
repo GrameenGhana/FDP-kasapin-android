@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.evrencoskun.tableview.TableView;
-import com.google.gson.Gson;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
@@ -327,7 +326,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             //answerData.setData(allFamilyMembersArrayData.toString());
             answerData.setData(oldValuesArray.toString());
             getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
-            mPresenter.setFarmerAsUnsynced(FARMER);
+            mPresenter.setFarmerAsUnSynced(FARMER);
             getAppDataManager().setBooleanValue("reload", true);
             moveToNextForm(FARMER);
         }

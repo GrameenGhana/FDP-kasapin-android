@@ -99,7 +99,7 @@ public class AddPlotMonitoringPresenter extends BasePresenter<AddPlotMonitoringC
     public void saveMonitoringData(Monitoring monitoring, Farmer farmer) {
 
         getAppDataManager().getDatabaseManager().monitoringDao().insertMonitoring(monitoring);
-        setFarmerAsUnsynced(farmer);
+        setFarmerAsUnSynced(farmer);
 
         getAppDataManager().setBooleanValue("reload", true);
 

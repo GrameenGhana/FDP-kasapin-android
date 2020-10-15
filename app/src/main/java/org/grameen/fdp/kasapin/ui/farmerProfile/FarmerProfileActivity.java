@@ -271,6 +271,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     @Override
     public void addButtons(List<Button> buttons) {
+         runOnUiThread(()-> dynamicButtons.removeAllViews());
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);

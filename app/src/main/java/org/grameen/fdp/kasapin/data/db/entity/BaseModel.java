@@ -20,7 +20,6 @@ public class BaseModel {
 
     int syncStatus = 1;
 
-
     public int getId() {
         return id;
     }
@@ -52,5 +51,4 @@ public class BaseModel {
     public void setSyncStatus(int syncStatus) {
         this.syncStatus = syncStatus;
     }
-
 }

@@ -4,7 +4,6 @@ package org.grameen.fdp.kasapin.syncManager;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.network.model.ServerResponse;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
-import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 import org.json.JSONArray;
@@ -32,7 +31,7 @@ public class UploadDataManager {
 
     int REQUEST_SIZE = 2;
     int INDEX = 0;
-    int BATCH_SIZE = 3;
+    int BATCH_SIZE = 1;
 
 
     private UploadDataManager(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress) {
@@ -56,6 +55,8 @@ public class UploadDataManager {
     }
 
     public void uploadFarmersData(JSONObject farmersJsonObject, List<JSONObject> imagesArray) {
+
+        AppLogger.e(TAG, "Images array size is ==> " + imagesArray.size());
         if (showProgress)
             getView().setLoadingMessage("Uploading farmer data...");
         getAppDataManager().getFdpApiService()
@@ -65,8 +66,22 @@ public class UploadDataManager {
                 .subscribe(new DisposableSingleObserver<ServerResponse>() {
                     @Override
                     public void onSuccess(ServerResponse response) {
-                        getView().setLoadingMessage("Farmer data uploaded.\n\nUploading images now. This might take longer...");
-                        sendImagesInBatches(farmersJsonObject, imagesArray);
+
+                        if(imagesArray.isEmpty()){
+                            success();
+                            return;
+                        }
+
+                        JSONObject submissionJson;
+                        try {
+                             submissionJson = farmersJsonObject.getJSONObject("submission");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            submissionJson = new JSONObject();
+                        }
+
+                        getView().setLoadingMessage("Farmer data uploaded.\nUploading images now. This might take longer...");
+                        sendImagesInBatches(submissionJson, imagesArray);
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -102,27 +117,35 @@ public class UploadDataManager {
                     JSONArray array = new JSONArray(subList);
                     payload.put("data", array);
 
-                    AppLogger.e(TAG, payload);
+                    AppLogger.e(TAG, "subList size => " + subList.size());
                     singleList.add(getAppDataManager().getFdpApiService()
                             .uploadFarmersData(token, payload));
+
+                    if (INDEX == 0 || INDEX >= imagesArraySize)
+                        break;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-                Single.merge(singleList).timeout(60, TimeUnit.SECONDS)
+        AppLogger.e(TAG, "batch list size => " + singleList.size());
+
+        Single.merge(singleList).timeout(60, TimeUnit.SECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new DisposableSubscriber<ServerResponse>() {
                             @Override
                             public void onNext(ServerResponse serverResponse) {
                                 if(imagesArraySize > INDEX)
-                                    getView().setLoadingMessage(String.format("Fetching %s out of %s records...", INDEX, imagesArraySize));
+                                    getView().setLoadingMessage(String.format("Uploading %s out of %s records...", INDEX + 1, imagesArraySize));
 
-                                AppLogger.e(TAG, "Server response  => " + serverResponse.getStatus());
+                                AppLogger.e(TAG, "Server response  => " + serverResponse.toString());
                              }
                             @Override
                             public void onError(Throwable t) {
+                                AppLogger.e(TAG, "onError");
+
+                                t.printStackTrace();
                                 uploadDataListener.onUploadError(t);
                             }
                             @Override
@@ -130,9 +153,9 @@ public class UploadDataManager {
                                 AppLogger.e(TAG, "OnComplete");
                                 //Break out of the loop if all data has been uploaded
                                 if (INDEX == 0 || INDEX >= imagesArraySize) {
-                                    System.out.println("BREAK LOOP");
+                                    AppLogger.e(TAG, "BREAK LOOP");
 
-                                   success("All data uploaded successfully!");
+                                   success();
 
                                 } else
                                     sendImagesInBatches(submissionData, imagesArray);
@@ -140,9 +163,9 @@ public class UploadDataManager {
                         });
     }
 
-    private void success(String message){
+    private void success(){
         if (uploadDataListener != null)
-            uploadDataListener.onUploadComplete(message);
+            uploadDataListener.onUploadComplete("All data uploaded successfully!");
         uploadDataListener = null;
     }
 

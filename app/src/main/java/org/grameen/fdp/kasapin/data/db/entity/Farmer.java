@@ -1,5 +1,6 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
@@ -8,20 +9,24 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Date;
 import java.util.Objects;
 
 @Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true), @Index(value = "villageId"), @Index(value = "syncStatus"), @Index(value = "gender"),})
-public class Farmer extends BaseModel{
+public class Farmer {
+    @PrimaryKey()
+    @NonNull
+    @SerializedName("farmer_code_c")
+    String code;
 
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
     @SerializedName("full_name_c")
     String farmerName;
-
-    @SerializedName("farmer_code_c")
-    @NotNull
-    String code;
 
     @SerializedName("gender_c")
     String gender;
@@ -40,6 +45,7 @@ public class Farmer extends BaseModel{
 
     Date firstVisitDate;
     Date lastVisitDate;
+    int syncStatus = 1;
 
     @SerializedName("LastModifiedDate")
     Date lastModifiedDate;
@@ -85,13 +91,12 @@ public class Farmer extends BaseModel{
         if (this == o) return true;
         if (!(o instanceof Farmer)) return false;
         Farmer farmer = (Farmer) o;
-        return id == farmer.id &&
-                code.equals(farmer.code);
+        return code.equals(farmer.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code);
+        return Objects.hash(code);
     }
 
     public Date getLastVisitDate() {
@@ -135,14 +140,6 @@ public class Farmer extends BaseModel{
         this.hasSubmitted = hasSubmitted;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getBirthYear() {
         return birthYear;
     }
@@ -151,6 +148,7 @@ public class Farmer extends BaseModel{
         this.birthYear = birthYear;
     }
 
+    @NonNull
     public String getCode() {
         return code;
     }
@@ -176,7 +174,6 @@ public class Farmer extends BaseModel{
         this.gender = gender;
     }
 
-
     public int getVillageId() {
         return villageId;
     }
@@ -193,11 +190,37 @@ public class Farmer extends BaseModel{
         this.villageName = villageName;
     }
 
+    @Ignore
     public boolean hasAgreed() {
         return hasSubmitted.equalsIgnoreCase("YES");
     }
 
+    @Ignore
     public boolean isSynced() {
         return syncStatus == 1;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public int getSyncStatus() {
+        return syncStatus;
+    }
+
+    public void setSyncStatus(int syncStatus) {
+        this.syncStatus = syncStatus;
     }
 }

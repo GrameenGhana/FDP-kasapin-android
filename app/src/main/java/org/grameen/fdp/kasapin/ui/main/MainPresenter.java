@@ -18,9 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -110,10 +108,6 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
          *
          * First check if there are un synced data
          */
-        if (getAppDataManager().getDatabaseManager().realFarmersDao().checkIfUnsyncedFarmersAvailable().blockingGet() <= 0) {
-            getView().showMessage(R.string.no_new_data);
-            return;
-        }
         UN_SYNCED_FARMERS = getAppDataManager().getDatabaseManager().realFarmersDao().getAllNotSynced().blockingGet(new ArrayList<>());
         if(UN_SYNCED_FARMERS.isEmpty()){
             getView().showMessage(R.string.no_new_data);
@@ -190,18 +184,20 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     //Upload Data Callbacks declared at the global level
     @Override
     public void onUploadComplete(String message) {
-        AppLogger.e("MainPresenter", "Unsync farmers size ..> " + UN_SYNCED_FARMERS.size());
         //On download data success.
         if(UN_SYNCED_FARMERS != null) {
+            List<String> farmerCodes = new ArrayList<>();
+
             runSingleCall(Observable.fromIterable(UN_SYNCED_FARMERS)
                     .subscribeOn(Schedulers.io())
-                    .map(Farmer::getCode)
-                    .toList().subscribe(farmerCodes -> {
-                                getAppDataManager().getDatabaseManager().realFarmersDao()
-                                        .setFarmersAsSynced(farmerCodes, TimeUtils.getDateTime());
-                                UN_SYNCED_FARMERS = null;
-                            },
-                            Throwable::printStackTrace));
+                    //.map(Farmer::getCode)
+                    //.toList()
+                    .subscribe(farmer -> {
+                        farmer.setSyncStatus(AppConstants.SYNC_OK);
+                        updateFarmerData(farmer);
+                        farmerCodes.add(farmer.getCode());
+                        }, Throwable::printStackTrace));
+            getAppDataManager().getDatabaseManager().logsDao().deleteFarmerLogs(farmerCodes);
         }
         getView().hideLoading();
         getView().showMessage(message);

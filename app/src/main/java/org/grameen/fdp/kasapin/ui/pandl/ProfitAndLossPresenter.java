@@ -6,7 +6,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -88,7 +87,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        setFarmerAsUnsynced(mAppDataManager.getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet());
+                        setFarmerAsUnSynced(mAppDataManager.getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet());
                         getAppDataManager().setBooleanValue("reload", true);
                         getView().loadTableData();
                     }
@@ -112,7 +111,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                 -> getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(formAnswerData))
                 .subscribeOn(Schedulers.io())
                 .subscribe(longValue -> {
-                    setFarmerAsUnsynced(farmer);
+                    setFarmerAsUnSynced(farmer);
                     getAppDataManager().setBooleanValue("reload", true);
                     getView().showMessage("Labour values updated!");
                 }, throwable -> {
