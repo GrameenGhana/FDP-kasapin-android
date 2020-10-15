@@ -421,7 +421,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
 
                                                 getView().hideLoading();
-                                                //UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData);
+                                                //UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData, imagesPayloadDataArray);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 showGenericError(e);
@@ -562,20 +562,4 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         return answerJson;
     }
 
-    private void syncImages() {
-        List<Integer> photoTypeQuestions = getAppDataManager().getDatabaseManager().questionDao()
-                .getQuestionsOfTypePhoto().blockingGet(new ArrayList<>());
-
-        //if(photoTypeQuestions.isEmpty())
-
-        //Get mappings for questions with type photo
-        //Per farmer, compare and check to see if question label is contained in the logs
-        //if yes, generate and add mapping data else skip
-        //Send data in batches
-
-
-
-
-
-    }
 }

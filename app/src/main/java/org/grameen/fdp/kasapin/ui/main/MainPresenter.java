@@ -114,7 +114,11 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
             getView().showMessage(R.string.no_new_data);
             return;
         }
-        UN_SYNCED_FARMERS = getAppDataManager().getDatabaseManager().realFarmersDao().getAllNotSynced().blockingGet();
+        UN_SYNCED_FARMERS = getAppDataManager().getDatabaseManager().realFarmersDao().getAllNotSynced().blockingGet(new ArrayList<>());
+        if(UN_SYNCED_FARMERS.isEmpty()){
+            getView().showMessage(R.string.no_new_data);
+            return;
+        }
         syncData(this, showProgress, UN_SYNCED_FARMERS);
     }
 
