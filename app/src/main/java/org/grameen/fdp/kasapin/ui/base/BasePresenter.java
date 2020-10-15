@@ -282,8 +282,9 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         submission.setSurveyor__c(getAppDataManager().getUserId());
 
         try {
-            payloadData.put("submission", getGson().toJson(submission));
-            imagesOnlyPayload.put("submission", payloadData.get("submission"));
+            JSONObject submissionData = new JSONObject(getGson().toJson(submission));
+            payloadData.put("submission", submissionData);
+            imagesOnlyPayload.put("submission", submissionData);
         } catch (JSONException ignored) {}
 
         JSONArray payloadDataArray = new JSONArray();
@@ -353,7 +354,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                             if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE)) {
                                                                 formatFarmerObjectData(farmer, arrayOfValues);
 
-                                                                if(farmerLogs.contains(AppConstants.FARMER_TABLE_PHOTO_FIELD)){
+                                                                if(farmerLogs.contains(AppConstants.FARMER_TABLE_PHOTO_FIELD)) {
                                                                     //add farmer profile image
                                                                     imagesArrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_PHOTO_FIELD,
                                                                             (farmer.getImageUrl() != null && !farmer.getImageUrl().isEmpty()) ? farmer.getImageUrl() : "", null));
@@ -366,27 +367,27 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                 if (allAnswersJsonObject.has(question.getLabelC())) {
 
                                                                     //Separate normal string answers from imageData answers
-
                                                                     String answer = allAnswersJsonObject.get(question.getLabelC()).toString();
                                                                     if (!answer.isEmpty() && !answer.equalsIgnoreCase("null")) {
 
-                                                                        JSONObject dataToInsert = generateAnswerJSONObject(question.getTypeC(), mapping.getFieldName(), answer, null);
-
+                                                                        JSONObject dataToInsert =
+                                                                                generateAnswerJSONObject(question.getTypeC(), mapping.getFieldName(), answer, null);
                                                                         if(dataToInsert.length() > 0)
                                                                         if (photoTypeQuestions.contains(question.getId())) {
+
+                                                                            AppLogger.e(TAG, "questionId found ==> " + question.getId());
                                                                             //Question is a photo type question
                                                                             // Build images payload data
 
-                                                                            if(farmerLogs.contains(question.getLabelC())){
+                                                                            if(farmerLogs.contains(question.getLabelC())) {
                                                                                 imagesArrayOfValues.put(dataToInsert);
-
                                                                             }
-                                                                        }else {
+                                                                        } else {
                                                                             //Question is not a photo type question
                                                                             arrayOfValues.put(dataToInsert);
                                                                         }
                                                                     }
-                                                            }
+                                                                }
                                                             }
                                                         }
                                                         if(arrayOfValues.length() > 0)
@@ -394,7 +395,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                                         if(imagesArrayOfValues.length() > 0)
                                                             imagesJsonObject.put(mappingEntry.getKey(), imagesArrayOfValues);
-
                                                     }
                                                 }
                                                 payloadDataArray.put(jsonObject);

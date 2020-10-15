@@ -94,7 +94,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         permissionManager = new PermissionManager() {
             @Override
             public void ifCancelledAndCanRequest(Activity activity) {
-                showDialog(false, getString(R.string.permissions_needed),
+                showDialog(false, getString(R.string.hello),
                         getString(R.string.permissions_needed_rationale), (dialogInterface, i) ->
                                 permissionManager.checkAndRequestPermissions(LoginActivity.this),
                         getString(R.string.grant_permissions), (dialogInterface, i) -> supportFinishAfterTransition(),
@@ -109,12 +109,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
             }
         };
 
-        if(!permissionManager.checkAndRequestPermissions(this))
-            new Handler().postDelayed(() -> showDialog(false, getString(R.string.hello),
-                getString(R.string.provide_all_permissions_rationale), (dialogInterface, i) -> {
-                    permissionManager.checkAndRequestPermissions(LoginActivity.this);
-                }, getString(R.string.grant_permissions), (dialogInterface, i) -> finishAfterTransition(),
-                getString(R.string.quit), 0), 500);
+         permissionManager.checkAndRequestPermissions(this);
+
     }
 
     @OnClick(R.id.sign_in_button)
