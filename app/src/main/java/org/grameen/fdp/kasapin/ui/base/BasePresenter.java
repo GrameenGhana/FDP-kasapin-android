@@ -288,7 +288,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         } catch (JSONException ignored) {}
 
         JSONArray payloadDataArray = new JSONArray();
-        JSONArray imagesPayloadDataArray = new JSONArray();
+        //JSONArray imagesPayloadDataArray = new JSONArray();
+        List<JSONObject> imagesPayloadDataList = new ArrayList<>();
 
 
         runSingleCall(getAppDataManager().getDatabaseManager().mappingDao().getAll()
@@ -398,7 +399,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                     }
                                                 }
                                                 payloadDataArray.put(jsonObject);
-                                                imagesPayloadDataArray.put(imagesJsonObject);
+                                                 imagesPayloadDataList.add(imagesJsonObject);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 getView().showMessage(e.getMessage());
@@ -413,15 +414,13 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                         public void onComplete() {
                                             try {
                                                 payloadData.put("data", payloadDataArray);
-                                                imagesOnlyPayload.put("data", imagesPayloadDataArray);
-
 
                                                 AppLogger.e(TAG, "data with out images => " + payloadData.toString());
-                                                AppLogger.e(TAG, "images only data => " + imagesOnlyPayload.toString());
+                                                AppLogger.e(TAG, "images list => " + getGson().toJson(imagesPayloadDataList));
 
 
                                                 getView().hideLoading();
-                                                //UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData, imagesPayloadDataArray);
+                                                //UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData, imagesPayloadDataList);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 showGenericError(e);
@@ -440,7 +439,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     }
 
     protected void formatFarmerObjectData(Farmer farmer, JSONArray arrayOfValues) {
-        Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
+        //Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
 
         //Generate VillageId json
         arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_COUNTRY_ADMIN_LEVEL_FIELD,

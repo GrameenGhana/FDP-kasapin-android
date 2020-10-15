@@ -13,11 +13,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 
 public class UploadDataManager {
@@ -27,6 +29,10 @@ public class UploadDataManager {
     private AppDataManager mAppDataManager;
     private boolean showProgress;
     private String token;
+
+    int REQUEST_SIZE = 2;
+    int INDEX = 0;
+    int BATCH_SIZE = 3;
 
 
     private UploadDataManager(BaseContract.View view, AppDataManager appDataManager, FdpCallbacks.UploadDataListener listener, boolean showProgress) {
@@ -49,9 +55,9 @@ public class UploadDataManager {
         return mView;
     }
 
-    public void uploadFarmersData(JSONObject farmersJsonObject, JSONArray imagesArray) {
+    public void uploadFarmersData(JSONObject farmersJsonObject, List<JSONObject> imagesArray) {
         if (showProgress)
-            getView().setLoadingMessage("Syncing farmer data...");
+            getView().setLoadingMessage("Uploading farmer data...");
         getAppDataManager().getFdpApiService()
                 .uploadFarmersData(token, farmersJsonObject)
                 .subscribeOn(Schedulers.io())
@@ -59,47 +65,93 @@ public class UploadDataManager {
                 .subscribe(new DisposableSingleObserver<ServerResponse>() {
                     @Override
                     public void onSuccess(ServerResponse response) {
-                        if (uploadDataListener != null)
-                            uploadDataListener.onUploadComplete("Data upload successful.");
-                        uploadDataListener = null;
-                        getAppDataManager().setBooleanValue("reload", true);
+                        getView().setLoadingMessage("Farmer data uploaded.\n\nUploading images now. This might take longer...");
+                        sendImagesInBatches(farmersJsonObject, imagesArray);
                     }
                     @Override
                     public void onError(Throwable e) {
-                        AppLogger.e("OnError " + (uploadDataListener != null));
-                        if (uploadDataListener != null) {
-                            uploadDataListener.onUploadError(e);
-                            uploadDataListener = null;
-                        }
+                             error(e);
                     }
                 });
     }
 
-    int REQUEST_SIZE = 2;
-    int INDEX = 0;
-    int BATCH_SIZE = 3;
-    void syncImagesInBatches(JSONObject submissionData, List<JSONObject> imagesArray) {
 
+    void sendImagesInBatches(JSONObject submissionData, List<JSONObject> imagesArray) {
         int imagesArraySize = imagesArray.size();
         List<Single<ServerResponse>> singleList = new ArrayList<>();
+
+        //Build payload data for (REQUEST_SIZE) requests to be sent simultaneously
         for (int i = 0; i < REQUEST_SIZE; i++) {
             JSONObject payload = new JSONObject();
-            JSONArray array = new JSONArray(imagesArray.subList(INDEX, (imagesArraySize - INDEX  >= BATCH_SIZE) ? BATCH_SIZE : imagesArraySize));
             try {
                 payload.put("submission", submissionData);
-                payload.put("data", array);
+                List<JSONObject> subList;
+                if (imagesArraySize <= BATCH_SIZE) {
+                    subList = imagesArray;
+                } else {
+                    if (imagesArraySize - INDEX >= BATCH_SIZE) {
+                        subList = imagesArray.subList(INDEX, BATCH_SIZE + INDEX);
+                        INDEX += BATCH_SIZE;
 
+                    } else {
+                        subList = imagesArray.subList(INDEX, imagesArraySize);
+                        INDEX = imagesArraySize;
+                    }
+                }
+                if(!subList.isEmpty()) {
+                    JSONArray array = new JSONArray(subList);
+                    payload.put("data", array);
 
-//                singleList.add(getAppDataManager().getFdpApiService()
-//                        .fetchFarmersData(mAppDataManager.getAccessToken(), country.getId(),
-//                                getAppDataManager().getUserId(), INDEX, AppConstants.BATCH_NO));
-//                INDEX += BATCH_SIZE;
-
-                //BreakOutofLoop
-
+                    AppLogger.e(TAG, payload);
+                    singleList.add(getAppDataManager().getFdpApiService()
+                            .uploadFarmersData(token, payload));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+
+                Single.merge(singleList).timeout(60, TimeUnit.SECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new DisposableSubscriber<ServerResponse>() {
+                            @Override
+                            public void onNext(ServerResponse serverResponse) {
+                                if(imagesArraySize > INDEX)
+                                    getView().setLoadingMessage(String.format("Fetching %s out of %s records...", INDEX, imagesArraySize));
+
+                                AppLogger.e(TAG, "Server response  => " + serverResponse.getStatus());
+                             }
+                            @Override
+                            public void onError(Throwable t) {
+                                uploadDataListener.onUploadError(t);
+                            }
+                            @Override
+                            public void onComplete() {
+                                AppLogger.e(TAG, "OnComplete");
+                                //Break out of the loop if all data has been uploaded
+                                if (INDEX == 0 || INDEX >= imagesArraySize) {
+                                    System.out.println("BREAK LOOP");
+
+                                   success("All data uploaded successfully!");
+
+                                } else
+                                    sendImagesInBatches(submissionData, imagesArray);
+                            }
+                        });
+    }
+
+    private void success(String message){
+        if (uploadDataListener != null)
+            uploadDataListener.onUploadComplete(message);
+        uploadDataListener = null;
+    }
+
+    private void error(Throwable t){
+
+        if (uploadDataListener != null) {
+            t.printStackTrace();
+            uploadDataListener.onUploadError(t);
+            uploadDataListener = null;
         }
     }
 }

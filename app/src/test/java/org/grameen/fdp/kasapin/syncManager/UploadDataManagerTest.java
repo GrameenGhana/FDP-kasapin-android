@@ -53,10 +53,9 @@ public class UploadDataManagerTest {
 
             if (INDEX == 0 || INDEX >= size) {
                 System.out.println("BREAK LOOP");
-
                 break;
-            }
-            else testSyncImagesInBatches();
+            } else
+                testSyncImagesInBatches();
 
         }
 
