@@ -318,7 +318,6 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
 
                                             Logs farmerLogs = getAppDataManager().getDatabaseManager().logsDao().getAllLogsForFarmer(farmer.getCode())
                                                     .blockingGet(new Logs(farmer.getCode()));
-                                            AppLogger.e(TAG, "farmer logs => " + getGson().toJson(farmerLogs));
 
 
                                             JSONObject allAnswersJsonObject = buildAllAnswersJsonDataPerFarmer(farmer.getCode());
@@ -353,11 +352,9 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                         else {
                                                             //This formats the farmer basic info into the mapping payload since this data is not obtained from the form/answer survey module
                                                             if (mappingEntry.getKey().equalsIgnoreCase(AppConstants.FARMER_TABLE)) {
-                                                                JSONArray farmerProfileArray = formatFarmerObjectData(farmer);
+                                                             formatFarmerObjectData(farmer, arrayOfValues);
 
-                                                                arrayOfValues = farmerProfileArray;
-                                                                imagesArrayOfValues = farmerProfileArray;
-
+                                                                imagesArrayOfValues =  new JSONArray(arrayOfValues.toString());
                                                                 if(farmerLogs.contains(AppConstants.FARMER_TABLE_PHOTO_FIELD)) {
                                                                     //add farmer profile image
                                                                     imagesArrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_PHOTO_FIELD,
@@ -450,9 +447,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         getView().showMessage(throwable.getLocalizedMessage());
     }
 
-    protected JSONArray formatFarmerObjectData(Farmer farmer) {
-        JSONArray arrayOfValues = new JSONArray();
-        //Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
+    protected void formatFarmerObjectData(Farmer farmer, JSONArray arrayOfValues) {
+         //Country country = getGson().fromJson(getAppDataManager().getStringValue("country"), Country.class);
 
         //Generate VillageId json
         arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_COUNTRY_ADMIN_LEVEL_FIELD,
@@ -469,17 +465,12 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
         //Generate farmer education level json
         arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_EDUCATION_LEVEL_FIELD,
                 farmer.getEducationLevel(), null));
-        //Generate farmer image json
-//        arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_PHOTO_FIELD,
-//                (farmer.getImageUrl() != null && !farmer.getImageUrl().isEmpty()) ? farmer.getImageUrl() : "", null));
         //Generate farmer gender json
         arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_GENDER_FIELD,
                 farmer.getGender(), null));
         //Generate farmer birth year json
         arrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_BIRTHDAY_FIELD,
                 farmer.getBirthYear(), null));
-
-        return arrayOfValues;
     }
 
     protected void formatPlotsData(Plot plot, JSONArray arrayOfValues) {

@@ -103,6 +103,7 @@ public class UploadDataManager {
                 List<JSONObject> subList;
                 if (imagesArraySize <= BATCH_SIZE) {
                     subList = imagesArray;
+                    INDEX = imagesArraySize;
                 } else {
                     if (imagesArraySize - INDEX >= BATCH_SIZE) {
                         subList = imagesArray.subList(INDEX, BATCH_SIZE + INDEX);
@@ -121,7 +122,7 @@ public class UploadDataManager {
                     singleList.add(getAppDataManager().getFdpApiService()
                             .uploadFarmersData(token, payload));
 
-                    if (INDEX == 0 || INDEX >= imagesArraySize)
+                    if (INDEX >= imagesArraySize)
                         break;
                 }
             } catch (JSONException e) {
@@ -137,8 +138,7 @@ public class UploadDataManager {
                             @Override
                             public void onNext(ServerResponse serverResponse) {
                                 if(imagesArraySize > INDEX)
-                                    getView().setLoadingMessage(String.format("Uploading %s out of %s records...", INDEX + 1, imagesArraySize));
-
+                                    getView().setLoadingMessage(String.format("Uploading %s out of %s records...", INDEX, imagesArraySize));
                                 AppLogger.e(TAG, "Server response  => " + serverResponse.toString());
                              }
                             @Override
@@ -154,9 +154,7 @@ public class UploadDataManager {
                                 //Break out of the loop if all data has been uploaded
                                 if (INDEX == 0 || INDEX >= imagesArraySize) {
                                     AppLogger.e(TAG, "BREAK LOOP");
-
                                    success();
-
                                 } else
                                     sendImagesInBatches(submissionData, imagesArray);
                             }
