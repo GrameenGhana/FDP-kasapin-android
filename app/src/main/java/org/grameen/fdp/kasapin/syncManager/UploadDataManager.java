@@ -132,7 +132,7 @@ public class UploadDataManager {
 
         AppLogger.e(TAG, "batch list size => " + singleList.size());
 
-        Single.merge(singleList).timeout(60, TimeUnit.SECONDS)
+        Single.merge(singleList).timeout(90, TimeUnit.SECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new DisposableSubscriber<ServerResponse>() {
                             @Override

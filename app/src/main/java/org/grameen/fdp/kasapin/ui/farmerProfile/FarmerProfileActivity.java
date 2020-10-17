@@ -59,7 +59,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.observers.DisposableMaybeObserver;
 
 public class FarmerProfileActivity extends BaseActivity implements FarmerProfileContract.View {
     public static int familyMembersFormPosition = 0;
@@ -171,8 +170,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         lastVisitDate.setText((FARMER.getLastVisitDate() != null) ? FARMER.getLastVisitDate().toString() : "--");
 
 
-        if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().equals("")) {
-            circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(FARMER.getImageUrl()));
+        if (FARMER.getImageBase64() != null && !FARMER.getImageBase64().equals("")) {
+            circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(FARMER.getImageBase64()));
             initials.setText("");
         } else {
             try {

@@ -4,7 +4,6 @@ package org.grameen.fdp.kasapin.ui.base;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.entity.Country;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -47,6 +46,8 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     public AppDataManager mAppDataManager;
     protected String TAG = "";
     private V mView;
+    int totalNoOfImagesToBeUploaded = 0;
+
 
     @Inject
     public BasePresenter(AppDataManager appDataManager) {
@@ -99,6 +100,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
     protected void runSingleCall(Disposable disposableSingleObserver) {
         getAppDataManager().getCompositeDisposable().add(disposableSingleObserver);
     }
+
 
     public void setFarmerAsUnSynced(Farmer farmer) {
         farmer.setSyncStatus(AppConstants.SYNC_NOT_OK);
@@ -267,8 +269,11 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
          * First check if there are un synced data
          **/
 
+        totalNoOfImagesToBeUploaded = 0;
+
         if (showProgress)
             getView().showLoading("Uploading data", "Please wait...", false, 0, false);
+
 
         JSONObject payloadData = new JSONObject();
         JSONObject imagesOnlyPayload = new JSONObject();
@@ -358,7 +363,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                 if(farmerLogs.contains(AppConstants.FARMER_TABLE_PHOTO_FIELD)) {
                                                                     //add farmer profile image
                                                                     imagesArrayOfValues.put(generateAnswerJSONObject(null, AppConstants.FARMER_TABLE_PHOTO_FIELD,
-                                                                            (farmer.getImageUrl() != null && !farmer.getImageUrl().isEmpty()) ? farmer.getImageUrl() : "", null));
+                                                                            (farmer.getImageBase64() != null && !farmer.getImageBase64().isEmpty()) ? farmer.getImageBase64() : "", null));
                                                                 }
                                                             }
 
@@ -394,8 +399,10 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                         if(arrayOfValues.length() > 0)
                                                         jsonObject.put(mappingEntry.getKey(), arrayOfValues);
 
-                                                        if(imagesArrayOfValues.length() > 0)
+                                                        if(imagesArrayOfValues.length() > 0) {
                                                             imagesJsonObject.put(mappingEntry.getKey(), imagesArrayOfValues);
+                                                            totalNoOfImagesToBeUploaded += imagesArrayOfValues.length();
+                                                        }
                                                     }
                                                 }
                                                 payloadDataArray.put(jsonObject);
@@ -422,14 +429,15 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                             try {
                                                 payloadData.put("data", payloadDataArray);
 
-                                                AppLogger.e(TAG, "data with out images => " + payloadData.toString());
-                                                AppLogger.e(TAG, "Images array size is ==> " + imagesPayloadDataList.size());
+                                                AppLogger.e(TAG, "***********************************************************");
+                                                AppLogger.e(TAG, "No. of images to upload => " + totalNoOfImagesToBeUploaded);
+                                                System.out.println();
+                                                AppLogger.e(TAG, "data without images => " + payloadData.toString());
+                                                AppLogger.e(TAG, "***********************************************************");
 
-                                                //AppLogger.e(TAG, "images list => " + new JSONArray(imagesPayloadDataList));
 
-
-                                                //getView().hideLoading();
-                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true).uploadFarmersData(payloadData, imagesPayloadDataList);
+                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true)
+                                                        .uploadFarmersData(payloadData, imagesPayloadDataList);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 showGenericError(e);

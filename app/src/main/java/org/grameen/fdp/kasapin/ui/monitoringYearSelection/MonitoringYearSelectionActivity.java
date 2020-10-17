@@ -21,7 +21,6 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
 import org.grameen.fdp.kasapin.ui.plotMonitoringActivity.PlotMonitoringActivity;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
@@ -134,12 +133,12 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
         lastSyncDate.setText((FARMER.getLastModifiedDate() != null) ? FARMER.getLastModifiedDate().toString() : "--");
         lastVisitDate.setText((FARMER.getLastVisitDate() != null) ? FARMER.getLastVisitDate().toString() : "--");
 
-        if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().equals("")) {
-            circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(FARMER.getImageUrl()));
+        if (FARMER.getImageBase64() != null && !FARMER.getImageBase64().equals("")) {
+            circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(FARMER.getImageBase64()));
             initials.setText("");
             circleImageView.setOnClickListener(v -> {
                 Intent intent = new Intent(MonitoringYearSelectionActivity.this, ImageViewActivity.class);
-                intent.putExtra("image_string", FARMER.getImageUrl());
+                intent.putExtra("image_string", FARMER.getImageBase64());
                 startActivity(intent);
             });
         } else {

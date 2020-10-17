@@ -10,7 +10,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.11_non_queue"
+        versionName "1.0.12_non_queue"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -185,6 +185,9 @@ android {
         implementation 'com.android.support:exifinterface:28.0.0'
 
         implementation 'androidx.preference:preference:1.1.1'
+
+        //Picasso
+        implementation "com.squareup.picasso:picasso:2.71828"
     }
 
     applicationVariants.all { variant ->

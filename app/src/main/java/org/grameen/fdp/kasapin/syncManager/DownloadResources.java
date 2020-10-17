@@ -241,7 +241,7 @@ public class DownloadResources {
         //This function merges the 2 requests and calls them simultaneously awaiting for their results.
         //The onNext function is called when the results for each request is returned.
         //
-        Single.merge(singleList).timeout(60, TimeUnit.SECONDS)
+        Single.merge(singleList).timeout(90, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableSubscriber<ServerResponse>() {
                     @Override
@@ -266,6 +266,7 @@ public class DownloadResources {
                         if (TOTAL_COUNT <= (INDEX - 1)) {
                             showProgress = false;
                             showSuccess("Data download completed!");
+                            getAppDataManager().setBooleanValue(AppConstants.IS_FARMER_IMAGES_CACHED, false);
                         } else
                              getFarmersData();
                     }

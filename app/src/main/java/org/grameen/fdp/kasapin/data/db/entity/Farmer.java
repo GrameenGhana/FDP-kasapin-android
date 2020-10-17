@@ -12,7 +12,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true), @Index(value = "villageId"), @Index(value = "syncStatus"), @Index(value = "gender"),})
+@Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true), @Index(value = "villageId"),
+        @Index(value = "syncStatus"), @Index(value = "gender"),})
 public class Farmer {
     @PrimaryKey()
     @NonNull
@@ -25,6 +26,7 @@ public class Farmer {
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
+
     @SerializedName("full_name_c")
     String farmerName;
 
@@ -38,7 +40,9 @@ public class Farmer {
     String educationLevel;
 
     @SerializedName("farmer_photo_c")
-    String imageUrl = null;
+    String imageBase64 = null;
+
+    String imageLocalUrl = null;
 
     @SerializedName("country_admin_level_id")
     int villageId;
@@ -107,12 +111,12 @@ public class Farmer {
         this.lastVisitDate = lastVisitDate;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageBase64() {
+        return imageBase64;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 
     public String getLandArea() {
@@ -222,5 +226,13 @@ public class Farmer {
 
     public void setSyncStatus(int syncStatus) {
         this.syncStatus = syncStatus;
+    }
+
+    public void setImageLocalUrl(String imageLocalUrl) {
+        this.imageLocalUrl = imageLocalUrl;
+    }
+
+    public String getImageLocalUrl() {
+        return imageLocalUrl;
     }
 }

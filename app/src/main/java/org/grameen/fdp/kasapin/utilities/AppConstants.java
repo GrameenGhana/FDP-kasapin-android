@@ -138,6 +138,7 @@ public class AppConstants {
     public static String USER_PHOTO_LOCAL_URL = "userProfilePhotoLocal";
     public static String USER_PHOTO_CLOUD_URL = "userProfilePhotoCloud";
     public static String IS_NIGHT_MODE = "isNightMode";
+    public static String IS_FARMER_IMAGES_CACHED = "isFarmerImagesCached";
     public static int LAST_SELECTED_FRAGMENT = 1;
     public static int SYNC_OK = 1;
     public static int SYNC_NOT_OK = 0;

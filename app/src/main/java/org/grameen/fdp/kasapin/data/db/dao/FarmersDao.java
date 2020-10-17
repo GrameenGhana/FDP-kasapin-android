@@ -18,11 +18,11 @@ public interface FarmersDao extends BaseDao<Farmer> {
     @Query("SELECT * FROM farmers")
     Single<List<Farmer>> getAll();
 
-    @Query("SELECT farmerName, code, syncStatus, lastModifiedDate,   villageId, gender, " +
+    @Query("SELECT farmerName, code, syncStatus, lastModifiedDate, villageId, gender, imageLocalUrl, " +
             "lastVisitDate, educationLevel, hasSubmitted FROM farmers WHERE code IN (:codes)")
     Single<List<Farmer>> getAll(List<String> codes);
 
-    @Query("SELECT farmerName, code, syncStatus, lastModifiedDate,   villageId, gender, " +
+    @Query("SELECT farmerName, code, syncStatus, lastModifiedDate, villageId, gender, imageLocalUrl," +
             "lastVisitDate, educationLevel, hasSubmitted FROM farmers WHERE code = :farmerCode")
     Single<Farmer> getOne(String farmerCode);
 

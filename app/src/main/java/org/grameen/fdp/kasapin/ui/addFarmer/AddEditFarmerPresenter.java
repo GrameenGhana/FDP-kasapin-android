@@ -1,5 +1,6 @@
 package org.grameen.fdp.kasapin.ui.addFarmer;
 
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -42,7 +43,7 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
                     if(getView() != null)
                     getView().setUpViews(farmer);
                     },
-                    throwable -> getView().setUpViews(null)));
+                    throwable -> getView().showMessage(R.string.error_getting_farmer_info)));
     }
 
     @Override
