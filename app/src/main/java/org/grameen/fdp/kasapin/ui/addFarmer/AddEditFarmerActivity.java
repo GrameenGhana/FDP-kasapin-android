@@ -101,13 +101,17 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
 
-
-        mPresenter.getFarmerData(getIntent()
-                .getStringExtra("farmerCode"));
+        String code = getIntent().getStringExtra("farmerCode");
+        if(code != null)
+        mPresenter.getFarmerData(code);
+        else
+            setUpViews(null);
     }
 
     @Override
     public void setUpViews(Farmer farmer) {
+        AppLogger.e(TAG, "isNewFarmer == " + isNewFarmer);
+
         FARMER = farmer;
         isNewFarmer = farmer == null;
 
@@ -135,7 +139,6 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         genderSpinner.setItems(genders);
         genderSpinner.setOnItemSelectedListener((view, position, id, item) -> gender = genders[position]);
 
-        AppLogger.e(TAG, "Is new farmer " + isNewFarmer);
 
         if (!isNewFarmer) {
             CURRENT_FORM_QUESTION = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
@@ -174,8 +177,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     }
             }
 
-            if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().isEmpty()) {
-                farmerBase64ImageData = FARMER.getImageUrl();
+            if (FARMER.getImageBase64() != null && !FARMER.getImageBase64().isEmpty()) {
+                farmerBase64ImageData = FARMER.getImageBase64();
                 try {
                     circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(farmerBase64ImageData));
 
@@ -280,8 +283,11 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setVillageId(villageId);
             FARMER.setVillageName(villageName);
             FARMER.setLastModifiedDate(TimeUtils.getDateTime());
-            FARMER.setImageUrl(farmerBase64ImageData);
+            FARMER.setImageBase64(farmerBase64ImageData);
 
+            if(farmerBase64ImageData != null) {
+                FARMER.setImageLocalUrl(convertBase64ToUrl(FARMER.getImageBase64(), FARMER.getCode()));
+            }
 
             mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer, wasProfileImageEdited);
 

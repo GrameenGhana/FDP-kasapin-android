@@ -21,6 +21,7 @@ import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.util.Date;
@@ -107,6 +108,8 @@ public class PhotoButtonController extends MyLabeledFieldController {
                     linearLayout.requestLayout();
 
                      getModel().getEditedElements().add(getName());
+
+                    AppLogger.e("Just added a photo on ==> " + getName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

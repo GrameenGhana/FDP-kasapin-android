@@ -7,6 +7,10 @@ import android.view.Window;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
+
+import java.util.List;
+
 public class BaseContract {
     public interface Presenter<T extends View> {
         /**
@@ -24,8 +28,7 @@ public class BaseContract {
         void setUserAsLoggedOut();
         boolean isViewAttached();
         void onTokenExpire();
-//        void getFarmerData(String code);
-    }
+          }
 
 
     public interface View {
@@ -43,5 +46,6 @@ public class BaseContract {
         void hideKeyboard();
         void toggleFullScreen(Boolean hideNavBar, Window W);
         void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable);
+
     }
 }

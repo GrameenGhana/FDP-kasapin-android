@@ -285,7 +285,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             case R.id.download_resources:
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
                     //Todo Sync data down
-                    new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 500);
+                    new Handler().postDelayed(() -> mPresenter.downloadResourcesData(true), 200);
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;
@@ -298,7 +298,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
             case R.id.download_farmer_data:
                 //Todo Sync down new data from server
                 if (NetworkUtils.isNetworkConnected(MainActivity.this))
-                    new Handler().postDelayed(() -> mPresenter.downloadFarmersData(true), 500);
+                    new Handler().postDelayed(() -> mPresenter.downloadFarmersData(true), 200);
                 else
                     showMessage(R.string.no_internet_connection_available);
                 break;

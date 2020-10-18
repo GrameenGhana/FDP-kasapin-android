@@ -59,7 +59,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.observers.DisposableMaybeObserver;
 
 public class FarmerProfileActivity extends BaseActivity implements FarmerProfileContract.View {
     public static int familyMembersFormPosition = 0;
@@ -126,8 +125,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
         if (getAppDataManager().isMonitoring()) {
-            //Todo add the rest of the views to hide
-            edit.setVisibility(View.GONE);
+             edit.setVisibility(View.GONE);
             addPlot.setVisibility(View.GONE);
 
         } else
@@ -171,8 +169,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         lastVisitDate.setText((FARMER.getLastVisitDate() != null) ? FARMER.getLastVisitDate().toString() : "--");
 
 
-        if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().equals("")) {
-            circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(FARMER.getImageUrl()));
+        if (FARMER.getImageBase64() != null && !FARMER.getImageBase64().equals("")) {
+            circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(FARMER.getImageBase64()));
             initials.setText("");
         } else {
             try {
@@ -204,7 +202,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         }
 
         /*
-        if (IS_MONITIRING_MODE && BuildConfig.DEBUG) {
+        if (IS_MONITORING_MODE && BuildConfig.DEBUG) {
             findViewById(R.id.historical_view).setVisibility(View.VISIBLE);
 
             findViewById(R.id.historical_view).setOnClickListener(new View.OnClickListener() {
@@ -232,8 +230,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             plotsRecyclerView.setAdapter(plotsListAdapter);
             plotsListAdapter.setOnItemClickListener((view, position) -> {
 
-                //Todo go to plot details
-                if (!getAppDataManager().isMonitoring()) {
+                 if (!getAppDataManager().isMonitoring()) {
                     Intent intent = new Intent(FarmerProfileActivity.this, PlotDetailsActivity.class);
                     intent.putExtra("plot", getGson().toJson(PLOTS.get(position)));
                     intent.putExtra("plotSize", plotsSize);
@@ -250,8 +247,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 plotsListAdapter.OnLongClickListener((view, position) -> showDialog(true, "Delete Plot Info", "Do you want to delete data for " + PLOTS.get(position).getName() + "?", (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     mPresenter.deletePlot(PLOTS.get(position));
-                    //TODO DELETE monitoring for a plot
-                    PLOTS.remove(position);
+
+                     PLOTS.remove(position);
                     plotsListAdapter.notifyItemRemoved(position);
                 }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0));
         } else noOfPlots.setText(getString(R.string.plot_adoption_observations));
@@ -602,7 +599,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
         if (plots != null && plots.size() > 0) {
             noOfPlots = plots.size();
             for (Plot plot : plots) {
-                //Check number of monitorings for each plot for the current monitoring year
+                //Check number of monitoring for each plot for the current monitoring year
                 numberOfMonitoringsPerPlot.add(getAppDataManager().getDatabaseManager().monitoringDao()
                         .countMonitoringForSelectedYear(plot.getExternalId(), currentMonitoringYear)
                         .blockingGet(0));

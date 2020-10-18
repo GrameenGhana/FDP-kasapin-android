@@ -89,6 +89,8 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
                     listView.setNumColumns(AppConstants.PHONE_COLUMN_COUNT);
 
                 farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
+                farmerListViewAdapter.hasStableIds();
+
                 listView.setAdapter(farmerListViewAdapter);
                 listView.setOnItemClickListener((adapterView, view, i, l) -> {
                     //Todo uncomment this
@@ -105,6 +107,7 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
                     return true;
                 });
             }
+
 
             circularProgress.setVisibility(View.GONE);
     }

@@ -12,6 +12,7 @@ import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 
+import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,13 +174,17 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     public void onError(Throwable throwable) {
         //On download data error
         getView().hideLoading();
-        getView().showMessage(throwable.getMessage());
-        throwable.printStackTrace();
 
-        if (throwable.getMessage().contains("401")) {
+        if(throwable instanceof EOFException)
+            getView().showMessage("FarmGrow app could nto reach the server. Please try again.");
+        else
+            getView().showMessage(throwable.getMessage());
+
+
+        if (throwable.getMessage() != null && throwable.getMessage().contains("401")) {
             getView().openLoginActivityOnTokenExpire();
         }
-    }
+     }
 
     //Upload Data Callbacks declared at the global level
     @Override

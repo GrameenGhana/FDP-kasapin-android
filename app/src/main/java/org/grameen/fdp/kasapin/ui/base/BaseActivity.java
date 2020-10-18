@@ -3,9 +3,11 @@ package org.grameen.fdp.kasapin.ui.base;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,16 +55,23 @@ import org.grameen.fdp.kasapin.ui.familyMembers.FamilyMembersActivity;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.login.LoginActivity;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.FileUtils;
+import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.grameen.fdp.kasapin.utilities.KeyboardUtils;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -121,6 +130,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = getClass().getSimpleName();
+
+
+
         //Sets theme for if Diagnostic or Monitoring mode
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(AppPreferencesHelper.PREF_KEY_IS_MONITORING_MODE, true))
             setTheme(R.style.AppTheme_Monitoring);
@@ -208,7 +220,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     @Override
     public void showMessage(String message) {
         runOnUiThread(() ->
-                CustomToast.makeText(this, (message != null) ? message : getString(R.string.some_error),
+                CustomToast.makeToast(this, (message != null) ? message : getString(R.string.some_error),
                         Toast.LENGTH_LONG).show());
     }
 
@@ -229,6 +241,37 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     @Override
     public void onFragmentDetached(String tag) {
     }
+
+
+    protected String convertBase64ToUrl(String base64String, String fileName) {
+        String newImageUrl = null;
+        File directory = new ContextWrapper(this).getDir("images", Context.MODE_PRIVATE);
+        File imageFile = new File(directory, fileName.replace("/", "_"));
+        FileOutputStream fos = null;
+        try {
+            Bitmap bitmap = ImageUtil.base64ToBitmap(base64String);
+
+              fos = new FileOutputStream(imageFile);
+            if(bitmap != null) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+              newImageUrl = imageFile.getPath();
+             }
+        } catch (Exception e) {
+            AppLogger.e(TAG, "Exception ==> " + e.getMessage());
+
+        } finally {
+            if(fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        AppLogger.e(TAG, "Image created at ==> " + newImageUrl);
+        return newImageUrl;
+    }
+
 
     public void hideKeyboard() {
         View view = this.getCurrentFocus();

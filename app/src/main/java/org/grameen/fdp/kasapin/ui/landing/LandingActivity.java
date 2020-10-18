@@ -2,8 +2,11 @@ package org.grameen.fdp.kasapin.ui.landing;
 
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.PopupMenu;
 
@@ -12,10 +15,18 @@ import androidx.appcompat.app.AlertDialog;
 
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.main.MainActivity;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.FileUtils;
+import org.grameen.fdp.kasapin.utilities.ImageUtil;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -45,20 +56,39 @@ public class LandingActivity extends BaseActivity implements LandingContract.Vie
         setUnBinder(ButterKnife.bind(this));
 
         findViewById(R.id.diagnostic).setOnClickListener(v -> {
-            mPresenter.getAppDataManager().setIsMonitoringMode(false);
+          getAppDataManager().setIsMonitoringMode(false);
             openMainActivity();
         });
         findViewById(R.id.monitoring).setOnClickListener(v -> {
-            mPresenter.getAppDataManager().setIsMonitoringMode(true);
+            getAppDataManager().setIsMonitoringMode(true);
             openMainActivity();
         });
         FileUtils.createNoMediaFile();
+
+        if(!getAppDataManager().getBooleanValue(AppConstants.IS_FARMER_IMAGES_CACHED))
+            new Handler().postDelayed(() -> mPresenter.getFarmers(), 500);
     }
 
     @Override
     protected void onDestroy() {
         mPresenter.dropView();
         super.onDestroy();
+    }
+
+
+
+    @Override
+    public void cacheFarmerImages(List<Farmer> farmers) {
+        List<Farmer> updatedData = new ArrayList<>();
+        for (Farmer farmer : farmers) {
+            if (farmer.getImageBase64() != null) {
+                String imageUri  = convertBase64ToUrl(farmer.getImageBase64(),farmer.getCode() + ".jpg");
+                farmer.setImageLocalUrl(imageUri);
+                 updatedData.add(farmer);
+            }
+        }
+
+        mPresenter.updateFarmerData(updatedData);
     }
 
     @Override
