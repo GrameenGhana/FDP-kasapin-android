@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.firebase.crashlytics'
 
 
 android {
@@ -10,7 +10,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.11_non_queue"
+        versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -20,20 +20,20 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("fdp-kasapin.jks")
+            storeFile file("fdp-kasapin")
             storePassword "sirrius"
-            keyAlias "fdp-kasapin"
-            keyPassword "sirrius"
+            keyAlias "farmgrow_app"
+            keyPassword "grameen.farmgrow2020@fdp.org"
         }
     }
 
     buildTypes {
         release {
             debuggable false
-            minifyEnabled false
+//            minifyEnabled true
+//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-
         }
 
         debug {
@@ -117,13 +117,20 @@ android {
         //Serialization
         implementation "com.squareup.moshi:moshi:$rootProject.ext.moshiVersion"
 
-//        //firebase
+        //firebase
+
+        // Import the Firebase BoM
+        //implementation platform('com.google.firebase:firebase-bom:25.12.0')
+        implementation "com.google.firebase:firebase-crashlytics:17.2.2"
+        implementation 'com.google.firebase:firebase-analytics:17.6.0'
+
+//
 //        implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
 //        // Add the Firebase Crashlytics SDK.
 //        implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
-
-        // Recommended: Add the Google Analytics SDK.
-       // implementation 'com.google.firebase:firebase-analytics:17.6.0'
+//
+//        // Recommended: Add the Google Analytics SDK.
+//        implementation 'com.google.firebase:firebase-analytics:17.6.0'
         
 
         // room database

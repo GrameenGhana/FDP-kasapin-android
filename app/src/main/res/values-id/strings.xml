@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FDP</string>
+    <string name="app_name">@string/fdp</string>
     <string name="farm_development_plan">FarmGrow</string>
     <string name="navigation_drawer_open">Buka navigasi</string>
     <string name="navigation_drawer_close">Tutup navigasi</string>
@@ -353,7 +353,7 @@
 
     <string name="monitoring">Pemantauan</string>
 
-    <string name="fdp">Rencana Pengembangan Pertanian</string>
+    <string name="fdp">FarmGrow</string>
     <string name="download_resources">Unduh Sumber Daya</string>
     <string name="upload_farmer_data">Unggah data petani</string>
     <string name="share">Bagikan</string>

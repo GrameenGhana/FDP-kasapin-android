@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FDP</string>
+    <string name="app_name">@string/fdp</string>
     <string name="farm_development_plan">FarmGrow</string>
     <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
     <string name="navigation_drawer_close">Fermez le tiroir de navigation</string>

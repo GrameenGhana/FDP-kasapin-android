@@ -500,7 +500,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     boolean checkIfCocoaProdCorresponds(List<Plot> plots) {
         boolean value = true;
-        Double farmAcre;
+        double farmAcre;
         Question cocoaProdQuestion = getAppDataManager().getDatabaseManager().questionDao().get("cocoa_production_ly");
 
         if (cocoaProdQuestion != null) {
@@ -514,7 +514,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 }
 
                 StringBuilder stringBuilder = new StringBuilder();
-                Double totalSizes;
+                double totalSizes;
                 if (plots != null)
                     for (Plot plot : plots) {
                         try {

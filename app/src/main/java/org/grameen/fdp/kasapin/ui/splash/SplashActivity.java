@@ -60,7 +60,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         toggleFullScreen(false, getWindow());
 
         image1.setAlpha(0f);
-        textLayout.setTranslationY(-100f);
+        //textLayout.setTranslationY(-100f);
         textLayout.setAlpha(0f);
     }
 
@@ -101,7 +101,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     private void startAnimations() {
         image1.animate()
                 .alpha(1f)
-                .setDuration(1500)
+                .setDuration(2000)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
@@ -109,38 +109,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        if(textLayout != null)
-                        textLayout.animate()
-                                .translationY(0)
-                                .alpha(1f)
-                                .setDuration(500)
-                                .setListener(new Animator.AnimatorListener() {
-                                    @Override
-                                    public void onAnimationStart(Animator animation) {}
-
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        try {
-                                            int waited = 0;
-                                            // Splash screen pause time
-                                            while (waited < 1000) {
-                                                sleep(100);
-                                                waited += 100;
-                                            }
-                                            mPresenter.checkIfIsLoggedIn();
-                                        } catch (InterruptedException ignored) {
-                                        }
-                                    }
-                                    @Override
-                                    public void onAnimationCancel(Animator animation) {
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(Animator animation) {
-                                    }
-                                })
-                                .setStartDelay(200)
-                                .start();
+                        mPresenter.checkIfIsLoggedIn();
                     }
 
                     @Override

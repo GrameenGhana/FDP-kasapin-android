@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">FDP</string>
+    <string name="app_name">@string/fdp</string>
     <string name="farm_development_plan">FarmGrow</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
