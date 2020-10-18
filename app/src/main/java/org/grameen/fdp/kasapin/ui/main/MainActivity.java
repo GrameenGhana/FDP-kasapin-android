@@ -41,7 +41,6 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfileActivity;
 import org.grameen.fdp.kasapin.ui.preferences.SettingsActivity;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 
 import java.lang.reflect.Method;
@@ -187,11 +186,13 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
                     @Override
                     public void onPageScrolled(int i, float v, int i1) {
                     }
+
                     @Override
                     public void onPageSelected(int i) {
                         SELECTED_VILLAGE = fragmentPagerItems.get(i).getTitle().toString();
                         CURRENT_PAGE = i;
                     }
+
                     @Override
                     public void onPageScrollStateChanged(int i) {
                     }
@@ -241,7 +242,7 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     @Override
     public void viewFarmerProfile(Farmer farmer) {
         Intent intent = new Intent(this, FarmerProfileActivity.class);
-        intent.putExtra("farmerCode",  farmer.getCode());
+        intent.putExtra("farmerCode", farmer.getCode());
         startActivity(intent);
     }
 
@@ -310,13 +311,14 @@ public class MainActivity extends BaseActivity implements MainContract.View, Nav
     }
 
     @OnClick(R.id.sync)
-    void syncData(){
+    void syncData() {
         //Generate the json object here, pass the object as a value
         if (NetworkUtils.isNetworkConnected(MainActivity.this))
             new Handler().postDelayed(() -> mPresenter.syncData(true), 500);
         else
             showMessage(R.string.no_internet_connection_available);
     }
+
     @Override
     public void showNoFarmersMessage() {
         showDialog(true, getString(R.string.no_data), getString(R.string.no_new_data),

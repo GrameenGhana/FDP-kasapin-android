@@ -73,7 +73,6 @@ public abstract class MyFormElementController {
     }
 
 
-
     public void setView(View view) {
         this.view = view;
     }

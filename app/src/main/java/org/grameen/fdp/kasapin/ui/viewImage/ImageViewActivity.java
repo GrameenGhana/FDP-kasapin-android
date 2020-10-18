@@ -36,11 +36,11 @@ public class ImageViewActivity extends BaseActivity {
         appBar = findViewById(R.id.appBar);
         hideToolBr();
 
-        if(getIntent().hasExtra("image_string"))
+        if (getIntent().hasExtra("image_string"))
             decodableString = getIntent().getStringExtra("image_string");
         else
-         decodableString = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
-                .getStringExtra("farmerCode")).blockingGet().getImageBase64();
+            decodableString = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
+                    .getStringExtra("farmerCode")).blockingGet().getImageBase64();
 
 
         if (decodableString != null && !decodableString.equalsIgnoreCase("")) {

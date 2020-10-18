@@ -17,10 +17,13 @@ public class RecommendationsDataWrapper {
     @SerializedName("data")
     @Expose
     private List<Recommendation> data = null;
+
     /**
      * No args constructor for use in serialization
      */
-    public RecommendationsDataWrapper() {}
+    public RecommendationsDataWrapper() {
+    }
+
     /**
      * @param recommendations Recommendation data from the server
      */

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     tools:context=".ui.login.LoginActivity">
+
     <include layout="@layout/background_view" />
 
     <LinearLayout
@@ -27,9 +28,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/farm_grow_logo"
                 android:scaleType="fitCenter"
-                />
+                android:src="@drawable/farm_grow_logo" />
         </LinearLayout>
 
 
@@ -60,9 +60,9 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="@dimen/spacing_normal"
-                tools:text="https://fdp.com/ghana"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_medium" />
+                android:textSize="@dimen/text_size_medium"
+                tools:text="https://fdp.com/ghana" />
 
 
             <AutoCompleteTextView
@@ -76,6 +76,7 @@
                 android:inputType="textWebEmailAddress"
                 android:maxLines="1"
                 android:padding="@dimen/spacing_normal" />
+
             <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"

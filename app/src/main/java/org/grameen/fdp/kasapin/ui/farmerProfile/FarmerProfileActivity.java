@@ -125,7 +125,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
 
         if (getAppDataManager().isMonitoring()) {
-             edit.setVisibility(View.GONE);
+            edit.setVisibility(View.GONE);
             addPlot.setVisibility(View.GONE);
 
         } else
@@ -230,7 +230,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
             plotsRecyclerView.setAdapter(plotsListAdapter);
             plotsListAdapter.setOnItemClickListener((view, position) -> {
 
-                 if (!getAppDataManager().isMonitoring()) {
+                if (!getAppDataManager().isMonitoring()) {
                     Intent intent = new Intent(FarmerProfileActivity.this, PlotDetailsActivity.class);
                     intent.putExtra("plot", getGson().toJson(PLOTS.get(position)));
                     intent.putExtra("plotSize", plotsSize);
@@ -248,7 +248,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     dialogInterface.dismiss();
                     mPresenter.deletePlot(PLOTS.get(position));
 
-                     PLOTS.remove(position);
+                    PLOTS.remove(position);
                     plotsListAdapter.notifyItemRemoved(position);
                 }, "YES", (dialogInterface, i) -> dialogInterface.dismiss(), "No", 0));
         } else noOfPlots.setText(getString(R.string.plot_adoption_observations));
@@ -268,7 +268,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
     @Override
     public void addButtons(List<Button> buttons) {
-         runOnUiThread(()-> dynamicButtons.removeAllViews());
+        runOnUiThread(() -> dynamicButtons.removeAllViews());
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -283,7 +283,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                     return;
                 }
                 Intent intent = new Intent(FarmerProfileActivity.this, AddEditFarmerActivity.class);
-                intent.putExtra("farmerCode",  FARMER.getCode());
+                intent.putExtra("farmerCode", FARMER.getCode());
                 startActivity(intent);
             });
         }
@@ -306,7 +306,7 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
 
         //check if service is running
         if (isServiceRunning(LocationPrepareService.class))
-        stopService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
+            stopService(new Intent().setClass(getApplicationContext(), LocationPrepareService.class));
     }
 
     @Override
@@ -315,7 +315,8 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
     }
 
     @Override
-    public void openLoginActivityOnTokenExpire() {}
+    public void openLoginActivityOnTokenExpire() {
+    }
 
     @OnClick({R.id.photo, R.id.addPlot, R.id.review_page, R.id.pandl, R.id.farm_assessment, R.id.sync_farmer, R.id.historical_view})
     public void onViewClicked(View view) {
@@ -343,18 +344,18 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 if (PLOTS != null && PLOTS.size() > 0) {
                     if (!checkIfFarmSizeCorresponds(PLOTS))
                         return;
-                     if (!checkIfCocoaProdCorresponds(PLOTS))
+                    if (!checkIfCocoaProdCorresponds(PLOTS))
                         return;
 
-                     for (Plot plot : PLOTS) {
-                         if (plot.getRecommendationId() == -1) {
-                             showMessage(getString(R.string.enter_all_ao_data) + plot.getName());
-                             return;
-                         }
-                     }
-                     intent = new Intent(this, ProfitAndLossActivity.class);
-                     intent.putExtra("farmerCode", FARMER.getCode());
-                     startActivity(intent);
+                    for (Plot plot : PLOTS) {
+                        if (plot.getRecommendationId() == -1) {
+                            showMessage(getString(R.string.enter_all_ao_data) + plot.getName());
+                            return;
+                        }
+                    }
+                    intent = new Intent(this, ProfitAndLossActivity.class);
+                    intent.putExtra("farmerCode", FARMER.getCode());
+                    startActivity(intent);
                 } else
                     showDialog(true, getString(R.string.no_plots), getString(R.string.add_plot_to_access_pl),
                             (dialogInterface, i) -> dialogInterface.dismiss(), getString(R.string.ok),

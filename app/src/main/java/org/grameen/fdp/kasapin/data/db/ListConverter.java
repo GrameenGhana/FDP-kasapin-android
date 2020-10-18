@@ -1,15 +1,12 @@
 package org.grameen.fdp.kasapin.data.db;
 
 
-import android.content.res.TypedArray;
-
 import androidx.room.TypeConverter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.List;
 
 
@@ -19,15 +16,14 @@ import java.util.List;
  */
 
 public class ListConverter {
-     @TypeConverter
+    @TypeConverter
     public static String from(List<String> data) {
-        return new Gson().toJson(data) ;
+        return new Gson().toJson(data);
     }
 
     @TypeConverter
     public static List<String> to(String data) {
-        Type listType = new TypeToken<List<String>>()
-        {
+        Type listType = new TypeToken<List<String>>() {
         }.getType();
         return new Gson().fromJson(data, listType);
     }

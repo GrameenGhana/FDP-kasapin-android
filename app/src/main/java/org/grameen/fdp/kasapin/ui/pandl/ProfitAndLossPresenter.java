@@ -31,17 +31,19 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
     public void getFarmerData(String farmerCode) {
         getView().showLoading("Getting farmer data", "Please wait...", true, 0, false);
         getAppDataManager().getDatabaseManager().realFarmersDao().getOne(farmerCode).toMaybe()
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableMaybeObserver<Farmer>() {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableMaybeObserver<Farmer>() {
             @Override
             public void onSuccess(Farmer farmer) {
-                 getView().setUpViews(farmer);
+                getView().setUpViews(farmer);
             }
+
             @Override
-            public void onError(Throwable e){
+            public void onError(Throwable e) {
                 getView().showMessage("Could not fetch farmer data. Please report this issue.");
             }
+
             @Override
-            public void onComplete(){
+            public void onComplete() {
 
                 getView().hideLoading();
             }
@@ -70,7 +72,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                         }
                         getView().hideLoading();
                         getView().setAnswerData(ALL_DATA_JSON);
-                    }else
+                    } else
                         getView().hideLoading();
                 }, throwable -> {
                     throwable.printStackTrace();

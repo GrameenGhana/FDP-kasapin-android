@@ -253,13 +253,13 @@
     </string-array>
 
     <string-array name="monitoring_years">
-    <item name="year_1">Year %d</item>
-    <item name="year_2">Year %d</item>
-    <item name="year_3">Year %d</item>
-    <item name="year_4">Year %d</item>
-    <item name="year_5">Year %d</item>
-    <item name="year_6">Year %d</item>
-    <item name="year_7">Year %d</item>
+        <item name="year_1">Year %d</item>
+        <item name="year_2">Year %d</item>
+        <item name="year_3">Year %d</item>
+        <item name="year_4">Year %d</item>
+        <item name="year_5">Year %d</item>
+        <item name="year_6">Year %d</item>
+        <item name="year_7">Year %d</item>
     </string-array>
 
 

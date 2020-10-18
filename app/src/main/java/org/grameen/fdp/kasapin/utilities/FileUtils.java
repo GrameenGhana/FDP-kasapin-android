@@ -21,7 +21,8 @@ public class FileUtils {
                 out.close();
                 AppLogger.i("FileUtils", "No media file created!  " + file);
             }
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
     }
 
     static File createFolder(String directoryName, String fileName) {

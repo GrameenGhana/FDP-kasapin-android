@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="false"
-        tools:src="@drawable/icon_farmer_color"
-        android:scaleType="centerInside" />
+        android:scaleType="centerInside"
+        tools:src="@drawable/icon_farmer_color" />
 
     <RelativeLayout
         android:id="@+id/appBar"

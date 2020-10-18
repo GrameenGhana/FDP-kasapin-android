@@ -38,12 +38,12 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
     public void getFarmerData(String code) {
         runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().get(code)
                 .subscribeOn(Schedulers.io())
-               .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(farmer -> {
-                    if(getView() != null)
-                    getView().setUpViews(farmer);
-                    },
-                    throwable -> getView().showMessage(R.string.error_getting_farmer_info)));
+                            if (getView() != null)
+                                getView().setUpViews(farmer);
+                        },
+                        throwable -> getView().showMessage(R.string.error_getting_farmer_info)));
     }
 
     @Override

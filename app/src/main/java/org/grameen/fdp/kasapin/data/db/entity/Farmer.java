@@ -19,7 +19,29 @@ public class Farmer {
     @NonNull
     @SerializedName("farmer_code_c")
     String code;
-
+    @SerializedName("full_name_c")
+    String farmerName;
+    @SerializedName("gender_c")
+    String gender;
+    @SerializedName("birthday_c")
+    String birthYear = "1970";
+    @SerializedName("educational_level_c")
+    String educationLevel;
+    @SerializedName("farmer_photo_c")
+    String imageBase64 = null;
+    String imageLocalUrl = null;
+    @SerializedName("country_admin_level_id")
+    int villageId;
+    Date firstVisitDate;
+    Date lastVisitDate;
+    int syncStatus = 1;
+    @SerializedName("LastModifiedDate")
+    Date lastModifiedDate;
+    String landArea;
+    String hasSubmitted = "NO";
+    String villageName;
+    @Ignore
+    String externalId;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
@@ -27,44 +49,9 @@ public class Farmer {
     @Expose
     private String updatedAt;
 
-    @SerializedName("full_name_c")
-    String farmerName;
 
-    @SerializedName("gender_c")
-    String gender;
-
-    @SerializedName("birthday_c")
-    String birthYear = "1970";
-
-    @SerializedName("educational_level_c")
-    String educationLevel;
-
-    @SerializedName("farmer_photo_c")
-    String imageBase64 = null;
-
-    String imageLocalUrl = null;
-
-    @SerializedName("country_admin_level_id")
-    int villageId;
-
-    Date firstVisitDate;
-    Date lastVisitDate;
-    int syncStatus = 1;
-
-    @SerializedName("LastModifiedDate")
-    Date lastModifiedDate;
-
-    String landArea;
-
-    String hasSubmitted = "NO";
-
-    String villageName;
-
-    @Ignore
-    String externalId;
-
-
-    public Farmer() {}
+    public Farmer() {
+    }
 
     public String getExternalId() {
         return externalId;
@@ -228,11 +215,11 @@ public class Farmer {
         this.syncStatus = syncStatus;
     }
 
-    public void setImageLocalUrl(String imageLocalUrl) {
-        this.imageLocalUrl = imageLocalUrl;
-    }
-
     public String getImageLocalUrl() {
         return imageLocalUrl;
+    }
+
+    public void setImageLocalUrl(String imageLocalUrl) {
+        this.imageLocalUrl = imageLocalUrl;
     }
 }

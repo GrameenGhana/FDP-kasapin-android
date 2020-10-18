@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
- import timber.log.Timber;
+import timber.log.Timber;
 
 import static android.util.Log.INFO;
 

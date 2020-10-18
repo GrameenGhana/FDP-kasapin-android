@@ -233,13 +233,13 @@
     </string-array>
 
     <string-array name="monitoring_years">
-    <item name="year_1">Tahun %d</item>
-    <item name="year_2">Tahun %d</item>
-    <item name="year_3">Tahun %d</item>
-    <item name="year_4">Tahun %d</item>
-    <item name="year_5">Tahun %d</item>
-    <item name="year_6">Tahun %d</item>
-    <item name="year_7">Tahun %d</item>
+        <item name="year_1">Tahun %d</item>
+        <item name="year_2">Tahun %d</item>
+        <item name="year_3">Tahun %d</item>
+        <item name="year_4">Tahun %d</item>
+        <item name="year_5">Tahun %d</item>
+        <item name="year_6">Tahun %d</item>
+        <item name="year_7">Tahun %d</item>
     </string-array>
 
     <string-array name="seven_years">

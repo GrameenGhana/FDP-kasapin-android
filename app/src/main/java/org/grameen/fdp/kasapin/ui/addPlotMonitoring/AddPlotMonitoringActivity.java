@@ -221,7 +221,7 @@ public class AddPlotMonitoringActivity extends BaseActivity implements AddPlotMo
             formAnswerData.setCreatedAt(TimeUtils.getCurrentDateTime());
             formAnswerData.setData(new JSONObject().toString());
             dynamicFormFragment = DynamicFormFragment.newInstance(monitoringPlotInfoQuestions, false, PLOT.getFarmerCode(), false, formAnswerData);
-        }else {
+        } else {
             formAnswerData.setData(MONITORING_ANSWERS_JSON.toString());
             dynamicFormFragment = DynamicFormFragment.newInstance(monitoringPlotInfoQuestions, true, PLOT.getFarmerCode(), false, formAnswerData);
         }

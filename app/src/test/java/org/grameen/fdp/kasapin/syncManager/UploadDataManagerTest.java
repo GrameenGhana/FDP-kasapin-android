@@ -6,8 +6,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 public class UploadDataManagerTest {
 
     List<String> list = new ArrayList<>();
@@ -15,10 +13,11 @@ public class UploadDataManagerTest {
     int REQUEST_SIZE = 2;
     int INDEX = 0;
     int BATCH_SIZE = 3;
+
     @Before
     public void setUp() throws Exception {
-        for(int i = 0; i < 10; i++)
-            list.add("A" + (1+ i));
+        for (int i = 0; i < 10; i++)
+            list.add("A" + (1 + i));
 
         size = list.size();
 
@@ -28,15 +27,15 @@ public class UploadDataManagerTest {
 
     @Test
     public void testSyncImagesInBatches() {
-         for (int i = 0; i < REQUEST_SIZE; i++) {
-            System.out.println("************* " + i +" **************");
+        for (int i = 0; i < REQUEST_SIZE; i++) {
+            System.out.println("************* " + i + " **************");
 
             System.out.println("INDEX " + INDEX);
 
             List<String> subList;
-            if(size <= BATCH_SIZE) {
+            if (size <= BATCH_SIZE) {
                 subList = list;
-             }else {
+            } else {
                 if (size - INDEX >= BATCH_SIZE) {
                     subList = list.subList(INDEX, BATCH_SIZE + INDEX);
                     INDEX += BATCH_SIZE;
@@ -48,7 +47,6 @@ public class UploadDataManagerTest {
             }
             System.out.println(subList.toString());
             System.out.println("END INDEX ==> " + INDEX);
-
 
 
             if (INDEX == 0 || INDEX >= size) {

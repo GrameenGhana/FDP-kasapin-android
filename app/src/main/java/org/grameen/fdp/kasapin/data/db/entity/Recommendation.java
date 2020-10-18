@@ -30,7 +30,8 @@ public class Recommendation extends BaseModel {
     @SerializedName("recommendation_activity")
     List<RecommendationActivity> recommendationActivities;
 
-    public Recommendation() {}
+    public Recommendation() {
+    }
 
     public String getRecommendationName() {
         return recommendationName;

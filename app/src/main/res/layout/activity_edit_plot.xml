@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
 
@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <include layout="@layout/toolbar" />
 
 
@@ -41,10 +42,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        tools:text="Plot Name"
                         android:textColor="@android:color/primary_text_light"
                         android:textSize="@dimen/text_size_large"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="Plot Name" />
 
                     <TextView
                         android:id="@+id/landSize"
@@ -63,6 +64,7 @@
                     android:paddingTop="@dimen/spacing_half"
                     android:paddingRight="@dimen/spacing_normal"
                     android:paddingBottom="@dimen/spacing_half">
+
                     <TextView
                         android:id="@+id/plot_est_prod_text"
                         android:layout_width="wrap_content"
@@ -70,8 +72,7 @@
                         android:layout_marginEnd="@dimen/spacing_quarter"
                         android:text="@string/estimated_production_size"
                         android:textColor="@android:color/primary_text_light"
-                        android:textSize="@dimen/text_size_normal"
-                        />
+                        android:textSize="@dimen/text_size_normal" />
 
                     <TextView
                         android:id="@+id/estimatedProductionSize"
@@ -114,15 +115,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:scrollbars="horizontal">
+
                         <TextView
                             android:id="@+id/recommended_intervention"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:maxLines="1"
-                            tools:text="--"
                             android:textColor="?attr/colorAccent"
                             android:textSize="@dimen/text_size_normal"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="--" />
                     </HorizontalScrollView>
 
                 </LinearLayout>
@@ -132,11 +134,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/spacing_normal"
+                    android:baselineAligned="false"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/spacing_half"
-                    android:paddingRight="@dimen/spacing_half"
-                    android:baselineAligned="false">
+                    android:paddingRight="@dimen/spacing_half">
 
 
                     <LinearLayout
@@ -152,8 +154,7 @@
                             android:layout_marginEnd="@dimen/spacing_quarter"
                             android:text="@string/soil_ph"
                             android:textColor="@android:color/primary_text_light"
-                            android:textSize="@dimen/text_size_normal"
-                            />
+                            android:textSize="@dimen/text_size_normal" />
 
                         <TextView
                             android:id="@+id/ph"
@@ -169,6 +170,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="@dimen/spacing_half">
+
                         <TextView
                             android:id="@+id/lime_needed_text"
                             android:layout_width="wrap_content"
@@ -176,18 +178,16 @@
                             android:layout_marginEnd="@dimen/spacing_quarter"
                             android:text="@string/lime_needed"
                             android:textColor="@android:color/primary_text_light"
-                            android:textSize="@dimen/text_size_normal"
-                            />
+                            android:textSize="@dimen/text_size_normal" />
 
                         <TextView
                             android:id="@+id/lime_needed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tools:text="--"
                             android:textColor="?attr/colorAccent"
                             android:textSize="@dimen/text_size_normal"
                             android:textStyle="bold"
-                            />
+                            tools:text="--" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -195,24 +195,25 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-        <ScrollView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_buttons"
+        android:layout_below="@id/content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:background="@color/white"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:id="@+id/dynamicLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/content"
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:background="@color/white"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:layout_above="@+id/bottom_buttons"
-            android:scrollbars="vertical">
-            <LinearLayout
-                android:id="@+id/dynamicLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:background="@drawable/border_background_white"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_normal" />
-        </ScrollView>
+            android:animateLayoutChanges="true"
+            android:background="@drawable/border_background_white"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_normal" />
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/bottom_buttons"
@@ -223,6 +224,7 @@
         android:clipToPadding="false"
         android:orientation="horizontal"
         android:padding="@dimen/spacing_normal">
+
         <Button
             android:id="@+id/back"
             android:layout_width="0dp"
@@ -232,6 +234,7 @@
             android:padding="@dimen/spacing_normal"
             android:text="@string/back"
             android:theme="@style/PrimaryButtonGrey" />
+
         <Button
             android:id="@+id/editButton"
             android:layout_width="0dp"
@@ -239,7 +242,6 @@
             android:layout_marginStart="@dimen/spacing_normal"
             android:layout_weight="3"
             android:padding="@dimen/spacing_normal"
-            android:text="@string/edit"
-            />
+            android:text="@string/edit" />
     </LinearLayout>
 </RelativeLayout>

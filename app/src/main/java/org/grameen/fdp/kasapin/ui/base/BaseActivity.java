@@ -23,7 +23,6 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
@@ -31,9 +30,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
@@ -65,13 +61,10 @@ import org.grameen.fdp.kasapin.utilities.NetworkUtils;
 import org.grameen.fdp.kasapin.utilities.ScreenUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -130,7 +123,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = getClass().getSimpleName();
-
 
 
         //Sets theme for if Diagnostic or Monitoring mode
@@ -251,16 +243,16 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
         try {
             Bitmap bitmap = ImageUtil.base64ToBitmap(base64String);
 
-              fos = new FileOutputStream(imageFile);
-            if(bitmap != null) {
+            fos = new FileOutputStream(imageFile);
+            if (bitmap != null) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-              newImageUrl = imageFile.getPath();
-             }
+                newImageUrl = imageFile.getPath();
+            }
         } catch (Exception e) {
             AppLogger.e(TAG, "Exception ==> " + e.getMessage());
 
         } finally {
-            if(fos != null) {
+            if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {
@@ -343,8 +335,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
 
     @Override
     public void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable) {
-      runOnUiThread(() -> CommonUtils.showAlertDialog(mAlertDialogBuilder, cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener,
-              negativeText, icon_drawable));
+        runOnUiThread(() -> CommonUtils.showAlertDialog(mAlertDialogBuilder, cancelable, title, message, onPositiveButtonClickListener, positiveText, onNegativeButtonClickListener,
+                negativeText, icon_drawable));
     }
 
     @Override
@@ -433,7 +425,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
                 }
                 Intent intent = new Intent(this, FamilyMembersActivity.class);
                 intent.putExtra("noFamilyMembers", numberFamilyMembers);
-                intent.putExtra("farmerCode",  farmer.getCode());
+                intent.putExtra("farmerCode", farmer.getCode());
                 startActivity(intent);
                 finish();
             } else
@@ -453,7 +445,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
 
         if (CURRENT_FORM_POSITION < FILTERED_FORMS.size()) {
             Intent intent = new Intent(this, AddEditFarmerActivity.class);
-            intent.putExtra("farmerCode",  farmer.getCode());
+            intent.putExtra("farmerCode", farmer.getCode());
             startActivity(intent);
             finish();
             overridePendingTransition(0, 0);
@@ -463,7 +455,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
 
     public void showFarmerDetailsActivity(Farmer farmer) {
         Intent intent = new Intent(this, FarmerProfileActivity.class);
-        intent.putExtra("farmerCode",  farmer.getCode());
+        intent.putExtra("farmerCode", farmer.getCode());
         startActivity(intent);
         finish();
     }

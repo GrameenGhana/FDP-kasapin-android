@@ -11,7 +11,6 @@ import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 
 import java.util.Collections;
@@ -21,7 +20,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableMaybeObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.FILTERED_FORMS;
@@ -52,38 +50,38 @@ public class FarmerProfilePresenter extends BasePresenter<FarmerProfileContract.
 
     public void loadDynamicButtons(List<FormAndQuestions> formAndQuestions) {
         count = 0;
-            runSingleCall(Observable.fromIterable(formAndQuestions)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.newThread())
-                    .filter(formAndQuestions1 -> formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM)
-                            || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_TABLE)
-                            || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_HISTORICAL))
+        runSingleCall(Observable.fromIterable(formAndQuestions)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .filter(formAndQuestions1 -> formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_FORM)
+                        || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_TABLE)
+                        || formAndQuestions1.getForm().getDisplayTypeC().equalsIgnoreCase(AppConstants.DISPLAY_TYPE_HISTORICAL))
 
-                    .filter(formAndQuestions1 -> (!formAndQuestions1.getForm().shouldHide())
-                    ).filter(formAndQuestions1 ->
-                            getAppDataManager().isMonitoring() || (formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC)
-                                    || formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC_MONITORING))
-                    ).map(formAndQuestions1 -> {
-                        FILTERED_FORMS.add(formAndQuestions1);
-                        final Button btn = new Button(new ContextThemeWrapper(getContext(), getAppDataManager().isMonitoring() ? R.style.PrimaryButton_Monitoring
-                                : R.style.PrimaryButton));
-                        btn.setTag(count);
-                        btn.setText(formAndQuestions1.getForm().getTranslation());
-                        btn.setContentDescription(formAndQuestions1.getForm().getTranslation());
+                .filter(formAndQuestions1 -> (!formAndQuestions1.getForm().shouldHide())
+                ).filter(formAndQuestions1 ->
+                        getAppDataManager().isMonitoring() || (formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC)
+                                || formAndQuestions1.getForm().getTypeC().equalsIgnoreCase(AppConstants.DIAGNOSTIC_MONITORING))
+                ).map(formAndQuestions1 -> {
+                    FILTERED_FORMS.add(formAndQuestions1);
+                    final Button btn = new Button(new ContextThemeWrapper(getContext(), getAppDataManager().isMonitoring() ? R.style.PrimaryButton_Monitoring
+                            : R.style.PrimaryButton));
+                    btn.setTag(count);
+                    btn.setText(formAndQuestions1.getForm().getTranslation());
+                    btn.setContentDescription(formAndQuestions1.getForm().getTranslation());
 
-                        //Temporary save the position of the family members Form and Questions in the array for later.
-                        if (formAndQuestions1.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS))
-                            FarmerProfileActivity.familyMembersFormPosition = count;
+                    //Temporary save the position of the family members Form and Questions in the array for later.
+                    if (formAndQuestions1.getForm().getFormNameC().equalsIgnoreCase(AppConstants.FAMILY_MEMBERS))
+                        FarmerProfileActivity.familyMembersFormPosition = count;
 
-                        count += 1;
-                        return btn;
+                    count += 1;
+                    return btn;
 
-                    }).toList().subscribe(buttons -> getView().addButtons(buttons), throwable -> {
-                                throwable.printStackTrace();
-                        getView().showMessage("Could not load form buttons.");
+                }).toList().subscribe(buttons -> getView().addButtons(buttons), throwable -> {
+                            throwable.printStackTrace();
+                            getView().showMessage("Could not load form buttons.");
 
-            }
-                    ));
+                        }
+                ));
 
     }
 

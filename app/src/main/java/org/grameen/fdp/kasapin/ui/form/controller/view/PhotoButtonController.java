@@ -14,9 +14,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 
 import org.grameen.fdp.kasapin.R;
-import org.grameen.fdp.kasapin.data.AppDataManager;
-import org.grameen.fdp.kasapin.data.db.entity.Logs;
-import org.grameen.fdp.kasapin.syncManager.LogRecorder;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
@@ -72,7 +69,7 @@ public class PhotoButtonController extends MyLabeledFieldController {
 
 
     public PhotoButtonController(Context context, String name, String content_desc, String labelText, OnClickListener locationListener, Boolean enabled
-                                 ) {
+    ) {
         this(context, name, content_desc, labelText, false, locationListener);
         this.context = context;
         this.isEnabled = enabled;
@@ -107,7 +104,7 @@ public class PhotoButtonController extends MyLabeledFieldController {
                     linearLayout.addView(IMAGE_VIEW);
                     linearLayout.requestLayout();
 
-                     getModel().getEditedElements().add(getName());
+                    getModel().getEditedElements().add(getName());
 
                     AppLogger.e("Just added a photo on ==> " + getName());
                 } catch (Exception e) {
@@ -160,7 +157,7 @@ public class PhotoButtonController extends MyLabeledFieldController {
         if (value != null && !value.toString().contains("http://")) {
             try {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-               params.height = 350;
+                params.height = 350;
                 IMAGE_VIEW.setLayoutParams(params);
                 imageView.setImageBitmap(ImageUtil.base64ToBitmap(value.toString()));
 

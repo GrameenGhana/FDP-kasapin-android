@@ -3,7 +3,6 @@ package org.grameen.fdp.kasapin.ui.form.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,6 @@ import org.grameen.fdp.kasapin.ui.form.controller.view.PhotoButtonController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.SelectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.view.TimePickerController;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ComputationUtils;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
@@ -45,8 +43,6 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableMaybeObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class DynamicFormFragment extends FormFragment {
@@ -106,7 +102,7 @@ public class DynamicFormFragment extends FormFragment {
     }
 
     private FormAnswerData getDefaultFormAnswerData() {
-       FormAnswerData answerData = new FormAnswerData();
+        FormAnswerData answerData = new FormAnswerData();
         answerData.setFormId(FORM_AND_QUESTIONS.getForm().getFormTranslationId());
         answerData.setFarmerCode(farmerCode);
         answerData.setCreatedAt(TimeUtils.getCurrentDateTime());
@@ -120,7 +116,7 @@ public class DynamicFormFragment extends FormFragment {
         computationUtils = ComputationUtils.newInstance(controller);
 
         if (ANSWER_DATA == null)
-            ANSWER_DATA =  getDatabaseManager().formAnswerDao().getFormAnswerDataOrNull(farmerCode, FORM_AND_QUESTIONS.getForm()
+            ANSWER_DATA = getDatabaseManager().formAnswerDao().getFormAnswerDataOrNull(farmerCode, FORM_AND_QUESTIONS.getForm()
                     .getFormTranslationId()).blockingGet(getDefaultFormAnswerData());
         try {
             ANSWERS_JSON = new JSONObject(ANSWER_DATA.getData());
@@ -144,7 +140,6 @@ public class DynamicFormFragment extends FormFragment {
     }
 
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -164,7 +159,7 @@ public class DynamicFormFragment extends FormFragment {
         Observable.fromIterable(QUESTIONS)
                 .subscribeOn(Schedulers.io())
                 .doOnNext(question ->
-                         addDisposable(Observable.just(question).subscribeOn(Schedulers.io())
+                        addDisposable(Observable.just(question).subscribeOn(Schedulers.io())
                                 .filter(question1 -> question1.getTypeC().equalsIgnoreCase(AppConstants.TYPE_MATH_FORMULA))
                                 .observeOn(Schedulers.computation())
                                 .subscribe(this::applyFormulas)))
@@ -242,7 +237,7 @@ public class DynamicFormFragment extends FormFragment {
                 }
             }
 
-       addDisposable(getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
+            addDisposable(getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.newThread())
                     .subscribe(skipLogic -> applyPropertyChangeListeners(q, skipLogic), Throwable::printStackTrace)
@@ -284,8 +279,8 @@ public class DynamicFormFragment extends FormFragment {
 
     public JSONObject getDataJson() {
 
-        if(!getModel().getEditedElements().isEmpty())
-             getLogRecorder().add(farmerCode, getModel().getEditedElements());
+        if (!getModel().getEditedElements().isEmpty())
+            getLogRecorder().add(farmerCode, getModel().getEditedElements());
 
 
         JSONObject jsonObject = new JSONObject();

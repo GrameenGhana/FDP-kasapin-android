@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers;
 public class LogRecorder {
     private final AppDatabase mAppDatabase;
 
-     public LogRecorder(AppDatabase appDatabase) {
+    public LogRecorder(AppDatabase appDatabase) {
         mAppDatabase = appDatabase;
     }
 
@@ -30,7 +30,7 @@ public class LogRecorder {
         //We want to be able to keep track of whether questions of type AppConstants.TYPE_PHOTO
         //Was changed or not in order to decide to add to sync up payload since image base64 files are relatively large
         Logs farmerLog = mAppDatabase.logsDao().getAllLogsForFarmer(farmerCode).blockingGet(new Logs(farmerCode));
-        for(String s : labels)
+        for (String s : labels)
             farmerLog.add(s);
 
         Single.just(mAppDatabase.logsDao().insertOne(farmerLog))

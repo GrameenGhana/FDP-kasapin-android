@@ -14,7 +14,6 @@ import org.grameen.fdp.kasapin.data.network.FdpApiService;
 import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
-import org.grameen.fdp.kasapin.syncManager.LogRecorder;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import java.util.concurrent.TimeUnit;
@@ -34,6 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class ApplicationModule {
     private final Application application;
+
     public ApplicationModule(Application app) {
         application = app;
     }

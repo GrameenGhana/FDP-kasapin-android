@@ -97,7 +97,7 @@ public abstract class FormModel {
         propertyChangeSupport.removePropertyChangeListener(fieldName, listener);
     }
 
-    public Set<String> getEditedElements(){
+    public Set<String> getEditedElements() {
         return editedElements;
     }
 

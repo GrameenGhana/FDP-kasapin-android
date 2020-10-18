@@ -6,19 +6,16 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.grameen.fdp.kasapin.utilities.TimeUtils;
-
 public class BaseModel {
     @PrimaryKey(autoGenerate = true)
     int id;
+    int syncStatus = 1;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
-
-    int syncStatus = 1;
 
     public int getId() {
         return id;

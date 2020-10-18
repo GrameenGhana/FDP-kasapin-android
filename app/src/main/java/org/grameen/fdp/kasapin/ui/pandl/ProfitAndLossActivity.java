@@ -364,8 +364,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 DID_LABOUR = VALUES_JSON_OBJECT.has(labourQuestion.getLabelC())
                         && VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC()).equalsIgnoreCase(AppConstants.YES);
 
-                if(VALUES_JSON_OBJECT.has(labourTypeQuestion.getLabelC()))
-                LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
+                if (VALUES_JSON_OBJECT.has(labourTypeQuestion.getLabelC()))
+                    LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
                 else LABOUR_TYPE = "";
 
                 labourSpinner.setSelectedIndex(DID_LABOUR ? 1 : 2);

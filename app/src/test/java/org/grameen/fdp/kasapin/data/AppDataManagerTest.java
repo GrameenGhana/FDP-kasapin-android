@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.data;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import org.grameen.fdp.kasapin.MockData;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
@@ -11,14 +10,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import io.reactivex.Single;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -28,8 +25,10 @@ import static org.mockito.Mockito.when;
 public class AppDataManagerTest {
     @Mock
     Context context;
-    @Mock AppDatabase appDatabase;
-    @Mock PreferencesHelper preferencesHelper;
+    @Mock
+    AppDatabase appDatabase;
+    @Mock
+    PreferencesHelper preferencesHelper;
 
     AppDataManager appDataManager;
 
@@ -45,7 +44,7 @@ public class AppDataManagerTest {
 
     @Test
     public void test_getAccessToken() {
-        when(appDataManager.getAccessToken()).thenAnswer(i->
+        when(appDataManager.getAccessToken()).thenAnswer(i ->
                 MockData.fakeAccessToken);
         String token = appDataManager.getAccessToken();
         assertEquals(token, MockData.fakeAccessToken);
@@ -71,9 +70,9 @@ public class AppDataManagerTest {
 
     @Test
     public void test_isMonitoring() {
-        when(appDataManager.isMonitoring()).thenAnswer( i->
+        when(appDataManager.isMonitoring()).thenAnswer(i ->
                 true);
-assertTrue(appDataManager.isMonitoring());
+        assertTrue(appDataManager.isMonitoring());
     }
 
     @Test
@@ -100,17 +99,17 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_isTranslation_returns_a_value() {
-        when(appDataManager.isTranslation()).thenAnswer( i->
+        when(appDataManager.isTranslation()).thenAnswer(i ->
                 true);
         assertTrue(appDataManager.isTranslation());
     }
 
     @Test
     public void test_getUserLoggedInMode_returns_a_LoginMode_value() {
-        when(appDataManager.getUserLoggedInMode()).thenAnswer( i->
+        when(appDataManager.getUserLoggedInMode()).thenAnswer(i ->
                 DataManager.LoggedInMode.LOGGED_IN.getType());
 
-        assert(appDataManager.getUserLoggedInMode() == DataManager.LoggedInMode.LOGGED_IN.getType());
+        assert (appDataManager.getUserLoggedInMode() == DataManager.LoggedInMode.LOGGED_IN.getType());
         verify(preferencesHelper, times(1)).getUserLoggedInMode();
     }
 
@@ -127,10 +126,10 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserId() {
-        when(appDataManager.getUserId()).thenAnswer( i->
+        when(appDataManager.getUserId()).thenAnswer(i ->
                 MockData.getFakeUser().getId());
         appDataManager.getUserId();
-        assert(appDataManager.getUserId() == 1);
+        assert (appDataManager.getUserId() == 1);
         verify(preferencesHelper, times(2)).getUserId();
     }
 
@@ -145,7 +144,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserFirstName() {
-        when(appDataManager.getUserFirstName()).thenAnswer(i->
+        when(appDataManager.getUserFirstName()).thenAnswer(i ->
                 MockData.getFakeUser().getFirstName());
         String name = appDataManager.getUserFirstName();
         verify(preferencesHelper, times(1)).getUserFirstName();
@@ -160,7 +159,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserLastName() {
-        when(appDataManager.getUserLastName()).thenAnswer(i->
+        when(appDataManager.getUserLastName()).thenAnswer(i ->
                 MockData.getFakeUser().getLastName());
         String lastName = appDataManager.getUserLastName();
         verify(preferencesHelper, times(1)).getUserLastName();
@@ -176,7 +175,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserEmail() {
-        when(appDataManager.getUserEmail()).thenAnswer(i->
+        when(appDataManager.getUserEmail()).thenAnswer(i ->
                 MockData.getFakeUser().getEmail());
         appDataManager.getUserEmail();
         verify(preferencesHelper, times(1)).getUserEmail();
@@ -190,7 +189,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserUuid() {
-        when(appDataManager.getUserUuid()).thenAnswer(i->
+        when(appDataManager.getUserUuid()).thenAnswer(i ->
                 MockData.getFakeUser().getUuid());
         verify(preferencesHelper, times(1)).getUserUuid();
     }
@@ -203,7 +202,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserIsActive() {
-        when(appDataManager.getUserIsActive()).thenAnswer(i->
+        when(appDataManager.getUserIsActive()).thenAnswer(i ->
                 true);
         assertTrue(appDataManager.getUserIsActive());
         verify(preferencesHelper, times(1)).getUserIsActive();
@@ -220,7 +219,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserProfilePicUrl() {
-        when(appDataManager.getUserProfilePicUrl()).thenAnswer(i->
+        when(appDataManager.getUserProfilePicUrl()).thenAnswer(i ->
                 MockData.getFakeUser().getAvatarLocation());
         appDataManager.getUserProfilePicUrl();
 
@@ -236,7 +235,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserConfirmationCode() {
-        when(appDataManager.getUserConfirmationCode()).thenAnswer(i->
+        when(appDataManager.getUserConfirmationCode()).thenAnswer(i ->
                 MockData.getFakeUser().getConfirmationCode());
         appDataManager.getUserConfirmationCode();
         verify(preferencesHelper, times(1)).getUserConfirmationCode();
@@ -250,7 +249,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getUserIsConfirmed() {
-        when(appDataManager.getUserIsConfirmed()).thenAnswer(i->
+        when(appDataManager.getUserIsConfirmed()).thenAnswer(i ->
                 true);
         assertTrue(appDataManager.getUserIsConfirmed());
         verify(preferencesHelper, times(1)).getUserIsConfirmed();
@@ -299,7 +298,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_that_getDatabaseManager_returns_appDatabase() {
-        assert(appDataManager.getDatabaseManager() == appDatabase);
+        assert (appDataManager.getDatabaseManager() == appDatabase);
     }
 
     @Test
@@ -312,7 +311,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void test_getBooleanValue_returns_a_boolean_value() {
-        when(appDataManager.getBooleanValue("someKey")).thenAnswer( i->
+        when(appDataManager.getBooleanValue("someKey")).thenAnswer(i ->
                 true);
         assertTrue(appDataManager.getBooleanValue("someKey"));
         verify(preferencesHelper, times(1)).getBooleanValue("someKey");
@@ -327,7 +326,7 @@ assertTrue(appDataManager.isMonitoring());
 
     @Test
     public void getStringValue() {
-        when(appDataManager.getStringValue("someKey")).thenAnswer( i->
+        when(appDataManager.getStringValue("someKey")).thenAnswer(i ->
                 "Some value");
         assertTrue(appDataManager.getStringValue("someKey").contains("Some value"));
         verify(preferencesHelper, times(1)).getStringValue("someKey");

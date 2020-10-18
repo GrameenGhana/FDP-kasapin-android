@@ -4,12 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
-
 import org.grameen.fdp.kasapin.di.component.ApplicationComponent;
 import org.grameen.fdp.kasapin.di.component.DaggerApplicationComponent;
 import org.grameen.fdp.kasapin.di.module.ApplicationModule;
- import org.grameen.fdp.kasapin.utilities.AppLogger;
- ;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
+
+;
 
 public class FDPKasapin extends Application {
     private ApplicationComponent mApplicationComponent;

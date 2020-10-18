@@ -10,9 +10,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-         versionName "1.1.0"
-         versionName "1.0.12_non_queue"
-         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionName "1.1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
@@ -124,16 +123,7 @@ android {
         //implementation platform('com.google.firebase:firebase-bom:25.12.0')
         implementation "com.google.firebase:firebase-crashlytics:17.2.2"
         implementation 'com.google.firebase:firebase-analytics:17.6.0'
-
-//
-//        implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
-//        // Add the Firebase Crashlytics SDK.
-//        implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
-//
-//        // Recommended: Add the Google Analytics SDK.
-//        implementation 'com.google.firebase:firebase-analytics:17.6.0'
-        
-
+ 
         // room database
         //implementation "android.arch.lifecycle:livedata:$rootProject.ext.roomVersion"
         implementation "android.arch.persistence.room:rxjava2:$rootProject.ext.roomVersion"

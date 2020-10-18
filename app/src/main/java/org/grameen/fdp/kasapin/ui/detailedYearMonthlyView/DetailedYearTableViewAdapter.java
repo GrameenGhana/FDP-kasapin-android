@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
-import com.jaredrummler.materialspinner.MaterialSpinner;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.model.TableData;
 
@@ -36,7 +36,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
     public DetailedYearTableViewAdapter(final Context context, final List<TableData> data, final TableView<TableData> tableView) {
         super(context, data, tableView);
         this.context = context;
-     }
+    }
 
     public DetailedYearTableViewAdapter(final Context context, final List<TableData> data, final TableView<TableData> tableView, boolean _showIcons) {
         this(context, data, tableView);
@@ -60,7 +60,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
     private View renderCalculatedValuesForYear(final TableData data, int year) {
         List<String> calculationsForTheYears = data.getYearsDataFormula();
 
-        if(data.getTag().equals(TAG_ICON_VIEW)) {
+        if (data.getTag().equals(TAG_ICON_VIEW)) {
             if (showIcons && data.getImageBitmaps() != null) {
                 ImageView imageView = new ImageView(getContext());
                 imageView.setAdjustViewBounds(true);
@@ -68,7 +68,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
                 imageView.setPadding(10, 5, 10, 5);
                 return imageView;
             }
-        }else if (calculationsForTheYears != null) {
+        } else if (calculationsForTheYears != null) {
             TextView itemView = null;
             itemView = new TextView(getContext());
             itemView.setPadding(20, 10, 20, 10);

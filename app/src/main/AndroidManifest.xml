@@ -39,10 +39,9 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,LockedOrientationActivity">
         <activity
             android:name=".ui.preferences.SettingsActivity"
-            android:label="@string/title_activity_settings">
-        </activity>
+            android:label="@string/title_activity_settings"></activity>
 
-        <service android:name=".services.LocationPrepareService"/>
+        <service android:name=".services.LocationPrepareService" />
 
         <activity
             android:name=".ui.splash.SplashActivity"
@@ -56,11 +55,11 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
-        <activity android:name=".ui.landing.LandingActivity"/>
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity android:name=".ui.landing.LandingActivity" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.addFarmer.AddEditFarmerActivity"
             android:configChanges="orientation|screenSize" />
@@ -74,8 +73,7 @@
         <activity android:name=".ui.plotDetails.PlotDetailsActivity" />
         <activity
             android:name=".ui.plotMonitoringActivity.PlotMonitoringActivity"
-            android:screenOrientation="landscape"
-            />
+            android:screenOrientation="landscape" />
         <activity android:name=".ui.monitoringYearSelection.MonitoringYearSelectionActivity" />
         <activity android:name=".ui.gpsPicker.MapActivity" />
         <activity
@@ -95,9 +93,10 @@
 
         <service android:name=".services.SyncService" />
 
-        <activity android:name=".ui.serverUrl.AddEditServerUrlActivity"/>
-        <activity android:name=".ui.fdpStatus.FDPStatusDialogActivity"
-            android:theme="@style/Theme.Translucent"/>
+        <activity android:name=".ui.serverUrl.AddEditServerUrlActivity" />
+        <activity
+            android:name=".ui.fdpStatus.FDPStatusDialogActivity"
+            android:theme="@style/Theme.Translucent" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

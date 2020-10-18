@@ -11,14 +11,19 @@ import java.util.List;
 public class LandingContract {
     public interface View extends BaseContract.View {
         void showPopUp(@Nullable android.view.View v);
+
         void openMainActivity();
+
         void cacheFarmerImages(List<Farmer> farmers);
     }
 
     public interface Presenter {
         void showPopupDialog();
+
         void uploadLogsToServer();
+
         void getFarmers();
+
         void updateFarmerData(List<Farmer> updatedFarmers);
     }
 }

@@ -2,7 +2,6 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,21 +19,20 @@ import com.squareup.picasso.Picasso;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.io.File;
 import java.util.List;
 import java.util.Random;
 
 public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
+    int[] mColors;
+    Picasso picasso;
     private List<Farmer> farmers;
     private Context context;
     private LayoutInflater layoutInflater;
     private int lastPosition = -1;
     private OnItemClickListener mItemClickListener;
     private OnLongClickListener longClickListener;
-    int[] mColors;
-    Picasso picasso;
 
 
     public FarmerListViewAdapter(Context c, List<Farmer> _farmers) {

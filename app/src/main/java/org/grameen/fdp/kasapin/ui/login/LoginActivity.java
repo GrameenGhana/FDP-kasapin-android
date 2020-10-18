@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -20,7 +19,6 @@ import androidx.annotation.NonNull;
 
 import com.karan.churi.PermissionManager.PermissionManager;
 
-import org.grameen.fdp.kasapin.FDPKasapin;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
@@ -74,7 +72,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         });
 
         mPasswordView.setOnTouchListener((v, motionEvent) -> {
-           KeyboardUtils.showSoftInput(mPasswordView,LoginActivity.this);
+            KeyboardUtils.showSoftInput(mPasswordView, LoginActivity.this);
 
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -109,7 +107,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
             }
         };
 
-         permissionManager.checkAndRequestPermissions(this);
+        permissionManager.checkAndRequestPermissions(this);
 
     }
 

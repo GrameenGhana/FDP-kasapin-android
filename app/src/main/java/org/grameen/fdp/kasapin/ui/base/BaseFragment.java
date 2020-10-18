@@ -15,6 +15,7 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
 import org.grameen.fdp.kasapin.syncManager.LogRecorder;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
+
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 
@@ -133,15 +134,15 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
         return mActivity.mAppDataManager;
     }
 
-    public LogRecorder getLogRecorder(){
+    public LogRecorder getLogRecorder() {
         return mActivity.logRecorder;
     }
 
-    public void addDisposable(Disposable d){
+    public void addDisposable(Disposable d) {
         mActivity.getAppDataManager().getCompositeDisposable().add(d);
     }
 
-    public AppDatabase getDatabaseManager(){
+    public AppDatabase getDatabaseManager() {
         return getAppDataManager().getDatabaseManager();
     }
 
@@ -173,6 +174,7 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
 
     public interface Callback {
         void onFragmentAttached();
+
         void onFragmentDetached(String tag);
     }
 }

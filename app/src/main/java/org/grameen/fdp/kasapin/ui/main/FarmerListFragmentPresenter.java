@@ -29,10 +29,11 @@ public class FarmerListFragmentPresenter extends BasePresenter<MainContract.Frag
                 .delay(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(realFarmers -> {
-                            if(realFarmers!=null)
-                              getView().setListAdapter(realFarmers);
+                            if (realFarmers != null)
+                                getView().setListAdapter(realFarmers);
                         },
-                        throwable -> {}));
+                        throwable -> {
+                        }));
     }
 
     @Override

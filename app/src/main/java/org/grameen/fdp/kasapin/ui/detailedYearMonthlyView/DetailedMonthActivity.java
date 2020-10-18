@@ -143,9 +143,9 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         setTableData();
     }
 
-    void setTableData(){
-        if(myTableViewAdapter == null)
-        myTableViewAdapter = new DetailedYearTableViewAdapter(this, TABLE_DATA_LIST, tableView, true);
+    void setTableData() {
+        if (myTableViewAdapter == null)
+            myTableViewAdapter = new DetailedYearTableViewAdapter(this, TABLE_DATA_LIST, tableView, true);
         tableView.setDataAdapter(myTableViewAdapter);
         hideLoading();
     }
@@ -176,7 +176,7 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
                         //Combine icon names
                         if (ra.getImageId() != null)
                             //if (!iconsStringBuilder.toString().toLowerCase().contains(ra.getImageId().toLowerCase()))
-                                iconsStringBuilder.append(ra.getImageId()).append(",");
+                            iconsStringBuilder.append(ra.getImageId()).append(",");
 
                         suppliesCost.append(ra.getSuppliesCost()).append("+");
                         try {
@@ -223,12 +223,12 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         for (int i = 0; i < 12; i++) {
 
             String month = monthsArray.getString(i);
-            if(month != null) {
+            if (month != null) {
                 HistoricalTableViewData data = getMonthlyData(recommendationId, month.substring(0, 3), year);
-                    activities.add(data.getLabel());
-                    suppliesCost.add(data.getValueAtColumn1());
-                    if (DID_LABOUR)
-                        labourCost.add(data.getValueAtColumn2());
+                activities.add(data.getLabel());
+                suppliesCost.add(data.getValueAtColumn1());
+                if (DID_LABOUR)
+                    labourCost.add(data.getValueAtColumn2());
 
                 bitmaps.add(iconMerger.combineIcons(data.getIconData()));
             }

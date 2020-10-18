@@ -13,9 +13,7 @@ import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

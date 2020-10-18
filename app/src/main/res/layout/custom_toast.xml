@@ -20,9 +20,8 @@
         android:id="@+id/toast_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-         android:layout_gravity="center_vertical"
-        tools:text="toast"
-        android:textColor="@color/white"
+        android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/spacing_normal"
-        />
+        android:textColor="@color/white"
+        tools:text="toast" />
 </LinearLayout>

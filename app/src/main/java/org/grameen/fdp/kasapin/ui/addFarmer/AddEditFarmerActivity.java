@@ -102,8 +102,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         mPresenter.takeView(this);
 
         String code = getIntent().getStringExtra("farmerCode");
-        if(code != null)
-        mPresenter.getFarmerData(code);
+        if (code != null)
+            mPresenter.getFarmerData(code);
         else
             setUpViews(null);
     }
@@ -183,7 +183,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(farmerBase64ImageData));
 
                     showRemoveButton();
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             } else {
                 circleImageView.setImageBitmap(null);
                 if (FARMER.getFarmerName().contains(" ")) {
@@ -285,19 +286,19 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setLastModifiedDate(TimeUtils.getDateTime());
             FARMER.setImageBase64(farmerBase64ImageData);
 
-            if(farmerBase64ImageData != null) {
+            if (farmerBase64ImageData != null) {
                 FARMER.setImageLocalUrl(convertBase64ToUrl(FARMER.getImageBase64(), FARMER.getCode()));
             }
 
             mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer, wasProfileImageEdited);
 
-            if(wasProfileImageEdited)
+            if (wasProfileImageEdited)
                 getLogRecorder().add(farmerCode.getText().toString().trim(), AppConstants.FARMER_TABLE_PHOTO_FIELD);
         }
     }
 
 
-    private void showRemoveButton(){
+    private void showRemoveButton() {
         removeFarmerPhoto.setVisibility(View.VISIBLE);
         removeFarmerPhoto.setOnClickListener(v -> {
             farmerBase64ImageData = "";
@@ -406,7 +407,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
                     showRemoveButton();
                 } catch (Exception e) {
-                   CustomToast.makeToast(this, "Failed to load", Toast.LENGTH_SHORT).show();
+                    CustomToast.makeToast(this, "Failed to load", Toast.LENGTH_SHORT).show();
                 }
             }
         } else CustomToast.makeToast(this, "You did not take any photo", Toast.LENGTH_LONG).show();

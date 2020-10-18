@@ -10,7 +10,6 @@ import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
-import org.grameen.fdp.kasapin.utilities.TimeUtils;
 
 import java.io.EOFException;
 import java.util.ArrayList;
@@ -110,7 +109,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
          * First check if there are un synced data
          */
         UN_SYNCED_FARMERS = getAppDataManager().getDatabaseManager().realFarmersDao().getAllNotSynced().blockingGet(new ArrayList<>());
-        if(UN_SYNCED_FARMERS.isEmpty()){
+        if (UN_SYNCED_FARMERS.isEmpty()) {
             getView().showMessage(R.string.no_new_data);
             return;
         }
@@ -134,6 +133,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                                     public void onSuccess(List<MySearchItem> mySearchItems) {
                                         farmerNames.addAll(mySearchItems);
                                     }
+
                                     @Override
                                     public void onError(Throwable e) {
                                     }
@@ -175,7 +175,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         //On download data error
         getView().hideLoading();
 
-        if(throwable instanceof EOFException)
+        if (throwable instanceof EOFException)
             getView().showMessage("FarmGrow app could nto reach the server. Please try again.");
         else
             getView().showMessage(throwable.getMessage());
@@ -184,13 +184,13 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
         if (throwable.getMessage() != null && throwable.getMessage().contains("401")) {
             getView().openLoginActivityOnTokenExpire();
         }
-     }
+    }
 
     //Upload Data Callbacks declared at the global level
     @Override
     public void onUploadComplete(String message) {
         //On download data success.
-        if(UN_SYNCED_FARMERS != null) {
+        if (UN_SYNCED_FARMERS != null) {
             List<String> farmerCodes = new ArrayList<>();
 
             runSingleCall(Observable.fromIterable(UN_SYNCED_FARMERS)
@@ -201,7 +201,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
                         farmer.setSyncStatus(AppConstants.SYNC_OK);
                         updateFarmerData(farmer);
                         farmerCodes.add(farmer.getCode());
-                        }, Throwable::printStackTrace));
+                    }, Throwable::printStackTrace));
             getAppDataManager().getDatabaseManager().logsDao().deleteFarmerLogs(farmerCodes);
         }
         getView().hideLoading();

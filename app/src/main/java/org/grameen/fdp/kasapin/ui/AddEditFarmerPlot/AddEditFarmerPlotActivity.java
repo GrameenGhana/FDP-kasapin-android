@@ -19,7 +19,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
-import org.grameen.fdp.kasapin.services.LocationPrepareService;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
 import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
@@ -41,7 +40,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFarmerPlotContract.View {
@@ -294,7 +292,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         if (plotNameEditText.getText().toString().trim().isEmpty()) {
             plotNameEditText.setError(plotNameQuestion.getErrorMessage());
             isValid = false;
-         } else
+        } else
             plotNameEditText.setError(null);
 
         if (estProductionQuestion.isRequired() && estimatedProductionEditText.getText().toString().trim().isEmpty()) {
@@ -349,6 +347,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         startActivity(intent);
         finish();
     }
+
     @Override
     public void onBackPressed() {
         finish();

@@ -80,16 +80,17 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
 
     @Override
     public void setupListAdapter() {
-         int yearStartedProfiling = 0;
+        int yearStartedProfiling = 0;
         try {
             yearStartedProfiling = Integer.parseInt(PLOT.getCreatedAt().substring(0, 4).trim());
-        }catch(Exception ignore){}
+        } catch (Exception ignore) {
+        }
 
         String[] yearStrings = getResources().getStringArray(R.array.monitoring_years);
         List<String> YEARS = new ArrayList<>();
 
-        for(int i=0; i<7; i++)
-        YEARS.add(String.format(yearStrings[i], yearStartedProfiling + i + 1));
+        for (int i = 0; i < 7; i++)
+            YEARS.add(String.format(yearStrings[i], yearStartedProfiling + i + 1));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, YEARS);
         listView.setAdapter(adapter);
@@ -163,7 +164,7 @@ public class MonitoringYearSelectionActivity extends BaseActivity implements Mon
 
     @Override
     public void showError() {
-      showMessage(R.string.error_getting_farmer_info);
+        showMessage(R.string.error_getting_farmer_info);
         finishActivity();
     }
 

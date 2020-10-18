@@ -3,12 +3,10 @@ package org.grameen.fdp.kasapin.data.db.entity;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
-import org.grameen.fdp.kasapin.data.db.AppDatabase;
 import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +16,7 @@ import java.util.List;
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
 @Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
-public class Plot extends BaseModel{
+public class Plot extends BaseModel {
     @SerializedName("external_id_c")
     private String externalId;
     private String farmerName;

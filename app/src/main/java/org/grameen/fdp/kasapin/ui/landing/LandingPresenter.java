@@ -84,7 +84,7 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
 
     @Override
     public void getFarmers() {
-        getView().showLoading("Preparing farmer images","Please wait a moment...", true, 0, false);
+        getView().showLoading("Preparing farmer images", "Please wait a moment...", true, 0, false);
 
         runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().getAll()
                 .subscribeOn(Schedulers.io())

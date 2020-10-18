@@ -5,21 +5,22 @@ public class FarmerNameAndCode {
     String farmerName;
 
 
-    public FarmerNameAndCode(){}
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public void setFarmerName(String farmerName) {
-        this.farmerName = farmerName;
+    public FarmerNameAndCode() {
     }
 
     public String getCode() {
         return code;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getFarmerName() {
         return farmerName;
+    }
+
+    public void setFarmerName(String farmerName) {
+        this.farmerName = farmerName;
     }
 }

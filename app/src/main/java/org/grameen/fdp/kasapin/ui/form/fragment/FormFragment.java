@@ -3,7 +3,6 @@ package org.grameen.fdp.kasapin.ui.form.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Criteria;
@@ -38,10 +37,6 @@ import org.grameen.fdp.kasapin.utilities.FileUtils;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-
-import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 import static org.grameen.fdp.kasapin.utilities.ActivityUtils.getFormModelFragment;
@@ -57,7 +52,7 @@ public abstract class FormFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         return inflater.inflate(R.layout.form_activity, null);
+        return inflater.inflate(R.layout.form_activity, null);
     }
 
     @Override
@@ -66,9 +61,9 @@ public abstract class FormFragment extends BaseFragment {
         this.formModelFragment = getFormModelFragment(requireActivity());
         this.formController = new MyFormController(context, formModelFragment.getModel());
 
-        if(getActivity() != null)
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        if (getActivity() != null)
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         initForm(formController);
     }
@@ -133,7 +128,7 @@ public abstract class FormFragment extends BaseFragment {
                 File photo;
                 // place where to store camera taken picture
                 photo = FileUtils.createTemporaryFile("picture", ".jpg");
-                if(photo.exists())
+                if (photo.exists())
                     photo.delete();
                 URI = FileProvider.getUriForFile(getActivity(),
                         getActivity().getApplicationContext().getPackageName() + ".org.grameen.fdp.provider", photo);
