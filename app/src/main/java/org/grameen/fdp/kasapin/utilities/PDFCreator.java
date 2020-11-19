@@ -8,10 +8,12 @@ import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.print.PrintHelper;
 
 import org.grameen.fdp.kasapin.R;
+import org.grameen.fdp.kasapin.ui.base.model.TableData;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,27 +27,32 @@ import de.codecrafters.tableview.listeners.OnScrollListener;
 
 public class PDFCreator {
 
-    private int leftMargin = 24;
+    private final int leftMargin = 24;
     private boolean isEndOfTable = false;
     private boolean isPdfCreated = false;
-    private TableView tableView;
-    private PdfDocument document = new PdfDocument();
-    private File pdfDocFile;
+    private final TableView<TableData> tableView;
+    private final PdfDocument document = new PdfDocument();
+    private final File pdfDocFile;
+    Bitmap finalBitmap;
+
+    String docLabel;
 
     /**
      * Todo provide actual type for
      *
      * @param _tableView .
      **/
-    private PDFCreator(TableView _tableView, String _activityName) {
+    private PDFCreator(TableView<TableData> _tableView, String _activityName, String label) {
         tableView = _tableView;
+        docLabel = label;
         pdfDocFile = FileUtils.createFolder("screenCaptures", _activityName + "_document.pdf");
         AppLogger.e("PDFCreator ===> File location will be " + pdfDocFile.getAbsolutePath());
     }
 
 
-    public static PDFCreator createPdf(TableView _tableView, String _activityName) {
-        PDFCreator pdfCreator = new PDFCreator(_tableView, _activityName);
+    public static PDFCreator createPdf(TableView<TableData> _tableView, String _activityName, String label) {
+        PDFCreator pdfCreator = new PDFCreator(_tableView, _activityName, label);
+
         pdfCreator.initialize();
         return pdfCreator;
     }
@@ -70,7 +77,6 @@ public class PDFCreator {
             public void onScroll(ListView tableDataView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 isEndOfTable = (firstVisibleItem + visibleItemCount) == totalItemCount;
             }
-
             @Override
             public void onScrollStateChanged(ListView tableDateView, ScrollState scrollState) {
             }
@@ -79,14 +85,13 @@ public class PDFCreator {
 
         try {
             //Add farmer name view first
-            Bitmap farmerNameBitmap = textAsBitmap("Farmer Name\nCode: #32083", 40f, Color.BLACK);
+            Bitmap farmerNameBitmap = textAsBitmap("Farmer: " + docLabel, 40f, Color.BLACK);
             bitmaps.add(farmerNameBitmap);
             //finish farmer name view
 
             headerView.setDrawingCacheEnabled(true);
             bitmaps.add(getBitmapFromView(headerView));
             headerView.setDrawingCacheEnabled(false);
-
 
             //get screenshot chunks from tableView
             do {
@@ -100,10 +105,11 @@ public class PDFCreator {
 
             //Create pdf file from big bitmap in landscape mode specifying a height of a4Height per page
             //return path if created successfully or null
-            Bitmap finalBitmap = combineBitmaps(bitmaps, tableDataListView.getMeasuredWidth(), totalHeightOfAllBitmaps);
+            finalBitmap = combineBitmaps(bitmaps, tableDataListView.getMeasuredWidth(), totalHeightOfAllBitmaps);
             generatePdfFromBitmap(finalBitmap);
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM
+            showError();
             e.printStackTrace();
         } finally {
             tableView.removeOnScrollListener(scrollListener);
@@ -147,10 +153,19 @@ public class PDFCreator {
 
         PrintHelper photoPrinter = new PrintHelper(tableView.getContext());
         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-        photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", Uri.fromFile(pdfDocFile));
+
+        if(finalBitmap != null)
+            photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", finalBitmap);
+        else
+            showError();
+        //photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", Uri.fromFile(pdfDocFile));
     }
 
 
+    private void showError(){
+        CustomToast.makeToast(tableView.getContext(), "An error occurred printing.\nPlease try again.", Toast.LENGTH_LONG).show();
+
+    }
     private Bitmap combineBitmaps(List<Bitmap> bitmaps, int totalWidth, int totalHeight) {
         Bitmap bigBitmap = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888);
         Canvas bitCanvas = new Canvas(bigBitmap);
@@ -215,7 +230,7 @@ public class PDFCreator {
             return null;
         } finally {
             document.close();
-            bitmap.recycle();
+            //bitmap.recycle();
         }
     }
 

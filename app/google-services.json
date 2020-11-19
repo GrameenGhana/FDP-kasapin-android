@@ -34,6 +34,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754135670262:android:dfcd97d53c880c14",
+        "android_client_info": {
+          "package_name": "org.grameen.fdp.kasapin.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "754135670262-p6mj2admqgmd62hqc5c9kf885kdf12op.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz3lD2arWM4CP9UBpr1dP3d6Odt0DpEwA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "754135670262-p6mj2admqgmd62hqc5c9kf885kdf12op.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

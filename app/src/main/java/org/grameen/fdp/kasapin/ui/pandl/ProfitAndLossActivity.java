@@ -277,7 +277,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         showLoading("Initializing print", "Please wait...", false, 0, false);
 
         new Handler().postDelayed(() -> {
-            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl");
+            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl",  farmer.getFarmerName());
             hideLoading();
             showMessage("Done!");
 
@@ -390,8 +390,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         findViewById(R.id.labor_type_layout).setVisibility(DID_LABOUR != null && DID_LABOUR ? View.VISIBLE : View.GONE);
         if ((DID_LABOUR != null && !DID_LABOUR) || LABOUR_TYPE.equals(LabourType.FULL.name()) || LABOUR_TYPE.equals(LabourType.SEASONAL.name())) {
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.GONE);
-            if (BuildConfig.DEBUG)
-                print.setVisibility(View.VISIBLE);
+
+            print.setVisibility(View.VISIBLE);
+
             loadTableData();
         } else {
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.VISIBLE);

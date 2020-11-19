@@ -9,8 +9,8 @@ android {
         applicationId "org.grameen.fdp.kasapin"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.1.0"
+        versionCode 2
+        versionName "1.1." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -30,10 +30,9 @@ android {
     buildTypes {
         release {
             debuggable true
-//            minifyEnabled true
-//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
         }
 
         debug {
@@ -43,6 +42,7 @@ android {
             useProguard false
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
             buildConfigField "String", "END_POINT", "\"http://52.15.172.252/fdp/\""
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
         }
     }
 
@@ -118,11 +118,11 @@ android {
         implementation "com.squareup.moshi:moshi:$rootProject.ext.moshiVersion"
 
         //firebase
-
         // Import the Firebase BoM
-        //implementation platform('com.google.firebase:firebase-bom:25.12.0')
-        implementation "com.google.firebase:firebase-crashlytics:17.2.2"
-        implementation 'com.google.firebase:firebase-analytics:17.6.0'
+        implementation platform('com.google.firebase:firebase-bom:26.1.0')
+
+        implementation "com.google.firebase:firebase-crashlytics"
+        implementation 'com.google.firebase:firebase-analytics'
  
         // room database
         //implementation "android.arch.lifecycle:livedata:$rootProject.ext.roomVersion"

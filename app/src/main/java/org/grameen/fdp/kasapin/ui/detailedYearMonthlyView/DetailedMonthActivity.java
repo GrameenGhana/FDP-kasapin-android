@@ -3,6 +3,8 @@ package org.grameen.fdp.kasapin.ui.detailedYearMonthlyView;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.TableData;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.IconMerger;
+import org.grameen.fdp.kasapin.utilities.PDFCreator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -99,6 +102,27 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
             mPresenter.getPlotsData(farmer.getCode());
         }
         onBackClicked();
+
+        print.setOnClickListener(v -> {
+            issuePrinting();
+        });
+    }
+
+    private void issuePrinting() {
+        showLoading("Initializing print", "Please wait...", false, 0, false);
+
+        new Handler().postDelayed(() -> {
+            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl", farmer.getFarmerName());
+            hideLoading();
+            showMessage("Done!");
+
+            try {
+                pdfCreator.print();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+                showMessage("An error occurred printing.\nPlease try again.");
+            }
+        }, 200);
     }
 
     @Override
