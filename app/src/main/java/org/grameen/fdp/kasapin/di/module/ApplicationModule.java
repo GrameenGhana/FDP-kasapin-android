@@ -103,9 +103,13 @@ public class ApplicationModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
-            return builder.addInterceptor(new HttpLoggingInterceptor()
-                            .setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .callTimeout(30, TimeUnit.SECONDS)
+
+        if(BuildConfig.DEBUG)
+            builder.addInterceptor(new HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY));
+
+
+            return builder.callTimeout(30, TimeUnit.SECONDS)
                     .build();
     }
 

@@ -9,7 +9,7 @@ android {
         applicationId "org.grameen.fdp.kasapin"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
+        versionCode 3
         versionName "1.1." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -103,7 +103,7 @@ android {
 
         //Network
         implementation("com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion") {
-            //exclude module: 'okhttp'
+            exclude module: 'okhttp'
         }
 
         implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
