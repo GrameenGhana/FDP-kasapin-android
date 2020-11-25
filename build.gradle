@@ -82,7 +82,7 @@ ext {
 
     materialSearchDialogVersion = '1.2.3'
     moshiVersion = "1.9.2"
-    retrofitVersion = "2.7.1"
+    retrofitVersion = "2.9.0"
     retrofitGsonConverterVersion = "2.6.0"
     apacheCommonsVersion = "3.6"
 

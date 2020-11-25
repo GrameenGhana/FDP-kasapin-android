@@ -103,7 +103,7 @@ android {
 
         //Network
         implementation("com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion") {
-            exclude module: 'okhttp'
+            //exclude module: 'okhttp'
         }
 
         implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.retrofitVersion"
