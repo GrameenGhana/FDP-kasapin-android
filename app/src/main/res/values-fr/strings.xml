@@ -439,8 +439,7 @@
 
     <!-- Preferences Keys-->
     <string name="server_url_key">server_url</string>
-    <string name="http">http://</string>
-    <string name="calculate_area">calculate area</string>
+     <string name="calculate_area">calculate area</string>
     <string name="print">impression</string>
     <string name="plot_1_year_1">Plot 1 Year 1</string>
     <string name="choose_labor_option_rationale">Pour afficher les données du tableau, veuillez sélectionner l\'option Travail ci-dessus.</string>

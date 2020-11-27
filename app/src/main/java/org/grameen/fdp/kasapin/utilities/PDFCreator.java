@@ -27,14 +27,17 @@ import de.codecrafters.tableview.listeners.OnScrollListener;
 
 public class PDFCreator {
 
-    private final int leftMargin = 24;
+    private final int leftMargin = 10;
     private boolean isEndOfTable = false;
     private boolean isPdfCreated = false;
+    boolean isMorePagesAvailable = false;
+
     private final TableView<TableData> tableView;
     private final PdfDocument document = new PdfDocument();
     private final File pdfDocFile;
     Bitmap finalBitmap;
-
+    int noVisibleItems = 0;
+    int scrollDistance = 300;
     String docLabel;
 
     /**
@@ -45,6 +48,7 @@ public class PDFCreator {
     private PDFCreator(TableView<TableData> _tableView, String _activityName, String label) {
         tableView = _tableView;
         docLabel = label;
+        noVisibleItems = 0;
         pdfDocFile = FileUtils.createFolder("screenCaptures", _activityName + "_document.pdf");
         AppLogger.e("PDFCreator ===> File location will be " + pdfDocFile.getAbsolutePath());
     }
@@ -58,16 +62,22 @@ public class PDFCreator {
     }
 
     private void initialize() {
+
         tableView.getBackground().setAlpha(0);
         tableView.setVerticalScrollBarEnabled(false);
 
+        View headerView = tableView.findViewById(R.id.table_header_view);
+
         ListView tableDataListView = tableView.findViewById(R.id.table_data_view);
+        scrollDistance = tableDataListView.getMaxScrollAmount();
         int measuredHeight = tableDataListView.getMeasuredHeight();
+
+
         //Scroll tableView to the first item or position if the first item is not visible
         while (tableDataListView.getFirstVisiblePosition() != 0)
             tableDataListView.scrollListBy(-measuredHeight);
 
-        View headerView = tableView.findViewById(R.id.table_header_view);
+
         List<Bitmap> bitmaps = new ArrayList<>();
 
         int allitemsheight = 0;
@@ -75,7 +85,7 @@ public class PDFCreator {
         OnScrollListener scrollListener = new OnScrollListener() {
             @Override
             public void onScroll(ListView tableDataView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                isEndOfTable = (firstVisibleItem + visibleItemCount) == totalItemCount;
+                isEndOfTable = (firstVisibleItem + visibleItemCount) >= totalItemCount;
             }
             @Override
             public void onScrollStateChanged(ListView tableDateView, ScrollState scrollState) {
@@ -85,20 +95,31 @@ public class PDFCreator {
 
         try {
             //Add farmer name view first
-            Bitmap farmerNameBitmap = textAsBitmap("Farmer: " + docLabel, 40f, Color.BLACK);
+            Bitmap farmerNameBitmap = textAsBitmap("Farmer: " + docLabel, 30f, Color.BLACK);
             bitmaps.add(farmerNameBitmap);
+
             //finish farmer name view
-
-            headerView.setDrawingCacheEnabled(true);
             bitmaps.add(getBitmapFromView(headerView));
-            headerView.setDrawingCacheEnabled(false);
-
+            
             //get screenshot chunks from tableView
             do {
-                bitmaps.add(getBitmapFromView(tableDataListView));
-                allitemsheight += measuredHeight;
-                tableDataListView.scrollListBy(measuredHeight);
-            } while (!isEndOfTable);
+                isMorePagesAvailable = bitmaps.size() >= 3;
+
+                Bitmap scaledBitmap = createScaledBitmap(
+                        getBitmapFromView(tableDataListView), isMorePagesAvailable ? measuredHeight - scrollDistance : 0);
+                bitmaps.add(scaledBitmap);
+
+                allitemsheight += isMorePagesAvailable ? scrollDistance : measuredHeight;
+
+                tableDataListView.scrollListBy(scrollDistance);
+            } while(!isEndOfTable);
+
+
+//            //Add bottom piece of table
+//            Bitmap scaledBitmap = createScaledBitmap(
+//                    getBitmapFromView(tableDataListView), scrollDistance);
+//            bitmaps.add(scaledBitmap);
+//            allitemsheight += scrollDistance;
 
             //Combine all bitmaps into a single bitmap image
             int totalHeightOfAllBitmaps = allitemsheight + farmerNameBitmap.getHeight() + (headerView.getMeasuredHeight() * 3);
@@ -121,9 +142,11 @@ public class PDFCreator {
 
 
     private Bitmap getBitmapFromView(View view) {
+        view.setDrawingCacheEnabled(true);
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
+        view.setDrawingCacheEnabled(false);
         return bitmap;
     }
 
@@ -179,6 +202,14 @@ public class PDFCreator {
             bitmap.recycle();
         }
         return bigBitmap;
+    }
+
+
+    private Bitmap createScaledBitmap(Bitmap b, int top) {
+        AppLogger.e("Printer  ###", "Bitmap => |  top => " + top);
+        if(top == 0) return b;
+        else
+           return Bitmap.createBitmap(b, 0, b.getHeight() - top, b.getWidth(), scrollDistance);
     }
 
 

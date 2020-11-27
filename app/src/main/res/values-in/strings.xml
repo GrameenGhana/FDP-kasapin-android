@@ -434,8 +434,7 @@
 
     <!-- Preferences Keys-->
     <string name="server_url_key">server_url</string>
-    <string name="http">http://</string>
-    <string name="print">mencetak</string>
+     <string name="print">mencetak</string>
     <string name="plot_1_year_1">Plot 1 Year 1</string>
     <string name="choose_labor_option_rationale">Untuk menampilkan data tabel, silakan pilih opsi Tenaga Kerja di atas.</string>
     <string name="no_changes_after_sybmission_rational">Harap dicatat bahwa jika Anda mengisi formulir ini dan menyinkronkan data Anda, Anda tidak akan dapat membuat perubahan apa pun pada data petani ini.</string>

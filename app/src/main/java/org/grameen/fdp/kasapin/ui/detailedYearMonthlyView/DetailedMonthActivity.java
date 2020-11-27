@@ -112,7 +112,7 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         showLoading("Initializing print", "Please wait...", false, 0, false);
 
         new Handler().postDelayed(() -> {
-            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl", farmer.getFarmerName());
+            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "monthly_activities_calendar", farmer.getFarmerName());
             hideLoading();
             showMessage("Done!");
 
@@ -199,7 +199,6 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
 
                         //Combine icon names
                         if (ra.getImageId() != null)
-                            //if (!iconsStringBuilder.toString().toLowerCase().contains(ra.getImageId().toLowerCase()))
                             iconsStringBuilder.append(ra.getImageId()).append(",");
 
                         suppliesCost.append(ra.getSuppliesCost()).append("+");
@@ -267,6 +266,10 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
 
         if (DID_LABOUR)
             TABLE_DATA_LIST.add(new TableData(getString(R.string.labour), labourCost, TAG_OTHER_TEXT_VIEW));
+
+        //Extra spacing at bottom of table
+        for(int i = 0; i < 3; i++)
+            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
 
         monthsArray.recycle();
     }
