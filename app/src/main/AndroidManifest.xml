@@ -35,8 +35,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning,LockedOrientationActivity">
+        android:usesCleartextTraffic="true"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,LockedOrientationActivity,UnusedAttribute">
         <activity
             android:name=".ui.preferences.SettingsActivity"
             android:label="@string/title_activity_settings" />

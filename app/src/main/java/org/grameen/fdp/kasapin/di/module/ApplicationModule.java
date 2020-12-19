@@ -13,7 +13,7 @@ import org.grameen.fdp.kasapin.data.db.AppDatabase;
 import org.grameen.fdp.kasapin.data.network.FdpApi;
 import org.grameen.fdp.kasapin.data.network.FdpApiService;
 import org.grameen.fdp.kasapin.data.network.KeyPinStore;
- import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
+import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -33,11 +33,9 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 @Module
 public class ApplicationModule {
     private final Application application;
-
     public ApplicationModule(Application app) {
         application = app;
     }
@@ -92,28 +90,24 @@ public class ApplicationModule {
     @Singleton
     OkHttpClient provideOkHttpClient() {
         OkHttpClient.Builder  builder =  new OkHttpClient.Builder();
-
-        try {
-            KeyPinStore keystore = KeyPinStore.getInstance(application);
-            SSLSocketFactory tlsSocketFactory = keystore.getContext().getSocketFactory();
-            if (tlsSocketFactory.getSupportedCipherSuites() != null) {
-                 builder.sslSocketFactory(tlsSocketFactory, keystore.getTrustManager())
-                        .build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         if(BuildConfig.DEBUG)
             builder.addInterceptor(new HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY));
-
-
+        else {
+            try {
+                KeyPinStore keystore = KeyPinStore.getInstance(application);
+                SSLSocketFactory tlsSocketFactory = keystore.getContext().getSocketFactory();
+                if (tlsSocketFactory.getSupportedCipherSuites() != null) {
+                    builder.sslSocketFactory(tlsSocketFactory, keystore.getTrustManager())
+                            .build();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
             return builder.callTimeout(30, TimeUnit.SECONDS)
                     .build();
     }
-
-
 
     @Singleton
     @Provides

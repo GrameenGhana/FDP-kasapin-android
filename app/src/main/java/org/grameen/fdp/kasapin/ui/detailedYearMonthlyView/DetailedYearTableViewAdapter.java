@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.Locale;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.model.TableColumnModel;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_ICON_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
 
 
@@ -38,7 +40,8 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
         this.context = context;
     }
 
-    public DetailedYearTableViewAdapter(final Context context, final List<TableData> data, final TableView<TableData> tableView, boolean _showIcons) {
+    public DetailedYearTableViewAdapter(final Context context, final List<TableData> data,
+                                        final TableView<TableData> tableView, boolean _showIcons) {
         this(context, data, tableView);
         this.showIcons = _showIcons;
     }
@@ -95,7 +98,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
                 itemView.setPadding(20, 10, 20, 10);
                 itemView.setTextSize(TITLE_TEXT_SIZE);
                 itemView.setTypeface(itemView.getTypeface(), Typeface.BOLD);
-                itemView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                itemView.setTextColor(ContextCompat.getColor(getContext(),    (data.getTag().equals(TAG_OTHER_TEXT_VIEW)) ? R.color.text_black_87 : R.color.colorAccent)  );
                 return itemView;
             }
         }

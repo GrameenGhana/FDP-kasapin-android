@@ -277,7 +277,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         showLoading("Initializing print", "Please wait...", false, 0, false);
 
         new Handler().postDelayed(() -> {
-            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl",  farmer.getFarmerName());
+            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl",  farmer.getFarmerName(), 12);
+
             hideLoading();
             showMessage("Done!");
 
@@ -635,8 +636,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 e.printStackTrace();
                 TABLE_DATA_LIST.add(new TableData(pI.getCaptionC(), "0.00"));
             }
-            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
-            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
 
             myTableViewAdapter = new MyTableViewAdapter(ProfitAndLossActivity.this, TABLE_DATA_LIST, tableView, getAppDataManager().getDatabaseManager());
             runOnUiThread(() -> tableView.setDataAdapter(myTableViewAdapter));

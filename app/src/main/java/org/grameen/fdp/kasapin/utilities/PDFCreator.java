@@ -24,75 +24,76 @@ import java.util.List;
 import de.codecrafters.tableview.TableView;
 import de.codecrafters.tableview.listeners.OnScrollListener;
 
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 
 public class PDFCreator {
-
     private final int leftMargin = 10;
-    private boolean isEndOfTable = false;
     private boolean isPdfCreated = false;
-    boolean isMorePagesAvailable = false;
 
     private final TableView<TableData> tableView;
     private final PdfDocument document = new PdfDocument();
     private final File pdfDocFile;
     Bitmap finalBitmap;
-    int noVisibleItems = 0;
-    int scrollDistance = 300;
+    int scrollDistance;
     String docLabel;
+    static int sizeOfItemsPerPage;
+    static int totalNoOfItems;
 
     /**
      * Todo provide actual type for
      *
      * @param _tableView .
      **/
-    private PDFCreator(TableView<TableData> _tableView, String _activityName, String label) {
+    private PDFCreator(TableView<TableData> _tableView, String _activityName, String label, int sizePerPage) {
         tableView = _tableView;
+        sizeOfItemsPerPage = sizePerPage;
+
+        int initialTableSize = _tableView.getDataAdapter().getData().size();
+        AppLogger.e("initialTableSize => " + initialTableSize);
+
+
+        int noEmptyRowsToAdd = initialTableSize % sizeOfItemsPerPage;
+        AppLogger.e("noEmptyRowsToAdd => " + noEmptyRowsToAdd);
+
+        if(noEmptyRowsToAdd > 0)
+            for(int i = 0; i < sizeOfItemsPerPage - noEmptyRowsToAdd; i++)
+                tableView.getDataAdapter().getData().add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+
+            tableView.getDataAdapter().notifyDataSetChanged();
+
         docLabel = label;
-        noVisibleItems = 0;
+        totalNoOfItems = tableView.getDataAdapter().getData().size();
+        scrollDistance = tableView.getMeasuredHeight();
         pdfDocFile = FileUtils.createFolder("screenCaptures", _activityName + "_document.pdf");
         AppLogger.e("PDFCreator ===> File location will be " + pdfDocFile.getAbsolutePath());
+
+        AppLogger.e("totalNoOfItems => " + totalNoOfItems);
     }
 
 
-    public static PDFCreator createPdf(TableView<TableData> _tableView, String _activityName, String label) {
-        PDFCreator pdfCreator = new PDFCreator(_tableView, _activityName, label);
-
+    public static PDFCreator createPdf(TableView<TableData> _tableView, String _activityName, String label, int sizePerPage) {
+        PDFCreator pdfCreator = new PDFCreator(_tableView, _activityName, label, sizePerPage);
         pdfCreator.initialize();
         return pdfCreator;
     }
 
     private void initialize() {
-
         tableView.getBackground().setAlpha(0);
         tableView.setVerticalScrollBarEnabled(false);
 
         View headerView = tableView.findViewById(R.id.table_header_view);
 
         ListView tableDataListView = tableView.findViewById(R.id.table_data_view);
-        scrollDistance = tableDataListView.getMaxScrollAmount();
-        int measuredHeight = tableDataListView.getMeasuredHeight();
-
+        scrollDistance = tableDataListView.getMeasuredHeight();
 
         //Scroll tableView to the first item or position if the first item is not visible
         while (tableDataListView.getFirstVisiblePosition() != 0)
-            tableDataListView.scrollListBy(-measuredHeight);
-
+            tableDataListView.scrollListBy(-scrollDistance);
+        tableDataListView.scrollListBy(-scrollDistance);
 
         List<Bitmap> bitmaps = new ArrayList<>();
 
         int allitemsheight = 0;
-
-        OnScrollListener scrollListener = new OnScrollListener() {
-            @Override
-            public void onScroll(ListView tableDataView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                isEndOfTable = (firstVisibleItem + visibleItemCount) >= totalItemCount;
-            }
-            @Override
-            public void onScrollStateChanged(ListView tableDateView, ScrollState scrollState) {
-            }
-        };
-        tableView.addOnScrollListener(scrollListener);
-
         try {
             //Add farmer name view first
             Bitmap farmerNameBitmap = textAsBitmap("Farmer: " + docLabel, 30f, Color.BLACK);
@@ -100,27 +101,20 @@ public class PDFCreator {
 
             //finish farmer name view
             bitmaps.add(getBitmapFromView(headerView));
-            
+
             //get screenshot chunks from tableView
-            do {
-                isMorePagesAvailable = bitmaps.size() >= 3;
-
+            for(int i = 0; i < totalNoOfItems/sizeOfItemsPerPage; i++){
                 Bitmap scaledBitmap = createScaledBitmap(
-                        getBitmapFromView(tableDataListView), isMorePagesAvailable ? measuredHeight - scrollDistance : 0);
+                        getBitmapFromView(tableDataListView),  scrollDistance);
                 bitmaps.add(scaledBitmap);
+                allitemsheight +=  scrollDistance;
 
-                allitemsheight += isMorePagesAvailable ? scrollDistance : measuredHeight;
+
+                AppLogger.e("Page - " + (i + 1));
+                AppLogger.e("Pages left == " + totalNoOfItems/sizeOfItemsPerPage);
 
                 tableDataListView.scrollListBy(scrollDistance);
-            } while(!isEndOfTable);
-
-
-//            //Add bottom piece of table
-//            Bitmap scaledBitmap = createScaledBitmap(
-//                    getBitmapFromView(tableDataListView), scrollDistance);
-//            bitmaps.add(scaledBitmap);
-//            allitemsheight += scrollDistance;
-
+            }
             //Combine all bitmaps into a single bitmap image
             int totalHeightOfAllBitmaps = allitemsheight + farmerNameBitmap.getHeight() + (headerView.getMeasuredHeight() * 3);
 
@@ -133,7 +127,7 @@ public class PDFCreator {
             showError();
             e.printStackTrace();
         } finally {
-            tableView.removeOnScrollListener(scrollListener);
+            //tableView.removeOnScrollListener(scrollListener);
             tableView.getBackground().setAlpha(1);
             tableView.setVerticalScrollBarEnabled(true);
             tableDataListView.smoothScrollToPosition(0);
