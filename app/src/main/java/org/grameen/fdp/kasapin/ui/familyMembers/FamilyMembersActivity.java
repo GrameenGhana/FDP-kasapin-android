@@ -381,7 +381,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     @Override
     public void onItemValueChanged(int index, String uid, String value) {
         AppLogger.e("ItemValueChanged --> Uuid == " + uid + " Value == " + value);
-
         try {
             if (oldValuesArray.getJSONObject(index) != null) {
                 if (oldValuesArray.getJSONObject(index).has(uid))

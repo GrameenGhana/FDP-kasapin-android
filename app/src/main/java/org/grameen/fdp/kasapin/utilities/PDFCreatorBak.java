@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.codecrafters.tableview.TableView;
-import de.codecrafters.tableview.listeners.OnScrollListener;
 
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 
-public class PDFCreator {
+public class PDFCreatorBak {
     private final int leftMargin = 10;
     private boolean isPdfCreated = false;
+
     private final TableView<TableData> tableView;
     private final PdfDocument document = new PdfDocument();
     private final File pdfDocFile;
@@ -37,16 +37,13 @@ public class PDFCreator {
     String docLabel;
     static int sizeOfItemsPerPage;
     static int totalNoOfItems;
-    int a4Height = 1754;
-    List<Bitmap> bitmaps = new ArrayList<>();
-
 
     /**
      * Todo provide actual type for
      *
      * @param _tableView .
      **/
-    private PDFCreator(TableView<TableData> _tableView, String _activityName, String label, int sizePerPage) {
+    private PDFCreatorBak(TableView<TableData> _tableView, String _activityName, String label, int sizePerPage) {
         tableView = _tableView;
         sizeOfItemsPerPage = sizePerPage;
 
@@ -61,7 +58,7 @@ public class PDFCreator {
             for(int i = 0; i < sizeOfItemsPerPage - noEmptyRowsToAdd; i++)
                 tableView.getDataAdapter().getData().add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
 
-        tableView.getDataAdapter().notifyDataSetChanged();
+            tableView.getDataAdapter().notifyDataSetChanged();
 
         docLabel = label;
         totalNoOfItems = tableView.getDataAdapter().getData().size();
@@ -73,8 +70,8 @@ public class PDFCreator {
     }
 
 
-    public static PDFCreator createPdf(TableView<TableData> _tableView, String _activityName, String label, int sizePerPage) {
-        PDFCreator pdfCreator = new PDFCreator(_tableView, _activityName, label, sizePerPage);
+    public static PDFCreatorBak createPdf(TableView<TableData> _tableView, String _activityName, String label, int sizePerPage) {
+        PDFCreatorBak pdfCreator = new PDFCreatorBak(_tableView, _activityName, label, sizePerPage);
         pdfCreator.initialize();
         return pdfCreator;
     }
@@ -93,7 +90,7 @@ public class PDFCreator {
             tableDataListView.scrollListBy(-scrollDistance);
         tableDataListView.scrollListBy(-scrollDistance);
 
-        bitmaps.clear();
+        List<Bitmap> bitmaps = new ArrayList<>();
 
         int allitemsheight = 0;
         try {
@@ -118,12 +115,16 @@ public class PDFCreator {
                 tableDataListView.scrollListBy(scrollDistance);
             }
             //Combine all bitmaps into a single bitmap image
-            int totalHeightOfAllBitmaps = allitemsheight + farmerNameBitmap.getHeight() + (headerView.getMeasuredHeight() * 3);
+            //int totalHeightOfAllBitmaps = allitemsheight + farmerNameBitmap.getHeight() + (headerView.getMeasuredHeight() * 3);
 
             //Create pdf file from big bitmap in landscape mode specifying a height of a4Height per page
             //return path if created successfully or null
-            finalBitmap = combineBitmaps(bitmaps, tableDataListView.getMeasuredWidth(), totalHeightOfAllBitmaps);
-            generatePdfFromBitmap(finalBitmap);
+            //finalBitmap = combineBitmaps(bitmaps, tableDataListView.getMeasuredWidth(), totalHeightOfAllBitmaps);
+            //generatePdfFromBitmap(finalBitmap);
+
+
+            generatePdfFromBitmaps(bitmaps);
+
 
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM
@@ -174,11 +175,13 @@ public class PDFCreator {
         PrintHelper photoPrinter = new PrintHelper(tableView.getContext());
         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
-        if(finalBitmap != null)
-            photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", finalBitmap);
-        else
-            showError();
-        //photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", Uri.fromFile(pdfDocFile));
+//        if(finalBitmap != null)
+//            photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", finalBitmap);
+//        else
+//            showError();
+
+
+        photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", Uri.fromFile(pdfDocFile));
     }
 
 
@@ -206,12 +209,11 @@ public class PDFCreator {
         AppLogger.e("Printer  ###", "Bitmap => |  top => " + top);
         if(top == 0) return b;
         else
-            return Bitmap.createBitmap(b, 0, b.getHeight() - top, b.getWidth(), scrollDistance);
+           return Bitmap.createBitmap(b, 0, b.getHeight() - top, b.getWidth(), scrollDistance);
     }
 
 
     private void createPage(Bitmap bitmap, int pageNo, int pageHeight, int beginHeight) {
-        AppLogger.e("Creating page " + pageNo);
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth() + leftMargin, pageHeight, pageNo).create();
         PdfDocument.Page page = document.startPage(pageInfo);
         Canvas canvas = page.getCanvas();
@@ -226,10 +228,34 @@ public class PDFCreator {
         canvas.drawBitmap(newBitmap, leftMargin, 0f, null);
         document.finishPage(page);
         newBitmap.recycle();
-
-        AppLogger.e("Done creating page " + pageNo);
-
     }
+
+
+
+
+    private void generatePdfFromBitmaps(List<Bitmap> bitmaps) {
+        for (Bitmap b : bitmaps) {
+            int index = 0;
+            int a4Height = 1754;
+            index = index + 1;
+            //Creates pages and adds to the pdf document
+            createPage(b, index, a4Height, 0);
+        }
+
+            try {
+                document.writeTo(new FileOutputStream(pdfDocFile));
+                isPdfCreated = true;
+                AppLogger.e("ImageUtil", "Size of pages == " + document.getPages().size());
+               // return pdfDocFile.getAbsolutePath();
+            } catch (IOException e) {
+                e.printStackTrace();
+              //  return null;
+            } finally {
+                document.close();
+                //bitmap.recycle();
+            }
+    }
+
 
 
     private String generatePdfFromBitmap(Bitmap bitmap) {
@@ -238,18 +264,19 @@ public class PDFCreator {
         int totalHeight = bitmap.getHeight();
 
         int a4Height = 1754;
-        while (totalHeight > scrollDistance) {
+        while (totalHeight > a4Height) {
             index = index + 1;
             //Creates pages and adds to the pdf document
-            createPage(bitmap, index, scrollDistance, beginHeight);
+            createPage(bitmap, index, a4Height, beginHeight);
 
-            totalHeight -= scrollDistance;
-            beginHeight += scrollDistance;
+            totalHeight -= a4Height;
+            beginHeight += a4Height;
         }
 
         //Copy last bits of bitmap
         //Sometimes pixels left is just shite spaces. Ignore if that's the case
-         createPage(bitmap, index, Math.max(totalHeight, scrollDistance/3), beginHeight);
+        if (totalHeight > a4Height / 6)
+            createPage(bitmap, index, totalHeight, beginHeight);
 
         try {
             document.writeTo(new FileOutputStream(pdfDocFile));
@@ -264,4 +291,6 @@ public class PDFCreator {
             //bitmap.recycle();
         }
     }
+
+
 }
