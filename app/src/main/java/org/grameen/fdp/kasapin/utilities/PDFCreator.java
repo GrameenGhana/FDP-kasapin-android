@@ -35,6 +35,7 @@ public class PDFCreator {
     Bitmap finalBitmap;
     int scrollDistance;
     String docLabel;
+    String fileNameToSave;
     static int sizeOfItemsPerPage;
     static int totalNoOfItems;
     int a4Height = 1754;
@@ -70,6 +71,8 @@ public class PDFCreator {
         AppLogger.e("PDFCreator ===> File location will be " + pdfDocFile.getAbsolutePath());
 
         AppLogger.e("totalNoOfItems => " + totalNoOfItems);
+
+        fileNameToSave = _activityName + "_" + label;
     }
 
 
@@ -171,20 +174,14 @@ public class PDFCreator {
         if (!isPdfCreated)
             throw new Throwable("Pdf document has not been created. Did you forget to call PDFCreator.createPdf()?");
 
-        PrintHelper photoPrinter = new PrintHelper(tableView.getContext());
-        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
-        if(finalBitmap != null)
-            photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", finalBitmap);
-        else
-            showError();
-        //photoPrinter.printBitmap(tableView.getContext().getString(R.string.app_name) + " document", Uri.fromFile(pdfDocFile));
-    }
+        FDPPrintManager fdpPrintManager = new FDPPrintManager(tableView.getContext(),  pdfDocFile.getPath(), fileNameToSave);
+        fdpPrintManager.print();
+     }
 
 
     private void showError(){
         CustomToast.makeToast(tableView.getContext(), "An error occurred printing.\nPlease try again.", Toast.LENGTH_LONG).show();
-
     }
     private Bitmap combineBitmaps(List<Bitmap> bitmaps, int totalWidth, int totalHeight) {
         Bitmap bigBitmap = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888);
