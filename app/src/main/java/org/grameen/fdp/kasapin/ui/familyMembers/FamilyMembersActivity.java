@@ -43,6 +43,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Single;
 
 public class FamilyMembersActivity extends BaseActivity implements FamilyMembersContract.View, FdpCallbacks.UpdateJsonArray {
     static JSONArray oldValuesArray;
@@ -90,10 +91,25 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         mPresenter.takeView(this);
 
+        String farmerCode = getIntent().getStringExtra("farmerCode");
+
         FARMER = getAppDataManager()
                 .getDatabaseManager().realFarmersDao()
-                .get(getIntent().getStringExtra("farmerCode"))
+                .get(farmerCode)
                 .blockingGet();
+
+//        Get the family members questions
+//        FormAndQuestions familyMembersForm = getAppDataManager()
+//                .getDatabaseManager()
+//                .formAndQuestionsDao()
+//                .getFormAndQuestionsByName(AppConstants.FAMILY_MEMBERS).blockingGet();
+//
+//        answerData = getAppDataManager()
+//                .getDatabaseManager()
+//                .formAnswerDao()
+//                .getFormAnswerData(FARMER.getCode(),
+//                        familyMembersForm.getForm().getFormTranslationId());
+
 
         noFamilyMembers = getIntent().getIntExtra("noFamilyMembers", 1);
         ROW_SIZE = noFamilyMembers;
@@ -199,7 +215,11 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     @SuppressLint("CutPasteId")
     boolean validate() {
         List<ValidationError> errors = new ArrayList<>();
+
+
         for (int i = 0; i < ROW_SIZE; i++) {
+            AppLogger.e(TAG, "#################################################");
+
             for (int j = 0; j < COLUMN_SIZE; j++) {
                 View view = mTableViewAdapter.getCellViews(i, j);
                 if (view != null) {
@@ -211,25 +231,34 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                             error = inputVal.validate(getValue(i, name), name, "");
                             if (error != null) {
                                 errors.add(error);
-                                try {
-                                    if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
-                                        EditText edittext = view.findViewById(R.id.cell_data);
-                                        edittext.setError(error.getMessage(getResources()));
-                                    } else if (view.getTag().toString().equals("spinner")) {
-                                        Spinner spinner = view.findViewById(R.id.cell_data);
-                                        TextView itemView = spinner.findViewById(android.R.id.text1);
-                                        itemView.setError((error.getMessage(getResources())));
-                                    }
-                                } catch (Exception ignore) {
-                                }
+                                setError(view, error.getMessage(getResources()));
+                            }else {
+                                setError(view, null);
                             }
                         }
-                    }
+                    }else
+                        setError(view, null);
                 }
             }
         }
+
+
         AppLogger.e(TAG, "ERRORS SIZE IS " + errors.size());
         return errors.isEmpty();
+    }
+
+    void setError(View view, String message){
+        try {
+            if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
+                EditText edittext = view.findViewById(R.id.cell_data);
+                edittext.setError(message);
+            } else if (view.getTag().toString().equals("spinner")) {
+                Spinner spinner = view.findViewById(R.id.cell_data);
+                TextView itemView = spinner.findViewById(android.R.id.text1);
+                itemView.setError(message);
+            }
+        } catch (Exception ignore) {
+        }
     }
 
 
