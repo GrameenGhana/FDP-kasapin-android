@@ -2,6 +2,7 @@ package org.grameen.fdp.kasapin.ui.familyMembers;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -206,25 +208,27 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                     if(x == 0){
                         TextView headerView = new TextView(FamilyMembersActivity.this);
                         headerView.setText(questions.get(y).getCaptionC());
-                        headerView.setWidth(300);
+                        headerView.setTextSize(16f);
+                        headerView.setWidth(600);
                         headerView.setPadding(10,10,10,10);
                         headerView.setHeight(100);
+                        headerView.setTypeface(Typeface.DEFAULT_BOLD);
                         headerView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        headerView.setBackgroundResource(R.drawable.border_background);
+                        headerView.setBackgroundResource(R.drawable.table_view_border_background);
                         llContainer.addView(headerView);
                     }
                     else if(x > 0){
-                        Log.d("TYPE",questions.get(y).getTypeC());
+//                        Log.d("TYPE",questions.get(y).getTypeC());
                         if(questions.get(y).getTypeC().equals(AppConstants.TYPE_TEXT)){
                             EditText etContainer = new EditText(FamilyMembersActivity.this);
-                            etContainer.setHint("Enter text here");
-                            etContainer.setWidth(300);
+                            etContainer.setHint("Enter answer here...");
+                            etContainer.setWidth(600);
                             etContainer.setHeight(100);
                             etContainer.setPadding(10,10,10,10);
-                            etContainer.setBackgroundResource(R.drawable.border_background);
+                            etContainer.setBackgroundResource(R.drawable.table_view_borderless_background);
                             llContainer.addView(etContainer);
 
-                            etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
+                            //etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
 
                             etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                 @Override
@@ -242,22 +246,34 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                                     android.R.layout.simple_dropdown_item_1line,choices);
                             sp.setAdapter(arrDapt);
                             sp.setMinimumHeight(100);
-                            sp.setMinimumWidth(300);
-                            sp.setDropDownWidth(300);
+                            sp.setMinimumWidth(600);
+                            sp.setDropDownWidth(400);
                             sp.setPadding(10,10,10,10);
-                            sp.setBackgroundResource(R.drawable.border_background);
+                            //sp.setBackgroundResource(R.drawable.table_view_borderless_background);
+
+                            sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
                             llContainer.addView(sp);
                         }
                         else{
                             EditText etContainer = new EditText(FamilyMembersActivity.this);
-                            etContainer.setHint("Enter text here");
-                            etContainer.setWidth(300);
-                            etContainer.setHeight(300);
+                            etContainer.setHint(questions.get(y).getHelpTextC());
+                            etContainer.setWidth(600);
+                            etContainer.setHeight(100);
                             etContainer.setPadding(10,10,10,10);
-                            etContainer.setBackgroundResource(R.drawable.border_background);
+                            //etContainer.setBackgroundResource(R.drawable.table_view_borderless_background);
                             llContainer.addView(etContainer);
 
-                            etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
+                            //etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
 
                             etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                 @Override
@@ -273,7 +289,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                     }
                     else{
                         EditText etContainer = new EditText(FamilyMembersActivity.this);
-                        etContainer.setHint("Enter text here");
+                        etContainer.setHint(questions.get(y).getHelpTextC());
                         etContainer.setWidth(250);
                         etContainer.setHeight(100);
                         etContainer.setPadding(10,10,10,10);
@@ -472,6 +488,15 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 //                tableView.scrollToColumnPosition(SCROLL_POSITION);
 //            }
 //        }
+        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
+
+        for(int z=0;z<horizontalRow.getChildCount();z++){
+            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+            if(!rowHS.equals(ccHorizontalView)){
+                ccHorizontalView.scrollTo(ccHorizontalView.getScrollX() + 200,ccHorizontalView.getScrollY());
+            }
+        }
     }
 
 
@@ -484,6 +509,15 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 //        }
 //        SCROLL_POSITION -= lastVisibleItemPosition;
 //        tableView.scrollToColumnPosition(SCROLL_POSITION);
+        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
+
+        for(int z=0;z<horizontalRow.getChildCount();z++){
+            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+            if(!rowHS.equals(ccHorizontalView)){
+                ccHorizontalView.scrollTo(ccHorizontalView.getScrollX() - 300,ccHorizontalView.getScrollY());
+            }
+        }
     }
 
     @OnClick(R.id.save)
