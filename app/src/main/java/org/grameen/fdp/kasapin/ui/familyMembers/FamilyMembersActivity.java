@@ -2,11 +2,19 @@ package org.grameen.fdp.kasapin.ui.familyMembers;
 
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,6 +36,7 @@ import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.ValidationError;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
+import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 import org.grameen.fdp.kasapin.utilities.Validator;
 import org.json.JSONArray;
@@ -54,14 +63,17 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     Farmer FARMER;
     FormAndQuestions familyMembersFormAndQuestions;
     List<List<Question>> mQuestionsList;
-    @BindView(R.id.table_view)
-    TableView tableView;
+//    @BindView(R.id.table_view)
+//    TableView tableView;
     @BindView(R.id.save)
     Button save;
-    @BindView(R.id.name)
+    @BindView(R.id.farmer_name_et)
     TextView nameTextView;
-    @BindView(R.id.code)
+    @BindView(R.id.farmer_code_et)
     TextView codeTextView;
+    @BindView(R.id.hscrollDataTable)
+    ScrollView hScroll;
+
     int SCROLL_POSITION;
     int lastVisibleItemPosition;
     int noFamilyMembers;
@@ -89,6 +101,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         setContentView(R.layout.activity_family_members2);
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
+//        ButterKnife.bind(this);
 
         mPresenter.takeView(this);
 
@@ -119,7 +132,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 //        COLUMN_SIZE = familyMembersFormAndQuestions.getQuestions().size();
 //
         if (FARMER != null)
-            populateTable();
+            setUpViews();
         onBackClicked();
 
     }
@@ -137,6 +150,158 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 .formAnswerDao()
                 .getFormAnswerData(FARMER.getCode(),
                         familyMembersForm.getForm().getFormTranslationId());
+
+        List<Question> questions = familyMembersForm.getQuestions();
+
+        JSONArray jsonArray;
+
+        Log.e("JSON DATA",answerData.getData());
+
+        try{
+            jsonArray = new JSONArray(answerData.getData());
+        }
+        catch (JSONException jEx){
+            jEx.printStackTrace();
+            jsonArray = null;
+        }
+
+        if(jsonArray != null){
+            //Row Container
+            LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
+
+            for(int x=0;x<jsonArray.length();x++){
+                HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
+                rowHS.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        for(int z=0;z<horizontalRow.getChildCount();z++){
+                            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+                            if(!rowHS.equals(ccHorizontalView)){
+                                ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
+                            }
+                        }
+                        return false;
+                    }
+                });
+
+                if(Build.VERSION.SDK_INT >= 23){
+                    rowHS.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                        @Override
+                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                            for(int z=0;z<horizontalRow.getChildCount();z++){
+                                HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+                                if(!rowHS.equals(ccHorizontalView)){
+                                    ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
+                                }
+                            }
+                        }
+                    });
+                }
+
+                rowHS.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                LinearLayout llContainer = new LinearLayout(FamilyMembersActivity.this);
+
+                for(int y=0;y<questions.size();y++){
+
+                    if(x == 0){
+                        TextView headerView = new TextView(FamilyMembersActivity.this);
+                        headerView.setText(questions.get(y).getCaptionC());
+                        headerView.setWidth(300);
+                        headerView.setPadding(10,10,10,10);
+                        headerView.setHeight(100);
+                        headerView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        headerView.setBackgroundResource(R.drawable.border_background);
+                        llContainer.addView(headerView);
+                    }
+                    else if(x > 0){
+                        Log.d("TYPE",questions.get(y).getTypeC());
+                        if(questions.get(y).getTypeC().equals(AppConstants.TYPE_TEXT)){
+                            EditText etContainer = new EditText(FamilyMembersActivity.this);
+                            etContainer.setHint("Enter text here");
+                            etContainer.setWidth(300);
+                            etContainer.setHeight(100);
+                            etContainer.setPadding(10,10,10,10);
+                            etContainer.setBackgroundResource(R.drawable.border_background);
+                            llContainer.addView(etContainer);
+
+                            etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
+
+                            etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                @Override
+                                public void onFocusChange(View v, boolean hasFocus) {
+                                    if(!hasFocus){
+
+                                    }
+                                }
+                            });
+                        }
+                        else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
+                            Spinner sp = new Spinner(FamilyMembersActivity.this);
+                            String[] choices = questions.get(y).getOptionsC().split(",");
+                            ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
+                                    android.R.layout.simple_dropdown_item_1line,choices);
+                            sp.setAdapter(arrDapt);
+                            sp.setMinimumHeight(100);
+                            sp.setMinimumWidth(300);
+                            sp.setDropDownWidth(300);
+                            sp.setPadding(10,10,10,10);
+                            sp.setBackgroundResource(R.drawable.border_background);
+                            llContainer.addView(sp);
+                        }
+                        else{
+                            EditText etContainer = new EditText(FamilyMembersActivity.this);
+                            etContainer.setHint("Enter text here");
+                            etContainer.setWidth(300);
+                            etContainer.setHeight(300);
+                            etContainer.setPadding(10,10,10,10);
+                            etContainer.setBackgroundResource(R.drawable.border_background);
+                            llContainer.addView(etContainer);
+
+                            etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
+
+                            etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                @Override
+                                public void onFocusChange(View v, boolean hasFocus) {
+                                    if(!hasFocus){
+
+                                    }
+                                }
+                            });
+                        }
+
+
+                    }
+                    else{
+                        EditText etContainer = new EditText(FamilyMembersActivity.this);
+                        etContainer.setHint("Enter text here");
+                        etContainer.setWidth(250);
+                        etContainer.setHeight(100);
+                        etContainer.setPadding(10,10,10,10);
+                        etContainer.setBackgroundResource(R.drawable.border_background);
+                        llContainer.addView(etContainer);
+
+                        etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
+
+                        etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                            @Override
+                            public void onFocusChange(View v, boolean hasFocus) {
+                                if(!hasFocus){
+
+                                }
+                            }
+                        });
+                    }
+                }
+                rowHS.addView(llContainer);
+                horizontalRow.addView(rowHS);
+
+            }
+        }
+        else{
+            CustomToast.makeToast(FamilyMembersActivity.this,"No answer data", CustomToast.LENGTH_LONG).show();
+        }
+
+
     }
 
     @Override
@@ -146,87 +311,89 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         nameTextView.setText(FARMER.getFarmerName());
         codeTextView.setText(FARMER.getCode());
 
+        populateTable();
+
         if (getAppDataManager().isMonitoring())
             save.setVisibility(View.GONE);
 
-        mRowHeaderList = new ArrayList<>();
-        mColumnHeaderList = new ArrayList<>();
-        mCellList = new ArrayList<>();
-        mQuestionsList = new ArrayList<>();
-
-        answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getFormTranslationId());
-        if (answerData == null) {
-            answerData = new FormAnswerData();
-            answerData.setFormId(familyMembersFormAndQuestions.getForm().getFormTranslationId());
-            answerData.setFarmerCode(FARMER.getCode());
-        }
-        try {
-            oldValuesArray = new JSONArray(answerData.getData());
-        } catch (Exception ignore) {
-            oldValuesArray = new JSONArray();
-        }
-
-        for (int i = 0; i < ROW_SIZE; i++)
-            mCellList.add(new ArrayList<>());
-
-        for (int i = 0; i < ROW_SIZE; i++)
-            mQuestionsList.add(familyMembersFormAndQuestions.getQuestions());
-
-        for (int i = 0; i < ROW_SIZE; i++) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                if (i < oldValuesArray.length()) {
-                    if (oldValuesArray.get(i) == null)
-                        oldValuesArray.put(i, jsonObject);
-                } else
-                    oldValuesArray.put(i, jsonObject);
-                //allFamilyMembersArrayData.put(i, jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        setupTableView(familyMembersFormAndQuestions);
+//        mRowHeaderList = new ArrayList<>();
+//        mColumnHeaderList = new ArrayList<>();
+//        mCellList = new ArrayList<>();
+//        mQuestionsList = new ArrayList<>();
+//
+//        answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getFormTranslationId());
+//        if (answerData == null) {
+//            answerData = new FormAnswerData();
+//            answerData.setFormId(familyMembersFormAndQuestions.getForm().getFormTranslationId());
+//            answerData.setFarmerCode(FARMER.getCode());
+//        }
+//        try {
+//            oldValuesArray = new JSONArray(answerData.getData());
+//        } catch (Exception ignore) {
+//            oldValuesArray = new JSONArray();
+//        }
+//
+//        for (int i = 0; i < ROW_SIZE; i++)
+//            mCellList.add(new ArrayList<>());
+//
+//        for (int i = 0; i < ROW_SIZE; i++)
+//            mQuestionsList.add(familyMembersFormAndQuestions.getQuestions());
+//
+//        for (int i = 0; i < ROW_SIZE; i++) {
+//            JSONObject jsonObject = new JSONObject();
+//            try {
+//                if (i < oldValuesArray.length()) {
+//                    if (oldValuesArray.get(i) == null)
+//                        oldValuesArray.put(i, jsonObject);
+//                } else
+//                    oldValuesArray.put(i, jsonObject);
+//                //allFamilyMembersArrayData.put(i, jsonObject);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        setupTableView(familyMembersFormAndQuestions);
     }
 
     @Override
     public void setupTableView(FormAndQuestions _familyMembersFormAndQuestions) {
-        this.familyMembersFormAndQuestions = _familyMembersFormAndQuestions;
-
-        mTableViewAdapter = new FineTableViewAdapter(this, familyMembersFormAndQuestions.getQuestions(), ROW_SIZE);
-        tableView.setAdapter(mTableViewAdapter);
-        tableView.setTableViewListener(new TableViewListener());
-
-        tableView.setVerticalScrollBarEnabled(true);
-        tableView.setHorizontalScrollBarEnabled(true);
-        tableView.setScrollBarSize(50);
-
-        List<RowHeader> rowHeaders = getRowHeaderList();
-        List<ColumnHeader> columnHeaders = getColumnHeaderList();
-        List<List<Cell>> cellList = getCellList();
-
-        mRowHeaderList.addAll(rowHeaders);
-        mColumnHeaderList.addAll(columnHeaders);
-
-        for (int i = 0; i < ROW_SIZE; i++)
-            mCellList.get(i).addAll(cellList.get(i));
-        mTableViewAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
-
-        SpinnerViewHolder.UpdateJsonArrayListener(this);
-        CellViewHolder.UpdateJsonArrayListener(this);
-        CheckBoxViewHolder.UpdateJsonArrayListener(this);
-        MultiSelectViewHolder.UpdateJsonArrayListener(this);
-
-        try {
-            new Handler().postDelayed(() -> {
-                if (tableView != null) {
-                    LinearLayoutManager linearLayoutManager = tableView.getRowHeaderLayoutManager();
-                    if (linearLayoutManager != null)
-                        lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                    SCROLL_POSITION = lastVisibleItemPosition;
-                }
-            }, 2000);
-        } catch (Exception ignore) {
-        }
+//        this.familyMembersFormAndQuestions = _familyMembersFormAndQuestions;
+//
+//        mTableViewAdapter = new FineTableViewAdapter(this, familyMembersFormAndQuestions.getQuestions(), ROW_SIZE);
+//        tableView.setAdapter(mTableViewAdapter);
+//        tableView.setTableViewListener(new TableViewListener());
+//
+//        tableView.setVerticalScrollBarEnabled(true);
+//        tableView.setHorizontalScrollBarEnabled(true);
+//        tableView.setScrollBarSize(50);
+//
+//        List<RowHeader> rowHeaders = getRowHeaderList();
+//        List<ColumnHeader> columnHeaders = getColumnHeaderList();
+//        List<List<Cell>> cellList = getCellList();
+//
+//        mRowHeaderList.addAll(rowHeaders);
+//        mColumnHeaderList.addAll(columnHeaders);
+//
+//        for (int i = 0; i < ROW_SIZE; i++)
+//            mCellList.get(i).addAll(cellList.get(i));
+//        mTableViewAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
+//
+//        SpinnerViewHolder.UpdateJsonArrayListener(this);
+//        CellViewHolder.UpdateJsonArrayListener(this);
+//        CheckBoxViewHolder.UpdateJsonArrayListener(this);
+//        MultiSelectViewHolder.UpdateJsonArrayListener(this);
+//
+//        try {
+//            new Handler().postDelayed(() -> {
+//                if (tableView != null) {
+//                    LinearLayoutManager linearLayoutManager = tableView.getRowHeaderLayoutManager();
+//                    if (linearLayoutManager != null)
+//                        lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+//                    SCROLL_POSITION = lastVisibleItemPosition;
+//                }
+//            }, 2000);
+//        } catch (Exception ignore) {
+//        }
     }
 
     @SuppressLint("CutPasteId")
@@ -293,30 +460,30 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
     @OnClick(R.id.scrollRight)
     void scrollTableToTheRight() {
-        if (COLUMN_SIZE - SCROLL_POSITION < lastVisibleItemPosition) {
-            tableView.scrollToColumnPosition(COLUMN_SIZE - 1);
-            SCROLL_POSITION = 0;
-        } else {
-            if (SCROLL_POSITION == 0) {
-                tableView.scrollToColumnPosition(0);
-                SCROLL_POSITION = lastVisibleItemPosition;
-            } else {
-                SCROLL_POSITION += lastVisibleItemPosition;
-                tableView.scrollToColumnPosition(SCROLL_POSITION);
-            }
-        }
+//        if (COLUMN_SIZE - SCROLL_POSITION < lastVisibleItemPosition) {
+//            tableView.scrollToColumnPosition(COLUMN_SIZE - 1);
+//            SCROLL_POSITION = 0;
+//        } else {
+//            if (SCROLL_POSITION == 0) {
+//                tableView.scrollToColumnPosition(0);
+//                SCROLL_POSITION = lastVisibleItemPosition;
+//            } else {
+//                SCROLL_POSITION += lastVisibleItemPosition;
+//                tableView.scrollToColumnPosition(SCROLL_POSITION);
+//            }
+//        }
     }
 
 
     @OnClick(R.id.scrollLeft)
     void scrollTableToTheLeft() {
-        if (SCROLL_POSITION <= lastVisibleItemPosition) {
-            SCROLL_POSITION = lastVisibleItemPosition;
-            tableView.scrollToColumnPosition(0);
-            return;
-        }
-        SCROLL_POSITION -= lastVisibleItemPosition;
-        tableView.scrollToColumnPosition(SCROLL_POSITION);
+//        if (SCROLL_POSITION <= lastVisibleItemPosition) {
+//            SCROLL_POSITION = lastVisibleItemPosition;
+//            tableView.scrollToColumnPosition(0);
+//            return;
+//        }
+//        SCROLL_POSITION -= lastVisibleItemPosition;
+//        tableView.scrollToColumnPosition(SCROLL_POSITION);
     }
 
     @OnClick(R.id.save)

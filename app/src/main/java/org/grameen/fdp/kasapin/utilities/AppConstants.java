@@ -75,8 +75,8 @@ public class AppConstants {
     public static final String NULL_STRING = "null";
     public static final String TYPE_LOCATION = "geolocation";
     public static final String TYPE_PHOTO = "photo";
-    public static final String TYPE_SELECTABLE = "single select";
-    public static final String TYPE_MULTI_SELECTABLE = "multi select";
+    public static final String TYPE_SELECTABLE = "Single Select";
+    public static final String TYPE_MULTI_SELECTABLE = "Multi Select";
     public static final String TYPE_CHECKBOX = "checkbox";
     public static final String TYPE_TIMEPICKER = "timePicker";
     public static final String TYPE_DATEPICKER = "date";

@@ -41,7 +41,7 @@
                     android:textColor="@color/text_black_87" />
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/farmer_name_et"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_black_87"
@@ -69,7 +69,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/code"
+                    android:id="@+id/farmer_code_et"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
@@ -111,16 +111,17 @@
 
         </RelativeLayout>
 
-        <HorizontalScrollView
+        <ScrollView
             android:id="@+id/hscrollDataTable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/llDataTable"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical" />
-        </HorizontalScrollView>
+        </ScrollView>
 
     </LinearLayout>
 
