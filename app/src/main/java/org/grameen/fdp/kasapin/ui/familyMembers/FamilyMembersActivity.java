@@ -85,7 +85,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_family_members);
+        //setContentView(R.layout.activity_family_members);
+        setContentView(R.layout.activity_family_members2);
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
 
@@ -111,15 +112,31 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 //                        familyMembersForm.getForm().getFormTranslationId());
 
 
-        noFamilyMembers = getIntent().getIntExtra("noFamilyMembers", 1);
-        ROW_SIZE = noFamilyMembers;
-
-        familyMembersFormAndQuestions = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
-        COLUMN_SIZE = familyMembersFormAndQuestions.getQuestions().size();
-
+//        noFamilyMembers = getIntent().getIntExtra("noFamilyMembers", 1);
+//        ROW_SIZE = noFamilyMembers;
+//
+//        familyMembersFormAndQuestions = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
+//        COLUMN_SIZE = familyMembersFormAndQuestions.getQuestions().size();
+//
         if (FARMER != null)
-            setUpViews();
+            populateTable();
         onBackClicked();
+
+    }
+
+    private void populateTable(){
+
+//        Get the family members questions
+        FormAndQuestions familyMembersForm = getAppDataManager()
+                .getDatabaseManager()
+                .formAndQuestionsDao()
+                .getFormAndQuestionsByName(AppConstants.FAMILY_MEMBERS).blockingGet();
+
+        answerData = getAppDataManager()
+                .getDatabaseManager()
+                .formAnswerDao()
+                .getFormAnswerData(FARMER.getCode(),
+                        familyMembersForm.getForm().getFormTranslationId());
     }
 
     @Override
