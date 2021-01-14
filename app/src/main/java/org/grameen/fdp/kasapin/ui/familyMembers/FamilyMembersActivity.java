@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -157,7 +158,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         JSONArray jsonArray;
 
-        Log.e("JSON DATA",answerData.getData());
+//        Log.e("JSON DATA",answerData.getData());
 
         try{
             jsonArray = new JSONArray(answerData.getData());
@@ -173,18 +174,18 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
             for(int x=0;x<jsonArray.length();x++){
                 HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
-                rowHS.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        for(int z=0;z<horizontalRow.getChildCount();z++){
-                            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
-                            if(!rowHS.equals(ccHorizontalView)){
-                                ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
-                            }
-                        }
-                        return false;
-                    }
-                });
+//                rowHS.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        for(int z=0;z<horizontalRow.getChildCount();z++){
+//                            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+//                            if(!rowHS.equals(ccHorizontalView)){
+//                                ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
+//                            }
+//                        }
+//                        return false;
+//                    }
+//                });
 
                 if(Build.VERSION.SDK_INT >= 23){
                     rowHS.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -205,107 +206,30 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
                 for(int y=0;y<questions.size();y++){
 
+                    Log.d("TYPE",questions.get(y).getTypeC());
+                    //First row as header
                     if(x == 0){
-                        TextView headerView = new TextView(FamilyMembersActivity.this);
-                        headerView.setText(questions.get(y).getCaptionC());
-                        headerView.setTextSize(16f);
-                        headerView.setWidth(600);
-                        headerView.setPadding(10,10,10,10);
-                        headerView.setHeight(100);
-                        headerView.setTypeface(Typeface.DEFAULT_BOLD);
-                        headerView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        headerView.setBackgroundResource(R.drawable.table_view_border_background);
-                        llContainer.addView(headerView);
+                        //Textview as header view
+                        llContainer.addView(getHeaderView(questions.get(y).getCaptionC()));
                     }
                     else if(x > 0){
-//                        Log.d("TYPE",questions.get(y).getTypeC());
                         if(questions.get(y).getTypeC().equals(AppConstants.TYPE_TEXT)){
-                            EditText etContainer = new EditText(FamilyMembersActivity.this);
-                            etContainer.setHint("Enter answer here...");
-                            etContainer.setWidth(600);
-                            etContainer.setHeight(100);
-                            etContainer.setPadding(10,10,10,10);
-                            etContainer.setBackgroundResource(R.drawable.table_view_borderless_background);
-                            llContainer.addView(etContainer);
-
-                            //etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
-
-                            etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                @Override
-                                public void onFocusChange(View v, boolean hasFocus) {
-                                    if(!hasFocus){
-
-                                    }
-                                }
-                            });
+                            llContainer.addView(getEditTextView(false));
+                        }
+                        else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER)){
+                            llContainer.addView(getEditTextView(true));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
-                            Spinner sp = new Spinner(FamilyMembersActivity.this);
-                            String[] choices = questions.get(y).getOptionsC().split(",");
-                            ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
-                                    android.R.layout.simple_dropdown_item_1line,choices);
-                            sp.setAdapter(arrDapt);
-                            sp.setMinimumHeight(100);
-                            sp.setMinimumWidth(600);
-                            sp.setDropDownWidth(400);
-                            sp.setPadding(10,10,10,10);
-                            //sp.setBackgroundResource(R.drawable.table_view_borderless_background);
 
-                            sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-
-                                }
-                            });
-                            llContainer.addView(sp);
+                            llContainer.addView(getSpinnerView(questions.get(y).getOptionsC()));
                         }
                         else{
-                            EditText etContainer = new EditText(FamilyMembersActivity.this);
-                            etContainer.setHint(questions.get(y).getHelpTextC());
-                            etContainer.setWidth(600);
-                            etContainer.setHeight(100);
-                            etContainer.setPadding(10,10,10,10);
-                            //etContainer.setBackgroundResource(R.drawable.table_view_borderless_background);
-                            llContainer.addView(etContainer);
-
-                            //etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
-
-                            etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                @Override
-                                public void onFocusChange(View v, boolean hasFocus) {
-                                    if(!hasFocus){
-
-                                    }
-                                }
-                            });
+                            llContainer.addView(getEditTextView(false));
                         }
-
 
                     }
                     else{
-                        EditText etContainer = new EditText(FamilyMembersActivity.this);
-                        etContainer.setHint(questions.get(y).getHelpTextC());
-                        etContainer.setWidth(250);
-                        etContainer.setHeight(100);
-                        etContainer.setPadding(10,10,10,10);
-                        etContainer.setBackgroundResource(R.drawable.border_background);
-                        llContainer.addView(etContainer);
-
-                        etContainer.setError("Error in field " + String.valueOf(x) + "," + String.valueOf(y));
-
-                        etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                            @Override
-                            public void onFocusChange(View v, boolean hasFocus) {
-                                if(!hasFocus){
-
-                                }
-                            }
-                        });
+                        llContainer.addView(getHeaderView(questions.get(y).getCaptionC()));
                     }
                 }
                 rowHS.addView(llContainer);
@@ -314,10 +238,76 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             }
         }
         else{
-            CustomToast.makeToast(FamilyMembersActivity.this,"No answer data", CustomToast.LENGTH_LONG).show();
+            CustomToast.makeToast(FamilyMembersActivity.this,
+                    "No answer data", CustomToast.LENGTH_LONG).show();
         }
 
+    }
 
+    /** View Objects **/
+
+    private TextView getHeaderView(String question){
+        TextView headerView = new TextView(FamilyMembersActivity.this);
+        headerView.setText(question);
+        headerView.setTextSize(16f);
+        headerView.setWidth(600);
+        headerView.setPadding(10,10,10,10);
+        headerView.setHeight(100);
+        headerView.setTypeface(Typeface.DEFAULT_BOLD);
+        headerView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        headerView.setBackgroundResource(R.drawable.table_view_border_background);
+
+        return headerView;
+    }
+
+    private EditText getEditTextView(boolean isNumber){
+        EditText etContainer = new EditText(FamilyMembersActivity.this);
+        etContainer.setHint("Enter answer here...");
+        etContainer.setMaxLines(1);
+        etContainer.setWidth(600);
+        etContainer.setHeight(100);
+        etContainer.setPadding(10,10,10,10);
+        etContainer.setBackgroundResource(R.drawable.table_cell_background);
+        etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+
+                }
+            }
+        });
+
+        if(isNumber){
+            etContainer.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        }
+        return etContainer;
+    }
+
+    private Spinner getSpinnerView(String listOfChoices){
+        Spinner sp = new Spinner(FamilyMembersActivity.this);
+        String[] choices = listOfChoices.split(",");
+        ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
+                android.R.layout.simple_dropdown_item_1line,choices);
+        sp.setAdapter(arrDapt);
+        sp.setMinimumHeight(100);
+        sp.setMinimumWidth(600);
+        sp.setDropDownWidth(400);
+        sp.setPadding(10,10,10,10);
+        //sp.setBackgroundResource(R.drawable.table_view_borderless_background);
+
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        return sp;
     }
 
     @Override
