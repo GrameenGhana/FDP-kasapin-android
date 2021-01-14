@@ -6,7 +6,9 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -140,6 +142,10 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
     }
 
+    /**
+     * The function which now populates the table. This handles both
+     * the loading aspect to the display of the views.
+     */
     private void populateTable(){
 
 //        Get the family members questions
@@ -174,25 +180,16 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
             for(int x=0;x<jsonArray.length();x++){
                 HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
-//                rowHS.setOnTouchListener(new View.OnTouchListener() {
-//                    @Override
-//                    public boolean onTouch(View v, MotionEvent event) {
-//                        for(int z=0;z<horizontalRow.getChildCount();z++){
-//                            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
-//                            if(!rowHS.equals(ccHorizontalView)){
-//                                ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
-//                            }
-//                        }
-//                        return false;
-//                    }
-//                });
 
+                //This is to provide an illusion that the layout is moving as a whole when scrolled.
+                //Scroll one row, scroll all.
                 if(Build.VERSION.SDK_INT >= 23){
                     rowHS.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                         @Override
                         public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                             for(int z=0;z<horizontalRow.getChildCount();z++){
                                 HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+                                //Scroll everything except the view being scrolled.
                                 if(!rowHS.equals(ccHorizontalView)){
                                     ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
                                 }
@@ -201,11 +198,15 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                     });
                 }
 
-                rowHS.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                rowHS.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT));
+
+                //The additional layout container for each row.
                 LinearLayout llContainer = new LinearLayout(FamilyMembersActivity.this);
 
+                //Serve the questions now, baby!
                 for(int y=0;y<questions.size();y++){
-
+                    // TODO Remove this
                     Log.d("TYPE",questions.get(y).getTypeC());
                     //First row as header
                     if(x == 0){
@@ -214,19 +215,20 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                     }
                     else if(x > 0){
                         if(questions.get(y).getTypeC().equals(AppConstants.TYPE_TEXT)){
-                            llContainer.addView(getEditTextView(false));
+//                            llContainer.addView(getEditTextView(false));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER)){
-                            llContainer.addView(getEditTextView(true));
+//                            llContainer.addView(getEditTextView(true));
+                        }
+                        else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER_DECIMAL)){
+//                            llContainer.addView(getEditTextView(true));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
-
-                            llContainer.addView(getSpinnerView(questions.get(y).getOptionsC()));
+//                            llContainer.addView(getSpinnerView(questions.get(y).getOptionsC()));
                         }
                         else{
-                            llContainer.addView(getEditTextView(false));
+//                            llContainer.addView(getEditTextView(false));
                         }
-
                     }
                     else{
                         llContainer.addView(getHeaderView(questions.get(y).getCaptionC()));
@@ -260,10 +262,11 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return headerView;
     }
 
-    private EditText getEditTextView(boolean isNumber){
+    private EditText getEditTextView(boolean isNumber, int itemIndex, String tag){
         EditText etContainer = new EditText(FamilyMembersActivity.this);
         etContainer.setHint("Enter answer here...");
         etContainer.setMaxLines(1);
+        etContainer.setSingleLine(true);
         etContainer.setWidth(600);
         etContainer.setHeight(100);
         etContainer.setPadding(10,10,10,10);
@@ -274,6 +277,23 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 if(!hasFocus){
 
                 }
+            }
+        });
+
+        etContainer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                onItemValueChanged(itemIndex,tag,s.toString());
             }
         });
 
@@ -406,7 +426,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     boolean validate() {
         List<ValidationError> errors = new ArrayList<>();
 
-
         for (int i = 0; i < ROW_SIZE; i++) {
             AppLogger.e(TAG, "#################################################");
 
@@ -466,18 +485,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
     @OnClick(R.id.scrollRight)
     void scrollTableToTheRight() {
-//        if (COLUMN_SIZE - SCROLL_POSITION < lastVisibleItemPosition) {
-//            tableView.scrollToColumnPosition(COLUMN_SIZE - 1);
-//            SCROLL_POSITION = 0;
-//        } else {
-//            if (SCROLL_POSITION == 0) {
-//                tableView.scrollToColumnPosition(0);
-//                SCROLL_POSITION = lastVisibleItemPosition;
-//            } else {
-//                SCROLL_POSITION += lastVisibleItemPosition;
-//                tableView.scrollToColumnPosition(SCROLL_POSITION);
-//            }
-//        }
         LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
         HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
 
@@ -492,13 +499,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
     @OnClick(R.id.scrollLeft)
     void scrollTableToTheLeft() {
-//        if (SCROLL_POSITION <= lastVisibleItemPosition) {
-//            SCROLL_POSITION = lastVisibleItemPosition;
-//            tableView.scrollToColumnPosition(0);
-//            return;
-//        }
-//        SCROLL_POSITION -= lastVisibleItemPosition;
-//        tableView.scrollToColumnPosition(SCROLL_POSITION);
         LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
         HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
 

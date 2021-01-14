@@ -57,9 +57,9 @@ public class AppConstants {
     public static final long NULL_INDEX_L = -1L;
     public static final int NULL_INDEX = -1;
     public static final int API_STATUS_CODE_LOCAL_ERROR = 0;
-    public static final String TYPE_TEXT = "text";
-    public static final String TYPE_NUMBER = "number";
-    public static final String TYPE_NUMBER_DECIMAL = "decimal";
+    public static final String TYPE_TEXT = "Text";
+    public static final String TYPE_NUMBER = "Number";
+    public static final String TYPE_NUMBER_DECIMAL = "Decimal";
     public static final String TYPE_COMPLEX_CALCULATION = "complex calculation";
     public static final String FORMULA_TYPE_COMPLEX_FORMULA = "complex formula";
     public static final String ANSWERS = "fpd_Answer__c";
