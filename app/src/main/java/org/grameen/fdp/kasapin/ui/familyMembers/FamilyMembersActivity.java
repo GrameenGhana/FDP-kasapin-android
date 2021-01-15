@@ -48,9 +48,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -63,6 +66,19 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     static JSONArray oldValuesArray;
     static int COLUMN_SIZE;
     static int ROW_SIZE = 1;
+
+    //Input Type Constants
+    static final int TYPE_DECIMAL = 9998;
+    static final int TYPE_NUMBER = 9999;
+    static final int TYPE_TEXT = 8888;
+
+    //Field Tags
+    static final String TAG_EDITTEXT = "edittext";
+    static final String TAG_CHECKBOX = "checkbox";
+    static final String TAG_SPINNER = "spinner";
+    static final String TAG_TEXTVIEW = "textview";
+    static final String TAG_MULTISELECT = "multi_select";
+
     @Inject
     FamilyMembersPresenter mPresenter;
     Farmer FARMER;
@@ -79,15 +95,17 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     @BindView(R.id.hscrollDataTable)
     ScrollView hScroll;
 
-    int SCROLL_POSITION;
-    int lastVisibleItemPosition;
-    int noFamilyMembers;
+//    int SCROLL_POSITION;
+//    int lastVisibleItemPosition;
+//    int noFamilyMembers;
+
     FormAnswerData answerData;
     FineTableViewAdapter mTableViewAdapter;
     Validator validator = new Validator();
-    private List<RowHeader> mRowHeaderList;
-    private List<ColumnHeader> mColumnHeaderList;
-    private List<List<Cell>> mCellList;
+
+//    private List<RowHeader> mRowHeaderList;
+//    private List<ColumnHeader> mColumnHeaderList;
+//    private List<List<Cell>> mCellList;
 
     public static String getValue(int index, String key) {
         String value = "";
@@ -164,8 +182,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         JSONArray jsonArray;
 
-//        Log.e("JSON DATA",answerData.getData());
-
         try{
             jsonArray = new JSONArray(answerData.getData());
         }
@@ -206,53 +222,45 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
                 //Serve the questions now, baby!
                 for(int y=0;y<questions.size();y++){
-                    // TODO Remove this
-                    Log.d("TYPE",questions.get(y).getTypeC());
                     //First row as header
                     if(x == 0){
                         //Textview as header view
-                        llContainer.addView(getHeaderView(questions.get(y).getCaptionC()));
+                        llContainer.addView(getHeaderView(questions.get(y).getCaptionC(),TAG_TEXTVIEW));
                     }
                     else if(x > 0){
                         if(questions.get(y).getTypeC().equals(AppConstants.TYPE_TEXT)){
-//                            llContainer.addView(getEditTextView(false));
+                            llContainer.addView(getEditTextView(TYPE_TEXT,y,TAG_EDITTEXT));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER)){
-//                            llContainer.addView(getEditTextView(true));
+                            llContainer.addView(getEditTextView(TYPE_NUMBER,y,TAG_EDITTEXT));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER_DECIMAL)){
-//                            llContainer.addView(getEditTextView(true));
+                            llContainer.addView(getEditTextView(TYPE_DECIMAL,y,TAG_EDITTEXT));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
-//                            llContainer.addView(getSpinnerView(questions.get(y).getOptionsC()));
+                            llContainer.addView(getSpinnerView(questions.get(y).getOptionsC(),TAG_SPINNER));
                         }
-                        else{
-//                            llContainer.addView(getEditTextView(false));
-                        }
-                    }
-                    else{
-                        llContainer.addView(getHeaderView(questions.get(y).getCaptionC()));
                     }
                 }
                 rowHS.addView(llContainer);
                 horizontalRow.addView(rowHS);
-
             }
         }
         else{
             CustomToast.makeToast(FamilyMembersActivity.this,
-                    "No answer data", CustomToast.LENGTH_LONG).show();
+                    "No family data", CustomToast.LENGTH_LONG).show();
         }
 
     }
 
     /** View Objects **/
 
-    private TextView getHeaderView(String question){
+    private TextView getHeaderView(String question, String tag){
         TextView headerView = new TextView(FamilyMembersActivity.this);
         headerView.setText(question);
         headerView.setTextSize(16f);
         headerView.setWidth(600);
+        headerView.setTag(tag);
         headerView.setPadding(10,10,10,10);
         headerView.setHeight(100);
         headerView.setTypeface(Typeface.DEFAULT_BOLD);
@@ -262,23 +270,16 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return headerView;
     }
 
-    private EditText getEditTextView(boolean isNumber, int itemIndex, String tag){
+    private EditText getEditTextView(int inpType, int itemIndex, String tag){
         EditText etContainer = new EditText(FamilyMembersActivity.this);
         etContainer.setHint("Enter answer here...");
         etContainer.setMaxLines(1);
         etContainer.setSingleLine(true);
         etContainer.setWidth(600);
         etContainer.setHeight(100);
+        etContainer.setTag(tag);
         etContainer.setPadding(10,10,10,10);
         etContainer.setBackgroundResource(R.drawable.table_cell_background);
-        etContainer.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
-
-                }
-            }
-        });
 
         etContainer.addTextChangedListener(new TextWatcher() {
             @Override
@@ -297,19 +298,40 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             }
         });
 
-        if(isNumber){
-            etContainer.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        switch (inpType){
+            case TYPE_TEXT:
+                etContainer.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                break;
+            case TYPE_NUMBER:
+                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER);
+                break;
+            case TYPE_DECIMAL:
+                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                etContainer.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (!hasFocus && etContainer.getText() != null
+                            && !etContainer.getText().toString().isEmpty()) {
+                        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+                        DecimalFormat formatter = (DecimalFormat) nf;
+                        formatter.applyPattern("#,###,###.##");
+                        Double doubleValue = Double.parseDouble(etContainer.getText()
+                                .toString().replace(",", ""));
+                        etContainer.setText(formatter.format(doubleValue));
+                    }
+                });
+                break;
+            default:
         }
         return etContainer;
     }
 
-    private Spinner getSpinnerView(String listOfChoices){
+    private Spinner getSpinnerView(String listOfChoices, String tag){
         Spinner sp = new Spinner(FamilyMembersActivity.this);
         String[] choices = listOfChoices.split(",");
         ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
                 android.R.layout.simple_dropdown_item_1line,choices);
         sp.setAdapter(arrDapt);
         sp.setMinimumHeight(100);
+        sp.setTag(tag);
         sp.setMinimumWidth(600);
         sp.setDropDownWidth(400);
         sp.setPadding(10,10,10,10);
