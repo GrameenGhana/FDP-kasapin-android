@@ -296,7 +296,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
             @Override
             public void afterTextChanged(Editable s) {
-                onItemValueChanged(rowPosition,q.getLabelC(),s.toString());
+                onItemValueChanged(rowPosition-1,q.getLabelC(),s.toString());
             }
         });
 
