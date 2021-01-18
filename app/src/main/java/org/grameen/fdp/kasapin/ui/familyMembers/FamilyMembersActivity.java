@@ -242,11 +242,10 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                             llContainer.addView(getEditTextView(TYPE_DECIMAL,z,TAG_EDITTEXT,questions.get(z)));
                         }
                         else if(questions.get(z).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
-                            llContainer.addView(getSpinnerView(questions.get(z).getOptionsC(),TAG_SPINNER));
+                            llContainer.addView(getSpinnerView(questions.get(z).getOptionsC(),TAG_SPINNER,questions.get(z)));
                         }
                     }
                 }
-
 
                 rowHS.addView(llContainer);
                 horizontalRow.addView(rowHS);
@@ -332,7 +331,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return etContainer;
     }
 
-    private Spinner getSpinnerView(String listOfChoices, String tag){
+    private Spinner getSpinnerView(String listOfChoices, String tag, Question q){
         Spinner sp = new Spinner(FamilyMembersActivity.this);
         String[] choices = listOfChoices.split(",");
         ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
@@ -348,7 +347,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                    onItemValueChanged(position,q.getLabelC(),choices[position]);
             }
 
             @Override
@@ -365,7 +364,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         Log.d("INDEX",Integer.valueOf(rowIndex).toString() +","+ Integer.valueOf(colIndex).toString());
 
         LinearLayout rowContainer = hScroll.findViewById(R.id.llDataTable);
-        HorizontalScrollView hs = (HorizontalScrollView)rowContainer.getChildAt(rowIndex);
+        HorizontalScrollView hs = (HorizontalScrollView)rowContainer.getChildAt(rowIndex+1);
         LinearLayout llx = (LinearLayout)(hs.getChildAt(0));
         return llx.getChildAt(colIndex);
     }
@@ -474,7 +473,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             for (int j = 0; j < COLUMN_SIZE; j++) {
                 View view = getViewObject(i,j);//.getCellViews(i, j);
                 if (view != null) {
-                    String name = Integer.valueOf(i).toString() + Integer.valueOf(j).toString();//mTableViewAdapter.getCellItem(j, i).getId();
+                    String name = Integer.valueOf(i).toString() + Integer.valueOf(j).toString();mTableViewAdapter.getCellItem(j, i).getId();
                     HashSet<InputValidator> validators = validator.getValidators(name + i);
                     if (validators != null) {
                         ValidationError error;
