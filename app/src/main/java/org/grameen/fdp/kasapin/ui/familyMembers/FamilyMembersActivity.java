@@ -96,16 +96,16 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     ScrollView hScroll;
 
 //    int SCROLL_POSITION;
-//    int lastVisibleItemPosition;
-//    int noFamilyMembers;
+    int lastVisibleItemPosition;
+    int noFamilyMembers;
 
     FormAnswerData answerData;
     FineTableViewAdapter mTableViewAdapter;
     Validator validator = new Validator();
 
-//    private List<RowHeader> mRowHeaderList;
-//    private List<ColumnHeader> mColumnHeaderList;
-//    private List<List<Cell>> mCellList;
+    private List<RowHeader> mRowHeaderList;
+    private List<ColumnHeader> mColumnHeaderList;
+    private List<List<Cell>> mCellList;
 
     public static String getValue(int index, String key) {
         String value = "";
@@ -148,11 +148,11 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 //                        familyMembersForm.getForm().getFormTranslationId());
 
 
-//        noFamilyMembers = getIntent().getIntExtra("noFamilyMembers", 1);
-//        ROW_SIZE = noFamilyMembers;
-//
-//        familyMembersFormAndQuestions = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
-//        COLUMN_SIZE = familyMembersFormAndQuestions.getQuestions().size();
+        noFamilyMembers = getIntent().getIntExtra("noFamilyMembers", 1);
+        ROW_SIZE = noFamilyMembers;
+
+        familyMembersFormAndQuestions = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
+        COLUMN_SIZE = familyMembersFormAndQuestions.getQuestions().size();
 //
         if (FARMER != null)
             setUpViews();
@@ -229,13 +229,13 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                     }
                     else if(x > 0){
                         if(questions.get(y).getTypeC().equals(AppConstants.TYPE_TEXT)){
-                            llContainer.addView(getEditTextView(TYPE_TEXT,y,TAG_EDITTEXT));
+                            llContainer.addView(getEditTextView(TYPE_TEXT,y,TAG_EDITTEXT,questions.get(y)));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER)){
-                            llContainer.addView(getEditTextView(TYPE_NUMBER,y,TAG_EDITTEXT));
+                            llContainer.addView(getEditTextView(TYPE_NUMBER,y,TAG_EDITTEXT,questions.get(y)));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER_DECIMAL)){
-                            llContainer.addView(getEditTextView(TYPE_DECIMAL,y,TAG_EDITTEXT));
+                            llContainer.addView(getEditTextView(TYPE_DECIMAL,y,TAG_EDITTEXT,questions.get(y)));
                         }
                         else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
                             llContainer.addView(getSpinnerView(questions.get(y).getOptionsC(),TAG_SPINNER));
@@ -244,6 +244,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 }
                 rowHS.addView(llContainer);
                 horizontalRow.addView(rowHS);
+
+                addValidatorToViews();
             }
         }
         else{
@@ -270,7 +272,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return headerView;
     }
 
-    private EditText getEditTextView(int inpType, int itemIndex, String tag){
+    private EditText getEditTextView(int inpType, int rowPosition, String tag, Question q){
         EditText etContainer = new EditText(FamilyMembersActivity.this);
         etContainer.setHint("Enter answer here...");
         etContainer.setMaxLines(1);
@@ -294,7 +296,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
             @Override
             public void afterTextChanged(Editable s) {
-                //onItemValueChanged(itemIndex,tag,s.toString());
+                onItemValueChanged(rowPosition,q.getLabelC(),s.toString());
             }
         });
 
@@ -352,6 +354,16 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return sp;
     }
 
+    private View getViewObject(int rowIndex, int colIndex){
+
+        LinearLayout rowContainer = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView hs = (HorizontalScrollView)rowContainer.getChildAt(rowIndex);
+        LinearLayout llx = (LinearLayout)hs.getChildAt(0);
+        return llx.getChildAt(colIndex);
+    }
+
+    /** End of View Objects */
+
     @Override
     public void setUpViews() {
         setToolbar("Family Members Table");
@@ -359,47 +371,47 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         nameTextView.setText(FARMER.getFarmerName());
         codeTextView.setText(FARMER.getCode());
 
-        populateTable();
-
         if (getAppDataManager().isMonitoring())
             save.setVisibility(View.GONE);
 
-//        mRowHeaderList = new ArrayList<>();
-//        mColumnHeaderList = new ArrayList<>();
-//        mCellList = new ArrayList<>();
-//        mQuestionsList = new ArrayList<>();
-//
-//        answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getFormTranslationId());
-//        if (answerData == null) {
-//            answerData = new FormAnswerData();
-//            answerData.setFormId(familyMembersFormAndQuestions.getForm().getFormTranslationId());
-//            answerData.setFarmerCode(FARMER.getCode());
-//        }
-//        try {
-//            oldValuesArray = new JSONArray(answerData.getData());
-//        } catch (Exception ignore) {
-//            oldValuesArray = new JSONArray();
-//        }
-//
-//        for (int i = 0; i < ROW_SIZE; i++)
-//            mCellList.add(new ArrayList<>());
-//
-//        for (int i = 0; i < ROW_SIZE; i++)
-//            mQuestionsList.add(familyMembersFormAndQuestions.getQuestions());
-//
-//        for (int i = 0; i < ROW_SIZE; i++) {
-//            JSONObject jsonObject = new JSONObject();
-//            try {
-//                if (i < oldValuesArray.length()) {
-//                    if (oldValuesArray.get(i) == null)
-//                        oldValuesArray.put(i, jsonObject);
-//                } else
-//                    oldValuesArray.put(i, jsonObject);
-//                //allFamilyMembersArrayData.put(i, jsonObject);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        mRowHeaderList = new ArrayList<>();
+        mColumnHeaderList = new ArrayList<>();
+        mCellList = new ArrayList<>();
+        mQuestionsList = new ArrayList<>();
+
+        answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getFormTranslationId());
+        if (answerData == null) {
+            answerData = new FormAnswerData();
+            answerData.setFormId(familyMembersFormAndQuestions.getForm().getFormTranslationId());
+            answerData.setFarmerCode(FARMER.getCode());
+        }
+        try {
+            oldValuesArray = new JSONArray(answerData.getData());
+        } catch (Exception ignore) {
+            oldValuesArray = new JSONArray();
+        }
+
+        for (int i = 0; i < ROW_SIZE; i++)
+            mCellList.add(new ArrayList<>());
+
+        for (int i = 0; i < ROW_SIZE; i++)
+            mQuestionsList.add(familyMembersFormAndQuestions.getQuestions());
+
+        for (int i = 0; i < ROW_SIZE; i++) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                if (i < oldValuesArray.length()) {
+                    if (oldValuesArray.get(i) == null)
+                        oldValuesArray.put(i, jsonObject);
+                } else
+                    oldValuesArray.put(i, jsonObject);
+                //allFamilyMembersArrayData.put(i, jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        populateTable();
 //        setupTableView(familyMembersFormAndQuestions);
     }
 
@@ -452,9 +464,9 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             AppLogger.e(TAG, "#################################################");
 
             for (int j = 0; j < COLUMN_SIZE; j++) {
-                View view = mTableViewAdapter.getCellViews(i, j);
+                View view = getViewObject(i,j);//.getCellViews(i, j);
                 if (view != null) {
-                    String name = mTableViewAdapter.getCellItem(j, i).getId();
+                    String name = Integer.valueOf(i).toString() + Integer.valueOf(j).toString();//mTableViewAdapter.getCellItem(j, i).getId();
                     HashSet<InputValidator> validators = validator.getValidators(name + i);
                     if (validators != null) {
                         ValidationError error;
@@ -472,8 +484,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 }
             }
         }
-
-
         AppLogger.e(TAG, "ERRORS SIZE IS " + errors.size());
         return errors.isEmpty();
     }
@@ -540,102 +550,120 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         if (!validate()) {
             return;
         }
-        /*
-         ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
-         */
-        StringBuilder familyMembersIncomeStringBuilder = new StringBuilder();
+//        /*
+//         ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
+//         */
+//        StringBuilder familyMembersIncomeStringBuilder = new StringBuilder();
+//
+//        int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
+//        FormAnswerData socioEconomicProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), socioEconomicFormId);
+//
+//        if (socioEconomicProfileFormAnswerData == null) {
+//            socioEconomicProfileFormAnswerData = new FormAnswerData();
+//            socioEconomicProfileFormAnswerData.setFarmerCode(FARMER.getCode());
+//            socioEconomicProfileFormAnswerData.setFormId(socioEconomicFormId);
+//            socioEconomicProfileFormAnswerData.setData(new JSONObject().toString());
+//        }
+//        Question familyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("family_income_");
+//        Question totalFamilyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("total_family_income_");
+//
+//        if (familyIncomeQuestion != null && totalFamilyIncomeQuestion != null) {
+//            for (int i = 0; i < ROW_SIZE; i++) {
+//                String value;
+//                try {
+//                    value = oldValuesArray.getJSONObject(i).getString(familyIncomeQuestion.getLabelC());
+//                } catch (JSONException ignore) {
+//                    value = "0";
+//                }
+//                familyMembersIncomeStringBuilder.append(value).append("+");
+//            }
+//            familyMembersIncomeStringBuilder.append("0");
+//
+//            JSONObject data = socioEconomicProfileFormAnswerData.getJsonData();
+//            if (data.has(totalFamilyIncomeQuestion.getLabelC()))
+//                data.remove(totalFamilyIncomeQuestion.getLabelC());
+//            try {
+//                data.put(totalFamilyIncomeQuestion.getLabelC(), MathFormulaParser.getInstance().evaluate(familyMembersIncomeStringBuilder.toString()));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            socioEconomicProfileFormAnswerData.setData(data.toString());
+//            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(socioEconomicProfileFormAnswerData);
+//
+//            //Now Save the family members answer data
+//            //answerData.setData(allFamilyMembersArrayData.toString());
+//            answerData.setData(oldValuesArray.toString());
+//            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
+//            mPresenter.setFarmerAsUnSynced(FARMER);
+//            getAppDataManager().setBooleanValue("reload", true);
+//            moveToNextForm(FARMER);
+//        }
 
-        int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
-        FormAnswerData socioEconomicProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), socioEconomicFormId);
-
-        if (socioEconomicProfileFormAnswerData == null) {
-            socioEconomicProfileFormAnswerData = new FormAnswerData();
-            socioEconomicProfileFormAnswerData.setFarmerCode(FARMER.getCode());
-            socioEconomicProfileFormAnswerData.setFormId(socioEconomicFormId);
-            socioEconomicProfileFormAnswerData.setData(new JSONObject().toString());
-        }
-        Question familyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("family_income_");
-        Question totalFamilyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("total_family_income_");
-
-        if (familyIncomeQuestion != null && totalFamilyIncomeQuestion != null) {
-            for (int i = 0; i < ROW_SIZE; i++) {
-                String value;
-                try {
-                    value = oldValuesArray.getJSONObject(i).getString(familyIncomeQuestion.getLabelC());
-                } catch (JSONException ignore) {
-                    value = "0";
-                }
-                familyMembersIncomeStringBuilder.append(value).append("+");
-            }
-            familyMembersIncomeStringBuilder.append("0");
-
-            JSONObject data = socioEconomicProfileFormAnswerData.getJsonData();
-            if (data.has(totalFamilyIncomeQuestion.getLabelC()))
-                data.remove(totalFamilyIncomeQuestion.getLabelC());
-            try {
-                data.put(totalFamilyIncomeQuestion.getLabelC(), MathFormulaParser.getInstance().evaluate(familyMembersIncomeStringBuilder.toString()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            socioEconomicProfileFormAnswerData.setData(data.toString());
-            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(socioEconomicProfileFormAnswerData);
-
-            //Now Save the family members answer data
-            //answerData.setData(allFamilyMembersArrayData.toString());
-            answerData.setData(oldValuesArray.toString());
-            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
-            mPresenter.setFarmerAsUnSynced(FARMER);
-            getAppDataManager().setBooleanValue("reload", true);
-            moveToNextForm(FARMER);
-        }
+        CustomToast.makeToast(FamilyMembersActivity.this,
+                ((EditText)(getViewObject(1,1))).getText().toString(),
+                CustomToast.LENGTH_LONG).show();
     }
 
-    private List<List<Cell>> getCellList() {
-        List<List<Cell>> list = new ArrayList<>();
-        for (int i = 0; i < ROW_SIZE; i++) {
-            List<Cell> cellList = new ArrayList<>();
-            for (int j = 0; j < COLUMN_SIZE; j++) {
+    private void addValidatorToViews(){
+        for(int i=0;i<ROW_SIZE;i++){
+            for(int j=0;j<COLUMN_SIZE;j++){
                 Question q = mQuestionsList.get(i).get(j);
-                //q.setMax_value__c(i + ");
-                String value = getValue(i, q.getLabelC());
-                if (value != null)
+                String value = getValue(i,q.getLabelC());
+                if(value != null){
                     q.setDefaultValueC(value);
-                Cell cell = new Cell(q.getLabelC(), q);
-                cellList.add(cell);
+                }
 
-                validator.addValidation(i, q);
+                validator.addValidation(i,q);
             }
-            list.add(cellList);
         }
-        return list;
     }
 
-    private List<RowHeader> getRowHeaderList() {
-        List<RowHeader> list = new ArrayList<>();
-        for (int i = 0; i < ROW_SIZE; i++) {
-            int rowNumber = i + 1;
-            RowHeader header = new RowHeader(String.valueOf(i), String.valueOf(rowNumber));
-            list.add(header);
-        }
-        return list;
-    }
+//    private List<List<Cell>> getCellList() {
+//        List<List<Cell>> list = new ArrayList<>();
+//        for (int i = 0; i < ROW_SIZE; i++) {
+//            List<Cell> cellList = new ArrayList<>();
+//            for (int j = 0; j < COLUMN_SIZE; j++) {
+//                Question q = mQuestionsList.get(i).get(j);
+//                //q.setMax_value__c(i + ");
+//                String value = getValue(i, q.getLabelC());
+//                if (value != null)
+//                    q.setDefaultValueC(value);
+//                Cell cell = new Cell(q.getLabelC(), q);
+//                cellList.add(cell);
+//
+//                validator.addValidation(i, q);
+//            }
+//            list.add(cellList);
+//        }
+//        return list;
+//    }
 
-    private List<ColumnHeader> getColumnHeaderList() {
-        List<ColumnHeader> list = new ArrayList<>();
-        for (int i = 0; i < COLUMN_SIZE; i++) {
-            String helperText;
-            if (familyMembersFormAndQuestions.getQuestions().get(i).getHelpTextC() == null)
-                helperText = "--";
-            else
-                helperText = familyMembersFormAndQuestions.getQuestions().get(i).getHelpTextC();
+//    private List<RowHeader> getRowHeaderList() {
+//        List<RowHeader> list = new ArrayList<>();
+//        for (int i = 0; i < ROW_SIZE; i++) {
+//            int rowNumber = i + 1;
+//            RowHeader header = new RowHeader(String.valueOf(i), String.valueOf(rowNumber));
+//            list.add(header);
+//        }
+//        return list;
+//    }
 
-            String title = familyMembersFormAndQuestions.getQuestions().get(i).getCaptionC();
-            ColumnHeader header = new ColumnHeader(String.valueOf(i), title, helperText);
-            list.add(header);
-        }
-        return list;
-    }
+//    private List<ColumnHeader> getColumnHeaderList() {
+//        List<ColumnHeader> list = new ArrayList<>();
+//        for (int i = 0; i < COLUMN_SIZE; i++) {
+//            String helperText;
+//            if (familyMembersFormAndQuestions.getQuestions().get(i).getHelpTextC() == null)
+//                helperText = "--";
+//            else
+//                helperText = familyMembersFormAndQuestions.getQuestions().get(i).getHelpTextC();
+//
+//            String title = familyMembersFormAndQuestions.getQuestions().get(i).getCaptionC();
+//            ColumnHeader header = new ColumnHeader(String.valueOf(i), title, helperText);
+//            list.add(header);
+//        }
+//        return list;
+//    }
 
     @Override
     public void onItemValueChanged(int index, String uid, String value) {
@@ -647,7 +675,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 oldValuesArray.getJSONObject(index).put(uid, value);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
             e.printStackTrace();
         }
     }
