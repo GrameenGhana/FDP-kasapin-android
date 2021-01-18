@@ -51,6 +51,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -194,7 +195,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             //Row Container
             LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
 
-            for(int x=0;x<jsonArray.length();x++){
+            for(int x=0;x<jsonArray.length() + 1;x++){
                 HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
 
                 //This is to provide an illusion that the layout is moving as a whole when scrolled.
@@ -220,33 +221,38 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 //The additional layout container for each row.
                 LinearLayout llContainer = new LinearLayout(FamilyMembersActivity.this);
 
-                //Serve the questions now, baby!
+                //Load Headers
                 for(int y=0;y<questions.size();y++){
                     //First row as header
                     if(x == 0){
                         //Textview as header view
                         llContainer.addView(getHeaderView(questions.get(y).getCaptionC(),TAG_TEXTVIEW));
                     }
-                    else if(x > 0){
-                        if(questions.get(y).getTypeC().equals(AppConstants.TYPE_TEXT)){
-                            llContainer.addView(getEditTextView(TYPE_TEXT,y,TAG_EDITTEXT,questions.get(y)));
+                }
+
+                for(int z=0;z<questions.size();z++){
+                    if(x > 0){
+                        if(questions.get(z).getTypeC().equals(AppConstants.TYPE_TEXT)){
+                            llContainer.addView(getEditTextView(TYPE_TEXT,z,TAG_EDITTEXT,questions.get(z)));
                         }
-                        else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER)){
-                            llContainer.addView(getEditTextView(TYPE_NUMBER,y,TAG_EDITTEXT,questions.get(y)));
+                        else if(questions.get(z).getTypeC().equals(AppConstants.TYPE_NUMBER)){
+                            llContainer.addView(getEditTextView(TYPE_NUMBER,z,TAG_EDITTEXT,questions.get(z)));
                         }
-                        else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_NUMBER_DECIMAL)){
-                            llContainer.addView(getEditTextView(TYPE_DECIMAL,y,TAG_EDITTEXT,questions.get(y)));
+                        else if(questions.get(z).getTypeC().equals(AppConstants.TYPE_NUMBER_DECIMAL)){
+                            llContainer.addView(getEditTextView(TYPE_DECIMAL,z,TAG_EDITTEXT,questions.get(z)));
                         }
-                        else if(questions.get(y).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
-                            llContainer.addView(getSpinnerView(questions.get(y).getOptionsC(),TAG_SPINNER));
+                        else if(questions.get(z).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
+                            llContainer.addView(getSpinnerView(questions.get(z).getOptionsC(),TAG_SPINNER));
                         }
                     }
                 }
+
+
                 rowHS.addView(llContainer);
                 horizontalRow.addView(rowHS);
-
-                addValidatorToViews();
             }
+
+            addValidatorToViews();
         }
         else{
             CustomToast.makeToast(FamilyMembersActivity.this,
@@ -356,9 +362,11 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
     private View getViewObject(int rowIndex, int colIndex){
 
+        Log.d("INDEX",Integer.valueOf(rowIndex).toString() +","+ Integer.valueOf(colIndex).toString());
+
         LinearLayout rowContainer = hScroll.findViewById(R.id.llDataTable);
         HorizontalScrollView hs = (HorizontalScrollView)rowContainer.getChildAt(rowIndex);
-        LinearLayout llx = (LinearLayout)hs.getChildAt(0);
+        LinearLayout llx = (LinearLayout)(hs.getChildAt(0));
         return llx.getChildAt(colIndex);
     }
 
@@ -612,6 +620,26 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 String value = getValue(i,q.getLabelC());
                 if(value != null){
                     q.setDefaultValueC(value);
+                }
+                Log.d("VALUE_VALIDATOR",value);
+//                Set view info
+                View vx = (View)getViewObject(i,j);
+
+                if(value != null){
+                    if(vx != null){
+                        if(vx instanceof EditText){
+                            EditText et = (EditText)vx;
+                            et.setText(value);
+                        }
+                        else if(vx instanceof Spinner){
+                            Spinner sp = (Spinner)vx;
+                            List<String> lChoices = Arrays.asList(q.getOptionsC().split(","));
+                            sp.setSelection(lChoices.indexOf(value));
+                        }
+                    }
+                    else{
+                        Log.d("VALIDATOR_NULL","VIEW NULL");
+                    }
                 }
 
                 validator.addValidation(i,q);
