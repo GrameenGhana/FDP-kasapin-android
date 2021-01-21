@@ -23,7 +23,9 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.room.util.StringUtil;
 
 import com.evrencoskun.tableview.TableView;
 
@@ -55,6 +57,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 
@@ -173,91 +176,68 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 .formAndQuestionsDao()
                 .getFormAndQuestionsByName(AppConstants.FAMILY_MEMBERS).blockingGet();
 
-        answerData = getAppDataManager()
-                .getDatabaseManager()
-                .formAnswerDao()
-                .getFormAnswerData(FARMER.getCode(),
-                        familyMembersForm.getForm().getFormTranslationId());
-
         List<Question> questions = familyMembersForm.getQuestions();
 
-        JSONArray jsonArray;
+        //Row Container
+        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
 
-        try{
-            jsonArray = new JSONArray(answerData.getData());
-        }
-        catch (JSONException jEx){
-            jEx.printStackTrace();
-            jsonArray = null;
-        }
+        for(int x=0;x<ROW_SIZE + 1;x++){
+            HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
 
-        if(jsonArray != null){
-            //Row Container
-            LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
-
-            for(int x=0;x<jsonArray.length() + 1;x++){
-                HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
-
-                //This is to provide an illusion that the layout is moving as a whole when scrolled.
-                //Scroll one row, scroll all.
-                if(Build.VERSION.SDK_INT >= 23){
-                    rowHS.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-                        @Override
-                        public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                            for(int z=0;z<horizontalRow.getChildCount();z++){
-                                HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
-                                //Scroll everything except the view being scrolled.
-                                if(!rowHS.equals(ccHorizontalView)){
-                                    ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
-                                }
+            //This is to provide an illusion that the layout is moving as a whole when scrolled.
+            //Scroll one row, scroll all.
+            if(Build.VERSION.SDK_INT >= 23){
+                rowHS.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                    @Override
+                    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                        for(int z=0;z<horizontalRow.getChildCount();z++){
+                            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+                            //Scroll everything except the view being scrolled.
+                            if(!rowHS.equals(ccHorizontalView)){
+                                ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
                             }
                         }
-                    });
-                }
-
-                rowHS.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT));
-
-                //The additional layout container for each row.
-                LinearLayout llContainer = new LinearLayout(FamilyMembersActivity.this);
-
-                //Load Headers
-                for(int y=0;y<questions.size();y++){
-                    //First row as header
-                    if(x == 0){
-                        //Textview as header view
-                        llContainer.addView(getHeaderView(questions.get(y).getCaptionC(),TAG_TEXTVIEW));
                     }
-                }
-
-                for(int z=0;z<questions.size();z++){
-                    if(x > 0){
-                        if(questions.get(z).getTypeC().equals(AppConstants.TYPE_TEXT)){
-                            llContainer.addView(getEditTextView(TYPE_TEXT,x,TAG_EDITTEXT,questions.get(z)));
-                        }
-                        else if(questions.get(z).getTypeC().equals(AppConstants.TYPE_NUMBER)){
-                            llContainer.addView(getEditTextView(TYPE_NUMBER,x,TAG_EDITTEXT,questions.get(z)));
-                        }
-                        else if(questions.get(z).getTypeC().equals(AppConstants.TYPE_NUMBER_DECIMAL)){
-                            llContainer.addView(getEditTextView(TYPE_DECIMAL,x,TAG_EDITTEXT,questions.get(z)));
-                        }
-                        else if(questions.get(z).getTypeC().equals(AppConstants.TYPE_SELECTABLE)){
-                            llContainer.addView(getSpinnerView(questions.get(z).getOptionsC(),TAG_SPINNER,questions.get(z),x));
-                        }
-                    }
-                }
-
-                rowHS.addView(llContainer);
-                horizontalRow.addView(rowHS);
+                });
             }
 
-            addValidatorToViews();
-        }
-        else{
-            CustomToast.makeToast(FamilyMembersActivity.this,
-                    "No family data", CustomToast.LENGTH_LONG).show();
+            rowHS.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+
+            //The additional layout container for each row.
+            LinearLayout llContainer = new LinearLayout(FamilyMembersActivity.this);
+
+            //Load Headers
+            for(int y=0;y<questions.size();y++){
+                //First row as header
+                if(x == 0){
+                    //Textview as header view
+                    llContainer.addView(getHeaderView(questions.get(y).getCaptionC(),TAG_TEXTVIEW));
+                }
+            }
+
+            for(int z=0;z<questions.size();z++){
+                if(x > 0){
+                    if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_TEXT)){
+                        llContainer.addView(getEditTextView(TYPE_TEXT,x,TAG_EDITTEXT,questions.get(z)));
+                    }
+                    else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER)){
+                        llContainer.addView(getEditTextView(TYPE_NUMBER,x,TAG_EDITTEXT,questions.get(z)));
+                    }
+                    else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)){
+                        llContainer.addView(getEditTextView(TYPE_DECIMAL,x,TAG_EDITTEXT,questions.get(z)));
+                    }
+                    else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_SELECTABLE)){
+                        llContainer.addView(getSpinnerView(questions.get(z).getOptionsC(),TAG_SPINNER,questions.get(z),x));
+                    }
+                }
+            }
+
+            rowHS.addView(llContainer);
+            horizontalRow.addView(rowHS);
         }
 
+        addValidatorToViews();
     }
 
     /** View Objects **/
@@ -324,12 +304,66 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                         Double doubleValue = Double.parseDouble(etContainer.getText()
                                 .toString().replace(",", ""));
                         etContainer.setText(formatter.format(doubleValue));
+                        onItemValueChanged(rowPosition-1,q.getLabelC(),doubleValue.toString());
                     }
                 });
                 break;
             default:
         }
         return etContainer;
+    }
+
+    /**
+     * Splits a comma separated list of integers to integer list.
+     * <p>
+     * If an input is malformed, it is omitted from the result.
+     *
+     * @param input Comma separated list of integers.
+     * @return A List containing the integers or null if the input is null.
+     */
+    @Nullable
+    public static List<Integer> splitToIntList(@Nullable String input) {
+        if (input == null) {
+            return null;
+        }
+        List<Integer> result = new ArrayList<>();
+        StringTokenizer tokenizer = new StringTokenizer(input, ",");
+        while (tokenizer.hasMoreElements()) {
+            final String item = tokenizer.nextToken();
+            try {
+                result.add(Integer.parseInt(item));
+            } catch (NumberFormatException ex) {
+                Log.e("ROOM", "Malformed integer list", ex);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Joins the given list of integers into a comma separated list.
+     *
+     * @param input The list of integers.
+     * @return Comma separated string composed of integers in the list. If the list is null, return
+     * value is null.
+     */
+    @Nullable
+    public static String joinIntoString(@Nullable List<Integer> input) {
+        if (input == null) {
+            return null;
+        }
+
+        final int size = input.size();
+        if (size == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            sb.append(Integer.toString(input.get(i)));
+            if (i < size - 1) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
     }
 
     private Spinner getSpinnerView(String listOfChoices, String tag, Question q, int rowPosition){

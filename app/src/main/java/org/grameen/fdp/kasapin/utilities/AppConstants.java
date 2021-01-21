@@ -57,9 +57,9 @@ public class AppConstants {
     public static final long NULL_INDEX_L = -1L;
     public static final int NULL_INDEX = -1;
     public static final int API_STATUS_CODE_LOCAL_ERROR = 0;
-    public static final String TYPE_TEXT = "Text";
-    public static final String TYPE_NUMBER = "Number";
-    public static final String TYPE_NUMBER_DECIMAL = "Decimal";
+    public static final String TYPE_TEXT = "text";
+    public static final String TYPE_NUMBER = "number";
+    public static final String TYPE_NUMBER_DECIMAL = "decimal";
     public static final String TYPE_COMPLEX_CALCULATION = "complex calculation";
     public static final String FORMULA_TYPE_COMPLEX_FORMULA = "complex formula";
     public static final String ANSWERS = "fpd_Answer__c";
@@ -75,8 +75,8 @@ public class AppConstants {
     public static final String NULL_STRING = "null";
     public static final String TYPE_LOCATION = "geolocation";
     public static final String TYPE_PHOTO = "photo";
-    public static final String TYPE_SELECTABLE = "Single Select";
-    public static final String TYPE_MULTI_SELECTABLE = "Multi Select";
+    public static final String TYPE_SELECTABLE = "single select";
+    public static final String TYPE_MULTI_SELECTABLE = "multi select";
     public static final String TYPE_CHECKBOX = "checkbox";
     public static final String TYPE_TIMEPICKER = "timePicker";
     public static final String TYPE_DATEPICKER = "date";
