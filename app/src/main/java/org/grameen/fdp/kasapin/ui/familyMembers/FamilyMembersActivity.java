@@ -460,7 +460,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             }
         }
         populateTable();
-//        setupTableView(familyMembersFormAndQuestions);
     }
 
     @Override
@@ -477,7 +476,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 View view = getViewObject(i,j);//.getCellViews(i, j);
                 if (view != null) {
                     String name = mQuestionsList.get(i).get(j).getLabelC();
-                    Log.d("CAPTION",name);//Integer.valueOf(i).toString() + Integer.valueOf(j).toString();//mTableViewAdapter.getCellItem(j, i).getId();
                     HashSet<InputValidator> validators = validator.getValidators(name + i);
                     if (validators != null) {
                         ValidationError error;

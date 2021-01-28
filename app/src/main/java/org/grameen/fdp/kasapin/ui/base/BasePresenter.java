@@ -437,10 +437,10 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                 AppLogger.e(TAG, "data without images => " + payloadData.toString());
                                                 AppLogger.e(TAG, "***********************************************************");
 
-                                                getView().hideLoading();
+                                                //getView().hideLoading();
 
-//                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true)
-//                                                        .uploadFarmersData(payloadData, imagesPayloadDataList);
+                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true)
+                                                        .uploadFarmersData(payloadData, imagesPayloadDataList);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 showGenericError(e);
