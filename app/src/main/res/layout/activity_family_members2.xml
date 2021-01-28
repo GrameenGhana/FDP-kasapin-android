@@ -114,6 +114,7 @@
         <ScrollView
             android:id="@+id/hscrollDataTable"
             android:layout_width="match_parent"
+            android:background="@drawable/table_cell_background"
             android:layout_height="wrap_content">
 
             <LinearLayout
