@@ -390,7 +390,7 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                                                 }
                                                                             } else {
                                                                                 //Question is not a photo type question
-                                                                                if (!answer.isEmpty() && !answer.equals(question.getDefaultValueC()))
+                                                                                if (!answer.isEmpty() && (!answer.equals("-") && !answer.equals("--")))
                                                                                     arrayOfValues.put(dataToInsert);
                                                                             }
                                                                     }
@@ -437,9 +437,10 @@ public class BasePresenter<V extends BaseContract.View> implements BaseContract.
                                                 AppLogger.e(TAG, "data without images => " + payloadData.toString());
                                                 AppLogger.e(TAG, "***********************************************************");
 
+                                                getView().hideLoading();
 
-                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true)
-                                                        .uploadFarmersData(payloadData, imagesPayloadDataList);
+//                                                UploadDataManager.newInstance(getView(), getAppDataManager(), listener, true)
+//                                                        .uploadFarmersData(payloadData, imagesPayloadDataList);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                                 showGenericError(e);

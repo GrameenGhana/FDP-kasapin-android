@@ -37,7 +37,7 @@ public class ComputationUtils {
         String defVal = q.getDefaultValueC();
         try {
             if (ANSWERS_JSON.has(q.getLabelC()) && !ANSWERS_JSON.getString(q.getLabelC()).trim().isEmpty() && !ANSWERS_JSON.getString(q.getLabelC()).equalsIgnoreCase("null")) {
-                defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
+                defVal = ANSWERS_JSON.get(q.getLabelC()).toString().trim();
             }
         } catch (Exception ignored) {
         }

@@ -236,12 +236,14 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
             Recommendation GAPS_RECOMMENDATION_FOR_START_YEAR = null;
             if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE_YEARS != null) {
-                AppLogger.e(TAG, jsonObject.toString());
-                if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
                     try {
-                        if (ComputationUtils.getDataValue(PLOT_RENOVATED_CORRECTLY_QUESTION, jsonObject).equalsIgnoreCase("yes")) {
+                        String answerValue = jsonObject.getString(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC()).trim();
+
+                        if (answerValue.equalsIgnoreCase("yes")) {
                             year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE_YEARS.getLabelC()));
-                            String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
+
+                             String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
+
                             if (recommendationName.equalsIgnoreCase("replanting"))
                                 GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                         .getByRecommendationName("Replant").blockingGet();
@@ -257,12 +259,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                     } catch (Exception e) {
                         e.printStackTrace();
                         year = 1;
-                    }
                 }
             }
 
             try {
                 String plotInterventionStartYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_intervention_start_year_").blockingGet("null");
+
                 if (jsonObject.has(plotInterventionStartYearLabel))
                     jsonObject.remove(plotInterventionStartYearLabel);
                 jsonObject.put(plotInterventionStartYearLabel, year);

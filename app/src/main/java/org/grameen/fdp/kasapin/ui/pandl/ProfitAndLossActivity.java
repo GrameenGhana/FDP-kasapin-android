@@ -927,7 +927,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         Question plotIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_income_");
 
-        TABLE_DATA_LIST.add(new TableData(plotIncomeQuestion.getLabelC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(plotIncomeQuestion.getCaptionC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
 
         //This is also known as Supplies cost. The selected year is always with   the (GAPS) recommendation obtained in conjunction with the plot recommendation
         maintenanceCostList = new ArrayList<>();
