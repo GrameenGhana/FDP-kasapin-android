@@ -114,8 +114,10 @@
         <ScrollView
             android:id="@+id/hscrollDataTable"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/table_cell_background"
-            android:layout_height="wrap_content">
+            android:descendantFocusability="beforeDescendants"
+            android:focusable="true">
 
             <LinearLayout
                 android:id="@+id/llDataTable"

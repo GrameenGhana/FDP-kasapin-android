@@ -173,7 +173,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         for(int x=0;x<ROW_SIZE + 1;x++){
             HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
-
+            rowHS.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
             //This is to provide an illusion that the layout is moving as a whole when scrolled.
             //Scroll one row, scroll all.
             if(Build.VERSION.SDK_INT >= 23){
@@ -196,6 +196,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
             //The additional layout container for each row.
             LinearLayout llContainer = new LinearLayout(FamilyMembersActivity.this);
+//            llContainer.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
 
             //Load Headers
             for(int y=0;y<questions.size();y++){
@@ -379,18 +380,30 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     private Spinner getSpinnerView(String listOfChoices, String tag, Question q, int rowPosition){
         Spinner sp = new Spinner(FamilyMembersActivity.this);
         String[] choices = listOfChoices.split(",");
+        ViewGroup.LayoutParams sparams = new ViewGroup.LayoutParams(700,100);
+
         ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
                 android.R.layout.simple_dropdown_item_1line,choices);
         sp.setAdapter(arrDapt);
         sp.setTag(tag);
-        sp.setMinimumWidth(700);
-        sp.setDropDownWidth(400);
+        sp.setLayoutParams(sparams);
+        sp.setFocusable(true);
+//        sp.setMinimumWidth(700);
+//        sp.setDropDownWidth(400);
         sp.setPadding(10,5,10,5);
         //sp.setBackgroundResource(R.drawable.table_view_borderless_background);
+        sp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.requestFocus();
+                return false;
+            }
+        });
 
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    view.requestFocus();
                     onItemValueChanged(rowPosition-1,q.getLabelC(),choices[position]);
             }
 
