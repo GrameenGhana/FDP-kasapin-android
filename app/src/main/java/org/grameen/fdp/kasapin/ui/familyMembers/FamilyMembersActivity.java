@@ -2,6 +2,7 @@ package org.grameen.fdp.kasapin.ui.familyMembers;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -78,6 +79,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     static final int TYPE_DECIMAL = 9998;
     static final int TYPE_NUMBER = 9999;
     static final int TYPE_TEXT = 8888;
+
+
 
     //Field Tags
     static final String TAG_EDITTEXT = "edittext";
@@ -174,8 +177,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         for(int x=0;x<ROW_SIZE + 1;x++){
             HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
             rowHS.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
-            rowHS.setFocusable(true);
-            rowHS.setFocusableInTouchMode(true);
+//            rowHS.setFocusable(true);
+//            rowHS.setFocusableInTouchMode(true);
             //This is to provide an illusion that the layout is moving as a whole when scrolled.
             //Scroll one row, scroll all.
             if(Build.VERSION.SDK_INT >= 23){
@@ -303,6 +306,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
             @Override
             public void afterTextChanged(Editable s) {
+                etContainer.setTextColor(Color.BLACK);
                 onItemValueChanged(rowPosition-1, q.getLabelC(), s.toString());
             }
         });
@@ -507,6 +511,9 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                             if (error != null) {
                                 errors.add(error);
                                 setError(view, error.getMessage(getResources()));
+                                if(view instanceof EditText){
+                                    ((EditText)view).setTextColor(Color.RED);
+                                }
                             }else {
                                 setError(view, null);
                             }
