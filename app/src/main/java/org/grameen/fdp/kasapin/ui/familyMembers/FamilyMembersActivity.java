@@ -174,6 +174,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         for(int x=0;x<ROW_SIZE + 1;x++){
             HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
             rowHS.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+            rowHS.setFocusable(true);
+            rowHS.setFocusableInTouchMode(true);
             //This is to provide an illusion that the layout is moving as a whole when scrolled.
             //Scroll one row, scroll all.
             if(Build.VERSION.SDK_INT >= 23){
@@ -187,6 +189,14 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                                 ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
                             }
                         }
+                    }
+                });
+
+                rowHS.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        v.requestFocusFromTouch();
+                        return false;
                     }
                 });
             }

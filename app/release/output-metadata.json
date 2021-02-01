@@ -10,9 +10,9 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 3,
-      "versionName": "1.1.3",
-      "outputFile": "release/fdp-kasapin_v1.1.3.apk"
+      "versionCode": 4,
+      "versionName": "1.1.4",
+      "outputFile": "release/fdp-kasapin_v1.1.4.apk"
     }
   ]
 }
