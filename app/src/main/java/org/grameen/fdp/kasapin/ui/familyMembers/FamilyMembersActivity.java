@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.util.StringUtil;
 
 import com.evrencoskun.tableview.TableView;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
@@ -285,19 +286,18 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return linearLayout;
     }
 
-    private EditText getEditTextView(int inpType, int rowPosition, String tag, Question q){
-        EditText etContainer = new EditText(FamilyMembersActivity.this);
-        etContainer.setHint("Enter answer here...");
-        etContainer.setMaxLines(1);
-        etContainer.setSingleLine(true);
-        etContainer.setWidth(600);
-        etContainer.setTag(tag);
-        etContainer.setTextSize(15f);
-        etContainer.setPadding(10,20,10,20);
+    private MaterialEditText getEditTextView(int inpType, int rowPosition, String tag, Question q){
+        MaterialEditText materialEditText = new MaterialEditText(FamilyMembersActivity.this);
+        materialEditText.setHint(q.getHelpTextC());
+        materialEditText.setMaxLines(1);
+        materialEditText.setSingleLine(true);
+        materialEditText.setWidth(600);
+        materialEditText.setTag(tag);
+        materialEditText.setTextSize(15f);
+        materialEditText.setTextSize(15f);
+        materialEditText.setPadding(10,20,10,80);
 
-        etContainer.setBackgroundResource(R.drawable.table_cell_background);
-
-        etContainer.addTextChangedListener(new TextWatcher() {
+        materialEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -306,36 +306,74 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
             @Override
             public void afterTextChanged(Editable s) {
-                etContainer.setTextColor(Color.BLACK);
+                materialEditText.setTextColor(Color.BLACK);
                 onItemValueChanged(rowPosition-1, q.getLabelC(), s.toString());
             }
         });
-
         switch (inpType){
             case TYPE_TEXT:
-                etContainer.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                materialEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 break;
             case TYPE_NUMBER:
-                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER);
+                materialEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
                 break;
             case TYPE_DECIMAL:
-                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                etContainer.setOnFocusChangeListener((v, hasFocus) -> {
-                    if (!hasFocus && etContainer.getText() != null
-                            && !etContainer.getText().toString().isEmpty()) {
+                materialEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                materialEditText.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (!hasFocus && materialEditText.getText() != null
+                            && !materialEditText.getText().toString().isEmpty()) {
                         NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
                         DecimalFormat formatter = (DecimalFormat) nf;
                         formatter.applyPattern("#,###,###.##");
-                        Double doubleValue = Double.parseDouble(etContainer.getText()
+                        Double doubleValue = Double.parseDouble(materialEditText.getText()
                                 .toString().replace(",", ""));
-                        etContainer.setText(formatter.format(doubleValue));
+                        materialEditText.setText(formatter.format(doubleValue));
                         onItemValueChanged(rowPosition-1,q.getLabelC(),doubleValue.toString());
                     }
                 });
                 break;
             default:
         }
-        return etContainer;
+
+        return materialEditText;
+//        EditText etContainer = new EditText(FamilyMembersActivity.this);
+//        etContainer.setHint("Enter answer here...");
+//        etContainer.setMaxLines(1);
+//        etContainer.setSingleLine(true);
+//        etContainer.setWidth(600);
+//        etContainer.setTag(tag);
+//        etContainer.setTextSize(15f);
+//        etContainer.setPadding(10,20,10,20);
+//
+//        etContainer.setBackgroundResource(R.drawable.table_cell_background);
+//
+//        etContainer.addTextChangedListener();
+//
+//        switch (inpType){
+//            case TYPE_TEXT:
+//                etContainer.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+//                break;
+//            case TYPE_NUMBER:
+//                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER);
+//                break;
+//            case TYPE_DECIMAL:
+//                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+//                etContainer.setOnFocusChangeListener((v, hasFocus) -> {
+//                    if (!hasFocus && etContainer.getText() != null
+//                            && !etContainer.getText().toString().isEmpty()) {
+//                        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+//                        DecimalFormat formatter = (DecimalFormat) nf;
+//                        formatter.applyPattern("#,###,###.##");
+//                        Double doubleValue = Double.parseDouble(etContainer.getText()
+//                                .toString().replace(",", ""));
+//                        etContainer.setText(formatter.format(doubleValue));
+//                        onItemValueChanged(rowPosition-1,q.getLabelC(),doubleValue.toString());
+//                    }
+//                });
+//                break;
+//            default:
+//        }
+//        return etContainer;
     }
 
     /**
@@ -512,7 +550,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                                 errors.add(error);
                                 setError(view, error.getMessage(getResources()));
                                 if(view instanceof EditText){
-                                    ((EditText)view).setTextColor(Color.RED);
+                                    ((MaterialEditText)view).setTextColor(Color.RED);
                                 }
                             }else {
                                 setError(view, null);
@@ -530,7 +568,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     void setError(View view, String message){
         try {
             if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
-                EditText edittext = (EditText)view;
+                MaterialEditText edittext = (MaterialEditText) view;
                 edittext.setError(message);
             } else if (view.getTag().toString().equals("spinner")) {
                 Spinner spinner = (Spinner)view;

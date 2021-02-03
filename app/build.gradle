@@ -185,6 +185,9 @@ android {
         implementation 'androidx.preference:preference:1.1.1'
         //Picasso
         implementation "com.squareup.picasso:picasso:2.71828"
+
+        //MaterialEditText
+        implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     }
 
     applicationVariants.all { variant ->
