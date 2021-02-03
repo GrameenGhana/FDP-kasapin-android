@@ -12,8 +12,12 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.AppDatabase;
+import org.grameen.fdp.kasapin.syncManager.LogRecorder;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
+
 import butterknife.Unbinder;
+import io.reactivex.disposables.Disposable;
 
 public abstract class BaseFragment extends Fragment implements BaseContract.View {
     public String TAG;
@@ -126,8 +130,20 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
         return mActivity;
     }
 
-    public AppDataManager getAppDataManager() {
+    protected AppDataManager getAppDataManager() {
         return mActivity.mAppDataManager;
+    }
+
+    public LogRecorder getLogRecorder() {
+        return mActivity.logRecorder;
+    }
+
+    public void addDisposable(Disposable d) {
+        mActivity.getAppDataManager().getCompositeDisposable().add(d);
+    }
+
+    public AppDatabase getDatabaseManager() {
+        return getAppDataManager().getDatabaseManager();
     }
 
     public void setUnBinder(Unbinder unBinder) {
@@ -158,6 +174,7 @@ public abstract class BaseFragment extends Fragment implements BaseContract.View
 
     public interface Callback {
         void onFragmentAttached();
+
         void onFragmentDetached(String tag);
     }
 }

@@ -4,7 +4,6 @@ package org.grameen.fdp.kasapin.ui.gpsPicker;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import javax.inject.Inject;
 
@@ -25,7 +24,7 @@ public class MapPresenter extends BasePresenter<MapContract.View> implements Map
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((plot, throwable) -> getView().setPlotData(plot)
-        ));
+                ));
     }
 
     @Override
@@ -35,6 +34,6 @@ public class MapPresenter extends BasePresenter<MapContract.View> implements Map
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(value -> getView().onPlotUpdateComplete(value > 0)
-        ));
+                ));
     }
 }

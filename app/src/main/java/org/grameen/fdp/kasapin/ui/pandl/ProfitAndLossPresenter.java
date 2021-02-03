@@ -6,7 +6,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,17 +31,19 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
     public void getFarmerData(String farmerCode) {
         getView().showLoading("Getting farmer data", "Please wait...", true, 0, false);
         getAppDataManager().getDatabaseManager().realFarmersDao().getOne(farmerCode).toMaybe()
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableMaybeObserver<Farmer>() {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableMaybeObserver<Farmer>() {
             @Override
             public void onSuccess(Farmer farmer) {
-                 getView().setUpViews(farmer);
+                getView().setUpViews(farmer);
             }
+
             @Override
-            public void onError(Throwable e){
+            public void onError(Throwable e) {
                 getView().showMessage("Could not fetch farmer data. Please report this issue.");
             }
+
             @Override
-            public void onComplete(){
+            public void onComplete() {
 
                 getView().hideLoading();
             }
@@ -71,7 +72,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                         }
                         getView().hideLoading();
                         getView().setAnswerData(ALL_DATA_JSON);
-                    }else
+                    } else
                         getView().hideLoading();
                 }, throwable -> {
                     throwable.printStackTrace();
@@ -88,7 +89,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        setFarmerAsUnsynced(mAppDataManager.getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet());
+                        setFarmerAsUnSynced(mAppDataManager.getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet());
                         getAppDataManager().setBooleanValue("reload", true);
                         getView().loadTableData();
                     }
@@ -112,7 +113,7 @@ public class ProfitAndLossPresenter extends BasePresenter<ProfitAndLossContract.
                 -> getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(formAnswerData))
                 .subscribeOn(Schedulers.io())
                 .subscribe(longValue -> {
-                    setFarmerAsUnsynced(farmer);
+                    setFarmerAsUnSynced(farmer);
                     getAppDataManager().setBooleanValue("reload", true);
                     getView().showMessage("Labour values updated!");
                 }, throwable -> {

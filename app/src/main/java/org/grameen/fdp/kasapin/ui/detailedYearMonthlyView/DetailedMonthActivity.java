@@ -3,6 +3,8 @@ package org.grameen.fdp.kasapin.ui.detailedYearMonthlyView;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.TableData;
 import org.grameen.fdp.kasapin.utilities.CommonUtils;
 import org.grameen.fdp.kasapin.utilities.IconMerger;
+import org.grameen.fdp.kasapin.utilities.PDFCreator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,6 +39,7 @@ import de.codecrafters.tableview.TableView;
 
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_ICON_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_TITLE_TEXT_VIEW;
 
 public class DetailedMonthActivity extends BaseActivity implements DetailedMonthContract.View {
@@ -99,6 +103,27 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
             mPresenter.getPlotsData(farmer.getCode());
         }
         onBackClicked();
+
+        print.setOnClickListener(v -> {
+            issuePrinting();
+        });
+    }
+
+    private void issuePrinting() {
+        showLoading("Initializing print", "Please wait...", false, 0, false);
+
+        new Handler().postDelayed(() -> {
+            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "monthly_activities_calendar", farmer.getFarmerName(), 5);
+            hideLoading();
+            showMessage("Done!");
+
+            try {
+                pdfCreator.print();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+                showMessage("An error occurred printing.\nPlease try again.");
+            }
+        }, 200);
     }
 
     @Override
@@ -140,13 +165,19 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
             } else
                 getActivitiesSuppliesAndCosts(recommendationId, plot.getName(), Math.min(year + Math.abs(plotYear), 7));
         }
+
+        for(int i = 0; i < 15; i++)
+        TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+
         setTableData();
     }
 
-    void setTableData(){
-        if(myTableViewAdapter == null)
-        myTableViewAdapter = new DetailedYearTableViewAdapter(this, TABLE_DATA_LIST, tableView, true);
+    void setTableData() {
+        if (myTableViewAdapter == null)
+            myTableViewAdapter = new DetailedYearTableViewAdapter(this, TABLE_DATA_LIST, tableView, true);
         tableView.setDataAdapter(myTableViewAdapter);
+
+
         hideLoading();
     }
 
@@ -175,8 +206,7 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
 
                         //Combine icon names
                         if (ra.getImageId() != null)
-                            //if (!iconsStringBuilder.toString().toLowerCase().contains(ra.getImageId().toLowerCase()))
-                                iconsStringBuilder.append(ra.getImageId()).append(",");
+                            iconsStringBuilder.append(ra.getImageId()).append(",");
 
                         suppliesCost.append(ra.getSuppliesCost()).append("+");
                         try {
@@ -223,12 +253,12 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         for (int i = 0; i < 12; i++) {
 
             String month = monthsArray.getString(i);
-            if(month != null) {
+            if (month != null) {
                 HistoricalTableViewData data = getMonthlyData(recommendationId, month.substring(0, 3), year);
-                    activities.add(data.getLabel());
-                    suppliesCost.add(data.getValueAtColumn1());
-                    if (DID_LABOUR)
-                        labourCost.add(data.getValueAtColumn2());
+                activities.add(data.getLabel());
+                suppliesCost.add(data.getValueAtColumn1());
+                if (DID_LABOUR)
+                    labourCost.add(data.getValueAtColumn2());
 
                 bitmaps.add(iconMerger.combineIcons(data.getIconData()));
             }
@@ -239,10 +269,24 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         TABLE_DATA_LIST.add(new TableData("Icons", null, bitmaps, TAG_ICON_VIEW));
 
         TABLE_DATA_LIST.add(new TableData(getString(R.string.activities), activities, TAG_OTHER_TEXT_VIEW));
+
+
+        //empty space
+        TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+
+
+        TABLE_DATA_LIST.add(new TableData("Input Cost", null, TAG_OTHER_TEXT_VIEW));
         TABLE_DATA_LIST.add(new TableData(getString(R.string.supplies), suppliesCost, TAG_OTHER_TEXT_VIEW));
 
-        if (DID_LABOUR)
+        if (DID_LABOUR) {
+            TABLE_DATA_LIST.add(new TableData("Labor Cost", null, TAG_OTHER_TEXT_VIEW));
+
             TABLE_DATA_LIST.add(new TableData(getString(R.string.labour), labourCost, TAG_OTHER_TEXT_VIEW));
+        }
+        //Extra spacing at bottom of table
+         TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+
 
         monthsArray.recycle();
     }

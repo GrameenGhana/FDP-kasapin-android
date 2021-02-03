@@ -18,6 +18,7 @@ import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.MyFormController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
 import org.grameen.fdp.kasapin.ui.viewImage.ImageViewActivity;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
 import java.util.Date;
@@ -67,13 +68,15 @@ public class PhotoButtonController extends MyLabeledFieldController {
     }
 
 
-    public PhotoButtonController(Context context, String name, String content_desc, String labelText, OnClickListener locationListener, Boolean enabled) {
+    public PhotoButtonController(Context context, String name, String content_desc, String labelText, OnClickListener locationListener, Boolean enabled
+    ) {
         this(context, name, content_desc, labelText, false, locationListener);
         this.context = context;
         this.isEnabled = enabled;
 
         IMAGE_VIEW = new ImageView(context);
         IMAGE_VIEW.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
     }
 
     @Override
@@ -100,6 +103,10 @@ public class PhotoButtonController extends MyLabeledFieldController {
                     IMAGE_VIEW.setLayoutParams(params);
                     linearLayout.addView(IMAGE_VIEW);
                     linearLayout.requestLayout();
+
+                    getModel().getEditedElements().add(getName());
+
+                    AppLogger.e("Just added a photo on ==> " + getName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -150,7 +157,7 @@ public class PhotoButtonController extends MyLabeledFieldController {
         if (value != null && !value.toString().contains("http://")) {
             try {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-               params.height = 350;
+                params.height = 350;
                 IMAGE_VIEW.setLayoutParams(params);
                 imageView.setImageBitmap(ImageUtil.base64ToBitmap(value.toString()));
 

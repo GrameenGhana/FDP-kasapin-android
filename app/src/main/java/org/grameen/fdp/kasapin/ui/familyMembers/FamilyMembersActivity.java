@@ -2,18 +2,37 @@ package org.grameen.fdp.kasapin.ui.familyMembers;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.room.util.StringUtil;
 
 import com.evrencoskun.tableview.TableView;
-import com.google.gson.Gson;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
@@ -29,45 +48,72 @@ import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.ValidationError;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
+import org.grameen.fdp.kasapin.utilities.CustomToast;
 import org.grameen.fdp.kasapin.utilities.FdpCallbacks;
 import org.grameen.fdp.kasapin.utilities.Validator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Single;
 
 public class FamilyMembersActivity extends BaseActivity implements FamilyMembersContract.View, FdpCallbacks.UpdateJsonArray {
     static JSONArray oldValuesArray;
     static int COLUMN_SIZE;
     static int ROW_SIZE = 1;
+
+    //Input Type Constants
+    static final int TYPE_DECIMAL = 9998;
+    static final int TYPE_NUMBER = 9999;
+    static final int TYPE_TEXT = 8888;
+
+
+
+    //Field Tags
+    static final String TAG_EDITTEXT = "edittext";
+    static final String TAG_CHECKBOX = "checkbox";
+    static final String TAG_SPINNER = "spinner";
+    static final String TAG_TEXTVIEW = "textview";
+    static final String TAG_MULTISELECT = "multi_select";
+
     @Inject
     FamilyMembersPresenter mPresenter;
     Farmer FARMER;
     FormAndQuestions familyMembersFormAndQuestions;
     List<List<Question>> mQuestionsList;
-    @BindView(R.id.table_view)
-    TableView tableView;
+//    @BindView(R.id.table_view)
+//    TableView tableView;
     @BindView(R.id.save)
     Button save;
-    @BindView(R.id.name)
+    @BindView(R.id.farmer_name_et)
     TextView nameTextView;
-    @BindView(R.id.code)
+    @BindView(R.id.farmer_code_et)
     TextView codeTextView;
-    int SCROLL_POSITION;
+    @BindView(R.id.hscrollDataTable)
+    ScrollView hScroll;
+
+//    int SCROLL_POSITION;
     int lastVisibleItemPosition;
     int noFamilyMembers;
+
     FormAnswerData answerData;
     FineTableViewAdapter mTableViewAdapter;
     Validator validator = new Validator();
+
     private List<RowHeader> mRowHeaderList;
     private List<ColumnHeader> mColumnHeaderList;
     private List<List<Cell>> mCellList;
@@ -85,15 +131,19 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_family_members);
+        //setContentView(R.layout.activity_family_members);
+        setContentView(R.layout.activity_family_members2);
         getActivityComponent().inject(this);
         setUnBinder(ButterKnife.bind(this));
+//        ButterKnife.bind(this);
 
         mPresenter.takeView(this);
 
+        String farmerCode = getIntent().getStringExtra("farmerCode");
+
         FARMER = getAppDataManager()
                 .getDatabaseManager().realFarmersDao()
-                .get(getIntent().getStringExtra("farmerCode"))
+                .get(farmerCode)
                 .blockingGet();
 
         noFamilyMembers = getIntent().getIntExtra("noFamilyMembers", 1);
@@ -101,11 +151,332 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
         familyMembersFormAndQuestions = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
         COLUMN_SIZE = familyMembersFormAndQuestions.getQuestions().size();
-
+//
         if (FARMER != null)
             setUpViews();
         onBackClicked();
+
     }
+
+    /**
+     * The function which now populates the table. This handles both
+     * the loading aspect to the display of the views.
+     */
+    private void populateTable(){
+
+//        Get the family members questions
+        FormAndQuestions familyMembersForm = getAppDataManager()
+                .getDatabaseManager()
+                .formAndQuestionsDao()
+                .getFormAndQuestionsByName(AppConstants.FAMILY_MEMBERS).blockingGet();
+
+        List<Question> questions = familyMembersForm.getQuestions();
+
+        //Row Container
+        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
+
+        for(int x=0;x<ROW_SIZE + 1;x++){
+            HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
+            rowHS.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+//            rowHS.setFocusable(true);
+//            rowHS.setFocusableInTouchMode(true);
+            //This is to provide an illusion that the layout is moving as a whole when scrolled.
+            //Scroll one row, scroll all.
+            if(Build.VERSION.SDK_INT >= 23){
+                rowHS.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                    @Override
+                    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                        for(int z=0;z<horizontalRow.getChildCount();z++){
+                            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+                            //Scroll everything except the view being scrolled.
+                            if(!rowHS.equals(ccHorizontalView)){
+                                ccHorizontalView.scrollTo(v.getScrollX(),v.getScrollY());
+                            }
+                        }
+                    }
+                });
+
+                rowHS.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        v.requestFocusFromTouch();
+                        return false;
+                    }
+                });
+            }
+
+            rowHS.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT));
+
+            //The additional layout container for each row.
+            LinearLayout llContainer = new LinearLayout(FamilyMembersActivity.this);
+//            llContainer.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+
+            //Load Headers
+            for(int y=0;y<questions.size();y++){
+                //First row as header
+                if(x == 0){
+                    //Textview as header view
+                    llContainer.addView(getHeaderView(questions.get(y),TAG_TEXTVIEW));
+                }
+            }
+
+            for(int z=0;z<questions.size();z++){
+                if(x > 0){
+                    if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_TEXT)){
+                        llContainer.addView(getEditTextView(TYPE_TEXT,x,TAG_EDITTEXT,questions.get(z)));
+                    }
+                    else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER)){
+                        llContainer.addView(getEditTextView(TYPE_NUMBER,x,TAG_EDITTEXT,questions.get(z)));
+                    }
+                    else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)){
+                        llContainer.addView(getEditTextView(TYPE_DECIMAL,x,TAG_EDITTEXT,questions.get(z)));
+                    }
+                    else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_SELECTABLE)){
+                        llContainer.addView(getSpinnerView(questions.get(z).getOptionsC(),TAG_SPINNER,questions.get(z),x));
+                    }
+                }
+            }
+
+            rowHS.addView(llContainer);
+            horizontalRow.addView(rowHS);
+        }
+
+        addValidatorToViews();
+    }
+
+    /** View Objects **/
+
+    private View getHeaderView(Question question, String tag) {
+
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setVerticalGravity(Gravity.CENTER_HORIZONTAL);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setPadding(10,5,10,5);
+        linearLayout.setBackgroundResource(R.drawable.table_view_border_background);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER_HORIZONTAL;
+
+        if(question.getTypeC().equalsIgnoreCase(AppConstants.TYPE_SELECTABLE))
+            params.width = 700;
+        else
+            params.width = 600;
+
+        params.height = 100;
+        linearLayout.setLayoutParams(params);
+
+        TextView headerView = new TextView(FamilyMembersActivity.this);
+        headerView.setText(question.getCaptionC());
+        headerView.setTextSize(16f);
+        headerView.setTextColor(ContextCompat.getColor(this, R.color.text_black_87));
+         headerView.setTag(tag);
+         headerView.setTypeface(Typeface.DEFAULT_BOLD);
+        headerView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        linearLayout.addView(headerView);
+
+        TextView helpertext = new TextView(FamilyMembersActivity.this);
+        helpertext.setText(question.getHelpTextC());
+        helpertext.setTextSize(12f);
+        helpertext.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        linearLayout.addView(helpertext);
+
+        return linearLayout;
+    }
+
+    private MaterialEditText getEditTextView(int inpType, int rowPosition, String tag, Question q){
+        MaterialEditText materialEditText = new MaterialEditText(FamilyMembersActivity.this);
+        materialEditText.setHint(q.getHelpTextC());
+        materialEditText.setMaxLines(1);
+        materialEditText.setSingleLine(true);
+        materialEditText.setWidth(600);
+        materialEditText.setTag(tag);
+        materialEditText.setTextSize(15f);
+        materialEditText.setTextSize(15f);
+        materialEditText.setPadding(10,20,10,80);
+
+        materialEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                materialEditText.setTextColor(Color.BLACK);
+                onItemValueChanged(rowPosition-1, q.getLabelC(), s.toString());
+            }
+        });
+        switch (inpType){
+            case TYPE_TEXT:
+                materialEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                break;
+            case TYPE_NUMBER:
+                materialEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                break;
+            case TYPE_DECIMAL:
+                materialEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                materialEditText.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (!hasFocus && materialEditText.getText() != null
+                            && !materialEditText.getText().toString().isEmpty()) {
+                        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+                        DecimalFormat formatter = (DecimalFormat) nf;
+                        formatter.applyPattern("#,###,###.##");
+                        Double doubleValue = Double.parseDouble(materialEditText.getText()
+                                .toString().replace(",", ""));
+                        materialEditText.setText(formatter.format(doubleValue));
+                        onItemValueChanged(rowPosition-1,q.getLabelC(),doubleValue.toString());
+                    }
+                });
+                break;
+            default:
+        }
+
+        return materialEditText;
+//        EditText etContainer = new EditText(FamilyMembersActivity.this);
+//        etContainer.setHint("Enter answer here...");
+//        etContainer.setMaxLines(1);
+//        etContainer.setSingleLine(true);
+//        etContainer.setWidth(600);
+//        etContainer.setTag(tag);
+//        etContainer.setTextSize(15f);
+//        etContainer.setPadding(10,20,10,20);
+//
+//        etContainer.setBackgroundResource(R.drawable.table_cell_background);
+//
+//        etContainer.addTextChangedListener();
+//
+//        switch (inpType){
+//            case TYPE_TEXT:
+//                etContainer.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+//                break;
+//            case TYPE_NUMBER:
+//                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER);
+//                break;
+//            case TYPE_DECIMAL:
+//                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+//                etContainer.setOnFocusChangeListener((v, hasFocus) -> {
+//                    if (!hasFocus && etContainer.getText() != null
+//                            && !etContainer.getText().toString().isEmpty()) {
+//                        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+//                        DecimalFormat formatter = (DecimalFormat) nf;
+//                        formatter.applyPattern("#,###,###.##");
+//                        Double doubleValue = Double.parseDouble(etContainer.getText()
+//                                .toString().replace(",", ""));
+//                        etContainer.setText(formatter.format(doubleValue));
+//                        onItemValueChanged(rowPosition-1,q.getLabelC(),doubleValue.toString());
+//                    }
+//                });
+//                break;
+//            default:
+//        }
+//        return etContainer;
+    }
+
+    /**
+     * Splits a comma separated list of integers to integer list.
+     * <p>
+     * If an input is malformed, it is omitted from the result.
+     *
+     * @param input Comma separated list of integers.
+     * @return A List containing the integers or null if the input is null.
+     */
+    @Nullable
+    public static List<Integer> splitToIntList(@Nullable String input) {
+        if (input == null) {
+            return null;
+        }
+        List<Integer> result = new ArrayList<>();
+        StringTokenizer tokenizer = new StringTokenizer(input, ",");
+        while (tokenizer.hasMoreElements()) {
+            final String item = tokenizer.nextToken();
+            try {
+                result.add(Integer.parseInt(item));
+            } catch (NumberFormatException ex) {
+                Log.e("ROOM", "Malformed integer list", ex);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Joins the given list of integers into a comma separated list.
+     *
+     * @param input The list of integers.
+     * @return Comma separated string composed of integers in the list. If the list is null, return
+     * value is null.
+     */
+    @Nullable
+    public static String joinIntoString(@Nullable List<Integer> input) {
+        if (input == null) {
+            return null;
+        }
+
+        final int size = input.size();
+        if (size == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            sb.append(Integer.toString(input.get(i)));
+            if (i < size - 1) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
+    }
+
+    private Spinner getSpinnerView(String listOfChoices, String tag, Question q, int rowPosition){
+        Spinner sp = new Spinner(FamilyMembersActivity.this);
+        String[] choices = listOfChoices.split(",");
+        ViewGroup.LayoutParams sparams = new ViewGroup.LayoutParams(700,100);
+
+        ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
+                android.R.layout.simple_dropdown_item_1line,choices);
+        sp.setAdapter(arrDapt);
+        sp.setTag(tag);
+        sp.setLayoutParams(sparams);
+        sp.setFocusable(true);
+//        sp.setMinimumWidth(700);
+//        sp.setDropDownWidth(400);
+        sp.setPadding(10,5,10,5);
+        //sp.setBackgroundResource(R.drawable.table_view_borderless_background);
+        sp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.requestFocus();
+                return false;
+            }
+        });
+
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    view.requestFocus();
+                    onItemValueChanged(rowPosition-1,q.getLabelC(),choices[position]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        return sp;
+    }
+
+    private View getViewObject(int rowIndex, int colIndex){
+
+        LinearLayout rowContainer = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView hs = (HorizontalScrollView)rowContainer.getChildAt(rowIndex+1);
+        LinearLayout llx = (LinearLayout)(hs.getChildAt(0));
+        return llx.getChildAt(colIndex);
+    }
+
+    /** End of View Objects */
 
     @Override
     public void setUpViews() {
@@ -153,58 +524,23 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 e.printStackTrace();
             }
         }
-        setupTableView(familyMembersFormAndQuestions);
+        populateTable();
     }
 
     @Override
     public void setupTableView(FormAndQuestions _familyMembersFormAndQuestions) {
-        this.familyMembersFormAndQuestions = _familyMembersFormAndQuestions;
-
-        mTableViewAdapter = new FineTableViewAdapter(this, familyMembersFormAndQuestions.getQuestions(), ROW_SIZE);
-        tableView.setAdapter(mTableViewAdapter);
-        tableView.setTableViewListener(new TableViewListener());
-
-        tableView.setVerticalScrollBarEnabled(true);
-        tableView.setHorizontalScrollBarEnabled(true);
-        tableView.setScrollBarSize(50);
-
-        List<RowHeader> rowHeaders = getRowHeaderList();
-        List<ColumnHeader> columnHeaders = getColumnHeaderList();
-        List<List<Cell>> cellList = getCellList();
-
-        mRowHeaderList.addAll(rowHeaders);
-        mColumnHeaderList.addAll(columnHeaders);
-
-        for (int i = 0; i < ROW_SIZE; i++)
-            mCellList.get(i).addAll(cellList.get(i));
-        mTableViewAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
-
-        SpinnerViewHolder.UpdateJsonArrayListener(this);
-        CellViewHolder.UpdateJsonArrayListener(this);
-        CheckBoxViewHolder.UpdateJsonArrayListener(this);
-        MultiSelectViewHolder.UpdateJsonArrayListener(this);
-
-        try {
-            new Handler().postDelayed(() -> {
-                if (tableView != null) {
-                    LinearLayoutManager linearLayoutManager = tableView.getRowHeaderLayoutManager();
-                    if (linearLayoutManager != null)
-                        lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                    SCROLL_POSITION = lastVisibleItemPosition;
-                }
-            }, 2000);
-        } catch (Exception ignore) {
-        }
     }
 
     @SuppressLint("CutPasteId")
     boolean validate() {
         List<ValidationError> errors = new ArrayList<>();
         for (int i = 0; i < ROW_SIZE; i++) {
+            AppLogger.e(TAG, "#################################################");
+
             for (int j = 0; j < COLUMN_SIZE; j++) {
-                View view = mTableViewAdapter.getCellViews(i, j);
+                View view = getViewObject(i,j);//.getCellViews(i, j);
                 if (view != null) {
-                    String name = mTableViewAdapter.getCellItem(j, i).getId();
+                    String name = mQuestionsList.get(i).get(j).getLabelC();
                     HashSet<InputValidator> validators = validator.getValidators(name + i);
                     if (validators != null) {
                         ValidationError error;
@@ -212,20 +548,16 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                             error = inputVal.validate(getValue(i, name), name, "");
                             if (error != null) {
                                 errors.add(error);
-                                try {
-                                    if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
-                                        EditText edittext = view.findViewById(R.id.cell_data);
-                                        edittext.setError(error.getMessage(getResources()));
-                                    } else if (view.getTag().toString().equals("spinner")) {
-                                        Spinner spinner = view.findViewById(R.id.cell_data);
-                                        TextView itemView = spinner.findViewById(android.R.id.text1);
-                                        itemView.setError((error.getMessage(getResources())));
-                                    }
-                                } catch (Exception ignore) {
+                                setError(view, error.getMessage(getResources()));
+                                if(view instanceof EditText){
+                                    ((MaterialEditText)view).setTextColor(Color.RED);
                                 }
+                            }else {
+                                setError(view, null);
                             }
                         }
-                    }
+                    }else
+                        setError(view, null);
                 }
             }
         }
@@ -233,6 +565,20 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return errors.isEmpty();
     }
 
+    void setError(View view, String message){
+        try {
+            if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
+                MaterialEditText edittext = (MaterialEditText) view;
+                edittext.setError(message);
+            } else if (view.getTag().toString().equals("spinner")) {
+                Spinner spinner = (Spinner)view;
+                TextView itemView = spinner.findViewById(android.R.id.text1);
+                itemView.setError(message);
+            }
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -248,16 +594,13 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
     @OnClick(R.id.scrollRight)
     void scrollTableToTheRight() {
-        if (COLUMN_SIZE - SCROLL_POSITION < lastVisibleItemPosition) {
-            tableView.scrollToColumnPosition(COLUMN_SIZE - 1);
-            SCROLL_POSITION = 0;
-        } else {
-            if (SCROLL_POSITION == 0) {
-                tableView.scrollToColumnPosition(0);
-                SCROLL_POSITION = lastVisibleItemPosition;
-            } else {
-                SCROLL_POSITION += lastVisibleItemPosition;
-                tableView.scrollToColumnPosition(SCROLL_POSITION);
+        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
+
+        for(int z=0;z<horizontalRow.getChildCount();z++){
+            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+            if(!rowHS.equals(ccHorizontalView)){
+                ccHorizontalView.scrollTo(ccHorizontalView.getScrollX() + 200,ccHorizontalView.getScrollY());
             }
         }
     }
@@ -265,13 +608,15 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 
     @OnClick(R.id.scrollLeft)
     void scrollTableToTheLeft() {
-        if (SCROLL_POSITION <= lastVisibleItemPosition) {
-            SCROLL_POSITION = lastVisibleItemPosition;
-            tableView.scrollToColumnPosition(0);
-            return;
+        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
+
+        for(int z=0;z<horizontalRow.getChildCount();z++){
+            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+            if(!rowHS.equals(ccHorizontalView)){
+                ccHorizontalView.scrollTo(ccHorizontalView.getScrollX() - 300,ccHorizontalView.getScrollY());
+            }
         }
-        SCROLL_POSITION -= lastVisibleItemPosition;
-        tableView.scrollToColumnPosition(SCROLL_POSITION);
     }
 
     @OnClick(R.id.save)
@@ -280,11 +625,14 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         // check validations here
 
         if (!validate()) {
+            CustomToast.makeToast(FamilyMembersActivity.this,
+                    "Please complete all fields first before saving.",
+                    CustomToast.LENGTH_LONG).show();
             return;
         }
-        /*
-         ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
-         */
+//        /*
+//         ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
+//         */
         StringBuilder familyMembersIncomeStringBuilder = new StringBuilder();
 
         int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
@@ -327,63 +675,44 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             //answerData.setData(allFamilyMembersArrayData.toString());
             answerData.setData(oldValuesArray.toString());
             getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
-            mPresenter.setFarmerAsUnsynced(FARMER);
+            mPresenter.setFarmerAsUnSynced(FARMER);
             getAppDataManager().setBooleanValue("reload", true);
             moveToNextForm(FARMER);
         }
     }
 
-    private List<List<Cell>> getCellList() {
-        List<List<Cell>> list = new ArrayList<>();
-        for (int i = 0; i < ROW_SIZE; i++) {
-            List<Cell> cellList = new ArrayList<>();
-            for (int j = 0; j < COLUMN_SIZE; j++) {
+    private void addValidatorToViews() {
+        for(int i=0;i<ROW_SIZE;i++){
+            for(int j=0;j<COLUMN_SIZE;j++){
                 Question q = mQuestionsList.get(i).get(j);
-                //q.setMax_value__c(i + ");
-                String value = getValue(i, q.getLabelC());
-                if (value != null)
+                String value = getValue(i,q.getLabelC());
+                if(value != null){
                     q.setDefaultValueC(value);
-                Cell cell = new Cell(q.getLabelC(), q);
-                cellList.add(cell);
+                }
 
-                validator.addValidation(i, q);
+                View vx = (View)getViewObject(i,j);
+
+                if(value != null){
+                    if(vx != null){
+                        if(vx instanceof EditText){
+                            EditText et = (EditText)vx;
+                            et.setText(value);
+                        }
+                        else if(vx instanceof Spinner){
+                            Spinner sp = (Spinner)vx;
+                            List<String> lChoices = Arrays.asList(q.getOptionsC().split(","));
+                            sp.setSelection(lChoices.indexOf(value));
+                        }
+                    }
+                }
+                validator.addValidation(i,q);
             }
-            list.add(cellList);
         }
-        return list;
-    }
-
-    private List<RowHeader> getRowHeaderList() {
-        List<RowHeader> list = new ArrayList<>();
-        for (int i = 0; i < ROW_SIZE; i++) {
-            int rowNumber = i + 1;
-            RowHeader header = new RowHeader(String.valueOf(i), String.valueOf(rowNumber));
-            list.add(header);
-        }
-        return list;
-    }
-
-
-    private List<ColumnHeader> getColumnHeaderList() {
-        List<ColumnHeader> list = new ArrayList<>();
-        for (int i = 0; i < COLUMN_SIZE; i++) {
-            String helperText;
-            if (familyMembersFormAndQuestions.getQuestions().get(i).getHelpTextC() == null)
-                helperText = "--";
-            else
-                helperText = familyMembersFormAndQuestions.getQuestions().get(i).getHelpTextC();
-
-            String title = familyMembersFormAndQuestions.getQuestions().get(i).getCaptionC();
-            ColumnHeader header = new ColumnHeader(String.valueOf(i), title, helperText);
-            list.add(header);
-        }
-        return list;
     }
 
     @Override
     public void onItemValueChanged(int index, String uid, String value) {
         AppLogger.e("ItemValueChanged --> Uuid == " + uid + " Value == " + value);
-
         try {
             if (oldValuesArray.getJSONObject(index) != null) {
                 if (oldValuesArray.getJSONObject(index).has(uid))
@@ -391,7 +720,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 oldValuesArray.getJSONObject(index).put(uid, value);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
             e.printStackTrace();
         }
     }

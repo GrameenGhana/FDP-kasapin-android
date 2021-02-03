@@ -1,56 +1,54 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 import java.util.Objects;
 
-@Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true)})
+@Entity(tableName = "farmers", indices = {@Index(value = "code", unique = true), @Index(value = "villageId"),
+        @Index(value = "syncStatus"), @Index(value = "gender"),})
 public class Farmer {
-    @PrimaryKey(autoGenerate = true)
-    int id;
-
-    @SerializedName("full_name_c")
-    String farmerName;
-
+    @PrimaryKey()
+    @NonNull
     @SerializedName("farmer_code_c")
     String code;
-
+    @SerializedName("full_name_c")
+    String farmerName;
     @SerializedName("gender_c")
     String gender;
-
     @SerializedName("birthday_c")
     String birthYear = "1970";
-
     @SerializedName("educational_level_c")
     String educationLevel;
-
     @SerializedName("farmer_photo_c")
-    String imageUrl = null;
-
+    String imageBase64 = null;
+    String imageLocalUrl = null;
     @SerializedName("country_admin_level_id")
     int villageId;
-
     Date firstVisitDate;
     Date lastVisitDate;
-
+    int syncStatus = 1;
     @SerializedName("LastModifiedDate")
     Date lastModifiedDate;
-
     String landArea;
-
-    int syncStatus = 1;
     String hasSubmitted = "NO";
-
     String villageName;
-
     @Ignore
     String externalId;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
+
 
     public Farmer() {
     }
@@ -84,13 +82,12 @@ public class Farmer {
         if (this == o) return true;
         if (!(o instanceof Farmer)) return false;
         Farmer farmer = (Farmer) o;
-        return id == farmer.id &&
-                code.equals(farmer.code);
+        return code.equals(farmer.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code);
+        return Objects.hash(code);
     }
 
     public Date getLastVisitDate() {
@@ -101,12 +98,12 @@ public class Farmer {
         this.lastVisitDate = lastVisitDate;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageBase64() {
+        return imageBase64;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 
     public String getLandArea() {
@@ -126,28 +123,12 @@ public class Farmer {
         this.educationLevel = education;
     }
 
-    public int getSyncStatus() {
-        return syncStatus;
-    }
-
-    public void setSyncStatus(int syncStatus) {
-        this.syncStatus = syncStatus;
-    }
-
     public String getHasSubmitted() {
         return hasSubmitted;
     }
 
     public void setHasSubmitted(String hasSubmitted) {
         this.hasSubmitted = hasSubmitted;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getBirthYear() {
@@ -158,6 +139,7 @@ public class Farmer {
         this.birthYear = birthYear;
     }
 
+    @NonNull
     public String getCode() {
         return code;
     }
@@ -183,7 +165,6 @@ public class Farmer {
         this.gender = gender;
     }
 
-
     public int getVillageId() {
         return villageId;
     }
@@ -200,7 +181,45 @@ public class Farmer {
         this.villageName = villageName;
     }
 
+    @Ignore
     public boolean hasAgreed() {
         return hasSubmitted.equalsIgnoreCase("YES");
+    }
+
+    @Ignore
+    public boolean isSynced() {
+        return syncStatus == 1;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public int getSyncStatus() {
+        return syncStatus;
+    }
+
+    public void setSyncStatus(int syncStatus) {
+        this.syncStatus = syncStatus;
+    }
+
+    public String getImageLocalUrl() {
+        return imageLocalUrl;
+    }
+
+    public void setImageLocalUrl(String imageLocalUrl) {
+        this.imageLocalUrl = imageLocalUrl;
     }
 }

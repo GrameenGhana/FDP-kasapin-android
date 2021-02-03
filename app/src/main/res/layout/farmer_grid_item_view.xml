@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:cardCornerRadius="8dp"
-    android:elevation="5dp">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    app:cardCornerRadius="8dp">
 
     <RelativeLayout
         android:id="@+id/mainLayout"
@@ -19,34 +19,35 @@
             android:id="@+id/rl1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-                <ImageView
-                    android:id="@+id/image_view1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ic_add_a_photo_grey_500_48dp"
-                    android:tint="@color/divider" />
 
-                <TextView
-                    android:id="@+id/initials"
-                    style="@style/TextAppearance.AppCompat.Display2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:alpha="0.6"
-                    tools:text="INI"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white" />
+            <ImageView
+                android:id="@+id/image_view1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_add_a_photo_grey_500_48dp"
+                android:tint="@color/divider" />
 
-                <ImageView
-                    android:id="@+id/photo"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_centerHorizontal="true"
-                    tools:src="@drawable/icon_farmer_color"
-                    android:scaleType="centerCrop" />
+            <TextView
+                android:id="@+id/initials"
+                style="@style/TextAppearance.AppCompat.Display2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:alpha="0.6"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                tools:text="INI" />
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/icon_farmer_color" />
 
         </RelativeLayout>
 
@@ -68,13 +69,14 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:minLines="2"
-                tools:text="Farmer Name"
                 android:textColor="@android:color/primary_text_light"
-                android:textSize="@dimen/text_size_normal" />
+                android:textSize="@dimen/text_size_normal"
+                tools:text="Farmer Name" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:id="@+id/code"
                     android:layout_width="match_parent"
@@ -83,9 +85,10 @@
                     android:layout_toStartOf="@+id/sync_status"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    tools:text="Farmer Code"
                     android:textAllCaps="true"
-                    android:textSize="@dimen/text_size_small" />
+                    android:textSize="@dimen/text_size_small"
+                    tools:text="Farmer Code" />
+
                 <ImageView
                     android:id="@+id/sync_status"
                     android:layout_width="wrap_content"
@@ -99,8 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="2dp"
-                    />
+                    android:layout_marginStart="2dp" />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

@@ -1,6 +1,5 @@
 package org.grameen.fdp.kasapin.ui.viewImage;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -37,8 +36,12 @@ public class ImageViewActivity extends BaseActivity {
         appBar = findViewById(R.id.appBar);
         hideToolBr();
 
-         decodableString = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
-                .getStringExtra("farmerCode")).blockingGet().getImageUrl();
+        if (getIntent().hasExtra("image_string"))
+            decodableString = getIntent().getStringExtra("image_string");
+        else
+            decodableString = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
+                    .getStringExtra("farmerCode")).blockingGet().getImageBase64();
+
 
         if (decodableString != null && !decodableString.equalsIgnoreCase("")) {
             touchImageView = findViewById(R.id.touch_image_view);

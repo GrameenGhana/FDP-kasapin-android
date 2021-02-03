@@ -2,8 +2,6 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +14,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.squareup.picasso.Picasso;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
-import org.grameen.fdp.kasapin.utilities.ImageUtil;
 
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 
 public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
+    int[] mColors;
+    Picasso picasso;
     private List<Farmer> farmers;
     private Context context;
     private LayoutInflater layoutInflater;
@@ -35,12 +37,13 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
 
     public FarmerListViewAdapter(Context c, List<Farmer> _farmers) {
         super(c, R.layout.farmer_grid_item_view, _farmers);
-
         this.context = c;
         this.farmers = _farmers;
-
+        mColors = context.getResources().getIntArray(R.array.recommendations_colors);
         layoutInflater = LayoutInflater.from(context);
+        picasso = Picasso.get();
     }
+
 
     @NonNull
     @Override
@@ -49,7 +52,6 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
         Farmer realFarmer = farmers.get(position);
 
         ViewHolder viewHolder;
-
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = layoutInflater.inflate(R.layout.farmer_grid_item_view, parent, false);
@@ -73,24 +75,26 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
 
     @Override
     public long getItemId(int position) {
-        return farmers.get(position).hashCode();
+        return farmers.get(position).getCode().hashCode();
     }
 
     private void setData(Farmer farmer, ViewHolder viewHolder) {
-        if (farmer.getImageUrl() != null && !farmer.getImageUrl().isEmpty()) {
-            viewHolder.photo.setImageBitmap(ImageUtil.base64ToScaledBitmap(farmer.getImageUrl()));
+        if (farmer.getImageLocalUrl() != null) {
+            picasso.load(new File(farmer.getImageLocalUrl()))
+                    .resize(200, 200)
+                    .centerCrop()
+                    .into(viewHolder.photo);
         } else {
+            viewHolder.photo.setImageBitmap(null);
+
             try {
                 String[] valueArray = farmer.getFarmerName().split(" ");
                 String value = valueArray[0].substring(0, 1) + valueArray[1].substring(0, 1);
                 viewHolder.initials.setText(value);
-
-            } catch (Exception e) {
+            } catch (Exception ignore) {
                 if (!farmer.getFarmerName().trim().isEmpty())
                     viewHolder.initials.setText(farmer.getFarmerName().substring(0, 1));
             }
-
-            int[] mColors = context.getResources().getIntArray(R.array.recommendations_colors);
 
             int randomColor = mColors[new Random().nextInt(mColors.length)];
             GradientDrawable drawable = new GradientDrawable();
@@ -99,7 +103,6 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
             viewHolder.rl1.setBackground(drawable);
             viewHolder.imageView.setVisibility(View.GONE);
         }
-
 
         viewHolder.name.setText(farmer.getFarmerName());
         viewHolder.code.setText(farmer.getCode());
@@ -111,7 +114,6 @@ public class FarmerListViewAdapter extends ArrayAdapter<Farmer> {
             viewHolder.syncStatus.setImageResource(R.drawable.ic_sync_problem_black_18dp);
             viewHolder.syncStatus.setColorFilter(ContextCompat.getColor(context, R.color.cpb_red));
         }
-
 
         if (farmer.getHasSubmitted() != null) {
             if (farmer.getHasSubmitted().equalsIgnoreCase(AppConstants.FARMER_SUBMITTED_YES)) {

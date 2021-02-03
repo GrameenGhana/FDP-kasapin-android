@@ -1,7 +1,6 @@
 package org.grameen.fdp.kasapin.utilities;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,10 +22,10 @@ public class ImageUtil {
     }
 
     public static Bitmap base64ToBitmap(String base64Str) {
-        try{
+        try {
             byte[] decodedBytes = Base64.decode(base64Str.getBytes(), Base64.NO_WRAP);
             return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -50,7 +49,7 @@ public class ImageUtil {
         options.inJustDecodeBounds = false;
         // Decode bitmap with inSampleSize set
         InputStream imageStream = context.getContentResolver().openInputStream(selectedImage);
-         Bitmap img = rotateImageIfRequired(context, BitmapFactory.decodeStream(imageStream, null, options), selectedImage);
+        Bitmap img = rotateImageIfRequired(context, BitmapFactory.decodeStream(imageStream, null, options), selectedImage);
 
         if (imageStream != null)
             imageStream.close();
@@ -59,7 +58,7 @@ public class ImageUtil {
 
     private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
         InputStream input = context.getContentResolver().openInputStream(selectedImage);
-        if(input == null)
+        if (input == null)
             return img;
 
         ExifInterface ei = new ExifInterface(input);
@@ -111,14 +110,14 @@ public class ImageUtil {
             final float totalReqPixelsCap = reqWidth * reqHeight * 2;
 
             while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
-                inSampleSize+=1;
+                inSampleSize += 1;
             }
         }
         return inSampleSize;
     }
 
     public static Bitmap mergeIconsToBitmap(LinkedList<Bitmap> bitmaps) {
-        if(bitmaps.size() == 0) return null;
+        if (bitmaps.size() == 0) return null;
 
         int iconSize = 80;
         int noOfColumns = 2;
@@ -132,7 +131,7 @@ public class ImageUtil {
         Canvas bitCanvas = new Canvas(bigBitmap);
 
         for (int i = 0; i < sizeOfBitmapsArray; i++) {
-            Bitmap bitmap =  Bitmap.createScaledBitmap(bitmaps.get(i), iconSize, iconSize, false);
+            Bitmap bitmap = Bitmap.createScaledBitmap(bitmaps.get(i), iconSize, iconSize, false);
             bitCanvas.drawBitmap(bitmap, left, top, null);
             bitmap.recycle();
 

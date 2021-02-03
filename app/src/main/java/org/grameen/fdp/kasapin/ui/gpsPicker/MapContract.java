@@ -9,10 +9,13 @@ public class MapContract {
 
     public interface View extends BaseContract.View {
         void setPlotData(Plot plot);
+
         void onPlotUpdateComplete(boolean didUpdate);
-}
+    }
+
     public interface Presenter {
         void getPlotData(String externalId);
+
         void updatePlotData(Plot plot);
     }
 }

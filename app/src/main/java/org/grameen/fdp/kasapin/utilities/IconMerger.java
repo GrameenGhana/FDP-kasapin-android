@@ -10,7 +10,7 @@ import java.util.LinkedList;
 public class IconMerger {
     Context context;
 
-    public IconMerger(Context c){
+    public IconMerger(Context c) {
         this.context = c;
     }
 
@@ -19,21 +19,21 @@ public class IconMerger {
         String[] names = activities.split(",");
         AppLogger.e(Arrays.toString(names));
         LinkedList<Bitmap> bitmaps = new LinkedList<>();
-        if(names.length == 0) return null;
+        if (names.length == 0) return null;
 
-            for(String name : names) {
-                Bitmap iconBitmap = bitmapFromDrawable(name);
-                if(iconBitmap != null)
-                    bitmaps.add(iconBitmap);
-            }
+        for (String name : names) {
+            Bitmap iconBitmap = bitmapFromDrawable(name);
+            if (iconBitmap != null)
+                bitmaps.add(iconBitmap);
+        }
 
         return ImageUtil.mergeIconsToBitmap(bitmaps);
     }
 
 
-      Bitmap bitmapFromDrawable(String name) {
+    Bitmap bitmapFromDrawable(String name) {
         int resID = context.getResources().getIdentifier(name, "drawable", context.getPackageName());
-        if(resID < 0) return null;
+        if (resID < 0) return null;
         return BitmapFactory.decodeResource(context.getResources(), resID);
     }
 }

@@ -25,3 +25,5 @@ ktlint
 
 # Java class files
 *.class
+
+fdp-kasapin.jks

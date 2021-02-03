@@ -245,4 +245,5 @@ public class MyFormController {
         // now that the view is setup, register a listener of the model to update the view on changes
         registerFormModelListener();
     }
+
 }

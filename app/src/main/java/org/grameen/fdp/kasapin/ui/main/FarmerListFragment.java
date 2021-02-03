@@ -2,11 +2,9 @@ package org.grameen.fdp.kasapin.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.LinearInterpolator;
 import android.widget.GridView;
 import android.widget.ProgressBar;
@@ -68,7 +66,8 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
     @Override
     protected void setUp(View view) {
         if (getArguments() != null) {
-            farmerCodes = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<String>>() {}.getType());
+            farmerCodes = new Gson().fromJson(getArguments().getString("farmers"), new TypeToken<List<String>>() {
+            }.getType());
 
             mPresenter.getFarmerData(farmerCodes);
             SELECTED_VILLAGE = getArguments().getString("village");
@@ -82,31 +81,34 @@ public class FarmerListFragment extends BaseFragment implements MainContract.Fra
             listView.setAlpha(0);
             listView.animate().alpha(1).setDuration(1000).setInterpolator(new LinearInterpolator()).start();
         }
-            if (mFarmers.size() > 0) {
-                if (IS_TABLET)
-                    listView.setNumColumns(AppConstants.TABLET_COLUMN_COUNT);
-                else
-                    listView.setNumColumns(AppConstants.PHONE_COLUMN_COUNT);
+        if (mFarmers.size() > 0) {
+            if (IS_TABLET)
+                listView.setNumColumns(AppConstants.TABLET_COLUMN_COUNT);
+            else
+                listView.setNumColumns(AppConstants.PHONE_COLUMN_COUNT);
 
-                farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
-                listView.setAdapter(farmerListViewAdapter);
-                listView.setOnItemClickListener((adapterView, view, i, l) -> {
-                    //Todo uncomment this
-                    Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
-                    intent.putExtra("farmerCode",  mFarmers.get(i).getCode());
-                    startActivity(intent);
-                });
+            farmerListViewAdapter = new FarmerListViewAdapter(getActivity(), mFarmers);
+            farmerListViewAdapter.hasStableIds();
 
-                listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
-                    if (getAppDataManager().isMonitoring())
-                        return false;
-                    final Farmer farmer = mFarmers.get(i);
-                    mPresenter.showDeleteFarmerDialog(farmer, i);
-                    return true;
-                });
-            }
+            listView.setAdapter(farmerListViewAdapter);
+            listView.setOnItemClickListener((adapterView, view, i, l) -> {
+                //Todo uncomment this
+                Intent intent = new Intent(getActivity(), FarmerProfileActivity.class);
+                intent.putExtra("farmerCode", mFarmers.get(i).getCode());
+                startActivity(intent);
+            });
 
-            circularProgress.setVisibility(View.GONE);
+            listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+                if (getAppDataManager().isMonitoring())
+                    return false;
+                final Farmer farmer = mFarmers.get(i);
+                mPresenter.showDeleteFarmerDialog(farmer, i);
+                return true;
+            });
+        }
+
+
+        circularProgress.setVisibility(View.GONE);
     }
 
     @Override

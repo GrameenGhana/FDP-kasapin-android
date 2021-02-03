@@ -114,11 +114,11 @@ public class RecommendationActivity extends BaseModel {
         this.suppliesCost = suppliesCost;
     }
 
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
+    public String getImageId() {
+        return imageId != null ? imageId.replace(".png", "") : "n/a";
     }
 
-    public String getImageId() {
-         return imageId != null ? imageId.replace(".png", "") : "n/a";
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 }

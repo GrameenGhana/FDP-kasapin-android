@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">FDP</string>
+    <string name="app_name">@string/fdp</string>
     <string name="farm_development_plan">FarmGrow</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -253,13 +253,13 @@
     </string-array>
 
     <string-array name="monitoring_years">
-    <item name="year_1">Year %d</item>
-    <item name="year_2">Year %d</item>
-    <item name="year_3">Year %d</item>
-    <item name="year_4">Year %d</item>
-    <item name="year_5">Year %d</item>
-    <item name="year_6">Year %d</item>
-    <item name="year_7">Year %d</item>
+        <item name="year_1">Year %d</item>
+        <item name="year_2">Year %d</item>
+        <item name="year_3">Year %d</item>
+        <item name="year_4">Year %d</item>
+        <item name="year_5">Year %d</item>
+        <item name="year_6">Year %d</item>
+        <item name="year_7">Year %d</item>
     </string-array>
 
 
@@ -448,7 +448,7 @@
     <string name="select_url_rational">Please select a valid server url.</string>
     <string name="add_a_new_url">Add a new url</string>
     <string name="default_url_set_message">Default url has been set.</string>
-    <string name="http">http://</string>
+    <string name="http" translatable="false">https://</string>
     <string name="please_specify_the_name_and_the_url">Please specify the name and the url</string>
     <string name="add_gps_point">add gps point</string>
     <string name="calculate_area">calculate area</string>

@@ -101,7 +101,7 @@ public class FineTableViewAdapter extends AbstractTableAdapter<ColumnHeader, Row
                 viewHolder.itemView.setTag("multi_select");
                 views.get(rowPosition).add(columnPosition, viewHolder.itemView);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

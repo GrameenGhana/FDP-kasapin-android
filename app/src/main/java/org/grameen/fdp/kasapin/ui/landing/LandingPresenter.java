@@ -6,11 +6,12 @@ import android.text.TextUtils;
 import com.balsikandar.crashreporter.CrashReporter;
 import com.balsikandar.crashreporter.utils.CrashUtil;
 import com.balsikandar.crashreporter.utils.FileUtils;
-import com.crashlytics.android.Crashlytics;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
+import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class LandingPresenter extends BasePresenter<LandingContract.View> implements LandingContract.Presenter {
     private AppDataManager mAppDataManager;
@@ -40,8 +44,8 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
         getView().showMessage("Sending logs...");
         List<File> logFiles = getAllCrashes();
         if (logFiles.size() > 0) {
-            Crashlytics.setUserIdentifier(mAppDataManager.getUserEmail());
-            Crashlytics.log(FileUtils.readFromFile(new File(logFiles.get(0).getAbsolutePath())));
+//            Crashlytics.setUserIdentifier(mAppDataManager.getUserEmail());
+//            Crashlytics.log(FileUtils.readFromFile(new File(logFiles.get(0).getAbsolutePath())));
             getView().showMessage(R.string.logs_sent);
             new Thread(() -> {
                 try {
@@ -75,6 +79,31 @@ public class LandingPresenter extends BasePresenter<LandingContract.View> implem
         }
         Collections.sort(listOfFiles, Collections.reverseOrder());
         return listOfFiles;
+    }
+
+
+    @Override
+    public void getFarmers() {
+        getView().showLoading("Preparing farmer images", "Please wait a moment...", true, 0, false);
+
+        runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(farmers -> getView().cacheFarmerImages(farmers), throwable
+                        -> {
+                    getView().hideLoading();
+                    getView().onError(throwable.getLocalizedMessage());
+                }));
+
+    }
+
+    @Override
+    public void updateFarmerData(List<Farmer> updatedFarmers) {
+        getAppDataManager().getDatabaseManager().realFarmersDao().insertAll(updatedFarmers);
+
+        getAppDataManager().setBooleanValue(AppConstants.IS_FARMER_IMAGES_CACHED, true);
+        getView().hideLoading();
+        getView().showMessage("Farmer images loaded successfully.");
     }
 
 }

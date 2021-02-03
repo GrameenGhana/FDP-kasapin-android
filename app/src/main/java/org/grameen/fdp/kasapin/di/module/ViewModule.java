@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.di.Scope.ActivityContext;
+import org.grameen.fdp.kasapin.syncManager.LogRecorder;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.ui.farmerProfile.FarmerProfilePresenter;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -58,5 +58,10 @@ public class ViewModule {
     @Provides
     ScriptEngine providesScriptEngine() {
         return new ScriptEngineManager().getEngineByName("rhino");
+    }
+
+    @Provides
+    LogRecorder providesLogRecorder(AppDataManager appDataManager) {
+        return new LogRecorder(appDataManager.getDatabaseManager());
     }
 }

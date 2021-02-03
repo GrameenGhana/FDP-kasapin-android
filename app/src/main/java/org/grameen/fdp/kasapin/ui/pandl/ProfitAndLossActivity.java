@@ -277,7 +277,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         showLoading("Initializing print", "Please wait...", false, 0, false);
 
         new Handler().postDelayed(() -> {
-            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl");
+            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "pandl",  farmer.getFarmerName(), 12);
+
             hideLoading();
             showMessage("Done!");
 
@@ -364,8 +365,8 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 DID_LABOUR = VALUES_JSON_OBJECT.has(labourQuestion.getLabelC())
                         && VALUES_JSON_OBJECT.getString(labourQuestion.getLabelC()).equalsIgnoreCase(AppConstants.YES);
 
-                if(VALUES_JSON_OBJECT.has(labourTypeQuestion.getLabelC()))
-                LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
+                if (VALUES_JSON_OBJECT.has(labourTypeQuestion.getLabelC()))
+                    LABOUR_TYPE = VALUES_JSON_OBJECT.getString(labourTypeQuestion.getLabelC());
                 else LABOUR_TYPE = "";
 
                 labourSpinner.setSelectedIndex(DID_LABOUR ? 1 : 2);
@@ -390,8 +391,9 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
         findViewById(R.id.labor_type_layout).setVisibility(DID_LABOUR != null && DID_LABOUR ? View.VISIBLE : View.GONE);
         if ((DID_LABOUR != null && !DID_LABOUR) || LABOUR_TYPE.equals(LabourType.FULL.name()) || LABOUR_TYPE.equals(LabourType.SEASONAL.name())) {
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.GONE);
-            if (BuildConfig.DEBUG)
-                print.setVisibility(View.VISIBLE);
+
+            print.setVisibility(View.VISIBLE);
+
             loadTableData();
         } else {
             findViewById(R.id.choose_labour_rational_textview).setVisibility(View.VISIBLE);
@@ -634,8 +636,6 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
                 e.printStackTrace();
                 TABLE_DATA_LIST.add(new TableData(pI.getCaptionC(), "0.00"));
             }
-            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
-            TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
 
             myTableViewAdapter = new MyTableViewAdapter(ProfitAndLossActivity.this, TABLE_DATA_LIST, tableView, getAppDataManager().getDatabaseManager());
             runOnUiThread(() -> tableView.setDataAdapter(myTableViewAdapter));
@@ -927,7 +927,7 @@ public class ProfitAndLossActivity extends BaseActivity implements ProfitAndLoss
 
         Question plotIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("plot_income_");
 
-        TABLE_DATA_LIST.add(new TableData(plotIncomeQuestion.getLabelC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData(plotIncomeQuestion.getCaptionC(), plotIncomes, TAG_OTHER_TEXT_VIEW));
 
         //This is also known as Supplies cost. The selected year is always with   the (GAPS) recommendation obtained in conjunction with the plot recommendation
         maintenanceCostList = new ArrayList<>();

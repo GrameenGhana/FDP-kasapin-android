@@ -16,9 +16,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import io.reactivex.Single;
 
-import static org.mockito.Mockito.*;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FdpApiServiceTest {
@@ -27,8 +29,8 @@ public class FdpApiServiceTest {
 
     @Test
     public void test_that_makeLoginCall_returns_a_login_response_with_accessToken() {
-        when(fdpApiService.makeLoginCall(MockData.fakeEmail, MockData.fakePassword)).thenAnswer(i->
-                 Single.just(MockData.getFakeLoginResponse()));
+        when(fdpApiService.makeLoginCall(MockData.fakeEmail, MockData.fakePassword)).thenAnswer(i ->
+                Single.just(MockData.getFakeLoginResponse()));
 
         Single<LoginResponse> response = fdpApiService.makeLoginCall(MockData.fakeEmail, MockData.fakePassword);
         verify(fdpApiService, atLeastOnce()).makeLoginCall(ArgumentMatchers.eq(MockData.fakeEmail), ArgumentMatchers.eq(MockData.fakePassword));
@@ -67,11 +69,11 @@ public class FdpApiServiceTest {
 
     @Test
     public void test_that_fetchRecommendations_returns_RecommendationsDataWrapper_object_from_server() {
-        when(fdpApiService.fetchRecommendations(1,1, MockData.fakeAccessToken)).thenAnswer(i ->
+        when(fdpApiService.fetchRecommendations(1, 1, MockData.fakeAccessToken)).thenAnswer(i ->
                 Single.just(MockData.getFakeRecommendationsDataWrapper()));
 
-        Single<RecommendationsDataWrapper> response = fdpApiService.fetchRecommendations(1,1, MockData.fakeAccessToken);
-        verify(fdpApiService, atLeastOnce()).fetchRecommendations(1,1, MockData.fakeAccessToken);
+        Single<RecommendationsDataWrapper> response = fdpApiService.fetchRecommendations(1, 1, MockData.fakeAccessToken);
+        verify(fdpApiService, atLeastOnce()).fetchRecommendations(1, 1, MockData.fakeAccessToken);
         assertNotNull(response.blockingGet());
         assert (response.blockingGet().getData().isEmpty());
     }
@@ -85,7 +87,7 @@ public class FdpApiServiceTest {
         Single<ServerResponse> response = fdpApiService.uploadFarmersData(MockData.fakeAccessToken, fakePayload);
         verify(fdpApiService, atLeastOnce()).uploadFarmersData(MockData.fakeAccessToken, fakePayload);
         assertNotNull(response.blockingGet());
-        assert(response.blockingGet().getStatus() == 200);
+        assert (response.blockingGet().getStatus() == 200);
     }
 
     @Test
@@ -96,6 +98,6 @@ public class FdpApiServiceTest {
         Single<ServerResponse> response = fdpApiService.fetchFarmersData(MockData.fakeAccessToken, 1, 1, 1, 0);
         verify(fdpApiService, atLeastOnce()).fetchFarmersData(MockData.fakeAccessToken, 1, 1, 1, 0);
         assertNotNull(response.blockingGet());
-        assert(response.blockingGet().getData().isEmpty());
+        assert (response.blockingGet().getData().isEmpty());
     }
 }

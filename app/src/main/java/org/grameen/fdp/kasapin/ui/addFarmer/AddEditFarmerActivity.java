@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,9 +77,12 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
     CircleImageView circleImageView;
     @BindView(R.id.initials)
     TextView initials;
+    @BindView(R.id.remove_photo_button)
+    ImageButton removeFarmerPhoto;
     Farmer FARMER;
     boolean isNewFarmer = true;
     boolean shouldSaveData = true;
+    boolean wasProfileImageEdited = false;
     String farmerBase64ImageData = "";
     ArrayList<MySearchItem> villageItems = new ArrayList<>();
     String[] educationLevels;
@@ -97,17 +101,21 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         getActivityComponent().inject(this);
         mPresenter.takeView(this);
 
-        if (getIntent() != null) {
-            FARMER = getAppDataManager().getDatabaseManager().realFarmersDao().get(getIntent()
-                    .getStringExtra("farmerCode")).blockingGet();
-            if (FARMER != null)
-                isNewFarmer = false;
-            setUpViews();
-        }
+        String code = getIntent().getStringExtra("farmerCode");
+        if (code != null)
+            mPresenter.getFarmerData(code);
+        else
+            setUpViews(null);
     }
 
     @Override
-    public void setUpViews() {
+    public void setUpViews(Farmer farmer) {
+        AppLogger.e(TAG, "isNewFarmer == " + isNewFarmer);
+
+        FARMER = farmer;
+        isNewFarmer = farmer == null;
+
+
         List<Community> villages = getAppDataManager().getDatabaseManager().villagesDao().getAll().blockingGet();
         villageItems.clear();
         for (Community v : villages) {
@@ -130,6 +138,7 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
 
         genderSpinner.setItems(genders);
         genderSpinner.setOnItemSelectedListener((view, position, id, item) -> gender = genders[position]);
+
 
         if (!isNewFarmer) {
             CURRENT_FORM_QUESTION = FILTERED_FORMS.get(CURRENT_FORM_POSITION);
@@ -168,10 +177,12 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     }
             }
 
-            if (FARMER.getImageUrl() != null && !FARMER.getImageUrl().isEmpty()) {
-                farmerBase64ImageData = FARMER.getImageUrl();
+            if (FARMER.getImageBase64() != null && !FARMER.getImageBase64().isEmpty()) {
+                farmerBase64ImageData = FARMER.getImageBase64();
                 try {
                     circleImageView.setImageBitmap(ImageUtil.base64ToBitmap(farmerBase64ImageData));
+
+                    showRemoveButton();
                 } catch (Exception ignored) {
                 }
             } else {
@@ -212,6 +223,8 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                 }
             }
         }
+
+        farmerCode.setEnabled(isNewFarmer && FARMER.getUpdatedAt() == null);
         showFormFragment();
     }
 
@@ -221,8 +234,10 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
         ActivityUtils.loadDynamicView(getSupportFragmentManager(), dynamicFormFragment, CURRENT_FORM_QUESTION.getForm().getFormNameC());
     }
 
+
     @OnClick(R.id.save)
     void saveAndContinue() {
+
         if (farmerName.getText().toString().trim().isEmpty()) {
             showMessage(R.string.enter_valid_farmer_name);
             return;
@@ -269,10 +284,27 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
             FARMER.setVillageId(villageId);
             FARMER.setVillageName(villageName);
             FARMER.setLastModifiedDate(TimeUtils.getDateTime());
-            FARMER.setImageUrl(farmerBase64ImageData);
+            FARMER.setImageBase64(farmerBase64ImageData);
 
-            mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer);
+            if (farmerBase64ImageData != null) {
+                FARMER.setImageLocalUrl(convertBase64ToUrl(FARMER.getImageBase64(), FARMER.getCode()));
+            }
+
+            mPresenter.saveData(FARMER, dynamicFormFragment.getAnswerData(), isNewFarmer, wasProfileImageEdited);
+
+            if (wasProfileImageEdited)
+                getLogRecorder().add(farmerCode.getText().toString().trim(), AppConstants.FARMER_TABLE_PHOTO_FIELD);
         }
+    }
+
+
+    private void showRemoveButton() {
+        removeFarmerPhoto.setVisibility(View.VISIBLE);
+        removeFarmerPhoto.setOnClickListener(v -> {
+            farmerBase64ImageData = "";
+            circleImageView.setImageResource(R.drawable.icon_farmer_color);
+            removeFarmerPhoto.setVisibility(View.GONE);
+        });
     }
 
 
@@ -367,12 +399,15 @@ public class AddEditFarmerActivity extends BaseActivity implements AddEditFarmer
                     bitmap = ImageUtil.handleSamplingAndRotationBitmap(AddEditFarmerActivity.this, URI);
                     farmerBase64ImageData = ImageUtil.bitmapToBase64(bitmap);
 
+                    wasProfileImageEdited = true;
                     if (circleImageView != null) {
                         circleImageView.setImageBitmap(bitmap);
                         initials.setVisibility(View.GONE);
                     }
+
+                    showRemoveButton();
                 } catch (Exception e) {
-                   CustomToast.makeToast(this, "Failed to load", Toast.LENGTH_SHORT).show();
+                    CustomToast.makeToast(this, "Failed to load", Toast.LENGTH_SHORT).show();
                 }
             }
         } else CustomToast.makeToast(this, "You did not take any photo", Toast.LENGTH_LONG).show();

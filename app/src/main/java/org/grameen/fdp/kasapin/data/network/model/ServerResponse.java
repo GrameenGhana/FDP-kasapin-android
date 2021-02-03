@@ -9,7 +9,8 @@ public class ServerResponse {
     String message;
     List<FarmerAndAnswers> data;
 
-    public ServerResponse() {}
+    public ServerResponse() {
+    }
 
     public int getTotal_count() {
         return total_count;

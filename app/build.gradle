@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 
 
 android {
@@ -9,8 +9,8 @@ android {
         applicationId "org.grameen.fdp.kasapin"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.10_non_queue"
+        versionCode 4
+        versionName "1.1." + versionCode
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -20,20 +20,19 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("fdp-kasapin.jks")
+            storeFile file("fdp-kasapin")
             storePassword "sirrius"
-            keyAlias "fdp-kasapin"
-            keyPassword "sirrius"
+            keyAlias "farmgrow_app"
+            keyPassword "grameen.farmgrow2020@fdp.org"
         }
     }
 
     buildTypes {
         release {
-            debuggable false
-            minifyEnabled false
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
         }
 
         debug {
@@ -43,6 +42,7 @@ android {
             useProguard false
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
             buildConfigField "String", "END_POINT", "\"http://52.15.172.252/fdp/\""
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
         }
     }
 
@@ -94,7 +94,7 @@ android {
         implementation "com.android.support:preference-v14:$rootProject.supportLibraryVersion"
         implementation "com.android.support:percent:$rootProject.ext.supportLibraryVersion"
 
-        implementation "com.google.android.gms:play-services-maps:$rootProject.ext.playServicesVersion"
+        implementation "com.google.android.gms:play-services-maps:17.0.0"
         implementation "com.google.android.gms:play-services-location:$rootProject.ext.playServicesVersion"
 
         implementation 'com.google.maps.android:android-maps-utils:0.6.2'
@@ -118,11 +118,14 @@ android {
         implementation "com.squareup.moshi:moshi:$rootProject.ext.moshiVersion"
 
         //firebase
-        implementation "com.google.firebase:firebase-core:$rootProject.ext.firebaseVersion"
-        implementation "com.crashlytics.sdk.android:crashlytics:$rootProject.ext.crashyticsVersion"
+        // Import the Firebase BoM
+        implementation platform('com.google.firebase:firebase-bom:26.1.0')
 
+        implementation "com.google.firebase:firebase-crashlytics"
+        implementation 'com.google.firebase:firebase-analytics'
+ 
         // room database
-        implementation "android.arch.lifecycle:livedata:$rootProject.ext.roomVersion"
+        //implementation "android.arch.lifecycle:livedata:$rootProject.ext.roomVersion"
         implementation "android.arch.persistence.room:rxjava2:$rootProject.ext.roomVersion"
         implementation "android.arch.persistence.room:runtime:$rootProject.ext.roomVersion"
         annotationProcessor "android.arch.persistence.room:compiler:$rootProject.ext.roomVersion"
@@ -164,9 +167,6 @@ android {
         //Rhino
         implementation "io.apisense:rhino-android:$rootProject.ext.rhinoVersion"
 
-        //Spotlight for app intro
-        implementation 'com.github.wooplr:Spotlight:1.2.3'
-
         // logger
         implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
         implementation "com.balsikandar.android:crashreporter:$rootProject.ext.crashReporterVersion"
@@ -183,6 +183,11 @@ android {
         implementation 'com.android.support:exifinterface:28.0.0'
 
         implementation 'androidx.preference:preference:1.1.1'
+        //Picasso
+        implementation "com.squareup.picasso:picasso:2.71828"
+
+        //MaterialEditText
+        implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     }
 
     applicationVariants.all { variant ->

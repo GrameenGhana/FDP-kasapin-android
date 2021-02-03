@@ -19,7 +19,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
 import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import org.grameen.fdp.kasapin.parser.LogicFormulaParser;
-import org.grameen.fdp.kasapin.services.LocationPrepareService;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.form.fragment.DynamicPlotFormFragment;
 import org.grameen.fdp.kasapin.ui.gpsPicker.MapActivity;
@@ -41,7 +40,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFarmerPlotContract.View {
@@ -139,15 +137,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
 
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableCompletableObserver() {
-                    @Override
-                    public void onComplete() {
-                    }
-
-                    @Override
-                    public void onError(Throwable ignored) {
-                    }
-                });
+                .subscribe();
 
         //Edit Plot
         saveButton.setEnabled(false);
@@ -180,9 +170,10 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             phEditText.setText(PLOT.getPh());
         } else {
             PLOT = new Plot();
-            PLOT.setExternalId(String.valueOf(System.currentTimeMillis()));
+            PLOT.setExternalId(FARMER_CODE + String.valueOf(System.currentTimeMillis()));
             PLOT.setFarmerCode(FARMER_CODE);
             PLOT.setAnswersData(new JSONObject().toString());
+            PLOT.setCreatedAt(TimeUtils.getCurrentDateTime());
             String name = "Plot " + (getIntent().getIntExtra("plotSize", 0) + 1);
             plotNameEditText.setText(name);
             PLOT.setName(name);
@@ -245,12 +236,14 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             Question PLOT_RENOVATION_INTERVENTION_QUESTION = getAppDataManager().getDatabaseManager().questionDao().get("plot_renovated_intervention_");
             Recommendation GAPS_RECOMMENDATION_FOR_START_YEAR = null;
             if (PLOT_RENOVATED_CORRECTLY_QUESTION != null && PLOT_RENOVATION_MADE_YEARS != null) {
-                AppLogger.e(TAG, jsonObject.toString());
-                if (jsonObject.has(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC())) {
                     try {
-                        if (ComputationUtils.getDataValue(PLOT_RENOVATED_CORRECTLY_QUESTION, jsonObject).equalsIgnoreCase("yes")) {
+                        String answerValue = jsonObject.getString(PLOT_RENOVATED_CORRECTLY_QUESTION.getLabelC()).trim();
+
+                        if (answerValue.equalsIgnoreCase("yes")) {
                             year = Integer.parseInt(jsonObject.getString(PLOT_RENOVATION_MADE_YEARS.getLabelC()));
-                            String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
+
+                             String recommendationName = jsonObject.getString(PLOT_RENOVATION_INTERVENTION_QUESTION.getLabelC());
+
                             if (recommendationName.equalsIgnoreCase("replanting"))
                                 GAPS_RECOMMENDATION_FOR_START_YEAR = getAppDataManager().getDatabaseManager().recommendationsDao()
                                         .getByRecommendationName("Replant").blockingGet();
@@ -266,12 +259,12 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
                     } catch (Exception e) {
                         e.printStackTrace();
                         year = 1;
-                    }
                 }
             }
 
             try {
                 String plotInterventionStartYearLabel = getAppDataManager().getDatabaseManager().questionDao().getLabel("plot_intervention_start_year_").blockingGet("null");
+
                 if (jsonObject.has(plotInterventionStartYearLabel))
                     jsonObject.remove(plotInterventionStartYearLabel);
                 jsonObject.put(plotInterventionStartYearLabel, year);
@@ -289,6 +282,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
             PLOT.setName(plotNameEditText.getText().toString());
             PLOT.setEstimatedProductionSize(estimatedProductionEditText.getText().toString());
             PLOT.setLastVisitDate(TimeUtils.getCurrentDateTime());
+            PLOT.setUpdatedAt(TimeUtils.getCurrentDateTime());
             PLOT.setArea(plotSizeEditText.getText().toString());
 
             mPresenter.saveData(PLOT, flag);
@@ -300,7 +294,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         if (plotNameEditText.getText().toString().trim().isEmpty()) {
             plotNameEditText.setError(plotNameQuestion.getErrorMessage());
             isValid = false;
-         } else
+        } else
             plotNameEditText.setError(null);
 
         if (estProductionQuestion.isRequired() && estimatedProductionEditText.getText().toString().trim().isEmpty()) {
@@ -355,6 +349,7 @@ public class AddEditFarmerPlotActivity extends BaseActivity implements AddEditFa
         startActivity(intent);
         finish();
     }
+
     @Override
     public void onBackPressed() {
         finish();

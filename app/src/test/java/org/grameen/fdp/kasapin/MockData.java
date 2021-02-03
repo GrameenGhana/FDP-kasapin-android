@@ -9,7 +9,6 @@ import org.grameen.fdp.kasapin.data.db.model.FormsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.RecommendationsDataWrapper;
 import org.grameen.fdp.kasapin.data.db.model.User;
 import org.grameen.fdp.kasapin.data.network.model.LoginResponse;
-import org.grameen.fdp.kasapin.data.network.model.Response;
 import org.grameen.fdp.kasapin.data.network.model.ServerResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +21,7 @@ public class MockData {
     public static String fakePassword = "xxxxxxxxxxx";
 
 
-    public static LoginResponse getFakeLoginResponse(){
+    public static LoginResponse getFakeLoginResponse() {
         LoginResponse response = new LoginResponse();
         response.setToken(fakeAccessToken);
         return response;
@@ -37,7 +36,7 @@ public class MockData {
         return user;
     }
 
-    public static Community getFakeCommunityData(){
+    public static Community getFakeCommunityData() {
         Community community = new Community();
         community.setId(1);
         community.setName("Fake Community");
@@ -45,33 +44,33 @@ public class MockData {
         return community;
     }
 
-    public static District getFakeDistrictData(){
+    public static District getFakeDistrictData() {
         District district = new District();
         district.setId(1);
         district.setCommunities(Collections.singletonList(getFakeCommunityData()));
         return district;
     }
 
-    public static CountryAdminLevelDataWrapper getCountryAdminLevelDataWrapper(){
+    public static CountryAdminLevelDataWrapper getCountryAdminLevelDataWrapper() {
         CountryAdminLevelDataWrapper wrapper = new CountryAdminLevelDataWrapper();
         wrapper.setData(Collections.singletonList(getFakeDistrictData()));
         return wrapper;
     }
 
-    public static FormsDataWrapper getFakeFormsDataWrapper(){
+    public static FormsDataWrapper getFakeFormsDataWrapper() {
         FormsDataWrapper wrapper = new FormsDataWrapper();
         wrapper.setData(Collections.emptyList());
         return wrapper;
     }
 
 
-    public static RecommendationsDataWrapper getFakeRecommendationsDataWrapper(){
+    public static RecommendationsDataWrapper getFakeRecommendationsDataWrapper() {
         RecommendationsDataWrapper wrapper = new RecommendationsDataWrapper();
         wrapper.setData(Collections.emptyList());
         return wrapper;
     }
 
-    public static ServerResponse getFakeResponse(){
+    public static ServerResponse getFakeResponse() {
         ServerResponse response = new ServerResponse();
         response.setMessage("Success");
         response.setStatus(200);
@@ -89,23 +88,21 @@ public class MockData {
         return jsonObject;
     }
 
-    public static Question getFakeQuestion(){
-       Question question = new Question();
-       question.setId(1);
-       question.setCaptionC("Fake Question");
-       question.setLabelC("fake_question");
-       question.setDefaultValueC("None");
-       return question;
+    public static Question getFakeQuestion() {
+        Question question = new Question();
+        question.setId(1);
+        question.setCaptionC("Fake Question");
+        question.setLabelC("fake_question");
+        question.setDefaultValueC("None");
+        return question;
     }
 
-    public SkipLogic getFakeSkipLogic(){
+    public SkipLogic getFakeSkipLogic() {
         SkipLogic skipLogic = new SkipLogic();
         skipLogic.setId(1);
         skipLogic.setFormula("B==B");
         return skipLogic;
     }
-
-
 
 
 }

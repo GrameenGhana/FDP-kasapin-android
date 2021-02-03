@@ -96,11 +96,11 @@ public class HistoricalTableViewData {
         this.label = name;
     }
 
-    public void setIconData(String iconData) {
-        this.iconData = iconData;
-    }
-
     public String getIconData() {
         return iconData;
+    }
+
+    public void setIconData(String iconData) {
+        this.iconData = iconData;
     }
 }

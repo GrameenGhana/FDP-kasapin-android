@@ -146,7 +146,7 @@ public class LogicFormulaParser extends Tokenizer {
             } catch (JSONException ignored) {
             }
 
-        return returnValue;
+        return returnValue.trim();
     }
 
 
@@ -184,9 +184,9 @@ public class LogicFormulaParser extends Tokenizer {
             throw new ParserException("Json Object is null or was not provided");
         try {
             if (jsonObject.has(id))
-                return jsonObject.get(id).toString();
+                return jsonObject.get(id).toString().trim();
             else if (allValuesJson.has(id))
-                return allValuesJson.get(id).toString();
+                return allValuesJson.get(id).toString().trim();
             else return "--";
         } catch (JSONException ignore) {
             return "--";

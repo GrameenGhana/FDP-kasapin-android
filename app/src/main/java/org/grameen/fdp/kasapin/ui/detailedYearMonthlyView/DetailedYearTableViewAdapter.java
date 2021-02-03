@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
-import com.jaredrummler.materialspinner.MaterialSpinner;
+
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.model.TableData;
 
@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.Locale;
 
 import de.codecrafters.tableview.TableView;
+import de.codecrafters.tableview.model.TableColumnModel;
 import de.codecrafters.tableview.toolkit.LongPressAwareTableDataAdapter;
 
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_ICON_VIEW;
+import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_OTHER_TEXT_VIEW;
 import static org.grameen.fdp.kasapin.utilities.AppConstants.TAG_RESULTS;
 
 
@@ -36,9 +38,10 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
     public DetailedYearTableViewAdapter(final Context context, final List<TableData> data, final TableView<TableData> tableView) {
         super(context, data, tableView);
         this.context = context;
-     }
+    }
 
-    public DetailedYearTableViewAdapter(final Context context, final List<TableData> data, final TableView<TableData> tableView, boolean _showIcons) {
+    public DetailedYearTableViewAdapter(final Context context, final List<TableData> data,
+                                        final TableView<TableData> tableView, boolean _showIcons) {
         this(context, data, tableView);
         this.showIcons = _showIcons;
     }
@@ -60,7 +63,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
     private View renderCalculatedValuesForYear(final TableData data, int year) {
         List<String> calculationsForTheYears = data.getYearsDataFormula();
 
-        if(data.getTag().equals(TAG_ICON_VIEW)) {
+        if (data.getTag().equals(TAG_ICON_VIEW)) {
             if (showIcons && data.getImageBitmaps() != null) {
                 ImageView imageView = new ImageView(getContext());
                 imageView.setAdjustViewBounds(true);
@@ -68,7 +71,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
                 imageView.setPadding(10, 5, 10, 5);
                 return imageView;
             }
-        }else if (calculationsForTheYears != null) {
+        } else if (calculationsForTheYears != null) {
             TextView itemView = null;
             itemView = new TextView(getContext());
             itemView.setPadding(20, 10, 20, 10);
@@ -95,7 +98,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
                 itemView.setPadding(20, 10, 20, 10);
                 itemView.setTextSize(TITLE_TEXT_SIZE);
                 itemView.setTypeface(itemView.getTypeface(), Typeface.BOLD);
-                itemView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                itemView.setTextColor(ContextCompat.getColor(getContext(),    (data.getTag().equals(TAG_OTHER_TEXT_VIEW)) ? R.color.text_black_87 : R.color.colorAccent)  );
                 return itemView;
             }
         }

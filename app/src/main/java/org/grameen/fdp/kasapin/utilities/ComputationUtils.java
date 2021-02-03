@@ -37,7 +37,7 @@ public class ComputationUtils {
         String defVal = q.getDefaultValueC();
         try {
             if (ANSWERS_JSON.has(q.getLabelC()) && !ANSWERS_JSON.getString(q.getLabelC()).trim().isEmpty() && !ANSWERS_JSON.getString(q.getLabelC()).equalsIgnoreCase("null")) {
-                defVal = ANSWERS_JSON.get(q.getLabelC()).toString();
+                defVal = ANSWERS_JSON.get(q.getLabelC()).toString().trim();
             }
         } catch (Exception ignored) {
         }
@@ -105,17 +105,17 @@ public class ComputationUtils {
         if (skipLogics != null && skipLogics.size() > 0) {
             for (SkipLogic sl : skipLogics) {
                 parseSkipLogicFormula(sl);
-                    getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
-                        AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue() + "\nShould hide == " + sl.shouldHide());
-                        try {
-                            boolean isEqual = compareSkipLogicValues(sl, String.valueOf(event.getNewValue()));
-                            if (isEqual)
-                                toggleViewVisibility(sl.shouldHide(), questionToHide);
-                            else
-                                toggleViewVisibility(!sl.shouldHide(), questionToHide);
-                        } catch (Exception ignored) {
-                        }
-                    });
+                getModel().addPropertyChangeListener(sl.getComparingQuestion(), event -> {
+                    AppLogger.i("PROPERTY CHANGE ", " FOR QUESTION " + sl.getComparingQuestion() + " -----  Value was: " + event.getOldValue() + ", now: " + event.getNewValue() + "\nShould hide == " + sl.shouldHide());
+                    try {
+                        boolean isEqual = compareSkipLogicValues(sl, String.valueOf(event.getNewValue()));
+                        if (isEqual)
+                            toggleViewVisibility(sl.shouldHide(), questionToHide);
+                        else
+                            toggleViewVisibility(!sl.shouldHide(), questionToHide);
+                    } catch (Exception ignored) {
+                    }
+                });
             }
         }
     }
@@ -123,11 +123,11 @@ public class ComputationUtils {
     public void initiateSkipLogicAndHideViews(String label, List<SkipLogic> skipLogics) {
         if (skipLogics != null && skipLogics.size() > 0) {
             for (final SkipLogic sl : skipLogics) {
-                 parseSkipLogicFormula(sl);
+                parseSkipLogicFormula(sl);
                 try {
                     boolean isEqual = compareSkipLogicValues(sl, formController.getModel().getValue(sl.getComparingQuestion()).toString());
-                    if(isEqual)
-                    toggleViewVisibility(sl.shouldHide(), label);
+                    if (isEqual)
+                        toggleViewVisibility(sl.shouldHide(), label);
                     else
                         toggleViewVisibility(!sl.shouldHide(), label);
                 } catch (Exception ignored) {
@@ -136,7 +136,7 @@ public class ComputationUtils {
         }
     }
 
-    private void parseSkipLogicFormula(SkipLogic skipLogic){
+    private void parseSkipLogicFormula(SkipLogic skipLogic) {
         Pattern pattern = Pattern.compile("^([A-Za-z_]*)\\s*([!><=]=?)\\s*[\"\\\\]*([A-Za-z0-9]*)[\"\\\\]*$");
         Matcher matcher = pattern.matcher(skipLogic.getFormula());
 

@@ -21,8 +21,7 @@ public class FileUtils {
                 out.close();
                 AppLogger.i("FileUtils", "No media file created!  " + file);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
         }
     }
 

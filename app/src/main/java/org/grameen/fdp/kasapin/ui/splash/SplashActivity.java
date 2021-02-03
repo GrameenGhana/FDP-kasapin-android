@@ -1,26 +1,11 @@
 package org.grameen.fdp.kasapin.ui.splash;
 
 
-import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
@@ -31,8 +16,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static java.lang.Thread.sleep;
 
 
 public class SplashActivity extends BaseActivity implements SplashContract.View {
@@ -60,7 +43,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         toggleFullScreen(false, getWindow());
 
         image1.setAlpha(0f);
-        textLayout.setTranslationY(-100f);
+        //textLayout.setTranslationY(-100f);
         textLayout.setAlpha(0f);
     }
 
@@ -101,7 +84,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
     private void startAnimations() {
         image1.animate()
                 .alpha(1f)
-                .setDuration(1500)
+                .setDuration(2000)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
@@ -109,45 +92,16 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        if(textLayout != null)
-                        textLayout.animate()
-                                .translationY(0)
-                                .alpha(1f)
-                                .setDuration(500)
-                                .setListener(new Animator.AnimatorListener() {
-                                    @Override
-                                    public void onAnimationStart(Animator animation) {}
-
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        try {
-                                            int waited = 0;
-                                            // Splash screen pause time
-                                            while (waited < 1000) {
-                                                sleep(100);
-                                                waited += 100;
-                                            }
-                                            mPresenter.checkIfIsLoggedIn();
-                                        } catch (InterruptedException ignored) {
-                                        }
-                                    }
-                                    @Override
-                                    public void onAnimationCancel(Animator animation) {
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(Animator animation) {
-                                    }
-                                })
-                                .setStartDelay(200)
-                                .start();
+                        mPresenter.checkIfIsLoggedIn();
                     }
 
                     @Override
-                    public void onAnimationCancel(Animator animation) {}
+                    public void onAnimationCancel(Animator animation) {
+                    }
 
                     @Override
-                    public void onAnimationRepeat(Animator animation) {}
+                    public void onAnimationRepeat(Animator animation) {
+                    }
                 }).start();
     }
 }

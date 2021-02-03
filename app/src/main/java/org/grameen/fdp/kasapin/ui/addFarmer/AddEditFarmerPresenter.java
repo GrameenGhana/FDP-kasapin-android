@@ -1,5 +1,6 @@
 package org.grameen.fdp.kasapin.ui.addFarmer;
 
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
@@ -34,7 +35,19 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
     }
 
     @Override
-    public void saveData(Farmer farmer, FormAnswerData answerData, boolean exit) {
+    public void getFarmerData(String code) {
+        runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().get(code)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(farmer -> {
+                            if (getView() != null)
+                                getView().setUpViews(farmer);
+                        },
+                        throwable -> getView().showMessage(R.string.error_getting_farmer_info)));
+    }
+
+    @Override
+    public void saveData(Farmer farmer, FormAnswerData answerData, boolean exit, boolean wasProfileImageEdited) {
         answerData.setFarmerCode(farmer.getCode());
 
         getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmer))
@@ -46,17 +59,15 @@ public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(aLong -> {
-
-                                setFarmerAsUnsynced(farmer);
-
+                                setFarmerAsUnSynced(farmer);
                                 getView().showMessage("Farmer data saved!");
+
+                                getAppDataManager().setBooleanValue("reload", true);
 
                                 if (!exit)
                                     getView().moveToNextForm();
-                                else {
-                                    getAppDataManager().setBooleanValue("reload", true);
+                                else
                                     getView().finishActivity();
-                                }
                             }, throwable -> {
                                 getView().showMessage("An error occurred saving farmer data. Please try again.");
                                 throwable.printStackTrace();

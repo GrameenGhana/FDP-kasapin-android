@@ -19,7 +19,7 @@ public class TableData {
         this.tag = tag;
     }
 
-    public TableData(String label, @Nullable List<String> formula, List<Bitmap> _bitmaps,  String tag) {
+    public TableData(String label, @Nullable List<String> formula, List<Bitmap> _bitmaps, String tag) {
         this(label, formula, tag);
         this.imageBitmaps = _bitmaps;
     }
@@ -61,11 +61,11 @@ public class TableData {
         this.singleValue = singleValue;
     }
 
-    public void setImageBitmaps(List<Bitmap> imageBitmaps) {
-        this.imageBitmaps = imageBitmaps;
-    }
-
     public List<Bitmap> getImageBitmaps() {
         return imageBitmaps;
+    }
+
+    public void setImageBitmaps(List<Bitmap> imageBitmaps) {
+        this.imageBitmaps = imageBitmaps;
     }
 }

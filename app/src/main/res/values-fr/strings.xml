@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FDP</string>
+    <string name="app_name">@string/fdp</string>
     <string name="farm_development_plan">FarmGrow</string>
     <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
     <string name="navigation_drawer_close">Fermez le tiroir de navigation</string>
@@ -233,13 +233,13 @@
     </string-array>
 
     <string-array name="monitoring_years">
-    <item name="year_1">Année %d</item>
-    <item name="year_2">Année %d</item>
-    <item name="year_3">Année %d</item>
-    <item name="year_4">Année %d</item>
-    <item name="year_5">Année %d</item>
-    <item name="year_6">Année %d</item>
-    <item name="year_7">Année %d</item>
+        <item name="year_1">Année %d</item>
+        <item name="year_2">Année %d</item>
+        <item name="year_3">Année %d</item>
+        <item name="year_4">Année %d</item>
+        <item name="year_5">Année %d</item>
+        <item name="year_6">Année %d</item>
+        <item name="year_7">Année %d</item>
     </string-array>
 
     <string-array name="seven_years">
@@ -439,8 +439,7 @@
 
     <!-- Preferences Keys-->
     <string name="server_url_key">server_url</string>
-    <string name="http">http://</string>
-    <string name="calculate_area">calculate area</string>
+     <string name="calculate_area">calculate area</string>
     <string name="print">impression</string>
     <string name="plot_1_year_1">Plot 1 Year 1</string>
     <string name="choose_labor_option_rationale">Pour afficher les données du tableau, veuillez sélectionner l\'option Travail ci-dessus.</string>

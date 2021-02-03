@@ -8,18 +8,22 @@ import android.preference.PreferenceManager;
 import androidx.room.Room;
 
 import org.grameen.fdp.kasapin.BuildConfig;
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
 import org.grameen.fdp.kasapin.data.network.FdpApi;
 import org.grameen.fdp.kasapin.data.network.FdpApiService;
+import org.grameen.fdp.kasapin.data.network.KeyPinStore;
 import org.grameen.fdp.kasapin.data.prefs.AppPreferencesHelper;
 import org.grameen.fdp.kasapin.data.prefs.PreferencesHelper;
 import org.grameen.fdp.kasapin.di.Scope.ApplicationContext;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
 
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Singleton;
 
+import javax.net.ssl.SSLSocketFactory;
+import javax.security.cert.CertificateException;
+import javax.security.cert.X509Certificate;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.disposables.CompositeDisposable;
@@ -28,7 +32,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 
 @Module
 public class ApplicationModule {
@@ -82,18 +85,28 @@ public class ApplicationModule {
         return new CompositeDisposable();
     }
 
+
     @Provides
     @Singleton
     OkHttpClient provideOkHttpClient() {
-        if (BuildConfig.DEBUG) {
-            return new OkHttpClient.Builder()
-                    .addInterceptor(new HttpLoggingInterceptor()
-                            .setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .callTimeout(30, TimeUnit.SECONDS)
-                    .build();
-        } else {
-            return new OkHttpClient.Builder().build();
+        OkHttpClient.Builder  builder =  new OkHttpClient.Builder();
+        if(BuildConfig.DEBUG)
+            builder.addInterceptor(new HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY));
+        else {
+            try {
+                KeyPinStore keystore = KeyPinStore.getInstance(application);
+                SSLSocketFactory tlsSocketFactory = keystore.getContext().getSocketFactory();
+                if (tlsSocketFactory.getSupportedCipherSuites() != null) {
+                    builder.sslSocketFactory(tlsSocketFactory, keystore.getTrustManager())
+                            .build();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+            return builder.callTimeout(30, TimeUnit.SECONDS)
+                    .build();
     }
 
     @Singleton
@@ -117,5 +130,9 @@ public class ApplicationModule {
     @Provides
     FdpApiService providesFdpApiService(FdpApi fdpApi) {
         return new FdpApiService(fdpApi);
+    }
+
+    X509Certificate getCert() throws CertificateException {
+        return X509Certificate.getInstance(application.getResources().openRawResource(R.raw.cert)) ;
     }
 }

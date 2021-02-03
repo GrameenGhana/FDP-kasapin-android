@@ -5,7 +5,6 @@ import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
-import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import javax.inject.Inject;
 
@@ -40,7 +39,7 @@ public class FDPStatusPresenter extends BasePresenter<FDPStatusContract.View> im
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(success -> {
-                    setFarmerAsUnsynced(farmer);
+                    setFarmerAsUnSynced(farmer);
                     getAppDataManager().setBooleanValue("reload", true);
                     getView().dismiss();
                 }, throwable -> getView().showMessage("Could not save Labour and labour type data")));

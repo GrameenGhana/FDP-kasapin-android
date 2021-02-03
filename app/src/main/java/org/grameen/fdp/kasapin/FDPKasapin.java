@@ -2,18 +2,19 @@ package org.grameen.fdp.kasapin;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.StrictMode;
+import android.util.Log;
+
+import com.google.android.gms.security.ProviderInstaller;
 
 import org.grameen.fdp.kasapin.di.component.ApplicationComponent;
 import org.grameen.fdp.kasapin.di.component.DaggerApplicationComponent;
 import org.grameen.fdp.kasapin.di.module.ApplicationModule;
-import org.grameen.fdp.kasapin.utilities.AppConstants;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
-
-import java.io.File;
-import java.io.FileOutputStream;
-
-import timber.log.Timber;
 
 public class FDPKasapin extends Application {
     private ApplicationComponent mApplicationComponent;
@@ -29,6 +30,7 @@ public class FDPKasapin extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         mApplicationComponent = DaggerApplicationComponent
                 .builder()
                 .applicationModule(new ApplicationModule(this))

@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class BaseModel {
     @PrimaryKey(autoGenerate = true)
     int id;
+    int syncStatus = 1;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
@@ -38,5 +39,13 @@ public class BaseModel {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getSyncStatus() {
+        return syncStatus;
+    }
+
+    public void setSyncStatus(int syncStatus) {
+        this.syncStatus = syncStatus;
     }
 }

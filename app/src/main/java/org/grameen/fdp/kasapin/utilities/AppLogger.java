@@ -4,7 +4,6 @@ import android.app.Application;
 import android.util.Log;
 
 import com.balsikandar.crashreporter.CrashReporter;
-import com.crashlytics.android.Crashlytics;
 
 import org.grameen.fdp.kasapin.BuildConfig;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 import static android.util.Log.INFO;
@@ -20,13 +18,9 @@ import static android.util.Log.INFO;
 public class AppLogger {
     public static void init(Application applicationContext) {
         String crashReporterPath = AppConstants.ROOT_DIR + File.separator + "crashReports";
-
-        if (!BuildConfig.ENABLE_CRASHLYTICS) {
+        if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
             CrashReporter.initialize(applicationContext, crashReporterPath);
-        } else {
-            CrashReporter.initialize(applicationContext, crashReporterPath);
-            Fabric.with(applicationContext, new Crashlytics());
         }
     }
 

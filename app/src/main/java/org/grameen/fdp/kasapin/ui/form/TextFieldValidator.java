@@ -13,8 +13,7 @@ public class TextFieldValidator implements InputValidator {
 
     @Override
     public ValidationError validate(Object value, String fieldName, String fieldLabel) {
-
-        if (!value.toString().matches("^[a-zA-Z 0-9]*$")) {
+        if (defaultValue != value && !value.toString().matches("^[a-zA-Z 0-9\\W+]*$")) {
             return new RequiredField(fieldName, fieldLabel, message);
         }
         return null;

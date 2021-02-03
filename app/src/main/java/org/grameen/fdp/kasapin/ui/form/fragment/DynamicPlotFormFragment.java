@@ -4,9 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -41,7 +39,6 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class DynamicPlotFormFragment extends FormFragment {
@@ -112,8 +109,7 @@ public class DynamicPlotFormFragment extends FormFragment {
             Observable.fromIterable(ALL_QUESTIONS)
                     .subscribeOn(Schedulers.io())
                     .doOnNext(question ->
-                            getAppDataManager().getCompositeDisposable().add(getAppDataManager()
-                                    .getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
+                            addDisposable(getDatabaseManager().skipLogicsDao().getAllByQuestionId(question.getId())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(skipLogics -> {
                                         if (skipLogics != null && skipLogics.size() > 0)
@@ -191,17 +187,15 @@ public class DynamicPlotFormFragment extends FormFragment {
                 }
             }
 
-            if(getAppDataManager() != null)
-            getAppDataManager().getCompositeDisposable().add(getAppDataManager().getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.newThread())
-                    .subscribe(skipLogic -> applyPropertyChangeListeners(q, skipLogic),
-                            Throwable::printStackTrace)
-            );
+            if (getDatabaseManager() != null)
+                addDisposable(getDatabaseManager().skipLogicsDao().getAllByQuestionId(q.getId())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.newThread())
+                        .subscribe(skipLogic -> applyPropertyChangeListeners(q, skipLogic),
+                                Throwable::printStackTrace)
+                );
         }
     }
-
-
 
 
     private void applyPropertyChangeListeners(Question q, List<SkipLogic> skipLogic) {
@@ -213,7 +207,7 @@ public class DynamicPlotFormFragment extends FormFragment {
         getComputationUtils().initiateSkipLogicAndHideViews(question.getLabelC(), skipLogic);
     }
 
-    
+
     @Override
     public void showLoading(String title, String message, boolean indeterminate, int icon, boolean cancelableOnTouchOutside) {
     }

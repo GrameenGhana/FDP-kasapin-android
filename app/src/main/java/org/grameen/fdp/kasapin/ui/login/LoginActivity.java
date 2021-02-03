@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -20,7 +19,6 @@ import androidx.annotation.NonNull;
 
 import com.karan.churi.PermissionManager.PermissionManager;
 
-import org.grameen.fdp.kasapin.FDPKasapin;
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.landing.LandingActivity;
@@ -74,7 +72,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         });
 
         mPasswordView.setOnTouchListener((v, motionEvent) -> {
-           KeyboardUtils.showSoftInput(mPasswordView,LoginActivity.this);
+            KeyboardUtils.showSoftInput(mPasswordView, LoginActivity.this);
 
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -94,7 +92,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
         permissionManager = new PermissionManager() {
             @Override
             public void ifCancelledAndCanRequest(Activity activity) {
-                showDialog(false, getString(R.string.permissions_needed),
+                showDialog(false, getString(R.string.hello),
                         getString(R.string.permissions_needed_rationale), (dialogInterface, i) ->
                                 permissionManager.checkAndRequestPermissions(LoginActivity.this),
                         getString(R.string.grant_permissions), (dialogInterface, i) -> supportFinishAfterTransition(),
@@ -109,12 +107,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
             }
         };
 
-        if(!permissionManager.checkAndRequestPermissions(this))
-            new Handler().postDelayed(() -> showDialog(false, getString(R.string.hello),
-                getString(R.string.provide_all_permissions_rationale), (dialogInterface, i) -> {
-                    permissionManager.checkAndRequestPermissions(LoginActivity.this);
-                }, getString(R.string.grant_permissions), (dialogInterface, i) -> finishAfterTransition(),
-                getString(R.string.quit), 0), 500);
+        permissionManager.checkAndRequestPermissions(this);
+
     }
 
     @OnClick(R.id.sign_in_button)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
 
@@ -42,9 +42,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/spacing_normal"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
-                        android:layout_marginEnd="@dimen/spacing_normal"
                         app:layout_widthPercent="50%">
 
                         <TextView
@@ -86,22 +86,22 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/spacing_half"
-                            tools:text="Plot Size"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="Plot Size" />
 
-                            <EditText
-                                android:id="@+id/plotSizeEdittext"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/border_background"
-                                android:ellipsize="end"
-                                android:inputType="numberDecimal"
-                                android:maxLines="1"
-                                android:paddingStart="@dimen/spacing_normal"
-                                android:paddingEnd="@dimen/spacing_normal"
-                                app:layout_widthPercent="50%"
-                                app:ms_arrow_tint="@color/colorPrimary"
-                                app:ms_background_color="@color/background" />
+                        <EditText
+                            android:id="@+id/plotSizeEdittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_background"
+                            android:ellipsize="end"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="@dimen/spacing_normal"
+                            android:paddingEnd="@dimen/spacing_normal"
+                            app:layout_widthPercent="50%"
+                            app:ms_arrow_tint="@color/colorPrimary"
+                            app:ms_background_color="@color/background" />
                     </LinearLayout>
                 </androidx.percentlayout.widget.PercentRelativeLayout>
 
@@ -113,6 +113,7 @@
                     android:layout_marginTop="@dimen/spacing_normal"
                     android:layout_marginRight="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/spacing_normal">
+
                     <LinearLayout
                         android:id="@+id/ll3"
                         android:layout_width="match_parent"
@@ -121,8 +122,10 @@
                         android:layout_marginEnd="@dimen/spacing_normal"
                         android:orientation="vertical"
                         app:layout_widthPercent="50%">
+
                         <TextView
-                            android:id="@+id/plot_est_prod_text" style="@style/TextAppearance.AppCompat.Small"
+                            android:id="@+id/plot_est_prod_text"
+                            style="@style/TextAppearance.AppCompat.Small"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/spacing_half"
@@ -130,18 +133,19 @@
                             android:textStyle="bold"
 
                             />
-                            <EditText
-                                android:id="@+id/estimatedProductionEdittext"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/border_background"
-                                android:ellipsize="end"
-                                android:inputType="numberDecimal"
-                                android:maxLines="1"
-                                android:paddingLeft="@dimen/spacing_normal"
-                                app:layout_widthPercent="50%"
-                                app:ms_arrow_tint="@color/colorPrimary"
-                                app:ms_background_color="@color/background" />
+
+                        <EditText
+                            android:id="@+id/estimatedProductionEdittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_background"
+                            android:ellipsize="end"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingLeft="@dimen/spacing_normal"
+                            app:layout_widthPercent="50%"
+                            app:ms_arrow_tint="@color/colorPrimary"
+                            app:ms_background_color="@color/background" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -161,6 +165,7 @@
                             android:layout_marginBottom="@dimen/spacing_half"
                             android:text="@string/soil_ph"
                             android:textStyle="bold" />
+
                         <EditText
                             android:id="@+id/phEdittext"
                             android:layout_width="match_parent"

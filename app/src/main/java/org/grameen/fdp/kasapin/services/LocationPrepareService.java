@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
@@ -23,19 +22,32 @@ import org.grameen.fdp.kasapin.utilities.CommonUtils;
 public class LocationPrepareService extends Service {
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
-    private Double currLat, currLong, currAccuracy,currAlt;
+    private Double currLat, currLong, currAccuracy, currAlt;
+    LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            AppLogger.e("LOC_SERVICE", "Location changed : accuracy == " + location.getAccuracy());
+
+            currAccuracy = CommonUtils.round(location.getAccuracy(), 2);
+
+            currLat = location.getLatitude();
+            currLong = location.getLongitude();
+            currAlt = location.getAltitude();
+            broadcastCoordinates();
+        }
+    };
 
     @Override
     public void onCreate() {
         super.onCreate();
-        AppLogger.e("LOC_SERVICE_CREATE","Service started");
+        AppLogger.e("LOC_SERVICE_CREATE", "Service started");
         buildGoogleApiClient();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(googleApiClient.isConnected())
-        startLocationUpdates();
+        if (googleApiClient.isConnected())
+            startLocationUpdates();
         return START_STICKY;
     }
 
@@ -48,6 +60,7 @@ public class LocationPrepareService extends Service {
                         AppLogger.e("LOC_SERVICE_CREATE", "Connected");
                         startLocationUpdates();
                     }
+
                     @Override
                     public void onConnectionSuspended(int i) {
                         AppLogger.e("LOC_SERVICE", "Connection suspended==");
@@ -81,22 +94,8 @@ public class LocationPrepareService extends Service {
         //fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
-    LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            AppLogger.e("LOC_SERVICE","Location changed : accuracy == " + location.getAccuracy());
-
-            currAccuracy = CommonUtils.round(location.getAccuracy(), 2);
-
-            currLat = location.getLatitude();
-            currLong = location.getLongitude();
-            currAlt = location.getAltitude();
-            broadcastCoordinates();
-        }
-    };
-
     private void stopLocationUpdates() {
-         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, locationListener);
     }
 
     public void broadcastCoordinates() {
@@ -104,7 +103,7 @@ public class LocationPrepareService extends Service {
         i.putExtra("lat", currLat);
         i.putExtra("lng", currLong);
         i.putExtra("alt", currAlt);
-        i.putExtra("accuracy",currAccuracy);
+        i.putExtra("accuracy", currAccuracy);
         i.setAction("GET_CAPTURED_LOCATION");
         sendBroadcast(i);
     }
