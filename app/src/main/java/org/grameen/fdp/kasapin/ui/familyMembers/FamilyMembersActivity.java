@@ -295,7 +295,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         materialEditText.setTag(tag);
         materialEditText.setTextSize(15f);
         materialEditText.setTextSize(15f);
-        materialEditText.setPadding(10,20,10,80);
+        materialEditText.setPaddings(10,20,10,80);
 
         materialEditText.addTextChangedListener(new TextWatcher() {
             @Override
