@@ -362,44 +362,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         }
 
         return materialEditText;
-//        EditText etContainer = new EditText(FamilyMembersActivity.this);
-//        etContainer.setHint("Enter answer here...");
-//        etContainer.setMaxLines(1);
-//        etContainer.setSingleLine(true);
-//        etContainer.setWidth(600);
-//        etContainer.setTag(tag);
-//        etContainer.setTextSize(15f);
-//        etContainer.setPadding(10,20,10,20);
-//
-//        etContainer.setBackgroundResource(R.drawable.table_cell_background);
-//
-//        etContainer.addTextChangedListener();
-//
-//        switch (inpType){
-//            case TYPE_TEXT:
-//                etContainer.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-//                break;
-//            case TYPE_NUMBER:
-//                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER);
-//                break;
-//            case TYPE_DECIMAL:
-//                etContainer.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-//                etContainer.setOnFocusChangeListener((v, hasFocus) -> {
-//                    if (!hasFocus && etContainer.getText() != null
-//                            && !etContainer.getText().toString().isEmpty()) {
-//                        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
-//                        DecimalFormat formatter = (DecimalFormat) nf;
-//                        formatter.applyPattern("#,###,###.##");
-//                        Double doubleValue = Double.parseDouble(etContainer.getText()
-//                                .toString().replace(",", ""));
-//                        etContainer.setText(formatter.format(doubleValue));
-//                        onItemValueChanged(rowPosition-1,q.getLabelC(),doubleValue.toString());
-//                    }
-//                });
-//                break;
-//            default:
-//        }
-//        return etContainer;
     }
 
     /**
@@ -466,10 +428,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         sp.setTag(tag);
         sp.setLayoutParams(sparams);
         sp.setFocusable(true);
-//        sp.setMinimumWidth(700);
-//        sp.setDropDownWidth(400);
         sp.setPadding(10,5,10,5);
-        //sp.setBackgroundResource(R.drawable.table_view_borderless_background);
+
         sp.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
