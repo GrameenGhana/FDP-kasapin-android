@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -39,6 +40,7 @@ import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAndQuestions;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
 import org.grameen.fdp.kasapin.data.db.entity.Question;
+import org.grameen.fdp.kasapin.data.db.entity.ShadowData;
 import org.grameen.fdp.kasapin.parser.MathFormulaParser;
 import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.Cell;
@@ -81,7 +83,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     static final int TYPE_NUMBER = 9999;
     static final int TYPE_TEXT = 8888;
 
-
+    boolean HAS_CHANGED = false;
 
     //Field Tags
     static final String TAG_EDITTEXT = "edittext";
@@ -156,6 +158,29 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             setUpViews();
         onBackClicked();
 
+    }
+
+    @Override
+    protected void onStop() {
+
+        if(HAS_CHANGED){
+            CustomToast.makeToast(this,"Saving...", Toast.LENGTH_SHORT).show();
+            saveShadowData();
+            HAS_CHANGED = false;
+        }
+
+        super.onStop();
+    }
+
+    private void saveShadowData(){
+        ShadowData shadData = new ShadowData();
+        shadData.setFarmerId(FARMER.getCode());
+        shadData.setFarmerData(oldValuesArray.toString());
+
+        AppLogger.d("SAVEDATA");
+        AppLogger.d(shadData.getFarmerMemberData());
+
+        getAppDataManager().getDatabaseManager().shadowDataDao().addData(shadData);
     }
 
     /**
@@ -308,6 +333,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             public void afterTextChanged(Editable s) {
                 materialEditText.setTextColor(Color.BLACK);
                 onItemValueChanged(rowPosition-1, q.getLabelC(), s.toString());
+                HAS_CHANGED = true;
             }
         });
         switch (inpType){
@@ -457,6 +483,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     view.requestFocus();
                     onItemValueChanged(rowPosition-1,q.getLabelC(),choices[position]);
+                    HAS_CHANGED = true;
             }
 
             @Override
