@@ -12,7 +12,7 @@ import java.util.List;
 @Dao
 public interface ShadowDataDao extends BaseDao<ShadowData> {
 
-    @Query("SELECT * FROM shadow_data WHERE farmer_id=:farmerId")
+    @Query("SELECT * FROM shadow_data WHERE farmer_id=:farmerId ORDER BY id DESC")
     ShadowData getShadowDataForFarmer(String farmerId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

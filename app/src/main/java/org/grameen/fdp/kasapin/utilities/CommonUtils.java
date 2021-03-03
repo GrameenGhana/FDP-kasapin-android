@@ -34,7 +34,6 @@ public final class CommonUtils {
         progressDialog.show();
     }
 
-
     public static void showLoadingDialog(ProgressDialog progressDialog, String title, String message, boolean indeterminate, @DrawableRes int icon, boolean cancelableOnTouchOutside) {
         progressDialog.setTitle(title);
         progressDialog.setMessage(message);

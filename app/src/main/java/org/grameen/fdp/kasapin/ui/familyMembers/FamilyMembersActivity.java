@@ -2,6 +2,8 @@ package org.grameen.fdp.kasapin.ui.familyMembers;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -46,6 +48,7 @@ import org.grameen.fdp.kasapin.ui.base.BaseActivity;
 import org.grameen.fdp.kasapin.ui.base.model.Cell;
 import org.grameen.fdp.kasapin.ui.base.model.ColumnHeader;
 import org.grameen.fdp.kasapin.ui.base.model.RowHeader;
+import org.grameen.fdp.kasapin.ui.form.FieldValidator;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
 import org.grameen.fdp.kasapin.ui.form.ValidationError;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -62,6 +65,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -74,6 +78,7 @@ import butterknife.OnClick;
 import io.reactivex.Single;
 
 public class FamilyMembersActivity extends BaseActivity implements FamilyMembersContract.View, FdpCallbacks.UpdateJsonArray {
+
     static JSONArray oldValuesArray;
     static int COLUMN_SIZE;
     static int ROW_SIZE = 1;
@@ -97,8 +102,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     Farmer FARMER;
     FormAndQuestions familyMembersFormAndQuestions;
     List<List<Question>> mQuestionsList;
-//    @BindView(R.id.table_view)
-//    TableView tableView;
+
     @BindView(R.id.save)
     Button save;
     @BindView(R.id.farmer_name_et)
@@ -108,7 +112,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     @BindView(R.id.hscrollDataTable)
     ScrollView hScroll;
 
-//    int SCROLL_POSITION;
     int lastVisibleItemPosition;
     int noFamilyMembers;
 
@@ -119,6 +122,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     private List<RowHeader> mRowHeaderList;
     private List<ColumnHeader> mColumnHeaderList;
     private List<List<Cell>> mCellList;
+
+    private Handler h;
 
     public static String getValue(int index, String key) {
         String value = "";
@@ -140,6 +145,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 //        ButterKnife.bind(this);
 
         mPresenter.takeView(this);
+        h = new Handler(this.getMainLooper());
 
         String farmerCode = getIntent().getStringExtra("farmerCode");
 
@@ -169,7 +175,15 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             HAS_CHANGED = false;
         }
 
+        h.removeCallbacks(saveDataRunnable);
+
         super.onStop();
+    }
+
+    @Override
+    protected void onPostResume() {
+        h.postDelayed(saveDataRunnable,10000);
+        super.onPostResume();
     }
 
     private void saveShadowData(){
@@ -180,6 +194,22 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         AppLogger.d("SAVEDATA");
         AppLogger.d(shadData.getFarmerMemberData());
 
+        try{
+            for(int x=0;x<oldValuesArray.length();x++) {
+                Iterator<String> keys = oldValuesArray.getJSONObject(x).keys();
+
+                while(keys.hasNext()){
+                    String keyd = keys.next();
+                    AppLogger.d(keyd);
+                }
+                AppLogger.d("--------------------");
+            }
+        }
+        catch (JSONException jEx){
+            jEx.printStackTrace();
+        }
+
+        //Save to database
         getAppDataManager().getDatabaseManager().shadowDataDao().addData(shadData);
     }
 
@@ -249,16 +279,16 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             for(int z=0;z<questions.size();z++){
                 if(x > 0){
                     if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_TEXT)){
-                        llContainer.addView(getEditTextView(TYPE_TEXT,x,TAG_EDITTEXT,questions.get(z)));
+                        llContainer.addView(getEditTextView(TYPE_TEXT,x,z,TAG_EDITTEXT,questions.get(z)));
                     }
                     else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER)){
-                        llContainer.addView(getEditTextView(TYPE_NUMBER,x,TAG_EDITTEXT,questions.get(z)));
+                        llContainer.addView(getEditTextView(TYPE_NUMBER,x,z,TAG_EDITTEXT,questions.get(z)));
                     }
                     else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_NUMBER_DECIMAL)){
-                        llContainer.addView(getEditTextView(TYPE_DECIMAL,x,TAG_EDITTEXT,questions.get(z)));
+                        llContainer.addView(getEditTextView(TYPE_DECIMAL,x,z,TAG_EDITTEXT,questions.get(z)));
                     }
                     else if(questions.get(z).getTypeC().equalsIgnoreCase(AppConstants.TYPE_SELECTABLE)){
-                        llContainer.addView(getSpinnerView(questions.get(z).getOptionsC(),TAG_SPINNER,questions.get(z),x));
+                        llContainer.addView(getSpinnerView(questions.get(z).getOptionsC(),TAG_SPINNER,questions.get(z),x,z));
                     }
                 }
             }
@@ -267,8 +297,90 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             horizontalRow.addView(rowHS);
         }
 
+        ShadowData sdata = getAppDataManager().getDatabaseManager()
+                .shadowDataDao().getShadowDataForFarmer(FARMER.getCode());
+
+        if(sdata != null){
+            try{
+                oldValuesArray = new JSONArray(sdata.farmer_member_data);
+                CustomToast.makeToast(FamilyMembersActivity.this,
+                        "Loaded saved data.",Toast.LENGTH_LONG).show();
+            }
+            catch (JSONException jEx){
+                jEx.printStackTrace();
+            }
+        }
+//
+//        finally {
+//            h.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    CustomToast.makeToast(FamilyMembersActivity.this,"Saving...", Toast.LENGTH_SHORT).show();
+//                    saveShadowData();
+//                    h.postDelayed(this,1000);
+//                }
+//            },1000);
+//            addValidatorToViews();
+//        }
+
+//        if(sdata != null){
+//            try {
+//                JSONArray dataToReload = new JSONArray(sdata.farmer_member_data);
+//                showConfirmReloadDialog(dataToReload);
+//            }
+//            catch (JSONException jEx){
+//                jEx.printStackTrace();
+//            }
+//        }
+//        else{
+//            addValidatorToViews();
+//        }
+
+
         addValidatorToViews();
+
     }
+
+    private void startSaving(){
+
+        h.postDelayed(saveDataRunnable,10000);
+    }
+
+    private Runnable saveDataRunnable = new Runnable() {
+            @Override
+            public void run() {
+                CustomToast.makeToast(FamilyMembersActivity.this,"Saving...", Toast.LENGTH_SHORT).show();
+                saveShadowData();
+                h.postDelayed(this,10000);
+            }
+        };
+
+//    private void showConfirmReloadDialog(JSONArray jsonData){
+//
+//        AlertDialog.Builder ab = new AlertDialog.Builder(FamilyMembersActivity.this);
+//        ab.setTitle("Reload saved data");
+//        ab.setMessage("You still have a previously unsaved data. Would you like to reload it?");
+//
+//        ab.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                oldValuesArray = jsonData;
+//
+//                addValidatorToViews();
+//            }
+//        });
+//
+//        ab.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//                addValidatorToViews();
+//            }
+//        });
+//
+//        ab.create().show();
+//    }
+
 
     /** View Objects **/
 
@@ -311,7 +423,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return linearLayout;
     }
 
-    private MaterialEditText getEditTextView(int inpType, int rowPosition, String tag, Question q){
+    private MaterialEditText getEditTextView(int inpType, int rowPosition, int colPosition, String tag, Question q){
         MaterialEditText materialEditText = new MaterialEditText(FamilyMembersActivity.this);
         materialEditText.setHint(q.getHelpTextC());
         materialEditText.setMaxLines(1);
@@ -417,7 +529,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return sb.toString();
     }
 
-    private Spinner getSpinnerView(String listOfChoices, String tag, Question q, int rowPosition){
+    private Spinner getSpinnerView(String listOfChoices, String tag, Question q, int rowPosition, int colPosition){
         Spinner sp = new Spinner(FamilyMembersActivity.this);
         String[] choices = listOfChoices.split(",");
         ViewGroup.LayoutParams sparams = new ViewGroup.LayoutParams(700,100);
@@ -570,6 +682,14 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     @Override
     protected void onDestroy() {
         mPresenter.dropView();
+
+        if(HAS_CHANGED){
+            CustomToast.makeToast(this,"Saving...", Toast.LENGTH_SHORT).show();
+            saveShadowData();
+            HAS_CHANGED = false;
+        }
+
+        h.removeCallbacks(saveDataRunnable);
         super.onDestroy();
     }
 
@@ -663,11 +783,22 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             answerData.setData(oldValuesArray.toString());
             getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
             mPresenter.setFarmerAsUnSynced(FARMER);
+            //Remove shadow data once data is saved and ready for sync
+            getAppDataManager().getDatabaseManager().shadowDataDao().removeFarmerData(FARMER.getCode());
             getAppDataManager().setBooleanValue("reload", true);
+
+            //Remove callbacks from this point
+            h.removeCallbacks(saveDataRunnable);
+            getAppDataManager().getDatabaseManager().shadowDataDao().removeFarmerData(FARMER.getCode());
+
             moveToNextForm(FARMER);
         }
     }
 
+    /**
+     * This function adds the validator as well as the inputs
+     * loaded from the database.
+     */
     private void addValidatorToViews() {
         for(int i=0;i<ROW_SIZE;i++){
             for(int j=0;j<COLUMN_SIZE;j++){
@@ -695,6 +826,10 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 validator.addValidation(i,q);
             }
         }
+
+        //Start the saving interval
+        startSaving();
+
     }
 
     @Override
@@ -702,8 +837,8 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         AppLogger.e("ItemValueChanged --> Uuid == " + uid + " Value == " + value);
         try {
             if (oldValuesArray.getJSONObject(index) != null) {
-                if (oldValuesArray.getJSONObject(index).has(uid))
-                    oldValuesArray.getJSONObject(index).remove(uid);
+//                if (oldValuesArray.getJSONObject(index).has(uid))
+//                    oldValuesArray.getJSONObject(index).remove(uid);
                 oldValuesArray.getJSONObject(index).put(uid, value);
             }
         } catch (JSONException e) {
