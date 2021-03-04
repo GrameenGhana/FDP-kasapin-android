@@ -89,13 +89,17 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     static final int TYPE_TEXT = 8888;
 
     boolean HAS_CHANGED = false;
+    boolean WAS_SAVED = false;
+    int RUN_COUNT = 0;
+
+    int INTERVAL = 5000;
 
     //Field Tags
     static final String TAG_EDITTEXT = "edittext";
-    static final String TAG_CHECKBOX = "checkbox";
+//    static final String TAG_CHECKBOX = "checkbox";
     static final String TAG_SPINNER = "spinner";
     static final String TAG_TEXTVIEW = "textview";
-    static final String TAG_MULTISELECT = "multi_select";
+//    static final String TAG_MULTISELECT = "multi_select";
 
     @Inject
     FamilyMembersPresenter mPresenter;
@@ -116,7 +120,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     int noFamilyMembers;
 
     FormAnswerData answerData;
-    FineTableViewAdapter mTableViewAdapter;
+//    FineTableViewAdapter mTableViewAdapter;
     Validator validator = new Validator();
 
     private List<RowHeader> mRowHeaderList;
@@ -124,16 +128,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     private List<List<Cell>> mCellList;
 
     private Handler h;
-
-    public static String getValue(int index, String key) {
-        String value = "";
-        try {
-            if (oldValuesArray.getJSONObject(index).has(key))
-                return oldValuesArray.getJSONObject(index).getString(key);
-        } catch (JSONException ignored) {
-        }
-        return value;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,53 +158,63 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
             setUpViews();
         onBackClicked();
 
+        AppLogger.d("onC Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+
     }
 
+    /** VIEW SETUP */
     @Override
-    protected void onStop() {
+    public void setUpViews() {
+        setToolbar("Family Members Table");
 
-        if(HAS_CHANGED){
-            CustomToast.makeToast(this,"Saving...", Toast.LENGTH_SHORT).show();
-            saveShadowData();
-            HAS_CHANGED = false;
+        nameTextView.setText(FARMER.getFarmerName());
+        codeTextView.setText(FARMER.getCode());
+
+        if (getAppDataManager().isMonitoring())
+            save.setVisibility(View.GONE);
+
+        mRowHeaderList = new ArrayList<>();
+        mColumnHeaderList = new ArrayList<>();
+        mCellList = new ArrayList<>();
+        mQuestionsList = new ArrayList<>();
+
+        answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getFormTranslationId());
+        if (answerData == null) {
+            answerData = new FormAnswerData();
+            answerData.setFormId(familyMembersFormAndQuestions.getForm().getFormTranslationId());
+            answerData.setFarmerCode(FARMER.getCode());
+        }
+        try {
+            oldValuesArray = new JSONArray(answerData.getData());
+        } catch (Exception ignore) {
+            oldValuesArray = new JSONArray();
         }
 
-        h.removeCallbacks(saveDataRunnable);
+        for (int i = 0; i < ROW_SIZE; i++)
+            mCellList.add(new ArrayList<>());
 
-        super.onStop();
-    }
+        for (int i = 0; i < ROW_SIZE; i++)
+            mQuestionsList.add(familyMembersFormAndQuestions.getQuestions());
 
-    @Override
-    protected void onPostResume() {
-        h.postDelayed(saveDataRunnable,10000);
-        super.onPostResume();
-    }
-
-    private void saveShadowData(){
-        ShadowData shadData = new ShadowData();
-        shadData.setFarmerId(FARMER.getCode());
-        shadData.setFarmerData(oldValuesArray.toString());
-
-        AppLogger.d("SAVEDATA");
-        AppLogger.d(shadData.getFarmerMemberData());
-
-        try{
-            for(int x=0;x<oldValuesArray.length();x++) {
-                Iterator<String> keys = oldValuesArray.getJSONObject(x).keys();
-
-                while(keys.hasNext()){
-                    String keyd = keys.next();
-                    AppLogger.d(keyd);
-                }
-                AppLogger.d("--------------------");
+        for (int i = 0; i < ROW_SIZE; i++) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                if (i < oldValuesArray.length()) {
+                    if (oldValuesArray.get(i) == null)
+                        oldValuesArray.put(i, jsonObject);
+                } else
+                    oldValuesArray.put(i, jsonObject);
+                //allFamilyMembersArrayData.put(i, jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
-        catch (JSONException jEx){
-            jEx.printStackTrace();
-        }
+        AppLogger.d("sV Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+        populateTable();
+    }
 
-        //Save to database
-        getAppDataManager().getDatabaseManager().shadowDataDao().addData(shadData);
+    @Override
+    public void setupTableView(FormAndQuestions _familyMembersFormAndQuestions) {
     }
 
     /**
@@ -336,24 +340,289 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 //            addValidatorToViews();
 //        }
 
-
+        AppLogger.d("pT Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
         addValidatorToViews();
 
     }
 
-    private void startSaving(){
+    /** END OF VIEW SETUP */
 
-        h.postDelayed(saveDataRunnable,10000);
-    }
+    /** THREAD GROUP */
 
     private Runnable saveDataRunnable = new Runnable() {
-            @Override
-            public void run() {
-                CustomToast.makeToast(FamilyMembersActivity.this,"Saving...", Toast.LENGTH_SHORT).show();
+        @Override
+        public void run() {
+            AppLogger.d("RUN Count: " + Integer.valueOf(RUN_COUNT).toString());
+            AppLogger.d("RUN Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+            if(RUN_COUNT > 1){
                 saveShadowData();
-                h.postDelayed(this,10000);
             }
-        };
+            else{
+                HAS_CHANGED = false;
+            }
+            RUN_COUNT++;
+            h.postDelayed(this,INTERVAL);
+        }
+    };
+    /** END OF THREAD GROUP */
+
+    /** ACTIVITY LIFECYCLE OVERRIDES */
+    @Override
+    protected void onStop() {
+        AppLogger.d("OnS Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+        h.removeCallbacks(saveDataRunnable);
+        if(!WAS_SAVED){
+            if(HAS_CHANGED){
+                saveShadowData();
+            }
+        }
+
+        super.onStop();
+    }
+
+    @Override
+    protected void onPostResume() {
+        AppLogger.d("onP Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+        HAS_CHANGED = false;
+        startSaving();
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.dropView();
+        AppLogger.d("onD Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+        h.removeCallbacks(saveDataRunnable);
+
+        if(!WAS_SAVED){
+            if(HAS_CHANGED){
+                saveShadowData();
+            }
+        }
+
+        super.onDestroy();
+    }
+
+    /** END OF LIFECYCLE OVERRIDES */
+
+    /** VIEW VALIDATION */
+    @SuppressLint("CutPasteId")
+    boolean validate() {
+        List<ValidationError> errors = new ArrayList<>();
+        for (int i = 0; i < ROW_SIZE; i++) {
+            AppLogger.e(TAG, "#################################################");
+
+            for (int j = 0; j < COLUMN_SIZE; j++) {
+                View view = getViewObject(i,j);//.getCellViews(i, j);
+                if (view != null) {
+                    String name = mQuestionsList.get(i).get(j).getLabelC();
+                    HashSet<InputValidator> validators = validator.getValidators(name + i);
+                    if (validators != null) {
+                        ValidationError error;
+                        for (InputValidator inputVal : validators) {
+                            error = inputVal.validate(getValue(i, name), name, "");
+                            if (error != null) {
+                                errors.add(error);
+                                setError(view, error.getMessage(getResources()));
+                                if(view instanceof EditText){
+                                    ((MaterialEditText)view).setTextColor(Color.RED);
+                                }
+                            }else {
+                                setError(view, null);
+                            }
+                        }
+                    }else
+                        setError(view, null);
+                }
+            }
+        }
+        AppLogger.e(TAG, "ERRORS SIZE IS " + errors.size());
+        return errors.isEmpty();
+    }
+
+    void setError(View view, String message){
+        try {
+            if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
+                MaterialEditText edittext = (MaterialEditText) view;
+                edittext.setError(message);
+            } else if (view.getTag().toString().equals("spinner")) {
+                Spinner spinner = (Spinner)view;
+                TextView itemView = spinner.findViewById(android.R.id.text1);
+                itemView.setError(message);
+            }
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+        }
+    }
+
+    /**
+     * This function adds the validator as well as the inputs
+     * loaded from the database.
+     */
+    private void addValidatorToViews() {
+        AppLogger.d("aV Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+        for(int i=0;i<ROW_SIZE;i++){
+            for(int j=0;j<COLUMN_SIZE;j++){
+                Question q = mQuestionsList.get(i).get(j);
+                String value = getValue(i,q.getLabelC());
+                if(value != null){
+                    q.setDefaultValueC(value);
+                }
+
+                View vx = (View)getViewObject(i,j);
+
+                if(value != null){
+                    if(vx != null){
+                        if(vx instanceof EditText){
+                            EditText et = (EditText)vx;
+                            et.setText(value);
+                        }
+                        else if(vx instanceof Spinner){
+                            Spinner sp = (Spinner)vx;
+                            List<String> lChoices = Arrays.asList(q.getOptionsC().split(","));
+                            sp.setSelection(lChoices.indexOf(value));
+                        }
+                    }
+                }
+                validator.addValidation(i,q);
+            }
+        }
+
+        //Start the saving interval
+//        startSaving();
+        HAS_CHANGED = false;
+
+    }
+
+    /** END OF VIEW VALIDATION */
+
+    /** BACKGROUND SAVE DATA */
+
+    private void saveShadowData(){
+        AppLogger.d("Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+        if(HAS_CHANGED){
+            CustomToast.makeToast(FamilyMembersActivity.this,"Saving...", Toast.LENGTH_SHORT).show();
+            ShadowData shadData = new ShadowData();
+            shadData.setFarmerId(FARMER.getCode());
+            shadData.setFarmerData(oldValuesArray.toString());
+
+//        AppLogger.d("SAVEDATA");
+//        AppLogger.d(shadData.getFarmerMemberData());
+
+//            try{
+//                for(int x=0;x<oldValuesArray.length();x++) {
+//                    Iterator<String> keys = oldValuesArray.getJSONObject(x).keys();
+//
+//                    while(keys.hasNext()){
+//                        String keyd = keys.next();
+//                        AppLogger.d(keyd);
+//                    }
+//                    AppLogger.d("--------------------");
+//                }
+//            }
+//            catch (JSONException jEx){
+//                jEx.printStackTrace();
+//            }
+            //Save to database
+            getAppDataManager().getDatabaseManager().shadowDataDao().addData(shadData);
+            mPresenter.setFarmerAsUnSynced(FARMER);
+
+            HAS_CHANGED = false;
+        }
+    }
+
+    private void startSaving(){
+        AppLogger.d("sS Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+        h.postDelayed(saveDataRunnable,INTERVAL);
+    }
+
+    @OnClick(R.id.save)
+    void saveData() {
+        AppLogger.e(oldValuesArray.toString());
+        // check validations here
+
+        if (!validate()) {
+            CustomToast.makeToast(FamilyMembersActivity.this,
+                    "Please complete all fields first before saving.",
+                    CustomToast.LENGTH_LONG).show();
+            return;
+        }
+//        /*
+//         ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
+//         */
+        StringBuilder familyMembersIncomeStringBuilder = new StringBuilder();
+
+        int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
+        FormAnswerData socioEconomicProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), socioEconomicFormId);
+
+        if (socioEconomicProfileFormAnswerData == null) {
+            socioEconomicProfileFormAnswerData = new FormAnswerData();
+            socioEconomicProfileFormAnswerData.setFarmerCode(FARMER.getCode());
+            socioEconomicProfileFormAnswerData.setFormId(socioEconomicFormId);
+            socioEconomicProfileFormAnswerData.setData(new JSONObject().toString());
+        }
+        Question familyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("family_income_");
+        Question totalFamilyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("total_family_income_");
+
+        if (familyIncomeQuestion != null && totalFamilyIncomeQuestion != null) {
+            for (int i = 0; i < ROW_SIZE; i++) {
+                String value;
+                try {
+                    value = oldValuesArray.getJSONObject(i).getString(familyIncomeQuestion.getLabelC());
+                } catch (JSONException ignore) {
+                    value = "0";
+                }
+                familyMembersIncomeStringBuilder.append(value).append("+");
+            }
+            familyMembersIncomeStringBuilder.append("0");
+
+            JSONObject data = socioEconomicProfileFormAnswerData.getJsonData();
+            if (data.has(totalFamilyIncomeQuestion.getLabelC()))
+                data.remove(totalFamilyIncomeQuestion.getLabelC());
+            try {
+                data.put(totalFamilyIncomeQuestion.getLabelC(), MathFormulaParser.getInstance().evaluate(familyMembersIncomeStringBuilder.toString()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            socioEconomicProfileFormAnswerData.setData(data.toString());
+            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(socioEconomicProfileFormAnswerData);
+
+            //Remove callbacks from this point
+            h.removeCallbacks(saveDataRunnable);
+
+            //Now Save the family members answer data
+            //answerData.setData(allFamilyMembersArrayData.toString());
+            answerData.setData(oldValuesArray.toString());
+            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
+            mPresenter.setFarmerAsUnSynced(FARMER);
+            //Remove shadow data once data is saved and ready for sync
+            getAppDataManager().setBooleanValue("reload", true);
+
+            int xx = getAppDataManager().getDatabaseManager().shadowDataDao().removeFarmerData(FARMER.getCode());
+            AppLogger.d("Value stat for removal: " + Integer.valueOf(xx).toString());
+            WAS_SAVED = true;
+
+            moveToNextForm(FARMER);
+        }
+    }
+
+    @Override
+    public void onItemValueChanged(int index, String uid, String value) {
+        AppLogger.e("ItemValueChanged --> Uuid == " + uid + " Value == " + value);
+        try {
+            if (oldValuesArray.getJSONObject(index) != null) {
+//                if (oldValuesArray.getJSONObject(index).has(uid))
+//                    oldValuesArray.getJSONObject(index).remove(uid);
+                oldValuesArray.getJSONObject(index).put(uid, value);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /** END OF BACKGROUND SAVE DATA */
 
 //    private void showConfirmReloadDialog(JSONArray jsonData){
 //
@@ -380,7 +649,6 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
 //
 //        ab.create().show();
 //    }
-
 
     /** View Objects **/
 
@@ -472,9 +740,89 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
                 break;
             default:
         }
-
+        AppLogger.d("Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
         return materialEditText;
     }
+
+    private Spinner getSpinnerView(String listOfChoices, String tag, Question q, int rowPosition, int colPosition){
+        Spinner sp = new Spinner(FamilyMembersActivity.this);
+        String[] choices = listOfChoices.split(",");
+        ViewGroup.LayoutParams sparams = new ViewGroup.LayoutParams(700,100);
+
+        ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
+                android.R.layout.simple_dropdown_item_1line,choices);
+        sp.setAdapter(arrDapt);
+        sp.setTag(tag);
+        sp.setLayoutParams(sparams);
+        sp.setFocusable(true);
+        sp.setPadding(10,5,10,5);
+
+        sp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.requestFocus();
+                return false;
+            }
+        });
+
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    view.requestFocus();
+                    onItemValueChanged(rowPosition-1,q.getLabelC(),choices[position]);
+                    HAS_CHANGED = true;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        AppLogger.d("Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
+        return sp;
+    }
+
+    private View getViewObject(int rowIndex, int colIndex){
+
+        LinearLayout rowContainer = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView hs = (HorizontalScrollView)rowContainer.getChildAt(rowIndex+1);
+        LinearLayout llx = (LinearLayout)(hs.getChildAt(0));
+        return llx.getChildAt(colIndex);
+    }
+
+    /** End of View Objects */
+
+    /** SCROLL */
+    @OnClick(R.id.scrollRight)
+    void scrollTableToTheRight() {
+        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
+
+        for(int z=0;z<horizontalRow.getChildCount();z++){
+            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+            if(!rowHS.equals(ccHorizontalView)){
+                ccHorizontalView.scrollTo(ccHorizontalView.getScrollX() + 200,ccHorizontalView.getScrollY());
+            }
+        }
+    }
+
+
+    @OnClick(R.id.scrollLeft)
+    void scrollTableToTheLeft() {
+        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
+        HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
+
+        for(int z=0;z<horizontalRow.getChildCount();z++){
+            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
+            if(!rowHS.equals(ccHorizontalView)){
+                ccHorizontalView.scrollTo(ccHorizontalView.getScrollX() - 300,ccHorizontalView.getScrollY());
+            }
+        }
+    }
+
+    /** END OF SCROLL */
+
+    /** DATA UTILS */
 
     /**
      * Splits a comma separated list of integers to integer list.
@@ -529,320 +877,20 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         return sb.toString();
     }
 
-    private Spinner getSpinnerView(String listOfChoices, String tag, Question q, int rowPosition, int colPosition){
-        Spinner sp = new Spinner(FamilyMembersActivity.this);
-        String[] choices = listOfChoices.split(",");
-        ViewGroup.LayoutParams sparams = new ViewGroup.LayoutParams(700,100);
-
-        ArrayAdapter<String> arrDapt = new ArrayAdapter<>(FamilyMembersActivity.this,
-                android.R.layout.simple_dropdown_item_1line,choices);
-        sp.setAdapter(arrDapt);
-        sp.setTag(tag);
-        sp.setLayoutParams(sparams);
-        sp.setFocusable(true);
-        sp.setPadding(10,5,10,5);
-
-        sp.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.requestFocus();
-                return false;
-            }
-        });
-
-        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    view.requestFocus();
-                    onItemValueChanged(rowPosition-1,q.getLabelC(),choices[position]);
-                    HAS_CHANGED = true;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        return sp;
-    }
-
-    private View getViewObject(int rowIndex, int colIndex){
-
-        LinearLayout rowContainer = hScroll.findViewById(R.id.llDataTable);
-        HorizontalScrollView hs = (HorizontalScrollView)rowContainer.getChildAt(rowIndex+1);
-        LinearLayout llx = (LinearLayout)(hs.getChildAt(0));
-        return llx.getChildAt(colIndex);
-    }
-
-    /** End of View Objects */
-
-    @Override
-    public void setUpViews() {
-        setToolbar("Family Members Table");
-
-        nameTextView.setText(FARMER.getFarmerName());
-        codeTextView.setText(FARMER.getCode());
-
-        if (getAppDataManager().isMonitoring())
-            save.setVisibility(View.GONE);
-
-        mRowHeaderList = new ArrayList<>();
-        mColumnHeaderList = new ArrayList<>();
-        mCellList = new ArrayList<>();
-        mQuestionsList = new ArrayList<>();
-
-        answerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), familyMembersFormAndQuestions.getForm().getFormTranslationId());
-        if (answerData == null) {
-            answerData = new FormAnswerData();
-            answerData.setFormId(familyMembersFormAndQuestions.getForm().getFormTranslationId());
-            answerData.setFarmerCode(FARMER.getCode());
-        }
+    public static String getValue(int index, String key) {
+        String value = "";
         try {
-            oldValuesArray = new JSONArray(answerData.getData());
-        } catch (Exception ignore) {
-            oldValuesArray = new JSONArray();
+            if (oldValuesArray.getJSONObject(index).has(key))
+                return oldValuesArray.getJSONObject(index).getString(key);
+        } catch (JSONException ignored) {
         }
-
-        for (int i = 0; i < ROW_SIZE; i++)
-            mCellList.add(new ArrayList<>());
-
-        for (int i = 0; i < ROW_SIZE; i++)
-            mQuestionsList.add(familyMembersFormAndQuestions.getQuestions());
-
-        for (int i = 0; i < ROW_SIZE; i++) {
-            JSONObject jsonObject = new JSONObject();
-            try {
-                if (i < oldValuesArray.length()) {
-                    if (oldValuesArray.get(i) == null)
-                        oldValuesArray.put(i, jsonObject);
-                } else
-                    oldValuesArray.put(i, jsonObject);
-                //allFamilyMembersArrayData.put(i, jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        populateTable();
+        return value;
     }
 
-    @Override
-    public void setupTableView(FormAndQuestions _familyMembersFormAndQuestions) {
-    }
-
-    @SuppressLint("CutPasteId")
-    boolean validate() {
-        List<ValidationError> errors = new ArrayList<>();
-        for (int i = 0; i < ROW_SIZE; i++) {
-            AppLogger.e(TAG, "#################################################");
-
-            for (int j = 0; j < COLUMN_SIZE; j++) {
-                View view = getViewObject(i,j);//.getCellViews(i, j);
-                if (view != null) {
-                    String name = mQuestionsList.get(i).get(j).getLabelC();
-                    HashSet<InputValidator> validators = validator.getValidators(name + i);
-                    if (validators != null) {
-                        ValidationError error;
-                        for (InputValidator inputVal : validators) {
-                            error = inputVal.validate(getValue(i, name), name, "");
-                            if (error != null) {
-                                errors.add(error);
-                                setError(view, error.getMessage(getResources()));
-                                if(view instanceof EditText){
-                                    ((MaterialEditText)view).setTextColor(Color.RED);
-                                }
-                            }else {
-                                setError(view, null);
-                            }
-                        }
-                    }else
-                        setError(view, null);
-                }
-            }
-        }
-        AppLogger.e(TAG, "ERRORS SIZE IS " + errors.size());
-        return errors.isEmpty();
-    }
-
-    void setError(View view, String message){
-        try {
-            if (view.getTag().toString().equals("edittext") || view.getTag().toString().equals("multi_select")) {
-                MaterialEditText edittext = (MaterialEditText) view;
-                edittext.setError(message);
-            } else if (view.getTag().toString().equals("spinner")) {
-                Spinner spinner = (Spinner)view;
-                TextView itemView = spinner.findViewById(android.R.id.text1);
-                itemView.setError(message);
-            }
-        } catch (Exception ignore) {
-            ignore.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        mPresenter.dropView();
-
-        if(HAS_CHANGED){
-            CustomToast.makeToast(this,"Saving...", Toast.LENGTH_SHORT).show();
-            saveShadowData();
-            HAS_CHANGED = false;
-        }
-
-        h.removeCallbacks(saveDataRunnable);
-        super.onDestroy();
-    }
-
+    /** END OF DATA UTILS */
 
     @Override
     public void openNextActivity() {
     }
 
-
-    @OnClick(R.id.scrollRight)
-    void scrollTableToTheRight() {
-        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
-        HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
-
-        for(int z=0;z<horizontalRow.getChildCount();z++){
-            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
-            if(!rowHS.equals(ccHorizontalView)){
-                ccHorizontalView.scrollTo(ccHorizontalView.getScrollX() + 200,ccHorizontalView.getScrollY());
-            }
-        }
-    }
-
-
-    @OnClick(R.id.scrollLeft)
-    void scrollTableToTheLeft() {
-        LinearLayout horizontalRow = hScroll.findViewById(R.id.llDataTable);
-        HorizontalScrollView rowHS = new HorizontalScrollView(FamilyMembersActivity.this);
-
-        for(int z=0;z<horizontalRow.getChildCount();z++){
-            HorizontalScrollView ccHorizontalView =(HorizontalScrollView)horizontalRow.getChildAt(z);
-            if(!rowHS.equals(ccHorizontalView)){
-                ccHorizontalView.scrollTo(ccHorizontalView.getScrollX() - 300,ccHorizontalView.getScrollY());
-            }
-        }
-    }
-
-    @OnClick(R.id.save)
-    void saveData() {
-        AppLogger.e(oldValuesArray.toString());
-        // check validations here
-
-        if (!validate()) {
-            CustomToast.makeToast(FamilyMembersActivity.this,
-                    "Please complete all fields first before saving.",
-                    CustomToast.LENGTH_LONG).show();
-            return;
-        }
-//        /*
-//         ** Calculate income from all family members, save total family income value in Socio-EconomicProfile AnswerData
-//         */
-        StringBuilder familyMembersIncomeStringBuilder = new StringBuilder();
-
-        int socioEconomicFormId = getAppDataManager().getDatabaseManager().formsDao().getTranslationId(AppConstants.SOCIO_ECONOMIC_PROFILE).blockingGet(0);
-        FormAnswerData socioEconomicProfileFormAnswerData = getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(FARMER.getCode(), socioEconomicFormId);
-
-        if (socioEconomicProfileFormAnswerData == null) {
-            socioEconomicProfileFormAnswerData = new FormAnswerData();
-            socioEconomicProfileFormAnswerData.setFarmerCode(FARMER.getCode());
-            socioEconomicProfileFormAnswerData.setFormId(socioEconomicFormId);
-            socioEconomicProfileFormAnswerData.setData(new JSONObject().toString());
-        }
-        Question familyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("family_income_");
-        Question totalFamilyIncomeQuestion = getAppDataManager().getDatabaseManager().questionDao().get("total_family_income_");
-
-        if (familyIncomeQuestion != null && totalFamilyIncomeQuestion != null) {
-            for (int i = 0; i < ROW_SIZE; i++) {
-                String value;
-                try {
-                    value = oldValuesArray.getJSONObject(i).getString(familyIncomeQuestion.getLabelC());
-                } catch (JSONException ignore) {
-                    value = "0";
-                }
-                familyMembersIncomeStringBuilder.append(value).append("+");
-            }
-            familyMembersIncomeStringBuilder.append("0");
-
-            JSONObject data = socioEconomicProfileFormAnswerData.getJsonData();
-            if (data.has(totalFamilyIncomeQuestion.getLabelC()))
-                data.remove(totalFamilyIncomeQuestion.getLabelC());
-            try {
-                data.put(totalFamilyIncomeQuestion.getLabelC(), MathFormulaParser.getInstance().evaluate(familyMembersIncomeStringBuilder.toString()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            socioEconomicProfileFormAnswerData.setData(data.toString());
-            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(socioEconomicProfileFormAnswerData);
-
-            //Now Save the family members answer data
-            //answerData.setData(allFamilyMembersArrayData.toString());
-            answerData.setData(oldValuesArray.toString());
-            getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData);
-            mPresenter.setFarmerAsUnSynced(FARMER);
-            //Remove shadow data once data is saved and ready for sync
-            getAppDataManager().getDatabaseManager().shadowDataDao().removeFarmerData(FARMER.getCode());
-            getAppDataManager().setBooleanValue("reload", true);
-
-            //Remove callbacks from this point
-            h.removeCallbacks(saveDataRunnable);
-            getAppDataManager().getDatabaseManager().shadowDataDao().removeFarmerData(FARMER.getCode());
-
-            moveToNextForm(FARMER);
-        }
-    }
-
-    /**
-     * This function adds the validator as well as the inputs
-     * loaded from the database.
-     */
-    private void addValidatorToViews() {
-        for(int i=0;i<ROW_SIZE;i++){
-            for(int j=0;j<COLUMN_SIZE;j++){
-                Question q = mQuestionsList.get(i).get(j);
-                String value = getValue(i,q.getLabelC());
-                if(value != null){
-                    q.setDefaultValueC(value);
-                }
-
-                View vx = (View)getViewObject(i,j);
-
-                if(value != null){
-                    if(vx != null){
-                        if(vx instanceof EditText){
-                            EditText et = (EditText)vx;
-                            et.setText(value);
-                        }
-                        else if(vx instanceof Spinner){
-                            Spinner sp = (Spinner)vx;
-                            List<String> lChoices = Arrays.asList(q.getOptionsC().split(","));
-                            sp.setSelection(lChoices.indexOf(value));
-                        }
-                    }
-                }
-                validator.addValidation(i,q);
-            }
-        }
-
-        //Start the saving interval
-        startSaving();
-
-    }
-
-    @Override
-    public void onItemValueChanged(int index, String uid, String value) {
-        AppLogger.e("ItemValueChanged --> Uuid == " + uid + " Value == " + value);
-        try {
-            if (oldValuesArray.getJSONObject(index) != null) {
-//                if (oldValuesArray.getJSONObject(index).has(uid))
-//                    oldValuesArray.getJSONObject(index).remove(uid);
-                oldValuesArray.getJSONObject(index).put(uid, value);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 }

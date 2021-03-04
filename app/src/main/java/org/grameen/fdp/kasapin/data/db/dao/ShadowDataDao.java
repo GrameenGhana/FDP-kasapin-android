@@ -18,6 +18,6 @@ public interface ShadowDataDao extends BaseDao<ShadowData> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addData(ShadowData sdata);
 
-    @Query("DELETE FROM shadow_data WHERE farmer_id=:farmerId")
-    void removeFarmerData(String farmerId);
+    @Query("DELETE FROM shadow_data WHERE farmer_id LIKE :farmerId")
+    int removeFarmerData(String farmerId);
 }
