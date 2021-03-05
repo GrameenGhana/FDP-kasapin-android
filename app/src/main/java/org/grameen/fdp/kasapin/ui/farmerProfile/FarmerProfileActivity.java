@@ -432,6 +432,11 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 }
                 break;
             case R.id.sync_farmer:
+                if(checkIfHasUnsavedFarmerMember()){
+                    showMessage("This farmer has unsaved data in family members. Please finalize by " +
+                            "pressing save in Family Members form.");
+                    return;
+                }
                 if (FARMER.getSyncStatus() == AppConstants.SYNC_OK) {
                     showMessage(R.string.no_new_data);
                     return;
@@ -447,6 +452,10 @@ public class FarmerProfileActivity extends BaseActivity implements FarmerProfile
                 //showSelectFormDialog();
                 break;
         }
+    }
+
+    boolean checkIfHasUnsavedFarmerMember(){
+        return getAppDataManager().getDatabaseManager().shadowDataDao().getShadowDataForFarmer(FARMER.getCode()) != null;
     }
 
     boolean checkIfFarmSizeCorresponds(List<Plot> plots) {

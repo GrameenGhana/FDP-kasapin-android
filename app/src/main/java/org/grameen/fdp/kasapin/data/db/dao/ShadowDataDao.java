@@ -15,6 +15,9 @@ public interface ShadowDataDao extends BaseDao<ShadowData> {
     @Query("SELECT * FROM shadow_data WHERE farmer_id=:farmerId ORDER BY id DESC")
     ShadowData getShadowDataForFarmer(String farmerId);
 
+    @Query("SELECT * FROM shadow_data ORDER BY id DESC")
+    List<ShadowData> getAllFarmerShadowData();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addData(ShadowData sdata);
 

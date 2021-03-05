@@ -92,7 +92,7 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     boolean WAS_SAVED = false;
     int RUN_COUNT = 0;
 
-    int INTERVAL = 5000;
+    int INTERVAL = 2000;
 
     //Field Tags
     static final String TAG_EDITTEXT = "edittext";
@@ -371,9 +371,11 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
     protected void onStop() {
         AppLogger.d("OnS Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
         h.removeCallbacks(saveDataRunnable);
-        if(!WAS_SAVED){
-            if(HAS_CHANGED){
-                saveShadowData();
+        if(RUN_COUNT > 1){
+            if(!WAS_SAVED){
+                if(HAS_CHANGED){
+                    saveShadowData();
+                }
             }
         }
 
@@ -394,9 +396,11 @@ public class FamilyMembersActivity extends BaseActivity implements FamilyMembers
         AppLogger.d("onD Has changed: " + Boolean.valueOf(HAS_CHANGED).toString());
         h.removeCallbacks(saveDataRunnable);
 
-        if(!WAS_SAVED){
-            if(HAS_CHANGED){
-                saveShadowData();
+        if(RUN_COUNT > 1){
+            if(!WAS_SAVED){
+                if(HAS_CHANGED){
+                    saveShadowData();
+                }
             }
         }
 

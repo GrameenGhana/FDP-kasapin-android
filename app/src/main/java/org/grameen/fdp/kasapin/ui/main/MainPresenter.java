@@ -4,6 +4,7 @@ import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
 import org.grameen.fdp.kasapin.data.db.entity.CommunitiesAndFarmers;
 import org.grameen.fdp.kasapin.data.db.entity.Farmer;
+import org.grameen.fdp.kasapin.data.db.entity.ShadowData;
 import org.grameen.fdp.kasapin.syncManager.DownloadResources;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.ui.base.model.MySearchItem;
@@ -27,6 +28,7 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
     AppDataManager mAppDataManager;
     int count = 0;
     List<Farmer> UN_SYNCED_FARMERS;
+    List<ShadowData> SHADOW_DATA;
 
     @Inject
     public MainPresenter(AppDataManager appDataManager) {
@@ -113,6 +115,17 @@ public class MainPresenter extends BasePresenter<MainContract.View> implements M
             getView().showMessage(R.string.no_new_data);
             return;
         }
+
+        /*
+         * Notification of unsaved family member data
+         */
+        SHADOW_DATA = getAppDataManager().getDatabaseManager().shadowDataDao().getAllFarmerShadowData();
+        if(!SHADOW_DATA.isEmpty()){
+            getView().showMessage("There are farmers with unsaved family member data. " +
+                    "Kindly save their information before syncing.");
+            return;
+        }
+
         syncData(this, showProgress, UN_SYNCED_FARMERS);
     }
 
