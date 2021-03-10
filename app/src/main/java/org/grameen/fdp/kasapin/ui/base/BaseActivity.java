@@ -427,7 +427,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseCont
                 intent.putExtra("noFamilyMembers", numberFamilyMembers);
                 intent.putExtra("farmerCode", farmer.getCode());
                 startActivity(intent);
-                finish();
+//                finish();
             } else
                 showDialog(false, getString(R.string.fill_data),
                         getString(R.string.enter_data_rationale) + farmer.getFarmerName() + getString(R.string.before_proceed_suffux),
