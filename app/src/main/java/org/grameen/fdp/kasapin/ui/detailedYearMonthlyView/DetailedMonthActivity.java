@@ -113,7 +113,7 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         showLoading("Initializing print", "Please wait...", false, 0, false);
 
         new Handler().postDelayed(() -> {
-            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "monthly_activities_calendar", farmer.getFarmerName(), 5);
+            PDFCreator pdfCreator = PDFCreator.createPdf(tableView, "monthly_activities_calendar", farmer.getFarmerName(), 10);
             hideLoading();
             showMessage("Done!");
 

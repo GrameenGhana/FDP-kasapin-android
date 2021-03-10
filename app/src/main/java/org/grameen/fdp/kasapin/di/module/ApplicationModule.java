@@ -93,7 +93,7 @@ public class ApplicationModule {
         if(BuildConfig.DEBUG)
             builder.addInterceptor(new HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY));
-        else {
+
             try {
                 KeyPinStore keystore = KeyPinStore.getInstance(application);
                 SSLSocketFactory tlsSocketFactory = keystore.getContext().getSocketFactory();
@@ -104,7 +104,7 @@ public class ApplicationModule {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+
             return builder.callTimeout(30, TimeUnit.SECONDS)
                     .build();
     }
