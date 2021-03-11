@@ -215,7 +215,20 @@ public class PDFCreator {
 
         int[] pixels = new int[bitmap.getWidth() * pageHeight];
 
-        bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, beginHeight, bitmap.getWidth() - leftMargin, pageHeight);
+        AppLogger.e("beginHeight" + Integer.valueOf(beginHeight).toString() );
+        AppLogger.e("Bitmap height" + Integer.valueOf(bitmap.getHeight()).toString());
+        AppLogger.e("Page height" + Integer.valueOf(pageHeight).toString());
+//
+        Integer totHeight = beginHeight + pageHeight;
+        Integer excess = totHeight - bitmap.getHeight();
+
+        if(excess > 0)
+            pageHeight -= excess;
+//
+//        Integer sval = Math.abs(bitmap.getHeight() - totHeight);
+//        AppLogger.d("StandardVal" +sval.toString());
+
+        bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0,beginHeight, bitmap.getWidth() - leftMargin, pageHeight);
 
         Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(), pageHeight, Bitmap.Config.ARGB_8888);
         newBitmap.setPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), pageHeight);
