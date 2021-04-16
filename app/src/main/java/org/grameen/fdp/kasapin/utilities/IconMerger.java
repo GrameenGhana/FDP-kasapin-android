@@ -9,11 +9,9 @@ import java.util.LinkedList;
 
 public class IconMerger {
     Context context;
-
     public IconMerger(Context c) {
         this.context = c;
     }
-
 
     public Bitmap combineIcons(String activities) {
         String[] names = activities.split(",");

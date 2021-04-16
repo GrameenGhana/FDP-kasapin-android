@@ -98,7 +98,7 @@ public class DetailedYearTableViewAdapter extends LongPressAwareTableDataAdapter
                 itemView.setPadding(20, 10, 20, 10);
                 itemView.setTextSize(TITLE_TEXT_SIZE);
                 itemView.setTypeface(itemView.getTypeface(), Typeface.BOLD);
-                itemView.setTextColor(ContextCompat.getColor(getContext(),    (data.getTag().equals(TAG_OTHER_TEXT_VIEW)) ? R.color.text_black_87 : R.color.colorAccent)  );
+                itemView.setTextColor(ContextCompat.getColor(getContext(), (data.getTag().equals(TAG_OTHER_TEXT_VIEW)) ? R.color.text_black_87 : R.color.colorAccent)  );
                 return itemView;
             }
         }

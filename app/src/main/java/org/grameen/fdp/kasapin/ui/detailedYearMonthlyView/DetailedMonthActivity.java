@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -184,7 +185,6 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
     HistoricalTableViewData getMonthlyData(int id, String month, int year) {
         List<RecommendationActivity> recommendationsPlusActivities;
         HistoricalTableViewData data = new HistoricalTableViewData("", "", "");
-
         try {
             recommendationsPlusActivities = getAppDataManager().getDatabaseManager()
                     .recommendationPlusActivitiesDao().getAllByRecommendation(id, month, String.valueOf(year)).blockingGet();
@@ -275,19 +275,18 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
         TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
 
 
-        TABLE_DATA_LIST.add(new TableData("Input Cost", null, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData("Input Cost", generateList("Input", "Cost"), TAG_RESULTS));
         TABLE_DATA_LIST.add(new TableData(getString(R.string.supplies), suppliesCost, TAG_OTHER_TEXT_VIEW));
 
         if (DID_LABOUR) {
-            TABLE_DATA_LIST.add(new TableData("Labor Cost", null, TAG_OTHER_TEXT_VIEW));
-
+            TABLE_DATA_LIST.add(new TableData("Labor Cost", generateList("Labor", "Cost"), TAG_RESULTS));
             TABLE_DATA_LIST.add(new TableData(getString(R.string.labour), labourCost, TAG_OTHER_TEXT_VIEW));
         }
         //Extra spacing at bottom of table
-         TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
         TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
-
-
+        TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
+        TABLE_DATA_LIST.add(new TableData("", null, TAG_OTHER_TEXT_VIEW));
         monthsArray.recycle();
     }
 
@@ -299,5 +298,14 @@ public class DetailedMonthActivity extends BaseActivity implements DetailedMonth
 
     @Override
     public void openLoginActivityOnTokenExpire() {
+    }
+
+
+    List<String> generateList(String... values) {
+        List<String> items = new ArrayList<>();
+        Collections.addAll(items, values);
+        for(int i = 0; i < 12 - values.length; i++)
+            items.add("");
+        return items;
     }
 }

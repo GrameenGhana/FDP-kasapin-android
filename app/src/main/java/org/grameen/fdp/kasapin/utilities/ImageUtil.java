@@ -119,8 +119,8 @@ public class ImageUtil {
     public static Bitmap mergeIconsToBitmap(LinkedList<Bitmap> bitmaps) {
         if (bitmaps.size() == 0) return null;
 
-        int iconSize = 80;
-        int noOfColumns = 2;
+        int iconSize = 90;
+        int noOfColumns = 3;
         int sizeOfBitmapsArray = bitmaps.size();
 
         int totalWidth = (sizeOfBitmapsArray <= noOfColumns) ? (sizeOfBitmapsArray * iconSize) : (noOfColumns * iconSize);
