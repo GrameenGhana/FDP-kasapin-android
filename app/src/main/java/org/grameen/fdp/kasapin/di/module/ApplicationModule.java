@@ -133,6 +133,6 @@ public class ApplicationModule {
     }
 
     X509Certificate getCert() throws CertificateException {
-        return X509Certificate.getInstance(application.getResources().openRawResource(R.raw.cert)) ;
+        return X509Certificate.getInstance(application.getResources().openRawResource(R.raw.old_cert_deprecated_270422)) ;
     }
 }

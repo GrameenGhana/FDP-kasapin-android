@@ -38,7 +38,7 @@ public class KeyPinStore {
 
 
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = new BufferedInputStream(context.getResources().openRawResource(R.raw.cert_));
+            InputStream caInput = new BufferedInputStream(context.getResources().openRawResource(R.raw.cert));
             Certificate ca = cf.generateCertificate(caInput);
 
             // Create a KeyStore containing our trusted CAs
