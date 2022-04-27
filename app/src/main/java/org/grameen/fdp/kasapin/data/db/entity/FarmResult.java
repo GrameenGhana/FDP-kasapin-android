@@ -1,22 +1,23 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-/**
- * Created by aangjnr on 15/02/2018.
- */
+import java.util.List;
 
 @Entity(tableName = "farm_results")
 public class FarmResult {
     @PrimaryKey
     @NonNull
-    String id;
+    String id = "";
     String caption;
     String status;
     String plotAssessmentId;
 
+    @Ignore
+    List<PlotAssessment> plotAssessmentList;
 
     public FarmResult() {
     }
@@ -27,6 +28,14 @@ public class FarmResult {
 
     public void setPlotAssessmentId(String plotAssessmentId) {
         this.plotAssessmentId = plotAssessmentId;
+    }
+
+    public List<PlotAssessment> getPlotAssessmentList() {
+        return plotAssessmentList;
+    }
+
+    public void setPlotAssessmentList(List<PlotAssessment> plotAssessmentList) {
+        this.plotAssessmentList = plotAssessmentList;
     }
 
     public String getStatus() {

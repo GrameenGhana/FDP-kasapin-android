@@ -5,17 +5,13 @@ import android.view.View;
 
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
 
-
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
 public abstract class MyFormElementController {
     private final Context context;
     private final String name;
     private final String contentDesc;
     private FormModel model;
     private View view;
+    private boolean isHidden = false;
 
     /**
      * Constructs a new instance with the specified name.
@@ -28,7 +24,6 @@ public abstract class MyFormElementController {
         this.name = name;
         this.contentDesc = content_desc;
     }
-
 
     /**
      * Returns the Android context associated with this element.
@@ -47,7 +42,6 @@ public abstract class MyFormElementController {
     public String getName() {
         return name;
     }
-
 
     public String getContentDesc() {
         return contentDesc;
@@ -78,8 +72,18 @@ public abstract class MyFormElementController {
         return view;
     }
 
+
     public void setView(View view) {
         this.view = view;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
+        getView().setVisibility(hidden ? View.GONE : View.VISIBLE);
     }
 
     /**

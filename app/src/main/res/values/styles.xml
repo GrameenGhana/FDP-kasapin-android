@@ -1,7 +1,6 @@
 <resources>
 
     <!-- Base application theme. -->
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -9,8 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:buttonStyle">@style/PrimaryButton</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-
+        <item name="preferenceTheme">@style/AppPreferenceTheme</item>
+        <item name="alertDialogTheme">@style/AppAlertDialog</item>
     </style>
 
 
@@ -21,8 +20,8 @@
         <item name="colorAccent">@color/colorAccentMonitoring</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:buttonStyle">@style/PrimaryButton.Monitoring</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-
+        <item name="preferenceTheme">@style/AppPreferenceTheme</item>
+        <item name="alertDialogTheme">@style/AppAlertDialog</item>
     </style>
 
 
@@ -43,7 +42,6 @@
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="preferenceTheme">@style/AppPreferenceTheme</item>
         <item name="alertDialogTheme">@style/AppAlertDialog</item>
-
 
     </style>
 
@@ -82,9 +80,7 @@
 
     <style name="AppPreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
         <item name="preferenceFragmentCompatStyle">@style/AppPreferenceFragmentCompatStyle</item>
-        <item name="android:textColorPrimary">?attr/textColorPrimary</item>
-        <item name="android:textColorSecondary">?attr/textColorSecondary</item>
-        <item name="android:textColorTertiary">?attr/textColorTertiary</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="AppAlertDialogDark" parent="Theme.AppCompat.Dialog.Alert">
@@ -129,12 +125,9 @@
     <style name="PrimaryButtonRed" parent="Theme.AppCompat">
         <item name="colorButtonNormal">@color/divider</item>
         <item name="colorAccent">@color/cpb_red</item>
-
         <item name="colorControlHighlight">@color/cpb_red</item>
         <item name="backgroundTint">@color/cpb_red</item>
         <item name="android:textColor">@color/white</item>
-
-
     </style>
 
 
@@ -147,8 +140,6 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_small</item>
-
-
     </style>
 
 
@@ -160,8 +151,6 @@
         <item name="android:textColor">@color/text_black_87</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_small</item>
-
-
     </style>
 
 
@@ -211,7 +200,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:textColorPrimary">@color/text_black_87</item>
         <item name="android:backgroundDimEnabled">true</item>
-
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 
@@ -230,7 +219,7 @@
         <item name="android:textColorSecondary">@android:color/secondary_text_light</item>
         <item name="android:itemPadding">@dimen/alert_def_padding</item>
         <item name="panelBackground">@color/white</item>
-        <!-- <item name="colorAccent">@color/colorAccent</item>-->
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
 
@@ -374,16 +363,22 @@
     </style>
 
 
-    <style name="AppAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+    <style name="AppAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- To tint the buttons -->
         <item name="android:background">@color/white</item>
         <item name="android:textColorPrimary">@color/text_black_87</item>
         <item name="android:textColorSecondary">@android:color/secondary_text_light</item>
         <item name="android:itemPadding">@dimen/alert_def_padding</item>
-        <item name="panelBackground">@color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
-
         <item name="android:windowAnimationStyle">@style/PauseDialogAnimation</item>
+
+    </style>
+
+    <style name="Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <!-- To tint the buttons -->
+        <item name="android:textColorPrimary">@color/text_black_87</item>
+        <item name="android:textColorSecondary">@android:color/secondary_text_light</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
     </style>
 
@@ -432,5 +427,10 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+
+    <style name="AppAlertDialogContent" parent="AppTheme">
+        <!-- To keep the color of EditText -->
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
 
 </resources>

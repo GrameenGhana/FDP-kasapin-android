@@ -1,25 +1,19 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-
-/**
- * Created by aangjnr on 15/02/2018.
- */
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "plot_assessments")
 public class PlotAssessment {
-
     @PrimaryKey
     @NonNull
-    String id;
+    String id = "";
     String plotName;
     int plotId;
     String results;
     Integer color;
-
 
     public PlotAssessment() {
     }
@@ -62,11 +56,12 @@ public class PlotAssessment {
         this.plotName = plotName;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 }

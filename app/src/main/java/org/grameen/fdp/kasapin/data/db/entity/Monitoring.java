@@ -1,30 +1,35 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
+import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by aangjnr on 08/02/2018.
- */
+import org.json.JSONException;
+import org.json.JSONObject;
 
-@Entity(tableName = "monitorings", indices = @Index("plotId"), foreignKeys = @ForeignKey(entity = Plot.class, parentColumns = "id", childColumns = "plotId", onDelete = CASCADE))
-public class Monitoring {
-    @PrimaryKey
-    @NonNull
-    String id;
-
+@Entity(tableName = "monitorings", indices = {@Index("plotExternalId"), @Index("year")}, foreignKeys = @ForeignKey(entity = Plot.class, parentColumns = "externalId", childColumns = "plotExternalId"))
+public class Monitoring extends BaseModel {
+    @SerializedName("external_id")
+    String externalId;
     String year;
     String name;
+    @SerializedName("data")
     String json;
-    String plotId;
-
+    @SerializedName("plot_external_id")
+    String plotExternalId;
 
     public Monitoring() {
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getYear() {
@@ -35,11 +40,11 @@ public class Monitoring {
         this.year = year;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -59,13 +64,16 @@ public class Monitoring {
         this.json = json;
     }
 
-    public String getPlotId() {
-        return plotId;
+    public String getPlotExternalId() {
+        return plotExternalId;
     }
 
-    public void setPlotId(String plotId) {
-        this.plotId = plotId;
+    public void setPlotExternalId(String plotExternalId) {
+        this.plotExternalId = plotExternalId;
     }
 
-
+    @Ignore
+    public JSONObject getMonitoringAOJsonData() throws JSONException {
+        return new JSONObject(json);
+    }
 }

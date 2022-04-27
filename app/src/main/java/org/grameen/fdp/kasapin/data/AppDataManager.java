@@ -1,22 +1,7 @@
-/*
- * Copyright (C) 2017 MINDORKS NEXTGEN PRIVATE LIMITED
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://mindorks.com/license/apache-v2
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License
- */
-
 package org.grameen.fdp.kasapin.data;
 
-
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 import org.grameen.fdp.kasapin.data.db.AppDatabase;
@@ -37,16 +22,12 @@ import javax.inject.Singleton;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-
 @Singleton
 public class AppDataManager implements DataManager {
-
     private static final String TAG = "AppDataManager";
-
     private final Context mContext;
     private final AppDatabase mAppDatabase;
     private final PreferencesHelper mPreferencesHelper;
-
 
     @Inject
     CompositeDisposable compositeDisposable;
@@ -54,14 +35,12 @@ public class AppDataManager implements DataManager {
     @Inject
     FdpApiService fdpApiService;
 
-
     @Inject
     public AppDataManager(@ApplicationContext Context context, AppDatabase appDatabase, PreferencesHelper preferencesHelper) {
         mContext = context;
         mAppDatabase = appDatabase;
         mPreferencesHelper = preferencesHelper;
     }
-
 
     @Override
     public String getAccessToken() {
@@ -71,13 +50,11 @@ public class AppDataManager implements DataManager {
     @Override
     public void setAccessToken(String accessToken) {
         mPreferencesHelper.setAccessToken(accessToken);
-
     }
 
     @Override
     public void setIsMonitoringMode(boolean isMonitoringMode) {
         mPreferencesHelper.setIsMonitoringMode(isMonitoringMode);
-
     }
 
     @Override
@@ -91,15 +68,19 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void setIsTranslationToggled(boolean isTranslationToggled) {
-        mPreferencesHelper.setIsTranslationToggled(isTranslationToggled);
+    public SharedPreferences getPreferences() {
+        return mPreferencesHelper.getPreferences();
+    }
+
+    @Override
+    public void setIsTranslation(boolean isTranslationToggled) {
+        mPreferencesHelper.setIsTranslation(isTranslationToggled);
     }
 
     @Override
     public boolean isTranslation() {
         return mPreferencesHelper.isTranslation();
     }
-
 
     @Override
     public int getUserLoggedInMode() {
@@ -141,7 +122,6 @@ public class AppDataManager implements DataManager {
         mPreferencesHelper.setUserLastName(lastName);
     }
 
-
     @Override
     public String getUserEmail() {
         return mPreferencesHelper.getUserEmail();
@@ -182,7 +162,6 @@ public class AppDataManager implements DataManager {
         mPreferencesHelper.setUserProfilePicUrl(profilePicUrl);
     }
 
-
     public String getUserFullName() {
         return getUserFirstName() + " " + getUserLastName();
     }
@@ -206,7 +185,6 @@ public class AppDataManager implements DataManager {
     public void setUserIsConfirmed(boolean isActive) {
         mPreferencesHelper.setUserIsConfirmed(isActive);
     }
-
 
     @Override
     public void clearSecurePreferences() {
@@ -235,7 +213,6 @@ public class AppDataManager implements DataManager {
         mPreferencesHelper.setUserConfirmationCode(confirmationCode);
         mPreferencesHelper.setUserIsConfirmed(confirmed);
         mPreferencesHelper.setUserProfilePicUrl(image);
-
     }
 
     @Override
@@ -253,12 +230,10 @@ public class AppDataManager implements DataManager {
 
     @Override
     public void updateApiHeader(Long userId, String accessToken) {
-
     }
 
     @Override
     public void setUserAsLoggedOut() {
-
         updateUserInfo(new User(-1,
                 "",
                 "",
@@ -268,7 +243,6 @@ public class AppDataManager implements DataManager {
                 false,
                 "",
                 false));
-
         clearPreferences();
         clearSecurePreferences();
         clearAllTablesFromDb();
@@ -279,41 +253,33 @@ public class AppDataManager implements DataManager {
         getDatabaseManager().clearAllTables();
     }
 
-
     public AppDatabase getDatabaseManager() {
         return mAppDatabase;
     }
 
 
     @Override
-    public int backupRestoreDatabase(boolean shouldbackup) {
-
+    public int backupRestoreDatabase(boolean shouldBackup) {
         String oldPath;
         String newPath;
 
-        if (shouldbackup) {
+        if (shouldBackup) {
             oldPath = Environment.getDataDirectory().getPath() + "/data/" + mContext.getPackageName() + "/databases/" + AppConstants.DATABASE_NAME;
             newPath = AppConstants.DATABASE_BACKUP_DIR + "/" + AppConstants.DATABASE_NAME;
-
         } else {
-
             oldPath = AppConstants.DATABASE_BACKUP_DIR + "/" + AppConstants.DATABASE_NAME;
             newPath = Environment.getDataDirectory().getPath() + "/data/" + mContext.getPackageName() + "/databases/" + AppConstants.DATABASE_NAME;
         }
 
-
         int value;
-
         File currentDB = new File(oldPath);
-
         File backupDB = new File(newPath);
 
-        if (!shouldbackup && !currentDB.exists())
+        if (!shouldBackup && !currentDB.exists())
             return 0;
 
         FileChannel source;
         FileChannel destination;
-
         try {
             source = new FileInputStream(currentDB).getChannel();
             destination = new FileOutputStream(backupDB).getChannel();
@@ -326,9 +292,7 @@ public class AppDataManager implements DataManager {
             e.printStackTrace();
             value = -1;
         }
-
         return value;
-
     }
 
 
@@ -339,7 +303,6 @@ public class AppDataManager implements DataManager {
     public FdpApiService getFdpApiService() {
         return fdpApiService;
     }
-
 
     @Override
     public void setStringValue(String key, String value) {
@@ -354,7 +317,6 @@ public class AppDataManager implements DataManager {
     @Override
     public void setBooleanValue(String key, boolean value) {
         mPreferencesHelper.setBooleanValue(key, value);
-
     }
 
     @Override

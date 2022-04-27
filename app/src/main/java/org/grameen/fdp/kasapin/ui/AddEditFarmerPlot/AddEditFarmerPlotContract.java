@@ -7,35 +7,18 @@ import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
 import java.util.List;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 9:09 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class AddEditFarmerPlotContract {
-
-
     public interface View extends BaseContract.View {
-
-
         void showForm(List<FormAndQuestions> formAndQuestionsList);
 
         void showPlotDetailsActivity(Plot plot);
 
         void moveToMapActivity(Plot plot);
-
     }
 
     public interface Presenter {
-
-
         void getPlotQuestions();
 
         void saveData(Plot plot, String flag);
-
-
     }
-
-
 }

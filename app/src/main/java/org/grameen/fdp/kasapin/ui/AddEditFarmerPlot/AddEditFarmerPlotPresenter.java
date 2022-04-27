@@ -3,6 +3,7 @@ package org.grameen.fdp.kasapin.ui.AddEditFarmerPlot;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.Plot;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppConstants;
@@ -31,11 +32,6 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
 
     }
 
-
-    @Override
-    public void openNextActivity() {
-    }
-
     @Override
     public void getPlotQuestions() {
         runSingleCall(getAppDataManager().getDatabaseManager().formAndQuestionsDao().getFormAndQuestionsByDisplayType(AppConstants.DISPLAY_TYPE_PLOT_FORM)
@@ -45,7 +41,6 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
                     getView().showMessage(R.string.error_has_occurred);
                     throwable.printStackTrace();
                 }));
-
     }
 
 
@@ -56,20 +51,22 @@ public class AddEditFarmerPlotPresenter extends BasePresenter<AddEditFarmerPlotC
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
 
-                    getView().showMessage("Plot data saved!");
+                    Farmer farmer = getAppDataManager().getDatabaseManager().realFarmersDao().get(plot.getFarmerCode()).blockingGet();
+                    if (farmer != null)
+                        setFarmerAsUnSynced(farmer);
 
-                    getAppDataManager().setBooleanValue("reload", true);
+                    getView().showMessage("Plot data saved!");
                     getAppDataManager().setBooleanValue("reloadRecommendation", true);
 
                     getView().hideLoading();
 
-                    if (flag != null && flag.equalsIgnoreCase("map"))
+                    if (flag != null && flag.equalsIgnoreCase("gpsPicker"))
                         getView().moveToMapActivity(plot);
                     else
                         getView().showPlotDetailsActivity(plot);
 
-
                 }, throwable -> {
+
                     getView().showMessage("An error occurred saving plot data. Please try again.");
                     throwable.printStackTrace();
                 }));

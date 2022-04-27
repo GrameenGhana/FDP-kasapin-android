@@ -5,7 +5,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:id="@+id/ll1"
         android:layout_width="match_parent"
@@ -161,7 +160,7 @@
                 >
 
 
-                <android.support.v4.view.ViewPager
+                <androidx.viewpager.widget.ViewPager
                     android:id="@+id/view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -174,6 +173,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="No Data!"
+                    android:textAlignment="center"
                     android:visibility="gone" />
 
             </RelativeLayout>
@@ -183,13 +183,12 @@
 
     </LinearLayout>
 
-
     <LinearLayout
-
         android:id="@+id/bottom_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:layout_marginRight="@dimen/spacing_normal"
         android:orientation="vertical"
         android:paddingLeft="@dimen/spacing_normal"
@@ -239,6 +238,5 @@
 
         </LinearLayout>
     </LinearLayout>
-
 
 </RelativeLayout>

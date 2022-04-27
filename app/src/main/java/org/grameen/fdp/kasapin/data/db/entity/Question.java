@@ -1,10 +1,9 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -14,22 +13,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import timber.log.Timber;
-
-
-/**
- * Created by aangjnr on 29/11/2017.
- */
-
-//, foreignKeys = {@ForeignKey(entity = FormTranslation.class, parentColumns = "id", childColumns = "formTranslationId", deferred = true)}
 @Entity(tableName = "questions", indices = {@Index(value = "formTranslationId"), @Index(value = "id", unique = true), @Index(value = "labelC", unique = true)})
 public class Question {
-
-
     @PrimaryKey(autoGenerate = true)
-    @NonNull
+    private
     int base_id;
     @Ignore
+    private
     List<SkipLogic> skipLogics;
     @SerializedName("id")
     @Expose
@@ -54,7 +44,7 @@ public class Question {
     private int requiredC;
     @SerializedName("formula_c")
     @Expose
-    private String formulaC;
+    private String formulaC = "";
     @SerializedName("label_c")
     @Expose
     private String labelC;
@@ -77,6 +67,22 @@ public class Question {
     @SerializedName("can_edit")
     @Expose
     private int canEdit;
+    @SerializedName("related_questions_c")
+    @Expose
+    private String relatedQuestions;
+    @SerializedName("min_c")
+    @Expose
+    private String minValue;
+    @SerializedName("max_c")
+    @Expose
+    private String maxValue;
+
+    @Expose
+    @SerializedName("error_display_message_c")
+    private String errorMessage;
+
+    @Ignore
+    private String validationId = null;
 
 
     /**
@@ -84,24 +90,6 @@ public class Question {
      */
     public Question() {
     }
-
-    /**
-     * @param defaultValueC
-     * @param id
-     * @param captionC
-     * @param createTime
-     * @param helpTextC
-     * @param hideC
-     * @param labelC
-     * @param formTranslationId
-     * @param updateTime
-     * @param formulaC
-     * @param displayOrderC
-     * @param requiredC
-     * @param canEdit
-     * @param optionsC
-     * @param typeC
-     */
 
     @Ignore
     public Question(int id, int formTranslationId, String createTime, String updateTime, String captionC, String typeC, int requiredC, String formulaC, String labelC, String defaultValueC, int displayOrderC, String helpTextC, int hideC, String optionsC, int canEdit) {
@@ -123,12 +111,11 @@ public class Question {
         this.canEdit = canEdit;
     }
 
-    @NonNull
     public int getBase_id() {
         return base_id;
     }
 
-    public void setBase_id(@NonNull int base_id) {
+    public void setBase_id(int base_id) {
         this.base_id = base_id;
     }
 
@@ -146,17 +133,23 @@ public class Question {
         return this;
     }
 
+    public String getValidationId() {
+        if (validationId == null)
+            return labelC;
+        else
+            return validationId;
+    }
+
+    public void setValidationId(String validationId) {
+        this.validationId = validationId;
+    }
+
     public int getFormTranslationId() {
         return formTranslationId;
     }
 
     public void setFormTranslationId(int formTranslationId) {
         this.formTranslationId = formTranslationId;
-    }
-
-    public Question withFormTranslationId(int formTranslationId) {
-        this.formTranslationId = formTranslationId;
-        return this;
     }
 
     public String getCreateTime() {
@@ -167,22 +160,12 @@ public class Question {
         this.createTime = createTime;
     }
 
-    public Question withCreateTime(String createTime) {
-        this.createTime = createTime;
-        return this;
-    }
-
     public String getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Question withUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-        return this;
     }
 
     public String getCaptionC() {
@@ -193,22 +176,12 @@ public class Question {
         this.captionC = captionC;
     }
 
-    public Question withCaptionC(String captionC) {
-        this.captionC = captionC;
-        return this;
-    }
-
     public String getTypeC() {
         return typeC;
     }
 
     public void setTypeC(String typeC) {
         this.typeC = typeC;
-    }
-
-    public Question withTypeC(String typeC) {
-        this.typeC = typeC;
-        return this;
     }
 
     public int getRequiredC() {
@@ -219,22 +192,12 @@ public class Question {
         this.requiredC = requiredC;
     }
 
-    public Question withRequiredC(int requiredC) {
-        this.requiredC = requiredC;
-        return this;
-    }
-
     public String getFormulaC() {
         return formulaC;
     }
 
     public void setFormulaC(String formulaC) {
         this.formulaC = formulaC;
-    }
-
-    public Question withFormulaC(String formulaC) {
-        this.formulaC = formulaC;
-        return this;
     }
 
     public String getLabelC() {
@@ -245,22 +208,12 @@ public class Question {
         this.labelC = labelC;
     }
 
-    public Question withLabelC(String labelC) {
-        this.labelC = labelC;
-        return this;
-    }
-
     public String getDefaultValueC() {
         return (defaultValueC != null) ? defaultValueC : "";
     }
 
     public void setDefaultValueC(String defaultValueC) {
         this.defaultValueC = defaultValueC;
-    }
-
-    public Question withDefaultValueC(String defaultValueC) {
-        this.defaultValueC = defaultValueC;
-        return this;
     }
 
     public int getDisplayOrderC() {
@@ -271,22 +224,12 @@ public class Question {
         this.displayOrderC = displayOrderC;
     }
 
-    public Question withDisplayOrderC(int displayOrderC) {
-        this.displayOrderC = displayOrderC;
-        return this;
-    }
-
     public String getHelpTextC() {
         return helpTextC;
     }
 
     public void setHelpTextC(String helpTextC) {
         this.helpTextC = helpTextC;
-    }
-
-    public Question withHelpTextC(String helpTextC) {
-        this.helpTextC = helpTextC;
-        return this;
     }
 
     public int getHideC() {
@@ -297,22 +240,12 @@ public class Question {
         this.hideC = hideC;
     }
 
-    public Question withHideC(int hideC) {
-        this.hideC = hideC;
-        return this;
-    }
-
     public String getOptionsC() {
         return optionsC;
     }
 
     public void setOptionsC(String optionsC) {
         this.optionsC = optionsC;
-    }
-
-    public Question withOptionsC(String optionsC) {
-        this.optionsC = optionsC;
-        return this;
     }
 
     public int getCanEdit() {
@@ -323,39 +256,67 @@ public class Question {
         this.canEdit = canEdit;
     }
 
-    public Question withCanEdit(int canEdit) {
-        this.canEdit = canEdit;
-        return this;
-    }
-
     public boolean shouldHide() {
         return getHideC() == 1;
     }
-
 
     public boolean caEdit() {
         return canEdit == 1;
     }
 
+    public String getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(String maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public String getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(String minValue) {
+        this.minValue = minValue;
+    }
 
     @Ignore
     public List<String> formatQuestionOptions() {
-
-        String s = "";
+        String s;
         s = getOptionsC();
-        Timber.i("OPTIONS = %s", s);
-
-        if (!s.equalsIgnoreCase("null"))
+        if (s != null && !s.equalsIgnoreCase("null"))
             try {
                 return Arrays.asList(s.trim().split(","));
             } catch (Exception e) {
                 e.printStackTrace();
                 return Collections.singletonList(s);
             }
-
         else return new ArrayList<>();
+    }
 
+    public String getRelatedQuestions() {
+        return relatedQuestions;
+    }
 
+    public void setRelatedQuestions(String relatedQuestions) {
+        this.relatedQuestions = relatedQuestions;
+    }
+
+    public String getErrorMessage() {
+        if (errorMessage == null || errorMessage.isEmpty())
+            return "This field is required";
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    @Ignore
+    public String[] splitRelatedQuestions() {
+        if (relatedQuestions != null)
+            return relatedQuestions.split(",");
+        else return null;
     }
 
     public List<SkipLogic> getSkipLogics() {
@@ -364,5 +325,9 @@ public class Question {
 
     public void setSkipLogics(List<SkipLogic> skipLogics) {
         this.skipLogics = skipLogics;
+    }
+
+    public boolean isRequired() {
+        return requiredC == 1;
     }
 }

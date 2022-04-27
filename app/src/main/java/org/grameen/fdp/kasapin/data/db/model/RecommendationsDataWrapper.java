@@ -9,13 +9,11 @@ import org.grameen.fdp.kasapin.data.db.entity.Recommendation;
 import java.util.List;
 
 /**
- * Created by AangJnr on 09, December, 2018 @ 11:42 PM
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */
 
 public class RecommendationsDataWrapper {
-
     @SerializedName("data")
     @Expose
     private List<Recommendation> data = null;
@@ -27,11 +25,10 @@ public class RecommendationsDataWrapper {
     }
 
     /**
-     * @param data
+     * @param recommendations Recommendation data from the server
      */
-    public RecommendationsDataWrapper(List<Recommendation> data) {
-        super();
-        this.data = data;
+    public RecommendationsDataWrapper(List<Recommendation> recommendations) {
+        this.data = recommendations;
     }
 
     public List<Recommendation> getData() {
@@ -41,6 +38,4 @@ public class RecommendationsDataWrapper {
     public void setData(List<Recommendation> data) {
         this.data = data;
     }
-
-
 }

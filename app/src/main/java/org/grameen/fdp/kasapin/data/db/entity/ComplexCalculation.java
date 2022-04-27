@@ -1,26 +1,20 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
-
-/**
- * Created by aangjnr on 15/02/2018.
- */
+import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "complex_calculations", indices = @Index("questionId"), foreignKeys = @ForeignKey(entity = Question.class, parentColumns = "id", childColumns = "questionId", onDelete = CASCADE))
 public class ComplexCalculation {
-
     @PrimaryKey
     @NonNull
-    String id;
-
+    String id = "";
     @SerializedName("LastModifiedDate")
     String lastModifiedDate;
     String name;
@@ -28,7 +22,6 @@ public class ComplexCalculation {
     String questionId;
     @SerializedName("Condition__c")
     String condition;
-
 
     public ComplexCalculation() {
     }

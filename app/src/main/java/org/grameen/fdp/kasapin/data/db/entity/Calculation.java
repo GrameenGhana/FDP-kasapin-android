@@ -1,22 +1,16 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Index;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
-
-/**
- * Created by aangjnr on 04/01/2018.
- */
-
+import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "calculations", indices = {@Index(value = "id", unique = true), @Index(value = "recommendationId")},
         foreignKeys = {@ForeignKey(entity = Recommendation.class, parentColumns = "id", childColumns = "recommendationId", onDelete = CASCADE)})
 public class Calculation extends BaseModel {
-
     @SerializedName("recommendation_id")
     int recommendationId;
     @SerializedName("year_c")
@@ -26,10 +20,8 @@ public class Calculation extends BaseModel {
     @SerializedName("formula_c")
     String formula;
 
-
     public Calculation() {
     }
-
 
     public int getRecommendationId() {
         return recommendationId;

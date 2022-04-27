@@ -2,20 +2,13 @@ package org.grameen.fdp.kasapin.ui.base;
 
 
 import android.content.DialogInterface;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
 import android.view.Window;
 
-/**
- * Created by AangJnr on 19, September, 2018 @ 4:25 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 public class BaseContract {
-
     public interface Presenter<T extends View> {
-
         /**
          * Binds presenter with a view when resumed. The Presenter will perform initialization here.
          *
@@ -32,15 +25,11 @@ public class BaseContract {
 
         boolean isViewAttached();
 
-        void openNextActivity();
-
         void onTokenExpire();
-
     }
 
 
-    public interface View<T> {
-
+    public interface View {
         void showLoading();
 
         void setLoadingMessage(String message);
@@ -50,6 +39,8 @@ public class BaseContract {
         void showLoading(String title, String message, boolean indeterminate, @DrawableRes int icon, boolean cancelableOnTouchOutside);
 
         void openLoginActivityOnTokenExpire();
+
+        void onSuccess(String message);
 
         void onError(@StringRes int resId);
 
@@ -66,5 +57,6 @@ public class BaseContract {
         void toggleFullScreen(Boolean hideNavBar, Window W);
 
         void showDialog(Boolean cancelable, String title, String message, DialogInterface.OnClickListener onPositiveButtonClickListener, String positiveText, DialogInterface.OnClickListener onNegativeButtonClickListener, String negativeText, int icon_drawable);
+
     }
 }

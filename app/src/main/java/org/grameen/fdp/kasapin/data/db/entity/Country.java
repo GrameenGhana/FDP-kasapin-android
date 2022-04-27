@@ -1,54 +1,28 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.Entity;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by aangjnr on 30/01/2018.
- */
-
 @Entity(tableName = "countries")
-public class Country {
-
-
-    @PrimaryKey
-    @NonNull
-    int id;
-
-
-    String Name;
-
-    @SerializedName("currencySign__c")
+public class Country extends BaseModel {
+    String name;
+    @SerializedName("currency")
     String currency;
-
-    @SerializedName("ISO_code__c")
+    @SerializedName("iso_code")
     String isoCode;
-
-    @SerializedName("Avg_Price_Kg__c")
+    @SerializedName("avg_gate_price")
     String averageGatePrice;
-
 
     public Country() {
     }
 
-    @NonNull
-    public int getId() {
-        return id;
-    }
-
-    public void setId(@NonNull int id) {
-        this.id = id;
-    }
-
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        this.Name = name;
+        this.name = name;
     }
 
     public String getAverageGatePrice() {

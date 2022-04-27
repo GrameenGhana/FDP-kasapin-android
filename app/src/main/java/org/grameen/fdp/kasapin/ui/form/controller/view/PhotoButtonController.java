@@ -1,18 +1,17 @@
 package org.grameen.fdp.kasapin.ui.form.controller.view;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
 
 import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.ui.form.InputValidator;
@@ -33,14 +32,10 @@ import java.util.Set;
  */
 public class PhotoButtonController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
-    Location location;
-    boolean GpsStatus = false;
     OnClickListener onClickListener;
     Context context;
     ImageView IMAGE_VIEW;
     boolean isEnabled = true;
-    private DatePickerDialog datePickerDialog = null;
-
 
     /**
      * Constructs a new instance of a date picker field.
@@ -64,132 +59,108 @@ public class PhotoButtonController extends MyLabeledFieldController {
      * @param name          the name of the field
      * @param labelText     the label to display beside the field. Set to {@code null} to not show a label.
      * @param isRequired    indicates if the field is required or not
-     * @param displayFormat the format of the date to show in the text box when a date is set
+     * @param clickListener the format of the date to show in the text box when a date is set
      */
-    public PhotoButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, OnClickListener displayFormat) {
+    public PhotoButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, OnClickListener clickListener) {
         super(ctx, name, content_desc, labelText, isRequired);
-        this.onClickListener = displayFormat;
+        this.onClickListener = clickListener;
         this.context = ctx;
-
     }
 
-    /**
-     * Constructs a new instance of a date picker field, with the selected date displayed in "MMM d, yyyy" format.
-     *
-     * @param name      the name of the field
-     * @param labelText the label to display beside the field
-     */
-    public PhotoButtonController(Context context, String name, String content_desc, String labelText, OnClickListener locationListener, Boolean enabled) {
+
+    public PhotoButtonController(Context context, String name, String content_desc, String labelText, OnClickListener locationListener, Boolean enabled
+    ) {
         this(context, name, content_desc, labelText, false, locationListener);
         this.context = context;
         this.isEnabled = enabled;
+
+        IMAGE_VIEW = new ImageView(context);
+        IMAGE_VIEW.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
     }
 
     @Override
     protected View createFieldView() {
-
         final LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         linearLayout.setLayoutParams(params);
 
-
         @SuppressLint("RestrictedApi") ContextThemeWrapper newContext = new ContextThemeWrapper(context, R.style.PrimaryButton);
         final Button button = new Button(newContext);
-        button.setText("Take a photo");
+        button.setText(R.string.take_a_photo);
         button.setContentDescription(getContentDesc());
         button.setPadding(0, 20, 0, 20);
         button.setTextSize(12);
         button.setId(editTextId);
         button.setOnClickListener(onClickListener);
 
-
-        final ImageView imageView = new ImageView(context);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-
-        this.IMAGE_VIEW = imageView;
-
         getModel().addPropertyChangeListener(getName(), evt -> {
-            AppLogger.i("PHOTO BUTTON", evt.getNewValue().toString());
-
             if (evt.getNewValue() != null && !evt.getNewValue().toString().equalsIgnoreCase(""))
                 try {
-
-                    imageView.setAdjustViewBounds(true);
-                    imageView.setMaxHeight(300);
-                    imageView.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
-                    linearLayout.addView(imageView);
+                    IMAGE_VIEW.setImageBitmap(ImageUtil.base64ToBitmap(evt.getNewValue().toString()));
+                    params.height = 350;
+                    IMAGE_VIEW.setLayoutParams(params);
+                    linearLayout.addView(IMAGE_VIEW);
                     linearLayout.requestLayout();
 
+                    getModel().getEditedElements().add(getName());
+
+                    AppLogger.e("Just added a photo on ==> " + getName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
         });
 
-        imageView.setOnClickListener(v -> {
-
+        IMAGE_VIEW.setOnClickListener(v -> {
             final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppDialog);
             builder.setMessage(R.string.image_options);
             builder.setCancelable(true);
             builder.setPositiveButton(R.string.view, (dialog, which) -> {
-
                 Intent intent = new Intent(context, ImageViewActivity.class);
                 intent.putExtra("image_string", getModel().getValue(getName()).toString());
                 context.startActivity(intent);
-
-
             });
+
             builder.setNegativeButton(R.string.delete, (dialog, which) -> {
-
-                imageView.setImageBitmap(null);
-
+                IMAGE_VIEW.setImageBitmap(null);
                 getModel().setValue(getName(), "");
                 dialog.dismiss();
-                linearLayout.removeView(imageView);
-                linearLayout.requestLayout();
+                linearLayout.removeView(IMAGE_VIEW);
             });
             builder.show();
         });
 
-
         try {
             button.setEnabled(isEnabled);
-            imageView.setEnabled(isEnabled);
+            IMAGE_VIEW.setEnabled(isEnabled);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        refresh(imageView);
-
+        refresh(IMAGE_VIEW);
         linearLayout.addView(button);
-
-        linearLayout.addView(imageView);
-
-
-        linearLayout.requestLayout();
-
+        linearLayout.addView(IMAGE_VIEW);
         return linearLayout;
     }
-
 
     private Button getButton() {
         return (Button) getView().findViewById(editTextId);
     }
 
-
     private ImageView getImageView() {
         return IMAGE_VIEW;
-
     }
 
     private void refresh(ImageView imageView) {
         Object value = getModel().getValue(getName());
         if (value != null && !value.toString().contains("http://")) {
             try {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.height = 350;
+                IMAGE_VIEW.setLayoutParams(params);
                 imageView.setImageBitmap(ImageUtil.base64ToBitmap(value.toString()));
+
             } catch (IllegalArgumentException ignored) {
             }
         }
@@ -198,6 +169,4 @@ public class PhotoButtonController extends MyLabeledFieldController {
     public void refresh() {
         refresh(getImageView());
     }
-
-
 }

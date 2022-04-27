@@ -1,9 +1,9 @@
 package org.grameen.fdp.kasapin.ui.addFarmer;
 
-
+import org.grameen.fdp.kasapin.R;
 import org.grameen.fdp.kasapin.data.AppDataManager;
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BasePresenter;
 import org.grameen.fdp.kasapin.utilities.AppLogger;
 
@@ -15,115 +15,66 @@ import io.reactivex.schedulers.Schedulers;
 
 import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 9:06 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class AddEditFarmerPresenter extends BasePresenter<AddEditFarmerContract.View> implements AddEditFarmerContract.Presenter {
-
-
     @Inject
     public AddEditFarmerPresenter(AppDataManager appDataManager) {
         super(appDataManager);
         this.mAppDataManager = appDataManager;
-
-
     }
 
-
     @Override
-    public void openNextActivity() {
-
+    public void loadFormFragment(String farmerCode, int formTranslationId) {
+//        AppLogger.e(TAG, "Farmer code is " + farmerCode + " and Form translation id is " + formTranslationId);
+//        runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerDataSingle(farmerCode, formTranslationId)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(formAnswerData ->
+//                                getView().showFormFragment()
+//                        , throwable -> getView().showFormFragment()
+//                ));
     }
 
-
     @Override
-    public void loadFormFragment(String farmerCode, int formId) {
-
-        AppLogger.e(TAG, "Farmer code is " + farmerCode + " and Form id is " + formId);
-
-
-        runSingleCall(getAppDataManager().getDatabaseManager().formAnswerDao().getFormAnswerData(farmerCode, formId)
+    public void getFarmerData(String code) {
+        runSingleCall(getAppDataManager().getDatabaseManager().realFarmersDao().get(code)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(formAnswerData ->
-                                getView().showFormFragment(formAnswerData)
-
-                        , throwable -> {
-                            //throwable.printStackTrace();
-                            getView().showFormFragment(null);
-                        }
-                ));
+                .subscribe(farmer -> {
+                            if (getView() != null)
+                                getView().setUpViews(farmer);
+                        },
+                        throwable -> getView().showMessage(R.string.error_getting_farmer_info)));
     }
 
-
     @Override
-    public void saveData(RealFarmer farmer, FormAnswerData answerData, boolean exit) {
-
+    public void saveData(Farmer farmer, FormAnswerData answerData, boolean exit, boolean wasProfileImageEdited) {
         answerData.setFarmerCode(farmer.getCode());
+
         getAppDataManager().getCompositeDisposable().add(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().realFarmersDao().insertOne(farmer))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(id -> {
                     AppLogger.i(TAG, "Saving : " + getGson().toJson(answerData));
-
-                    //if(answerData.getId() == 0) {
-
                     runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().formAnswerDao().insertOne(answerData))
                             .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(aLong -> {
-
+                                setFarmerAsUnSynced(farmer);
                                 getView().showMessage("Farmer data saved!");
+
+                                getAppDataManager().setBooleanValue("reload", true);
 
                                 if (!exit)
                                     getView().moveToNextForm();
-                                else {
-                                    getAppDataManager().setBooleanValue("reload", true);
-
+                                else
                                     getView().finishActivity();
-                                }
                             }, throwable -> {
                                 getView().showMessage("An error occurred saving farmer data. Please try again.");
                                 throwable.printStackTrace();
                             }));
-/*
-
-                            }else{
-
-
-                                runSingleCall(Single.fromCallable(() -> getAppDataManager().getDatabaseManager().formAnswerDao().updateOne(answerData))
-                                        .subscribeOn(Schedulers.io())
-                                        .subscribe(aLong -> {
-
-                                            getView().showMessage("Farmer data updated!");
-
-                                            if (!exit)
-                                                getView().moveToNextForm();
-                                            else {
-                                                getAppDataManager().setBooleanValue("reload", true);
-
-                                                getView().finishActivity();
-                                            }
-                                        }, throwable -> {
-                                            getView().showMessage("An error occurred saving farmer data. Please try again.");
-                                            throwable.printStackTrace();
-                                        }));
-
-
-
-
-                            }
-*/
-
-
                 }, throwable -> {
                     AppLogger.e(TAG, throwable.getMessage());
                     throwable.printStackTrace();
                 }));
-
     }
-
-
 }

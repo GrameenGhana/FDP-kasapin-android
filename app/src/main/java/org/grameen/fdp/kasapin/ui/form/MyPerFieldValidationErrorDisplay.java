@@ -1,9 +1,5 @@
 package org.grameen.fdp.kasapin.ui.form;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
 import android.content.Context;
 import android.content.res.Resources;
 
@@ -16,7 +12,7 @@ public class MyPerFieldValidationErrorDisplay implements ValidationErrorDisplay 
     private final Context context;
     private final MyFormController controller;
 
-    public MyPerFieldValidationErrorDisplay(Context context, MyFormController controller) {
+    MyPerFieldValidationErrorDisplay(Context context, MyFormController controller) {
         this.context = context;
         this.controller = controller;
     }

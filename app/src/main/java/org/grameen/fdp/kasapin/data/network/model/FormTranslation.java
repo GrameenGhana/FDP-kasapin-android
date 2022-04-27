@@ -8,7 +8,6 @@ import org.grameen.fdp.kasapin.data.db.entity.Question;
 import java.util.List;
 
 public class FormTranslation {
-
     @SerializedName("id")
     private int id;
     @SerializedName("name")
@@ -16,7 +15,6 @@ public class FormTranslation {
     @SerializedName("form_id")
     private int formId;
     @SerializedName("form")
-
     private Form form;
     @SerializedName("question")
     private List<Question> question = null;
@@ -28,19 +26,19 @@ public class FormTranslation {
     }
 
     /**
-     * @param id
-     * @param form
-     * @param formId
-     * @param name
-     * @param question
+     * @param id        Integer id of the FormTranslation model
+     * @param form      Form of the FormTranslation model
+     * @param formId    of the FormTranslation model
+     * @param name      of the FormTranslation model
+     * @param questions of the FormTranslation model
      */
-    public FormTranslation(int id, String name, int formId, Form form, List<Question> question) {
+    public FormTranslation(int id, String name, int formId, Form form, List<Question> questions) {
         super();
         this.id = id;
         this.name = name;
         this.formId = formId;
         this.form = form;
-        this.question = question;
+        this.question = questions;
     }
 
     public int getId() {
@@ -107,5 +105,4 @@ public class FormTranslation {
         this.question = question;
         return this;
     }
-
 }

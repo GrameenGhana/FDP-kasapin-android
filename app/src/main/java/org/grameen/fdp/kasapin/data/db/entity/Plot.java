@@ -1,46 +1,52 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
 
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
+
+import org.grameen.fdp.kasapin.utilities.TimeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by aangjnr on 08/11/2017.
- */
-//, foreignKeys = @ForeignKey(entity = RealFarmer.class, parentColumns = "code", childColumns = "farmerCode", onDelete = CASCADE)
+import java.util.List;
+
+import static org.grameen.fdp.kasapin.ui.base.BaseActivity.getGson;
+
 @Entity(tableName = "plots", indices = {@Index("farmerCode"), @Index(value = "externalId", unique = true)})
-public class Plot {
-
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    int id;
-
-    String externalId;
-    String distanceBetweenCocoaTrees;
-    String EstimatedProduction;
-    String farmerName;
-    String farmerCode;
-    String numberOfShadeTrees;
-    String plotAge = "0";
-    String area;
-    String plotPoints;
-    String name;
-    String ph;
-    String lastVisitDate;
-    String estimatedProductionSize;
-    String answersData;
-    String gpsPoints;
-    int recommendationId = -1;
-    int gapsId = -1;
-    int startYear = 1;
+public class Plot extends BaseModel {
+    @SerializedName("external_id_c")
+    private String externalId;
+    private String farmerName;
+    @SerializedName("farmer_code")
+    private String farmerCode;
+    @SerializedName("age_c")
+    private String plotAge = "0";
+    @SerializedName("area_c")
+    private String area = null;
+    @SerializedName("plot_gps_points")
+    private String plotPoints;
+    @SerializedName("name_c")
+    private String name;
+    @SerializedName("ph_c")
+    private String ph;
+    private String lastVisitDate;
+    @SerializedName("estimated_production_c")
+    private String estimatedProductionSize = null;
+    @SerializedName("data")
+    private String answersData;
+    @SerializedName("recommendation_id")
+    private int recommendationId;
+    private int gapsId = 1;
+    @SerializedName("start_year")
+    private int startYear = 1;
+    @Ignore
+    @SerializedName("monitoring_list")
+    private List<Monitoring> monitoringList;
 
     public Plot() {
-
     }
 
     public String getExternalId() {
@@ -75,29 +81,6 @@ public class Plot {
         this.farmerName = farmerName;
     }
 
-    public String getDistanceBetweenCocoaTrees() {
-        return distanceBetweenCocoaTrees;
-    }
-
-    public void setDistanceBetweenCocoaTrees(String distanceBetweenCocoaTrees) {
-        this.distanceBetweenCocoaTrees = distanceBetweenCocoaTrees;
-    }
-
-    public String getEstimatedProduction() {
-        return EstimatedProduction;
-    }
-
-    public void setEstimatedProduction(String estimatedProduction) {
-        EstimatedProduction = estimatedProduction;
-    }
-
-    public String getNumberOfShadeTrees() {
-        return numberOfShadeTrees;
-    }
-
-    public void setNumberOfShadeTrees(String numberOfShadeTrees) {
-        this.numberOfShadeTrees = numberOfShadeTrees;
-    }
 
     public String getPlotAge() {
         return (plotAge == null) ? "" : plotAge;
@@ -113,15 +96,6 @@ public class Plot {
 
     public void setPlotPoints(String plotPoints) {
         this.plotPoints = plotPoints;
-    }
-
-    @NonNull
-    public int getId() {
-        return id;
-    }
-
-    public void setId(@NonNull int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -164,14 +138,6 @@ public class Plot {
         this.answersData = answersData;
     }
 
-    public String getGpsPoints() {
-        return gpsPoints;
-    }
-
-    public void setGpsPoints(String gpsPoints) {
-        this.gpsPoints = gpsPoints;
-    }
-
     public int getGapsId() {
         return gapsId;
     }
@@ -184,8 +150,14 @@ public class Plot {
         return recommendationId;
     }
 
-    public void setRecommendationId(int recommendationId) {
-        this.recommendationId = recommendationId;
+    public void setRecommendationId(int recommendation_id) {
+        this.recommendationId = recommendation_id;
+    }
+
+    @Ignore
+    public List<PlotGpsPoint> getGpsPoints() {
+        return getGson().fromJson(plotPoints, new TypeToken<List<PlotGpsPoint>>() {
+        }.getType());
     }
 
     @Ignore
@@ -199,5 +171,22 @@ public class Plot {
 
     public void setStartYear(int startYear) {
         this.startYear = startYear;
+    }
+
+    @Ignore
+    public List<Monitoring> getMonitoringList() {
+        return monitoringList;
+    }
+
+    @Ignore
+    public void setMonitoringList(List<Monitoring> monitoringList) {
+        this.monitoringList = monitoringList;
+    }
+
+    @Override
+    public String getCreatedAt() {
+        if (super.getCreatedAt() == null)
+            return TimeUtils.getCurrentDateTime();
+        return super.getCreatedAt();
     }
 }

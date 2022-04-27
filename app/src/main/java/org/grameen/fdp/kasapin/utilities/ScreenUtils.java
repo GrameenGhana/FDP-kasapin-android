@@ -2,9 +2,10 @@ package org.grameen.fdp.kasapin.utilities;
 
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ScreenUtils {
 
@@ -40,14 +41,11 @@ public class ScreenUtils {
     }
 
     public static boolean isTablet(AppCompatActivity context) {
-
         DisplayMetrics metrics = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
         float yInches = metrics.heightPixels / metrics.ydpi;
         float xInches = metrics.widthPixels / metrics.xdpi;
         double diagonalInches = Math.sqrt(xInches * xInches + yInches * yInches);
-
         return diagonalInches >= 7;
     }
 }

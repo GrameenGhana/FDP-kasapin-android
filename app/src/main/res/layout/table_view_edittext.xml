@@ -24,5 +24,4 @@
         android:textSize="@dimen/text_size_normal"
         android:visibility="visible"
         tools:text="Cell Data" />
-
 </LinearLayout>

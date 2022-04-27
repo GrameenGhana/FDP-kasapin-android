@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.grameen.fdp.kasapin"
     android:installLocation="internalOnly">
-
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <!--
-        <uses-permission android:name="org.grameen.fdp.C2D_MESSAGE" />
-    -->
+    <!--         <uses-permission android:name="org.grameen.fdp.C2D_MESSAGE" /> -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -27,7 +25,6 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
     <application
         android:name=".FDPKasapin"
         android:allowBackup="true"
@@ -38,57 +35,76 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning,LockedOrientationActivity,UnusedAttribute">
+        <activity
+            android:name=".ui.preferences.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+
+        <service android:name=".services.LocationPrepareService" />
+
         <activity
             android:name=".ui.splash.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.login.LoginActivity"
-            android:theme="@style/AppTheme" />
-
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity android:name=".ui.landing.LandingActivity" />
         <activity
             android:name=".ui.main.MainActivity"
             android:windowSoftInputMode="adjustNothing" />
-
-
-        <activity android:name=".ui.addFarmer.AddEditFarmerActivity" />
-
-
+        <activity
+            android:name=".ui.addFarmer.AddEditFarmerActivity"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.viewImage.ImageViewActivity"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".ui.test.CrashTestingActivity" />
         <activity android:name=".ui.farmerProfile.FarmerProfileActivity" />
         <activity android:name=".ui.AddEditFarmerPlot.AddEditFarmerPlotActivity" />
         <activity android:name=".ui.plotDetails.PlotDetailsActivity" />
-        <activity android:name=".ui.map.MapActivity" />
+        <activity
+            android:name=".ui.plotMonitoringActivity.PlotMonitoringActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".ui.monitoringYearSelection.MonitoringYearSelectionActivity" />
+        <activity android:name=".ui.gpsPicker.MapActivity" />
         <activity
             android:name=".ui.pandl.ProfitAndLossActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.detailedYearMonthlyView.DetailedMonthActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".ui.familyMembers.FamilyMembersActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".ui.plotReview.PlotReviewActivity" />
-
+        <activity
+            android:name=".ui.addPlotMonitoring.AddPlotMonitoringActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.farmAssessment.FarmAssessmentActivity" />
 
         <service android:name=".services.SyncService" />
+
+        <activity android:name=".ui.serverUrl.AddEditServerUrlActivity" />
+        <activity
+            android:name=".ui.fdpStatus.FDPStatusDialogActivity"
+            android:theme="@style/Theme.Translucent" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
+            android:value="${crashlyticsCollectionEnabled}" />
 
         <provider
             android:name=".utilities.GenericFileProvider"
@@ -99,8 +115,5 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-
     </application>
-
 </manifest>

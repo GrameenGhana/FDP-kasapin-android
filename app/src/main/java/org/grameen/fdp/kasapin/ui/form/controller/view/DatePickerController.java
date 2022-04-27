@@ -71,13 +71,14 @@ public class DatePickerController extends MyLabeledFieldController {
      * @param name      the name of the field
      * @param labelText the label to display beside the field
      */
-    public DatePickerController(Context context, String name, String content_desc, String labelText, boolean enable) {
+    public DatePickerController(Context context, String name, String content_desc, String labelText, boolean enable, Boolean isRequired, Set<InputValidator> validators) {
         this(context, name, content_desc, labelText, false, new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()), enable);
+        if (isRequired)
+            this.setValidators(validators);
     }
 
     @Override
     protected View createFieldView() {
-
         if (isEnabled) {
             final MaterialEditText editText = new MaterialEditText(getContext());
             editText.setId(editTextId);
@@ -113,16 +114,11 @@ public class DatePickerController extends MyLabeledFieldController {
 
             datePickerDialog = new DatePickerDialog(context, R.style.DatePickerSpinner, (view, year, monthOfYear, dayOfMonth) -> {
                 calendar.set(year, monthOfYear, dayOfMonth);
-
-
                 String date1 = displayFormat.format(calendar.getTime());
                 getModel().setValue(getName(), date1);
                 editText.setText(date1);
-
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-
             datePickerDialog.setOnDismissListener(dialog -> datePickerDialog = null);
-
             datePickerDialog.show();
         }
     }
@@ -133,13 +129,10 @@ public class DatePickerController extends MyLabeledFieldController {
 
     private void refresh(EditText editText) {
         String value = null;
-
         if (getModel().getValue(getName()) != null) {
             value = getModel().getValue(getName()).toString();
         }
         editText.setHint(value != null ? value : "Click to add date");
-
-
     }
 
     public void refresh() {

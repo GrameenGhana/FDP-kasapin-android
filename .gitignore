@@ -1,10 +1,29 @@
+# AS & Idea stuff
 *.iml
-.gradle
+.idea
+
+# Gradle & build junk
+/.gradle
 /local.properties
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-.DS_Store
 /build
 /captures
 .externalNativeBuild
+
+# Mac junk
+.DS_Store
+
+#klint junk
+ktlint
+<<<<<<< HEAD
+=======
+
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Java class files
+*.class
+
+fdp-kasapin.jks

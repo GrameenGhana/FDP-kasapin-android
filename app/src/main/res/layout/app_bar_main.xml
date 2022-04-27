@@ -67,7 +67,7 @@
 
         </LinearLayout>
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:padding="@dimen/spacing_normal"
-            android:text="@string/sync" />
+            android:text="@string/sync_all" />
 
 
         <Button
@@ -117,9 +117,7 @@
             android:layout_toRightOf="@id/sync"
             android:layout_weight="3"
             android:padding="@dimen/spacing_normal"
-            android:text="@string/add_farmer"
-
-            />
+            android:text="@string/add_farmer" />
 
     </LinearLayout>
 

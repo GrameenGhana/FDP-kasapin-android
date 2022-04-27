@@ -4,7 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+
+import androidx.core.content.ContextCompat;
 
 import org.grameen.fdp.kasapin.R;
 
@@ -31,6 +32,4 @@ public final class ViewUtils {
                     .getColor(context, R.color.textColorTertiaryLightInverted), PorterDuff.Mode.SRC_ATOP);
         }
     }
-
-
 }

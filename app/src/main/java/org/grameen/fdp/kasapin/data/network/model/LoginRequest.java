@@ -18,6 +18,7 @@ package org.grameen.fdp.kasapin.data.network.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
 
 public class LoginRequest {
 
@@ -57,14 +58,11 @@ public class LoginRequest {
 
         @Override
         public boolean equals(Object object) {
-            if (this == object) return true;
             if (object == null || getClass() != object.getClass()) return false;
 
-            ServerLoginRequest that = (ServerLoginRequest) object;
-
-            if (email != null ? !email.equals(that.email) : that.email != null) return false;
-            return password != null ? password.equals(that.password) : that.password == null;
-
+            ServerLoginRequest loginRequest = (ServerLoginRequest) object;
+            if (!Objects.equals(email, loginRequest.email)) return false;
+            return Objects.equals(password, ((ServerLoginRequest) object).password);
         }
 
         @Override
@@ -74,6 +72,4 @@ public class LoginRequest {
             return result;
         }
     }
-
-
 }

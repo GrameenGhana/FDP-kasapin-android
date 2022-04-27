@@ -1,10 +1,5 @@
 package org.grameen.fdp.kasapin.ui.form;
 
-/**
- * Created by aangjnr on 05/01/2018.
- */
-
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +9,7 @@ import org.grameen.fdp.kasapin.ui.form.controller.MyFormSectionController;
 import org.grameen.fdp.kasapin.ui.form.controller.MyLabeledFieldController;
 import org.grameen.fdp.kasapin.ui.form.model.FormModel;
 import org.grameen.fdp.kasapin.ui.form.model.MapFormModel;
+import org.grameen.fdp.kasapin.utilities.AppLogger;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -38,7 +34,7 @@ public class MyFormController {
      * Constructs a new FormController.
      *
      * @param context   the Activity's context
-     * @param formModel the backing model that stores the fields values. A map-based implementation is provided by {@link MapFormModel}.
+     * @param formModel the backing model that stores the fields values. A gpsPicker-based implementation is provided by {@link MapFormModel}.
      */
     public MyFormController(Context context, FormModel formModel) {
         this.model = formModel;
@@ -177,18 +173,21 @@ public class MyFormController {
      *
      * @return a list of validation errors of the form's input
      */
-    public List<ValidationError> validateInput() {
-        List<ValidationError> errors = new ArrayList<ValidationError>();
-
+    private List<ValidationError> validateInput() {
+        List<ValidationError> errors = new ArrayList<>();
         for (MyFormSectionController section : getSections()) {
             for (MyFormElementController element : section.getElements()) {
                 if (element instanceof MyLabeledFieldController) {
                     MyLabeledFieldController field = (MyLabeledFieldController) element;
-                    errors.addAll(field.validateInput());
+
+                    if (field.isRequired() && !field.isHidden()) {
+                        List<ValidationError> validationErrors = field.validateInput();
+                        AppLogger.e("MyFormController", "Field |name = " + field.getName() + " # isRequired = " + field.isRequired() + " # isHidden = " + field.isHidden() + " errors size is " + validationErrors.size() + "|");
+                        errors.addAll(validationErrors);
+                    }
                 }
             }
         }
-
         return errors;
     }
 
@@ -233,9 +232,8 @@ public class MyFormController {
      */
     public void recreateViews(ViewGroup containerView) {
         containerView.removeAllViews();
-
         for (MyFormSectionController section : getSections()) {
-            ((MyFormElementController) section).setModel(getModel());
+            section.setModel(getModel());
             containerView.addView(section.getView());
 
             for (MyFormElementController element : section.getElements()) {
@@ -247,4 +245,5 @@ public class MyFormController {
         // now that the view is setup, register a listener of the model to update the view on changes
         registerFormModelListener();
     }
+
 }

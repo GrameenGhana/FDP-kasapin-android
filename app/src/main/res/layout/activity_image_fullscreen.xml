@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
+    android:background="@android:color/black"
     android:orientation="vertical">
 
 
@@ -12,20 +13,15 @@
         android:id="@+id/touch_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:scaleType="center"
+        android:adjustViewBounds="false"
+        android:scaleType="centerInside"
+        tools:src="@drawable/icon_farmer_color" />
 
-        />
-
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:fitsSystemWindows="false"
-
-        >
-
+        android:fitsSystemWindows="false">
 
         <ImageView
             android:id="@+id/back"
@@ -35,7 +31,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="onBackClicked"
             android:padding="@dimen/spacing_normal"
             android:tint="@color/white"
             app:srcCompat="@drawable/ic_keyboard_backspace_white_24dp" />
@@ -47,14 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/back"
+            android:layout_toEndOf="@id/back"
             android:gravity="center"
-            android:text=""
-            android:textColor="@color/white"
-
-            />
-
-
+            android:textColor="@android:color/white" />
     </RelativeLayout>
-
 </FrameLayout>

@@ -1,20 +1,14 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Index;
+import androidx.room.Entity;
+import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
-
-/**
- * Created by aangjnr on 17/01/2018.
- */
 
 @Entity(tableName = "recommendation_activities",
         indices = {@Index("recommendationId"), @Index("activityId")})
 
 public class RecommendationActivity extends BaseModel {
-
-
     @SerializedName("recommendation_id")
     int recommendationId;
 
@@ -27,12 +21,14 @@ public class RecommendationActivity extends BaseModel {
     @SerializedName("month_c")
     String month;
 
+    @SerializedName("image_id")
+    String imageId;
+
     @SerializedName("year_c")
     int year;
 
     @SerializedName("seasonal_c")
     int seasonal;
-
 
     @SerializedName("labor_days_c")
     double laborDays;
@@ -42,7 +38,6 @@ public class RecommendationActivity extends BaseModel {
 
     @SerializedName("supplies_cost_c")
     double suppliesCost;
-
 
     public RecommendationActivity() {
     }
@@ -117,5 +112,13 @@ public class RecommendationActivity extends BaseModel {
 
     public void setSuppliesCost(double suppliesCost) {
         this.suppliesCost = suppliesCost;
+    }
+
+    public String getImageId() {
+        return imageId != null ? imageId.replace(".png", "") : "n/a";
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 }

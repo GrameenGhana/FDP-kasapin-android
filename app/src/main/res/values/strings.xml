@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">FDP</string>
-    <string name="farm_development_plan">Farm Development Plan</string>
+    <string name="app_name">@string/fdp</string>
+    <string name="farm_development_plan">FarmGrow</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -38,15 +38,15 @@
     <string name="add_new_plot">Add a new plot</string>
     <string name="provide_plot_name">Please provide the plot name</string>
     <string name="new_plot_added">New plot added</string>
-    <string name="data_saved">Data saved</string>
-    <string name="data_not_saved">Could not save data!</string>
-    <string name="generic_error">Could not save data!</string>
+    <string name="data_saved">Data saved successfully.</string>
+    <string name="data_not_saved">Could not save data.</string>
+    <string name="generic_error">An error has occurred</string>
 
 
     <string name="could_not_add_plot">Could not add plot info. Please try again</string>
-    <string name="new_data_updated">New data updated</string>
+    <string name="new_data_updated">The data has been updated.</string>
     <string name="add_plot_monitoring">Add new plot monitoring</string>
-    <string name="edit_plot_monitoring">Edit plot monitoring</string>
+    <string name="edit_plot_monitoring">Edit Plot </string>
     <string name="error_total_plot_estimated_production">Total Plots estimated production is more than total farm production!</string>
     <string name="error_invalid_units">Invalid units provided for plot production sizes!</string>
     <string name="error_missing_estimated_production">Total Farm Production or Plot production was not provided!</string>
@@ -68,6 +68,8 @@
     <string name="labour">Labour Cost</string>
     <string name="family_members">Family Members</string>
     <string name="farmer_details">Farmer Profile</string>
+    <string name="plot_monitoring" tools:ignore="MissingTranslation">Plot Monitoring</string>
+
     <string name="error_getting_farmer_info">There was an error attempting to retrieve farmer info</string>
     <string name="fill_data">Enter data</string>
     <string name="enter_data_rationale">"Please enter number of family members in Farmer Profile form for "</string>
@@ -77,7 +79,7 @@
     <string name="enter_all_ao_data">Please enter all Adoption Observation and Plot Info values for </string>
     <string name="missing_data">Missing data</string>
     <string name="no_plots">No Plots Added!</string>
-    <string name="add_plot_to_access_pl">Please add a plot to access P &amp; L.</string>
+    <string name="add_plot_to_access_pl">Please add a plot to access P and L.</string>
     <string name="farm_result">Farm Result</string>
     <string name="incomplete_ao_monitoring">Incomplete AO monitoring</string>
     <string name="different_no_monitoring">Different number of monitoring for plots</string>
@@ -88,7 +90,7 @@
     <string name="incorrect_no_plots_suffix">\'s plots are not equal.\\nPlease make sure all plots have the same number of monitoring!</string>
     <string name="farmer">Farmer </string>
     <string name="no_monitoring_added"> has no monitoring added for Year </string>
-    <string name="please_add_monitoring_suffix">!\\nPlease add at least 1 monitoring for each plot before proceeding.</string>
+    <string name="please_add_monitoring_suffix">.\nPlease add at least 1 monitoring before proceeding.</string>
     <string name="no_plots_added_suffix">has no plots added! Please add at least 1 plot before proceeding</string>
     <string name="incomplete_monitoring_prefix">Some plots have incomplete AO Monitoring results for Year</string>
     <string name="incomplete_monitoring_suffix">.
@@ -100,6 +102,8 @@
     <string name="select_country_region">Please Select a Country/Region</string>
     <string name="hey_there">Hi there!</string>
     <string name="sync">Sync</string>
+    <string name="sync_all" translatable="false">Sync All</string>
+
     <string name="sync_anyway">Sync anyway</string>
     <string name="first_sign_in_rationale">Looks like this is your first sign in.
         "Since you have internet connection it's recommended you sync data from the server.</string>
@@ -121,7 +125,7 @@
     <string name="all_data_downloaded">All data downloaded successfully!</string>
 
     <string name="download_all_farmer_data">Do you want to download farmer data?</string>
-    <string name="download_farmer_data">Download farmer data</string>
+    <string name="download_farmer_data">Download farmers data</string>
 
 
     <string name="download_complete">Data download Complete</string>
@@ -151,7 +155,6 @@
         <item name="10">October</item>
         <item name="11">November</item>
         <item name="12">December</item>
-
     </string-array>
 
 
@@ -200,7 +203,6 @@
     <string name="select_picture">Select a profile picture</string>
     <string name="next">Next</string>
     <string name="games">Arcade</string>
-    <string name="settings">Settings</string>
     <string name="login">Log In</string>
     <string name="home">Home</string>
     <string name="dont_have_account_text">Don\'t have an account?</string>
@@ -243,25 +245,22 @@
         <item name="2">Year 0</item>
         <item name="3">Year 1</item>
         <item name="4">Year 2</item>
-
         <item name="5">Year 3</item>
         <item name="6">Year 4</item>
         <item name="7">Year 5</item>
-
         <item name="8">Year 6</item>
         <item name="9">Year 7</item>
     </string-array>
 
-
-    <string name="year_1">Year 1</string>
-    <string name="year_2">Year 2</string>
-    <string name="year_3">Year 3</string>
-
-    <string name="year_4">Year 4</string>
-    <string name="year_5">Year 5</string>
-    <string name="year_6">Year 6</string>
-
-    <string name="year_7">Year 7</string>
+    <string-array name="monitoring_years">
+        <item name="year_1">Year %d</item>
+        <item name="year_2">Year %d</item>
+        <item name="year_3">Year %d</item>
+        <item name="year_4">Year %d</item>
+        <item name="year_5">Year %d</item>
+        <item name="year_6">Year %d</item>
+        <item name="year_7">Year %d</item>
+    </string-array>
 
 
     <string name="all_data_synced">All data synced successfully!</string>
@@ -274,8 +273,10 @@
     <string name="calc_area">calculate plot area</string>
     <string name="title_area_calc">GPS Area Calculation</string>
     <string name="no_points">No Points added yet</string>
-    <string name="add_3_more_points">To calculate area, please add 3 or more points.</string>
-    <string name="delete">Delete photo</string>
+    <string name="add_6_more_points">To calculate area, please add 6 or more points.</string>
+    <string name="delete">Delete</string>
+    <string name="delete_photo">Delete photo</string>
+
     <string name="delete_photo_rationale">Are you sure you want to delete photo?</string>
     <string name="click_photo_to_delete">You can click on photo to remove/delete</string>
     <string name="no_image_taken">No photo was selected.</string>
@@ -360,9 +361,9 @@
     <string name="monitoring">Monitoring</string>
     <string name="diagnostic">Diagnostics</string>
 
-    <string name="fdp">Farm Development Plan</string>
+    <string name="fdp">FarmGrow</string>
     <string name="download_resources">Download Resources</string>
-    <string name="upload_farmer_data">Upload farmer data</string>
+    <string name="upload_farmer_data">Upload all farmers data</string>
     <string name="share">Share</string>
     <string name="toggle_translation">Toggle Translation</string>
     <string name="estimated_production_size">Estimated production size:</string>
@@ -381,12 +382,12 @@
     <string name="no_database_data_found">No database data found!</string>
 
     <string name="database_exported">Database has been exported!</string>
-    <string name="logs_sent">Logs have been sent!</string>
+    <string name="logs_sent">Reports have been sent!</string>
 
 
     <string name="permissions_needed">Permission needed</string>
-    <string name="permissions_needed_rationale">This permission is needed. Please provide permission</string>
-    <string name="grant_permissions">Grant</string>
+    <string name="permissions_needed_rationale">This permission is needed by the app to function properly. Please provide permission</string>
+    <string name="grant_permissions">Grant access</string>
     <string name="permissions_not_provided">Permissions needed</string>
     <string name="permissions_not_provided_rationale">Permission were not provided. Please provide all permissions</string>
     <string name="required_field_error_msg">This field is required</string>
@@ -401,11 +402,11 @@
     <string name="class_cast_exception">ClassCast Exception</string>
     <string name="array_store_exception">ArrayStoreException</string>
     <string name="add_your_crash">Add your own crash and check if it gets logged</string>
-    <string name="some_error">An error occurred. Please try later!</string>
-    <string name="log_out_rational">This will delete all your data!</string>
-    <string name="delete_farmer_rational">Do you want to delete this farmer </string>
+    <string name="some_error">An error occurred. Please try again.</string>
+    <string name="log_out_rational">This will delete all your data.</string>
+    <string name="delete_farmer_rational">Do you want to delete this farmer data?</string>
     <string name="delete_farmer">Delete farmer</string>
-    <string name="farmer_data_deleted_message">Farmer has been deleted!</string>
+    <string name="farmer_data_deleted_message">Farmer has been deleted successfully.</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -425,5 +426,42 @@
     <string name="error_has_occurred_loading_data" tools:ignore="MissingTranslation">An error occurred loading data!</string>
 
     <string name="enter_valid_farmer_name">Please enter a valid farmer name.</string>
+    <string name="tag_line">Building a better Family Business!</string>
+    <string name="click_to_select">Click to select</string>
+    <string name="no_monitoring_data">No monitoring data available yet!</string>
+
+
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="settings_general">General Settings</string>
+
+
+    <!-- Messages Preferences -->
+    <string name="server_url_title">Server Url</string>
+    <string name="default_server_url" translatable="false">http://52.15.172.252/fdp/</string>
+    <string name="enter_valid_url">Please enter a valid url. The default url is set.</string>
+    <string name="server_url_rational">Please enter server url in the form "http://" or "https://" and end with "/"</string>
+
+    <!-- Preferences Keys-->
+    <string name="server_url_key">server_url</string>
+    <string name="select_url_rational">Please select a valid server url.</string>
+    <string name="add_a_new_url">Add a new url</string>
+    <string name="default_url_set_message">Default url has been set.</string>
+    <string name="http" translatable="false">https://</string>
+    <string name="please_specify_the_name_and_the_url">Please specify the name and the url</string>
+    <string name="add_gps_point">add gps point</string>
+    <string name="calculate_area">calculate area</string>
+    <string name="error_enter_valid_word">Please enter a valid word</string>
+    <string name="plot_adoption_observations">Plot Adoption Observations</string>
+    <string name="print">print</string>
+    <string name="plot_1_year_1">Plot 1 Year 1</string>
+    <string name="choose_labor_option_rationale">To show table data, please select Labor option above.</string>
+    <string name="no_changes_after_sybmission_rational">Please note that if you complete this form and sync your data, you will not be able to make any changes to this farmers data.</string>
+    <string name="take_a_photo">Take a photo</string>
+    <string name="save_gps">Save GPS data</string>
+    <string name="save_gps_rational">Do you want to save the GPS points?</string>
+    <string name="gps_data_saved">GPS data saved!</string>
+    <string name="please_wait_for_location_data">Please wait for location data…</string>
 
 </resources>

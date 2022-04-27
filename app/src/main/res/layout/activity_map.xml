@@ -4,25 +4,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <include layout="@layout/toolbar" />
-
 
     <RelativeLayout
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/accuracy_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_normal"
+            android:text="@string/please_wait_for_location_data"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_buttons">
-
-
-        </android.support.v7.widget.RecyclerView>
-
+            android:layout_above="@+id/bottom_buttons"
+            android:layout_below="@id/accuracy_textview" />
 
         <LinearLayout
             android:id="@+id/placeHolder"
@@ -31,9 +34,7 @@
             android:layout_centerInParent="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_normal"
-
-            >
+            android:padding="@dimen/spacing_normal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -41,19 +42,14 @@
                 android:layout_marginBottom="@dimen/spacing_quarter"
                 android:text="@string/no_points"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-
-                />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_3_more_points"
-
-                />
+                android:text="@string/add_6_more_points" />
 
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/bottom_buttons"
@@ -65,44 +61,41 @@
             android:orientation="horizontal"
             android:padding="@dimen/spacing_normal">
 
-
             <Button
                 android:id="@+id/back"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:padding="@dimen/spacing_normal"
-                android:text="Back"
+                android:text="@string/back"
                 android:theme="@style/PrimaryButtonGrey" />
-
 
             <Button
                 android:id="@+id/addPoint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_normal"
-                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_weight="3"
                 android:padding="@dimen/spacing_normal"
-                android:text="add GPS point"
-
-                />
-
+                android:text="@string/add_gps_point" />
 
             <Button
                 android:id="@+id/calculate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_normal"
-                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_weight="3"
                 android:padding="@dimen/spacing_normal"
-                android:text="calculate area"
+                android:text="@string/calculate_area" />
 
-                />
-
+            <Button
+                android:id="@+id/save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_weight="2"
+                android:padding="@dimen/spacing_normal"
+                android:text="@string/save" />
         </LinearLayout>
-
-
     </RelativeLayout>
-
-
 </LinearLayout>

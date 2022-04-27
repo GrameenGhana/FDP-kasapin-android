@@ -1,17 +1,12 @@
 package org.grameen.fdp.kasapin.data.db.model;
 
-
-/**
- * Created by AangJnr on 09, December, 2018 @ 11:54 AM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
 
+    @SerializedName("country_id")
+    int countryId;
     @SerializedName("id")
     @Expose
     private int id;
@@ -67,9 +62,6 @@ public class User {
     @Expose
     private String fullName;
 
-    @SerializedName("country_id")
-    int countryId;
-
     /**
      * No args constructor for use in serialization
      */
@@ -77,24 +69,24 @@ public class User {
     }
 
     /**
-     * @param lastName
-     * @param lastLoginAt
-     * @param passwordChangedAt
-     * @param confirmationCode
-     * @param updatedAt
-     * @param id
-     * @param lastLoginIp
-     * @param timezone
-     * @param confirmed
-     * @param avatarType
-     * @param email
-     * @param createdAt
-     * @param deletedAt
-     * @param active
-     * @param fullName
-     * @param uuid
-     * @param firstName
-     * @param avatarLocation
+     * @param lastName          .
+     * @param lastLoginAt       .
+     * @param passwordChangedAt .
+     * @param confirmationCode  .
+     * @param updatedAt         .
+     * @param id                .
+     * @param lastLoginIp       .
+     * @param timezone          .
+     * @param confirmed         .
+     * @param avatarType        .
+     * @param email             .
+     * @param createdAt         .
+     * @param deletedAt         .
+     * @param active            .
+     * @param fullName          .
+     * @param uuid              .
+     * @param firstName         .
+     * @param avatarLocation    .
      */
     public User(int id, String uuid, String firstName, String lastName, String email, String avatarType, String avatarLocation, String passwordChangedAt, boolean active, String confirmationCode, boolean confirmed, String timezone, String lastLoginAt, String lastLoginIp, String createdAt, String updatedAt, String deletedAt, String fullName) {
         super();
@@ -366,11 +358,11 @@ public class User {
         return this;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
-    }
-
     public int getCountryId() {
         return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
 }

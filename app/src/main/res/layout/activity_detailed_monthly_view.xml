@@ -12,9 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_buttons"
-        android:orientation="vertical"
-
-        >
+        android:orientation="vertical">
 
 
         <include layout="@layout/toolbar" />
@@ -32,8 +30,8 @@
                 android:id="@+id/print"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/spacing_normal"
-                android:layout_toLeftOf="@+id/currency_layout"
+                android:layout_marginEnd="@dimen/spacing_normal"
+                android:layout_toStartOf="@+id/currency_layout"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="@dimen/spacing_half"
                 android:src="@drawable/ic_print_black_24dp"
@@ -131,7 +129,7 @@
         <FrameLayout
             android:id="@+id/horizontalView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="558dp"
             android:isScrollContainer="true"
             android:scrollbars="horizontal|vertical">
 
@@ -142,38 +140,28 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/table_view_border_background"
                 android:dividerHeight="0.5dip"
+                android:layout_margin="@dimen/spacing_normal"
                 android:orientation="horizontal"
                 android:scrollbarAlwaysDrawHorizontalTrack="true"
                 table:tableView_headerColor="@color/divider"
-                table:tableView_headerElevation="2"
-
-                />
-
-
+                table:tableView_headerElevation="2" />
         </FrameLayout>
 
     </LinearLayout>
 
 
-    <LinearLayout
-
-        android:id="@+id/bottom_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_normal"
-
-        >
-
 
         <LinearLayout
+            android:id="@+id/bottom_buttons"
+            android:layout_alignParentBottom="true"
+            android:paddingStart="@dimen/spacing_normal"
+            android:paddingBottom="@dimen/spacing_normal"
+            android:paddingTop="@dimen/spacing_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:orientation="horizontal">
+          >
 
             <Button
                 android:id="@+id/back"
@@ -198,7 +186,6 @@
                 />
 
         </LinearLayout>
-    </LinearLayout>
 
 
 </RelativeLayout>

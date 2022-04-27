@@ -1,8 +1,5 @@
 package org.grameen.fdp.kasapin.ui.base.model;
 
-/**
- * Created by aangjnr on 22/02/2018.
- */
 public class ColumnHeader extends Cell {
 
     public ColumnHeader(String id) {

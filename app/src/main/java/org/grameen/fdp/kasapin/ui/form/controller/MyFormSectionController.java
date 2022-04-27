@@ -15,12 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Created by aangjnr on 18/12/2017.
- */
-
 public class MyFormSectionController extends MyFormElementController {
-
     private final String title;
     private final Map<String, MyFormElementController> elements = new HashMap<String, MyFormElementController>();
     private final List<MyFormElementController> orderedElements = new ArrayList<MyFormElementController>();
@@ -32,7 +27,7 @@ public class MyFormSectionController extends MyFormElementController {
      * @param name  the name of the section
      * @param title the title of the section to display
      */
-    public MyFormSectionController(Context ctx, String name, String title, String content_desc) {
+    private MyFormSectionController(Context ctx, String name, String title, String content_desc) {
         super(ctx, name, content_desc);
         this.title = title;
     }
@@ -41,12 +36,11 @@ public class MyFormSectionController extends MyFormElementController {
      * Creates a new instance of a form section with a specified title. The name of the section is generated randomly.
      * This method can be used when you do not need to refer to a section by name.
      *
-     * @param title
+     * @param title .
      */
-    public MyFormSectionController(Context context, String title, String content_desc) {
+    private MyFormSectionController(Context context, String title, String content_desc) {
         this(context, UUID.randomUUID().toString(), title, content_desc);
     }
-
 
     public MyFormSectionController(Context context, String title) {
         this(context, UUID.randomUUID().toString(), title, null);
@@ -75,7 +69,7 @@ public class MyFormSectionController extends MyFormElementController {
      * @param position the position at which to insert the element
      * @return the same instance of the form element that was added to support method chaining
      */
-    public MyFormElementController addElement(MyFormElementController element, int position) {
+    private MyFormElementController addElement(MyFormElementController element, int position) {
         if (element instanceof MyFormSectionController) {
             throw new IllegalArgumentException("Sub-sections are not supported");
         }
@@ -116,7 +110,7 @@ public class MyFormSectionController extends MyFormElementController {
      * @param name the name of the form element to remove
      * @return the removed form element instance, or null of no such element was found.
      */
-    public MyFormElementController removeElement(String name) {
+    private MyFormElementController removeElement(String name) {
         MyFormElementController element = elements.remove(name);
         orderedElements.remove(element);
         return element;
@@ -173,7 +167,6 @@ public class MyFormSectionController extends MyFormElementController {
     @Override
     protected View createView() {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-
         View view;
         if (!TextUtils.isEmpty(getTitle())) {
             view = layoutInflater.inflate(R.layout.my_form_section, null);
@@ -181,12 +174,11 @@ public class MyFormSectionController extends MyFormElementController {
             view.setOnLongClickListener(null);
             view.setLongClickable(false);
 
-            final TextView sectionView = (TextView) view.findViewById(R.id.list_item_section_text);
+            final TextView sectionView = view.findViewById(R.id.list_item_section_text);
             sectionView.setText(title);
         } else {
             view = layoutInflater.inflate(R.layout.separator, null);
         }
-
         return view;
     }
 

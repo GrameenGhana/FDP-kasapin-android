@@ -1,8 +1,6 @@
 package org.grameen.fdp.kasapin.ui.form.controller.view;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
-import android.location.Location;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,11 +23,8 @@ import java.util.Set;
 public class ButtonController extends MyLabeledFieldController {
     private final int editTextId = MyFormController.generateViewId();
     private final OnClickListener onClickListener;
-    Location location;
-
-    Context context;
-    boolean isEnabled = true;
-    private DatePickerDialog datePickerDialog = null;
+    private String placeholder;
+    private boolean isEnabled;
 
     /**
      * Constructs a new instance of a date picker field.
@@ -43,7 +38,7 @@ public class ButtonController extends MyLabeledFieldController {
     public ButtonController(Context ctx, String name, String content_desc, String labelText, Set<InputValidator> validators, OnClickListener listener) {
         super(ctx, name, content_desc, labelText, validators);
         this.onClickListener = listener;
-        this.context = ctx;
+        isEnabled = true;
     }
 
     /**
@@ -55,12 +50,11 @@ public class ButtonController extends MyLabeledFieldController {
      * @param isRequired indicates if the field is required or not
      * @param listener   the format of the date to show in the text box when a date is set
      */
-    public ButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, OnClickListener listener, boolean enabled) {
+    private ButtonController(Context ctx, String name, String content_desc, String labelText, boolean isRequired, OnClickListener listener, boolean enabled) {
         super(ctx, name, content_desc, labelText, isRequired);
         this.onClickListener = listener;
-        this.context = ctx;
+        isEnabled = true;
         this.isEnabled = enabled;
-
     }
 
     /**
@@ -69,15 +63,16 @@ public class ButtonController extends MyLabeledFieldController {
      * @param name      the name of the field
      * @param labelText the label to display beside the field
      */
-    public ButtonController(Context context, String name, String content_desc, String labelText, OnClickListener onClickListener, boolean enabled) {
-        this(context, name, content_desc, labelText, false, onClickListener, enabled);
-        this.context = context;
-
+    public ButtonController(Context context, String name, String content_desc, String labelText, String _defaultValue, OnClickListener onClickListener,
+                            boolean enabled, boolean isRequired, Set<InputValidator> validators) {
+        this(context, name, content_desc, labelText, isRequired, onClickListener, enabled);
+        if (isRequired)
+            this.setValidators(validators);
+        placeholder = _defaultValue;
     }
 
     @Override
     protected View createFieldView() {
-
         if (isEnabled) {
             final MaterialEditText editText = new MaterialEditText(getContext());
             editText.setId(editTextId);
@@ -89,22 +84,27 @@ public class ButtonController extends MyLabeledFieldController {
             editText.setSingleLine(true);
             editText.setInputType(InputType.TYPE_CLASS_TEXT);
             editText.setKeyListener(null);
-            editText.setHint("Click to obtain location");
+            editText.setHint(placeholder);
+            editText.setHelperText("Click to obtain location");
+            editText.setHelperTextAlwaysShown(true);
+
+            getModel().setValue(getName(), getModel().getValue(getName()));
+
             refresh(editText);
-
             editText.setOnClickListener(onClickListener);
-
-
             try {
                 editText.setEnabled(isEnabled);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             return editText;
-
         } else
             return inflateViewOnlyView();
+    }
+
+    @Override
+    public void setError(String message) {
+        super.setError(message);
     }
 
 
@@ -119,17 +119,12 @@ public class ButtonController extends MyLabeledFieldController {
             String valueStr = value.toString();
             if (!valueStr.equals(editText.getText().toString()))
                 editText.setText(valueStr);
-
         }
-
-
     }
 
     public void refresh() {
         refresh(getEditText());
     }
-
-
 }
 
 

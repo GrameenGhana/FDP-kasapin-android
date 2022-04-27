@@ -14,21 +14,12 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
-/**
- * Created by AangJnr on 20, September, 2018 @ 2:12 AM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
-
     void inject(FDPKasapin app);
 
     void inject(SyncService service);
-    //void inject(RetrofitInterceptor interceptor);
-
 
     @ApplicationContext
     Context getContext();
@@ -36,5 +27,4 @@ public interface ApplicationComponent {
     Application getApplication();
 
     AppDataManager getAppDataManager();
-
 }

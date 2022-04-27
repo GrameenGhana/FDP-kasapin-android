@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_normal"
@@ -41,6 +42,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/spacing_normal"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
                         app:layout_widthPercent="50%">
@@ -69,75 +71,42 @@
 
                     </LinearLayout>
 
-
                     <LinearLayout
                         android:id="@+id/ll2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/spacing_normal"
-                        android:layout_toRightOf="@+id/ll1"
+                        android:layout_toEndOf="@+id/ll1"
                         android:orientation="vertical"
-                        app:layout_widthPercent="50%"
-
-                        >
-
+                        app:layout_widthPercent="50%">
 
                         <TextView
                             android:id="@+id/plot_size_text"
-
                             style="@style/TextAppearance.AppCompat.Small"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/spacing_half"
-                            android:text="Plot Size"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="Plot Size" />
 
-
-                        <android.support.percent.PercentRelativeLayout
+                        <EditText
+                            android:id="@+id/plotSizeEdittext"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-
-                            <EditText
-                                android:id="@+id/plotSizeEdittext"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/spacing_half"
-                                android:background="@drawable/border_background"
-                                android:ellipsize="end"
-                                android:inputType="numberDecimal"
-                                android:maxLines="1"
-                                android:paddingLeft="@dimen/spacing_normal"
-                                app:layout_widthPercent="50%"
-                                app:ms_arrow_tint="@color/colorPrimary"
-                                app:ms_background_color="@color/background" />
-
-
-                            <TextView
-                                android:id="@+id/plotSizeUnitSpinner"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:layout_marginLeft="@dimen/spacing_half"
-                                android:layout_toRightOf="@id/plotSizeEdittext"
-                                android:ellipsize="end"
-                                android:gravity="center_vertical"
-                                android:maxLines="1"
-                                app:layout_widthPercent="50%"
-
-                                />
-
-
-                        </android.support.percent.PercentRelativeLayout>
-
-
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_background"
+                            android:ellipsize="end"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="@dimen/spacing_normal"
+                            android:paddingEnd="@dimen/spacing_normal"
+                            app:layout_widthPercent="50%"
+                            app:ms_arrow_tint="@color/colorPrimary"
+                            app:ms_background_color="@color/background" />
                     </LinearLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
-                </android.support.percent.PercentRelativeLayout>
-
-
-                <android.support.percent.PercentRelativeLayout
+                <androidx.percentlayout.widget.PercentRelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/spacing_normal"
@@ -145,19 +114,17 @@
                     android:layout_marginRight="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/spacing_normal">
 
-
                     <LinearLayout
                         android:id="@+id/ll3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/spacing_normal"
+                        android:layout_marginEnd="@dimen/spacing_normal"
                         android:orientation="vertical"
                         app:layout_widthPercent="50%">
 
                         <TextView
                             android:id="@+id/plot_est_prod_text"
-
                             style="@style/TextAppearance.AppCompat.Small"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -167,57 +134,28 @@
 
                             />
 
-
-                        <android.support.percent.PercentRelativeLayout
+                        <EditText
+                            android:id="@+id/estimatedProductionEdittext"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-
-                            <EditText
-                                android:id="@+id/estimatedProductionEdittext"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/spacing_half"
-                                android:background="@drawable/border_background"
-                                android:ellipsize="end"
-                                android:inputType="numberDecimal"
-                                android:maxLines="1"
-                                android:paddingLeft="@dimen/spacing_normal"
-                                app:layout_widthPercent="50%"
-                                app:ms_arrow_tint="@color/colorPrimary"
-                                app:ms_background_color="@color/background" />
-
-
-                            <TextView
-                                android:id="@+id/productionSizeUnitSpinner"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:layout_marginLeft="@dimen/spacing_half"
-                                android:layout_toRightOf="@id/estimatedProductionEdittext"
-                                android:ellipsize="end"
-                                android:gravity="center_vertical"
-                                android:maxLines="1"
-                                app:layout_widthPercent="50%" />
-
-
-                        </android.support.percent.PercentRelativeLayout>
-
-
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_background"
+                            android:ellipsize="end"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingLeft="@dimen/spacing_normal"
+                            app:layout_widthPercent="50%"
+                            app:ms_arrow_tint="@color/colorPrimary"
+                            app:ms_background_color="@color/background" />
                     </LinearLayout>
-
 
                     <LinearLayout
                         android:id="@+id/ll4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/ll3"
+                        android:layout_toEndOf="@+id/ll3"
                         android:orientation="vertical"
-                        app:layout_widthPercent="30%"
-
-
-                        >
-
+                        app:layout_widthPercent="50%">
 
                         <TextView
                             android:id="@+id/plot_ph_text"
@@ -228,24 +166,25 @@
                             android:text="@string/soil_ph"
                             android:textStyle="bold" />
 
-
                         <EditText
                             android:id="@+id/phEdittext"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginLeft="@dimen/spacing_half"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/border_background"
                             android:ellipsize="end"
                             android:inputType="numberDecimal"
-                            android:maxLength="3"
                             android:maxLines="1"
-                            android:paddingLeft="@dimen/spacing_normal" />
+                            android:paddingStart="@dimen/spacing_normal"
+                            android:paddingEnd="@dimen/spacing_normal"
+                            app:layout_widthPercent="50%"
+                            app:ms_arrow_tint="@color/colorPrimary"
+                            app:ms_background_color="@color/background" />
 
 
                     </LinearLayout>
 
 
-                </android.support.percent.PercentRelativeLayout>
+                </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
                 <TextView
@@ -265,7 +204,7 @@
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -282,12 +221,11 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:background="@drawable/border_background_white"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_normal" />
+            android:orientation="vertical" />
     </ScrollView>
 
 
-    <android.support.percent.PercentRelativeLayout
+    <androidx.percentlayout.widget.PercentRelativeLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -319,7 +257,7 @@
 
             />
 
-    </android.support.percent.PercentRelativeLayout>
+    </androidx.percentlayout.widget.PercentRelativeLayout>
 
 
 </RelativeLayout>

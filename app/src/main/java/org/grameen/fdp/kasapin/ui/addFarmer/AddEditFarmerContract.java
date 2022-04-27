@@ -1,44 +1,32 @@
 package org.grameen.fdp.kasapin.ui.addFarmer;
 
 
+import org.grameen.fdp.kasapin.data.db.entity.Farmer;
 import org.grameen.fdp.kasapin.data.db.entity.FormAnswerData;
-import org.grameen.fdp.kasapin.data.db.entity.RealFarmer;
 import org.grameen.fdp.kasapin.ui.base.BaseContract;
 
-/**
- * Created by AangJnr on 18, September, 2018 @ 9:09 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
 public class AddEditFarmerContract {
-
-
     public interface View extends BaseContract.View {
-
         void startCameraIntent();
 
         void disableViews();
 
-        void showFormFragment(FormAnswerData surveyAnswer);
+        void showFormFragment();
 
         void moveToNextForm();
 
-        void showFarmerDetailsActivity(RealFarmer farmer);
+        void showFarmerDetailsActivity(Farmer farmer);
 
-        void setUpViews();
-
+        void setUpViews(Farmer farmer);
 
         void finishActivity();
     }
 
     public interface Presenter {
-
         void loadFormFragment(String farmerId, int formId);
 
-        void saveData(RealFarmer farmer, FormAnswerData answerData, boolean exit);
+        void saveData(Farmer farmer, FormAnswerData answerData, boolean exit, boolean wasProfileImageEdited);
 
+        void getFarmerData(String code);
     }
-
-
 }

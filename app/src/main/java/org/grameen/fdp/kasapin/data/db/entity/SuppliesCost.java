@@ -1,23 +1,16 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-
-/**
- * Created by aangjnr on 17/03/2018.
- */
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "supplies_costs")
 
 public class SuppliesCost {
-
-
     @PrimaryKey
     @NonNull
-    String id;
+    String id = "";
     String cost;
-
 
     public SuppliesCost() {
     }

@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by AangJnr on 12, October, 2018 @ 2:45 PM
  * Work Mail cibrahim@grameenfoundation.org
  * Personal mail aang.jnr@gmail.com
  */
@@ -53,7 +52,7 @@ public class Tokenizer {
         return tokens;
     }
 
-    private class TokenInfo {
+    private static class TokenInfo {
         final Pattern regex;
         final int token;
 
@@ -64,7 +63,7 @@ public class Tokenizer {
         }
     }
 
-    public class Token {
+    public static class Token {
         public final int token;
         public final String sequence;
 

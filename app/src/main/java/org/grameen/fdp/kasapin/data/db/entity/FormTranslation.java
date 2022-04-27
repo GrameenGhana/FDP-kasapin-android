@@ -1,15 +1,8 @@
 package org.grameen.fdp.kasapin.data.db.entity;
 
-
-/**
- * Created by AangJnr on 05, December, 2018 @ 12:44 PM
- * Work Mail cibrahim@grameenfoundation.org
- * Personal mail aang.jnr@gmail.com
- */
-
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -20,7 +13,6 @@ import java.util.List;
 //, foreignKeys = {@ForeignKey(entity = Form.class, parentColumns = "id", childColumns = "formId", deferred = true)}
 @Entity(tableName = "form_translation", indices = {@Index(value = "formId"), @Index(value = "id", unique = true)})
 public class FormTranslation extends BaseModel {
-
     @SerializedName("form_id")
     String formId;
     @SerializedName("name")
@@ -28,22 +20,15 @@ public class FormTranslation extends BaseModel {
     @Ignore
     @SerializedName("form")
     private Form form;
-
     @Ignore
     @SerializedName("questions")
-    private List<QuestionsAndSkipLogic> questionsAndSkipLogics = null;
+    private List<QuestionsAndSkipLogic> questionsAndSkipLogic;
 
     /**
      * No args constructor for use in serialization
      */
     public FormTranslation() {
     }
-
-    /**
-     * @param id
-     * @param name
-     * @param formId
-     */
 
     @Ignore
     public FormTranslation(int id, String name, String formId) {
@@ -61,7 +46,6 @@ public class FormTranslation extends BaseModel {
     public void setId(int id) {
         this.id = id;
     }
-
 
     public String getName() {
         return name;
@@ -87,11 +71,11 @@ public class FormTranslation extends BaseModel {
         this.form = form;
     }
 
-    public List<QuestionsAndSkipLogic> getQuestionsAndSkipLogics() {
-        return questionsAndSkipLogics;
+    public List<QuestionsAndSkipLogic> getQuestionsAndSkipLogic() {
+        return questionsAndSkipLogic;
     }
 
-    public void setQuestionsAndSkipLogics(List<QuestionsAndSkipLogic> questionsAndSkipLogics) {
-        this.questionsAndSkipLogics = questionsAndSkipLogics;
+    public void setQuestionsAndSkipLogic(List<QuestionsAndSkipLogic> questionsAndSkipLogic) {
+        this.questionsAndSkipLogic = questionsAndSkipLogic;
     }
 }
