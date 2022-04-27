@@ -95,15 +95,21 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, F
                 showDialog(false, getString(R.string.hello),
                         getString(R.string.permissions_needed_rationale), (dialogInterface, i) ->
                                 permissionManager.checkAndRequestPermissions(LoginActivity.this),
-                        getString(R.string.grant_permissions), (dialogInterface, i) -> supportFinishAfterTransition(),
-                        getString(R.string.quit), 0);
+                        getString(R.string.grant_permissions), (dialogInterface, i) -> {
+                            //supportFinishAfterTransition();
+                            dialogInterface.dismiss();
+                        },
+                        getString(R.string.ok), 0);
             }
 
             @Override
             public void ifCancelledAndCannotRequest(Activity activity) {
                 showDialog(false, getString(R.string.permissions_not_provided),
                         "Please provide the permission in Settings.", null,
-                        "", (dialogInterface, i) -> supportFinishAfterTransition(), getString(R.string.quit), 0);
+                        "", (dialogInterface, i) -> {
+                            //supportFinishAfterTransition();
+                            dialogInterface.dismiss();
+                        }, getString(R.string.ok), 0);
             }
         };
 
